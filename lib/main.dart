@@ -16,9 +16,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // Set the status bar color
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: primaryColor,
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Color.fromRGBO(65, 75, 105, 1),
     ));
     return ScreenUtilInit(
       designSize: const Size(720, 1280),
@@ -30,11 +29,11 @@ class MyApp extends StatelessWidget {
           title: 'EdgiPrep',
           theme: ThemeData(
             fontFamily: GoogleFonts.nunito().fontFamily,
-            colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
+            colorScheme: ColorScheme.fromSeed(seedColor: primaryColor), 
             useMaterial3: true,
             navigationBarTheme: NavigationBarThemeData(
-              labelTextStyle: MaterialStateProperty.resolveWith((state) {
-                if (state.contains(MaterialState.selected)) {
+              labelTextStyle: WidgetStateProperty.resolveWith((state) {
+                if (state.contains(WidgetState.selected)) {
                   return const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -49,6 +48,12 @@ class MyApp extends StatelessWidget {
             ),
           ),
           home: const Wrapper(),
+          // home: Scaffold(
+          //   body: SafeArea(
+          //       child: Center(
+          //     child: Text("data"),
+          //   )),
+          // ),
         );
       },
     );

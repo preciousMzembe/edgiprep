@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:edgiprep/screens/topic_notes.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,15 @@ class SubjectNotes extends StatefulWidget {
 class _SubjectNotesState extends State<SubjectNotes> {
   final ScrollController _controller = ScrollController();
   bool _showDetails = true;
+
+  Color getRandomColor() {
+    final random = Random();
+    final red = random.nextInt(256);
+    final green = random.nextInt(256);
+    final blue = random.nextInt(256);
+    return Color.fromRGBO(red, green, blue, 1.0); // Set alpha to fully opaque
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,64 +39,62 @@ class _SubjectNotesState extends State<SubjectNotes> {
               height: 30.h,
             ),
             Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.w),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // back
-                    SizedBox(
-                      width: 75.h,
-                      child: MaterialButton(
+              padding: EdgeInsets.symmetric(horizontal: 30.w),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // back
+                  GestureDetector(
+                    onTap: () {
+                      Get.back();
+                    },
+                    child: Container(
+                      width: 50.w,
+                      height: 50.w,
+                      color: Colors.transparent,
+                      child: Icon(
+                        FontAwesomeIcons.arrowLeft,
                         color: primaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(75.r),
-                        ),
-                        height: 75.h,
-                        onPressed: () {
-                          Get.back();
-                        },
-                        child: Center(
-                          child: Icon(
-                            FontAwesomeIcons.arrowLeft,
-                            color: Colors.white,
-                            size: 25.h,
-                          ),
-                        ),
+                        size: 40.w,
                       ),
                     ),
-                    // subject
-                    SizedBox(
-                      width: 40.w,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text(
-                            "Biology Notes",
-                            style: GoogleFonts.nunito(
-                              fontSize: 50.sp,
-                              fontWeight: FontWeight.w900,
-                            ),
-                          ),
-                          // SizedBox(
-                          //   height: 5.h,
-                          // ),
-                          Text(
-                            "Here are all your Biology notes.",
-                            style: TextStyle(
-                              fontSize: 25.sp,
-                              fontWeight: FontWeight.bold,
-                              color: textColor,
-                            ),
-                          ),
-                        ],
+                  ),
+                  // subject
+                  SizedBox(
+                    width: 20.w,
+                  ),
+                  Expanded(
+                    child: Text(
+                      "Biology",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.nunito(
+                        fontSize: 50.sp,
+                        fontWeight: FontWeight.w900,
                       ),
                     ),
-                  ],
-                )),
+                  ),
+                  // image
+                  SizedBox(
+                    width: 20.w,
+                  ),
+                  Container(
+                    width: 50.h,
+                    height: 50.h,
+                    decoration: BoxDecoration(
+                      image: const DecorationImage(
+                        image: AssetImage('images/biology.jpg'),
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(
-              height: 35.h,
+              height: 20.h,
             ),
             // search
             Padding(
@@ -93,6 +102,8 @@ class _SubjectNotesState extends State<SubjectNotes> {
               child: TextField(
                 cursorColor: primaryColor,
                 decoration: InputDecoration(
+                  fillColor: grayColor,
+                  filled: true,
                   prefixIcon: Padding(
                     padding: EdgeInsets.only(
                       left: 50.w,
@@ -104,22 +115,22 @@ class _SubjectNotesState extends State<SubjectNotes> {
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(90.0),
+                    borderRadius: BorderRadius.circular(20.0),
                     borderSide: BorderSide(
-                      color: primaryColor,
+                      color: grayColor,
                       // color: Color.fromARGB(255, 139, 139, 139),
                       width: 2.0,
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(90.0),
+                    borderRadius: BorderRadius.circular(20.0),
                     borderSide: BorderSide(
-                      color: primaryColor,
+                      color: grayColor,
                       // color: Color.fromARGB(255, 139, 139, 139),
                       width: 2.0,
                     ),
                   ),
-                  hintText: 'Search topic',
+                  hintText: 'Search',
                 ),
               ),
             ),
@@ -148,14 +159,16 @@ class _SubjectNotesState extends State<SubjectNotes> {
                       SizedBox(
                         height: 30.h,
                       ),
-                      const NotesTopic(
+                      NotesTopic(
                         topic: "Research skills",
+                        color: getRandomColor(),
                       ),
                       SizedBox(
                         height: 20.h,
                       ),
-                      const NotesTopic(
+                      NotesTopic(
                         topic: "Plants Biology",
+                        color: getRandomColor(),
                       ),
                       // back to top
                       SizedBox(
@@ -181,7 +194,7 @@ class _SubjectNotesState extends State<SubjectNotes> {
                                 onPressed: () {
                                   _controller.animateTo(
                                     0,
-                                    duration: Duration(milliseconds: 500),
+                                    duration: const Duration(milliseconds: 500),
                                     curve: Curves.easeInOut,
                                   );
                                 },
@@ -212,33 +225,34 @@ class _SubjectNotesState extends State<SubjectNotes> {
   }
 }
 
-class NotesTopic extends StatefulWidget {
+class NotesTopic extends StatelessWidget {
   final String topic;
-  const NotesTopic({super.key, required this.topic});
+  final Color color;
+  const NotesTopic({super.key, required this.topic, required this.color});
 
-  @override
-  State<NotesTopic> createState() => _NotesTopicState();
-}
-
-class _NotesTopicState extends State<NotesTopic> {
   @override
   Widget build(BuildContext context) {
-    return MaterialButton(
-      onPressed: () {
+    return GestureDetector(
+      onTap: () {
         Get.to(() => const TopicNotes());
       },
-      color: Colors.white,
-      padding: EdgeInsets.symmetric(
-        horizontal: 40.h,
-        vertical: 40.h,
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(40.r),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10.r),
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: 30.w,
+            vertical: 30.w,
+          ),
+          decoration: BoxDecoration(
+            color: const Color.fromRGBO(231, 231, 231, 1),
+            border: Border(
+              left: BorderSide(
+                width: 5,
+                color: color,
+              ),
+            ),
+          ),
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
@@ -247,10 +261,18 @@ class _NotesTopicState extends State<NotesTopic> {
                   children: [
                     //  topic
                     Text(
-                      widget.topic,
+                      topic,
                       style: GoogleFonts.nunito(
                         fontSize: 35.sp,
                         fontWeight: FontWeight.w800,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Text(
+                      "3 lessons",
+                      style: GoogleFonts.nunito(
+                        fontSize: 25.sp,
+                        fontWeight: FontWeight.w600,
                         color: Colors.black,
                       ),
                     ),
@@ -259,14 +281,14 @@ class _NotesTopicState extends State<NotesTopic> {
               ),
               Center(
                 child: Icon(
-                  FontAwesomeIcons.anglesRight,
+                  FontAwesomeIcons.angleRight,
                   size: 30.h,
-                  color: Colors.orange,
+                  color: primaryColor,
                 ),
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }

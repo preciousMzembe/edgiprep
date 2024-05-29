@@ -1,8 +1,6 @@
 import 'package:edgiprep/screens/topic.dart';
 import 'package:edgiprep/utils/constants.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -108,7 +106,7 @@ class _SubjectState extends State<Subject> {
               child: LinearPercentIndicator(
                 padding: const EdgeInsets.all(0),
                 animation: true,
-                lineHeight: 25.h,
+                lineHeight: 15.h,
                 animationDuration: 2000,
                 // percent
                 percent: .7,
@@ -170,7 +168,7 @@ class _SubjectState extends State<Subject> {
                         barRadius: Radius.circular(40.r),
                         progressColor: Colors.white,
                         // progressColor: Color.fromRGBO(47, 59, 98, 1),
-                        backgroundColor: Color.fromRGBO(255, 249, 249, 1),
+                        backgroundColor: const Color.fromRGBO(255, 249, 249, 1),
                         center: Row(
                           children: [
                             Expanded(

@@ -1,7 +1,7 @@
+import 'package:edgiprep/screens/start.dart';
 import 'package:edgiprep/utils/constants.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:edgiprep/utils/enums.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -262,46 +262,60 @@ class Lesson extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text(
-                            "Lesson $lessonNumber",
-                            style: GoogleFonts.nunito(
-                              fontSize: 25.sp,
-                              color: textColor,
-                              fontWeight: FontWeight.w700,
-                            ),
+                      child: GestureDetector(
+                        onTap: () {
+                          if (lessonDone) {
+                            Get.to(() => const Start(
+                                  testMode: TestMode.lesson,
+                                  lessonDone: true,
+                                ));
+                          }
+                        },
+                        child: Container(
+                          color: Colors.transparent,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                "Lesson $lessonNumber",
+                                style: GoogleFonts.nunito(
+                                  fontSize: 25.sp,
+                                  color: textColor,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              // lesson name
+                              Text(
+                                lessonName,
+                                style: GoogleFonts.nunito(
+                                  color: currentLesson
+                                      ? Colors.black
+                                      : Colors.black54,
+                                  fontSize: 40.sp,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ],
                           ),
-                          // lesson name
-                          Text(
-                            lessonName,
-                            style: GoogleFonts.nunito(
-                              color:
-                                  currentLesson ? Colors.black : Colors.black54,
-                              fontSize: 40.sp,
-                              fontWeight: FontWeight.w900,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                     // take lesson
-                    Visibility(
-                      visible: lessonDone,
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 20.w,
-                          ),
-                          Icon(
-                            FontAwesomeIcons.angleRight,
-                            size: 30.h,
-                            color: Colors.orange,
-                          ),
-                        ],
-                      ),
-                    ),
+                    // Visibility(
+                    //   visible: lessonDone,
+                    //   child: Row(
+                    //     children: [
+                    //       SizedBox(
+                    //         width: 20.w,
+                    //       ),
+                    //       Icon(
+                    //         FontAwesomeIcons.angleRight,
+                    //         size: 30.h,
+                    //         color: Colors.orange,
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
 
@@ -343,7 +357,10 @@ class Lesson extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(700.r),
                               ),
                               height: 70.h,
-                              onPressed: () {},
+                              onPressed: () {
+                                Get.to(() =>
+                                    const Start(testMode: TestMode.lesson));
+                              },
                               child: Center(
                                 child: Text(
                                   "Start",

@@ -1,5 +1,3 @@
-import 'package:edgiprep/components/daily_practice.dart';
-import 'package:edgiprep/components/recent_progress.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,7 +5,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  final Function seeAll;
+  const Home({super.key, required this.seeAll});
 
   @override
   State<Home> createState() => _HomeState();
@@ -35,78 +34,456 @@ class _HomeState extends State<Home> {
                 children: [
                   // name
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          "Hello,",
-                          style: TextStyle(
-                            fontSize: 30.sp,
-                            fontWeight: FontWeight.bold,
-                            color: textColor,
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(100.r),
+                          child: Container(
+                            width: 85.h,
+                            decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage('images/male.jpg'),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            child: MaterialButton(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  85.r,
+                                ),
+                              ),
+                              color: Colors.transparent,
+                              height: 85.h,
+                              onPressed: () {},
+                            ),
                           ),
                         ),
-                        Text(
-                          "Precious",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.nunito(
-                            fontSize: 45.sp,
-                            fontWeight: FontWeight.w700,
+                        SizedBox(
+                          width: 20.w,
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Hello,",
+                                style: TextStyle(
+                                  fontSize: 25.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor,
+                                  height: .9,
+                                ),
+                              ),
+                              Text(
+                                "Precious",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.nunito(
+                                  fontSize: 45.sp,
+                                  fontWeight: FontWeight.w900,
+                                  height: 1.3,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
 
-                  // notification and profile
+                  // notifications
                   SizedBox(
-                    width: 20.w,
+                    width: 30.w,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 90.h,
-                        child: MaterialButton(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                              90.r,
-                            ),
+                  Image.asset(
+                    "icons/bell.png",
+                    height: 85.h,
+                    color: primaryColor,
+                  ),
+                ],
+              ),
+            ),
+
+            // rewards
+            SizedBox(
+              height: 50.h,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 30.w,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20.r),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('images/questions.jpg'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 40.h,
+                      vertical: 60.h,
+                    ),
+                    color: const Color.fromARGB(169, 0, 0, 0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // XP
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                "icons/star.png",
+                                height: 80.h,
+                                color: secondaryColor,
+                              ),
+                              SizedBox(
+                                width: 10.w,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Total XP",
+                                    style: TextStyle(
+                                      fontSize: 20.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: const Color.fromARGB(
+                                          221, 255, 255, 255),
+                                      // height: .9,
+                                    ),
+                                  ),
+                                  Text(
+                                    "5030",
+                                    style: GoogleFonts.nunito(
+                                      fontSize: 50.sp,
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                          color: primaryColor,
-                          height: 90.h,
-                          onPressed: () {},
-                          child: Center(
-                            child: Icon(
-                              FontAwesomeIcons.solidBell,
-                              size: 30.h,
-                              color: Colors.white,
+                        ),
+                        // Streak
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                "icons/fire.png",
+                                height: 80.h,
+                                color: secondaryColor,
+                              ),
+                              SizedBox(
+                                width: 10.w,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Streak",
+                                    style: TextStyle(
+                                      fontSize: 20.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: const Color.fromARGB(
+                                          221, 255, 255, 255),
+                                      // height: .9,
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "9 ",
+                                        style: GoogleFonts.nunito(
+                                          fontSize: 50.sp,
+                                          fontWeight: FontWeight.w900,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      Text(
+                                        "days",
+                                        style: GoogleFonts.nunito(
+                                          fontSize: 30.sp,
+                                          fontWeight: FontWeight.w700,
+                                          color: const Color.fromARGB(
+                                              204, 255, 255, 255),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            // practice
+            SizedBox(
+              height: 50.h,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    "Practice More",
+                    style: GoogleFonts.nunito(
+                      fontSize: 30.sp,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15.h,
+                  ),
+                  IntrinsicHeight(
+                    child: Row(
+                      children: [
+                        // quiz
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color.fromRGBO(183, 207, 231, 0.5),
+                              borderRadius: BorderRadius.circular(20.r),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20.r),
+                                    topRight: Radius.circular(20.r),
+                                  ),
+                                  child: Container(
+                                    height: 170.h,
+                                    decoration: const BoxDecoration(
+                                      image: DecorationImage(
+                                        image: AssetImage('images/quiz.jpg'),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 40.h,
+                                        vertical: 60.h,
+                                      ),
+                                      // color: Color.fromARGB(55, 0, 0, 0),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 30.w, vertical: 30.w),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Text(
+                                        "Biology",
+                                        style: GoogleFonts.nunito(
+                                          fontSize: 35.sp,
+                                          fontWeight: FontWeight.w900,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 10.h,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "16 ",
+                                            style: GoogleFonts.nunito(
+                                              fontSize: 30.sp,
+                                              fontWeight: FontWeight.w900,
+                                            ),
+                                          ),
+                                          Text(
+                                            "questions",
+                                            style: GoogleFonts.nunito(
+                                              fontSize: 25.sp,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.black54,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 20.w,
-                      ),
-                      SizedBox(
-                        width: 90.h,
-                        child: MaterialButton(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                              90.r,
+                        // test
+                        SizedBox(
+                          width: 30.w,
+                        ),
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color.fromRGBO(139, 160, 251, 0.5),
+                              borderRadius: BorderRadius.circular(20.r),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20.r),
+                                    topRight: Radius.circular(20.r),
+                                  ),
+                                  child: Container(
+                                    height: 170.h,
+                                    decoration: const BoxDecoration(
+                                      image: DecorationImage(
+                                        image: AssetImage('images/test.jpg'),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 40.h,
+                                        vertical: 60.h,
+                                      ),
+                                      // color: Color.fromARGB(55, 0, 0, 0),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 30.w, vertical: 30.w),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Text(
+                                        "History",
+                                        style: GoogleFonts.nunito(
+                                          fontSize: 35.sp,
+                                          fontWeight: FontWeight.w900,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 10.h,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  "16 ",
+                                                  style: GoogleFonts.nunito(
+                                                    fontSize: 30.sp,
+                                                    fontWeight: FontWeight.w900,
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Text(
+                                                    "questions",
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: GoogleFonts.nunito(
+                                                      fontSize: 25.sp,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      color: Colors.black54,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "2 ",
+                                                style: GoogleFonts.nunito(
+                                                  fontSize: 30.sp,
+                                                  fontWeight: FontWeight.w900,
+                                                ),
+                                              ),
+                                              Text(
+                                                "hrs",
+                                                style: GoogleFonts.nunito(
+                                                  fontSize: 25.sp,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Colors.black54,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          color: primaryColor,
-                          height: 90.h,
-                          onPressed: () {},
-                          child: Center(
-                            child: Icon(
-                              FontAwesomeIcons.solidUser,
-                              size: 30.h,
-                              color: Colors.white,
-                            ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // subjects
+            SizedBox(
+              height: 50.h,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    "For You",
+                    style: GoogleFonts.nunito(
+                      fontSize: 30.sp,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "MSCE Subjects",
+                        style: GoogleFonts.nunito(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          widget.seeAll();
+                        },
+                        child: Text(
+                          "See all",
+                          style: GoogleFonts.nunito(
+                            fontSize: 25.sp,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.orange,
                           ),
                         ),
                       ),
@@ -115,180 +492,63 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
+            SizedBox(
+              height: 15.h,
+            ),
+            SizedBox(
+              height: 150.h,
+              child: ListView.separated(
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemCount: subjects.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return SizedBox(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        right: 30.w,
+                        left: index == 0 ? 30.w : 0.w,
+                        top: 10.h,
+                        bottom: 10.h,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // image
+                          Container(
+                            width: 80.h,
+                            height: 80.h,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image:
+                                    AssetImage('images/${subjects[index][1]}'),
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: BorderRadius.circular(20.r),
+                            ),
+                          ),
 
-            // streaks
-            SizedBox(
-              height: 45.h,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 30.w,
-              ),
-              child: Text(
-                "Do Not Miss Practice to Maintain Your Streak.",
-                style: GoogleFonts.nunito(
-                  fontSize: 50.sp,
-                  fontWeight: FontWeight.w900,
-                  height: 1.1,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 5.h,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 50.w,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    "expand",
-                    style: GoogleFonts.nunito(
-                      fontSize: 25.sp,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.orange,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 20.h,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30.w),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // sun
-                  Expanded(
-                    child: Center(
-                      child: DayStreak(
-                        day: "S",
-                        done: true,
+                          // name
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          Text(
+                            "${subjects[index][0]}",
+                            style: GoogleFonts.nunito(
+                              fontSize: 25.sp,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  // mon
-                  Expanded(
-                    child: Center(
-                      child: DayStreak(
-                        day: "M",
-                        done: true,
-                      ),
-                    ),
-                  ),
-                  // tue
-                  Expanded(
-                    child: Center(
-                      child: DayStreak(
-                        day: "Today",
-                        done: true,
-                      ),
-                    ),
-                  ),
-                  // wed
-                  Expanded(
-                    child: Center(
-                      child: DayStreak(
-                        day: "W",
-                        done: false,
-                      ),
-                    ),
-                  ),
-                  // thu
-                  Expanded(
-                    child: Center(
-                      child: DayStreak(
-                        day: "T",
-                        done: false,
-                      ),
-                    ),
-                  ),
-                  // fri
-                  Expanded(
-                    child: Center(
-                      child: DayStreak(
-                        day: "F",
-                        done: false,
-                      ),
-                    ),
-                  ),
-                  // sat
-                  Expanded(
-                    child: Center(
-                      child: DayStreak(
-                        day: "S",
-                        done: false,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // xps
-            SizedBox(
-              height: 50.h,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30.w),
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 40.h,
-                  vertical: 50.h,
-                ),
-                decoration: BoxDecoration(
-                  color: secondaryColor,
-                  borderRadius: BorderRadius.circular(40.r),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "2000 XP",
-                      style: GoogleFonts.nunito(
-                        fontSize: 50.sp,
-                        fontWeight: FontWeight.w900,
-                        color: Colors.black,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 8.h,
-                    ),
-                    Text(
-                      "Practice more to boost your XP",
-                      style: TextStyle(
-                        fontSize: 25.sp,
-                        fontWeight: FontWeight.bold,
-                        // color: textColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            // daily
-            SizedBox(
-              height: 50.h,
-            ),
-            Visibility(
-              visible: true,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.w),
-                child: const DailyPractice(),
-              ),
-            ),
-
-            // recent
-            Visibility(
-              visible: false,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.w),
-                child: const RecentProgress(),
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return SizedBox(
+                    width: 10.w,
+                  );
+                },
               ),
             ),
 
@@ -297,42 +557,6 @@ class _HomeState extends State<Home> {
             ),
           ],
         ),
-      ],
-    );
-  }
-}
-
-class DayStreak extends StatelessWidget {
-  final String day;
-  final bool done;
-  const DayStreak({super.key, required this.day, required this.done});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          width: 60.h,
-          height: 60.h,
-          decoration: BoxDecoration(
-            border: Border.all(
-                color: done ? secondaryColor : grayColor, width: 2.0),
-            borderRadius: BorderRadius.circular(50.r),
-          ),
-          child: Center(
-            child: Icon(
-              FontAwesomeIcons.check,
-              size: 30.h,
-              color: done ? secondaryColor : grayColor,
-            ),
-          ),
-        ),
-        const SizedBox(
-          height: 5,
-        ),
-        Text(day),
       ],
     );
   }
