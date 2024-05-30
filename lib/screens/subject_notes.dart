@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:edgiprep/screens/topic_notes.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -18,14 +16,6 @@ class SubjectNotes extends StatefulWidget {
 class _SubjectNotesState extends State<SubjectNotes> {
   final ScrollController _controller = ScrollController();
   bool _showDetails = true;
-
-  Color getRandomColor() {
-    final random = Random();
-    final red = random.nextInt(256);
-    final green = random.nextInt(256);
-    final blue = random.nextInt(256);
-    return Color.fromRGBO(red, green, blue, 1.0); // Set alpha to fully opaque
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -162,6 +152,7 @@ class _SubjectNotesState extends State<SubjectNotes> {
                       NotesTopic(
                         topic: "Research skills",
                         color: getRandomColor(),
+                        lessons: 6,
                       ),
                       SizedBox(
                         height: 20.h,
@@ -169,6 +160,7 @@ class _SubjectNotesState extends State<SubjectNotes> {
                       NotesTopic(
                         topic: "Plants Biology",
                         color: getRandomColor(),
+                        lessons: 9,
                       ),
                       // back to top
                       SizedBox(
@@ -228,7 +220,8 @@ class _SubjectNotesState extends State<SubjectNotes> {
 class NotesTopic extends StatelessWidget {
   final String topic;
   final Color color;
-  const NotesTopic({super.key, required this.topic, required this.color});
+  final int lessons;
+  const NotesTopic({super.key, required this.topic, required this.color, required this.lessons});
 
   @override
   Widget build(BuildContext context) {
@@ -269,7 +262,7 @@ class NotesTopic extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "3 lessons",
+                      "$lessons lessons",
                       style: GoogleFonts.nunito(
                         fontSize: 25.sp,
                         fontWeight: FontWeight.w600,

@@ -1,7 +1,9 @@
+import 'package:edgiprep/screens/subject.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
@@ -510,36 +512,44 @@ class _HomeState extends State<Home> {
                         top: 10.h,
                         bottom: 10.h,
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // image
-                          Container(
-                            width: 80.h,
-                            height: 80.h,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image:
-                                    AssetImage('images/${subjects[index][1]}'),
-                                fit: BoxFit.cover,
+                      child: GestureDetector(
+                        onTap: () {
+                          Get.to(() => const Subject());
+                        },
+                        child: Container(
+                          color: Colors.transparent,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              // image
+                              Container(
+                                width: 80.h,
+                                height: 80.h,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage(
+                                        'images/${subjects[index][1]}'),
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.circular(20.r),
+                                ),
                               ),
-                              borderRadius: BorderRadius.circular(20.r),
-                            ),
-                          ),
 
-                          // name
-                          SizedBox(
-                            height: 10.h,
+                              // name
+                              SizedBox(
+                                height: 10.h,
+                              ),
+                              Text(
+                                "${subjects[index][0]}",
+                                style: GoogleFonts.nunito(
+                                  fontSize: 25.sp,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            "${subjects[index][0]}",
-                            style: GoogleFonts.nunito(
-                              fontSize: 25.sp,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   );

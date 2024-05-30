@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 const appName = "EdgiPrep";
@@ -24,3 +26,11 @@ List subjects = [
   ["Chemistry", "science.jpg"],
   ["Agriculture", "agriculture.jpg"],
 ];
+
+Color getRandomColor() {
+    final random = Random();
+    final red = random.nextInt(256);
+    final green = random.nextInt(256);
+    final blue = random.nextInt(256);
+    return Color.fromRGBO(red, green, blue, 1.0); // Set alpha to fully opaque
+  }

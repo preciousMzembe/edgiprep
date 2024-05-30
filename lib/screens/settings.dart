@@ -128,13 +128,13 @@ class _SettingsState extends State<Settings> {
                         height: 40.h,
                       ),
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(20.r),
+                        borderRadius: BorderRadius.circular(40.r),
                         child: Container(
                           padding: EdgeInsets.symmetric(
                             horizontal: 40.w,
                             vertical: 40.w,
                           ),
-                          color: const Color.fromARGB(255, 241, 241, 241),
+                          color: const Color.fromARGB(255, 47, 59, 98),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -144,9 +144,9 @@ class _SettingsState extends State<Settings> {
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                       width: 1.0,
-                                      color: primaryColor,
+                                      color: Colors.white,
                                     ),
-                                    borderRadius: BorderRadius.circular(20.r),
+                                    borderRadius: BorderRadius.circular(40.r),
                                   ),
                                   padding: EdgeInsets.symmetric(
                                     vertical: 30.h,
@@ -175,13 +175,8 @@ class _SettingsState extends State<Settings> {
                                             style: TextStyle(
                                               fontSize: 20.sp,
                                               fontWeight: FontWeight.bold,
-                                              // color: const Color.fromARGB(
-                                              //   221,
-                                              //   255,
-                                              //   255,
-                                              //   255,
-                                              // ),
-                                              // height: .9,
+                                              color: const Color.fromARGB(
+                                                  255, 179, 179, 179),
                                             ),
                                           ),
                                           Text(
@@ -189,7 +184,7 @@ class _SettingsState extends State<Settings> {
                                             style: GoogleFonts.nunito(
                                               fontSize: 30.sp,
                                               fontWeight: FontWeight.w900,
-                                              // color: Colors.white,
+                                              color: Colors.white,
                                             ),
                                           ),
                                         ],
@@ -207,9 +202,9 @@ class _SettingsState extends State<Settings> {
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                       width: 1.0,
-                                      color: primaryColor,
+                                      color: Colors.white,
                                     ),
-                                    borderRadius: BorderRadius.circular(20.r),
+                                    borderRadius: BorderRadius.circular(40.r),
                                   ),
                                   padding: EdgeInsets.symmetric(
                                     vertical: 30.h,
@@ -238,9 +233,8 @@ class _SettingsState extends State<Settings> {
                                             style: TextStyle(
                                               fontSize: 20.sp,
                                               fontWeight: FontWeight.bold,
-                                              // color: const Color.fromARGB(
-                                              //     221, 255, 255, 255),
-                                              // height: .9,
+                                              color: const Color.fromARGB(
+                                                  255, 179, 179, 179),
                                             ),
                                           ),
                                           Row(
@@ -250,7 +244,7 @@ class _SettingsState extends State<Settings> {
                                                 style: GoogleFonts.nunito(
                                                   fontSize: 30.sp,
                                                   fontWeight: FontWeight.w900,
-                                                  // color: Colors.white,
+                                                  color: Colors.white,
                                                 ),
                                               ),
                                               Text(
@@ -258,8 +252,8 @@ class _SettingsState extends State<Settings> {
                                                 style: GoogleFonts.nunito(
                                                   fontSize: 30.sp,
                                                   fontWeight: FontWeight.w700,
-                                                  // color: const Color.fromARGB(
-                                                  //     204, 255, 255, 255),
+                                                  color: const Color.fromARGB(
+                                                      255, 179, 179, 179),
                                                 ),
                                               ),
                                             ],
@@ -280,13 +274,13 @@ class _SettingsState extends State<Settings> {
                         height: 30.h,
                       ),
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(20.r),
+                        borderRadius: BorderRadius.circular(40.r),
                         child: Container(
                           padding: EdgeInsets.symmetric(
                             horizontal: 40.w,
                             vertical: 40.w,
                           ),
-                          color: const Color.fromARGB(255, 241, 241, 241),
+                          color: const Color.fromARGB(115, 47, 59, 98),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
@@ -319,13 +313,13 @@ class _SettingsState extends State<Settings> {
                         height: 30.h,
                       ),
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(20.r),
+                        borderRadius: BorderRadius.circular(40.r),
                         child: Container(
                           padding: EdgeInsets.symmetric(
                             horizontal: 40.w,
                             vertical: 40.w,
                           ),
-                          color: const Color.fromARGB(255, 241, 241, 241),
+                          color: const Color.fromARGB(115, 47, 59, 98),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
@@ -392,8 +386,6 @@ class _SettingsState extends State<Settings> {
                             ),
                             const ShareOption(
                                 color: Colors.black, image: "x.png"),
-
-                            // TODO: add share to other
                           ],
                         ),
                       ),

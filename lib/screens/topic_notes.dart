@@ -18,10 +18,19 @@ class _TopicNotesState extends State<TopicNotes> {
   final ScrollController _controller = ScrollController();
   bool _scroll = true;
 
+// extend content
   int _extendIndex = -1;
   void changeExtendIndex(index) {
     setState(() {
       _extendIndex = index;
+    });
+  }
+
+  // edit content
+  bool _edit = false;
+  void changeEdit() {
+    setState(() {
+      _edit = !_edit;
     });
   }
 
@@ -108,6 +117,7 @@ class _TopicNotesState extends State<TopicNotes> {
                             extend: ({index = 0}) {
                               changeExtendIndex(index);
                             },
+                            edit: changeEdit,
                             showData: _extendIndex == 0,
                             lessonNumber: 1,
                             lessonName: 'Flowering vs Nonflowering Plants',
@@ -121,6 +131,7 @@ class _TopicNotesState extends State<TopicNotes> {
                             extend: ({index = 1}) {
                               changeExtendIndex(index);
                             },
+                            edit: changeEdit,
                             showData: _extendIndex == 1,
                             lessonNumber: 2,
                             lessonName: 'Parts of Flowering Plants',
@@ -134,6 +145,7 @@ class _TopicNotesState extends State<TopicNotes> {
                             extend: ({index = 2}) {
                               changeExtendIndex(index);
                             },
+                            edit: changeEdit,
                             showData: _extendIndex == 2,
                             lessonNumber: 3,
                             lessonName: 'Parts of Nonflowering Plants',
@@ -194,15 +206,20 @@ class _TopicNotesState extends State<TopicNotes> {
             ),
 
             // edit notes
-            BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 40.w,
-                  vertical: 60.h,
+            Visibility(
+              visible: _edit,
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 40.w,
+                    vertical: 60.h,
+                  ),
+                  color: const Color.fromARGB(54, 47, 59, 98),
+                  child: EditNotes(
+                    edit: changeEdit,
+                  ),
                 ),
-                color: const Color.fromARGB(54, 47, 59, 98),
-                child: const EditNotes(),
               ),
             ),
           ],
@@ -219,13 +236,15 @@ class LessonNotes extends StatelessWidget {
   final String notes;
   final Function extend;
   final bool showData;
+  final Function edit;
   const LessonNotes(
       {super.key,
       required this.lessonNumber,
       required this.lessonName,
       required this.notes,
       required this.extend,
-      required this.showData});
+      required this.showData,
+      required this.edit});
 
   @override
   Widget build(BuildContext context) {
@@ -324,7 +343,9 @@ class LessonNotes extends StatelessWidget {
                           children: [
                             // edit
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                edit();
+                              },
                               child: Container(
                                 width: 60.w,
                                 height: 60.w,
@@ -397,7 +418,8 @@ class LessonNotes extends StatelessWidget {
 
 // Edit Notes
 class EditNotes extends StatefulWidget {
-  const EditNotes({super.key});
+  final Function edit;
+  const EditNotes({super.key, required this.edit});
 
   @override
   State<EditNotes> createState() => _EditNotesState();
@@ -412,8 +434,98 @@ class _EditNotesState extends State<EditNotes> {
         borderRadius: BorderRadius.circular(40.r),
       ),
       padding: EdgeInsets.symmetric(
-        horizontal: 20.w,
+        horizontal: 30.w,
         vertical: 30.h,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // close
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  widget.edit();
+                },
+                child: SizedBox(
+                  height: 30.h,
+                  width: 30.h,
+                  child: Center(
+                    child: Icon(
+                      FontAwesomeIcons.xmark,
+                      size: 25.h,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          // topic name
+          SizedBox(
+            height: 20.h,
+          ),
+          Text(
+            "Parts of Flowering Plants",
+            textAlign: TextAlign.center,
+            style: GoogleFonts.nunito(
+              fontSize: 35.sp,
+              fontWeight: FontWeight.w900,
+              color: primaryColor,
+            ),
+          ),
+
+          // input
+          SizedBox(
+            height: 30.h,
+          ),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: grayColor), // Create a border
+                borderRadius:
+                    BorderRadius.circular(10.0), // Add rounded corners
+              ),
+              child: const TextField(
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.all(10.0),
+                ),
+              ),
+            ),
+          ),
+
+          // button
+          SizedBox(
+            height: 30.h,
+          ),
+          Row(
+            children: [
+              // save
+              ClipRRect(
+                borderRadius: BorderRadius.circular(90.r),
+                child: Container(
+                  width: 180.w,
+                  height: 70.h,
+                  color: primaryColor,
+                  child: const Center(
+                    child: Text(
+                      "Save",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

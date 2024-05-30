@@ -143,7 +143,7 @@ class _LearnState extends State<Learn> {
   }
 }
 
-class LearnSubject extends StatefulWidget {
+class LearnSubject extends StatelessWidget {
   final String subject;
   final double percent;
   final String image;
@@ -154,22 +154,17 @@ class LearnSubject extends StatefulWidget {
       required this.image});
 
   @override
-  State<LearnSubject> createState() => _LearnSubjectState();
-}
-
-class _LearnSubjectState extends State<LearnSubject> {
-  @override
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(20.r),
       child: GestureDetector(
         onTap: () {
-          // Get.to(() => const Subject());
+          Get.to(() => const Subject());
         },
         child: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('images/${widget.image}'),
+              image: AssetImage('images/$image'),
               fit: BoxFit.cover,
             ),
           ),
@@ -190,7 +185,7 @@ class _LearnSubjectState extends State<LearnSubject> {
                       height: 70.h,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage('images/${widget.image}'),
+                          image: AssetImage('images/$image'),
                           fit: BoxFit.cover,
                         ),
                         borderRadius: BorderRadius.circular(20.r),
@@ -217,7 +212,7 @@ class _LearnSubjectState extends State<LearnSubject> {
                           ),
                           // name
                           Text(
-                            widget.subject,
+                            subject,
                             style: GoogleFonts.nunito(
                               fontSize: 40.sp,
                               fontWeight: FontWeight.w900,
@@ -246,7 +241,7 @@ class _LearnSubjectState extends State<LearnSubject> {
                                 height: 70.h,
                                 child: CircularPercentIndicator(
                                   radius: 35.h,
-                                  percent: widget.percent,
+                                  percent: percent,
                                   progressColor: secondaryColor,
                                   lineWidth: 3.0,
                                   circularStrokeCap: CircularStrokeCap.round,
@@ -254,7 +249,7 @@ class _LearnSubjectState extends State<LearnSubject> {
                                   startAngle: 270,
                                   animation: true,
                                   center: Text(
-                                    "${(widget.percent * 100).toStringAsFixed(0)}%",
+                                    "${(percent * 100).toStringAsFixed(0)}%",
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 20.sp,
