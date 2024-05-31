@@ -1,3 +1,4 @@
+import 'package:edgiprep/questionTabs/done.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -32,17 +33,10 @@ class _RetryPromptState extends State<RetryPrompt> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     // image
-                    Container(
-                      padding: EdgeInsets.all(50.h),
-                      decoration: BoxDecoration(
-                        color: progressColor,
-                        borderRadius: BorderRadius.circular(500.r),
-                      ),
-                      child: Image.asset(
-                        "icons/sad.png",
-                        width: 100.w,
-                        color: primaryColor,
-                      ),
+                    Image.asset(
+                      "images/learn2.png",
+                      width: 400.w,
+                      // color: primaryColor,
                     ),
                     SizedBox(
                       height: 30.h,
@@ -51,8 +45,8 @@ class _RetryPromptState extends State<RetryPrompt> {
                       "Lets Make Corrections",
                       textAlign: TextAlign.center,
                       style: GoogleFonts.nunito(
-                        fontSize: 50.sp,
-                        fontWeight: FontWeight.w900,
+                        fontSize: 35.sp,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
                   ],
@@ -67,16 +61,14 @@ class _RetryPromptState extends State<RetryPrompt> {
                   borderRadius: BorderRadius.circular(100.r),
                 ),
                 onPressed: () {
-                  Get.back();
-                  Get.back();
-                  Get.back();
+                  Get.to(() => const Done());
                 },
                 child: Text(
                   "Continue",
                   style: GoogleFonts.nunito(
                     color: primaryColor,
                     fontSize: 40.sp,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),

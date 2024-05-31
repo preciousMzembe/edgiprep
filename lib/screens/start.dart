@@ -48,19 +48,12 @@ class Start extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     // image
-                    Container(
-                      padding: EdgeInsets.all(50.h),
-                      decoration: BoxDecoration(
-                        color: progressColor,
-                        borderRadius: BorderRadius.circular(500.r),
-                      ),
-                      child: Image.asset(
-                        testMode == TestMode.test
-                            ? "icons/start_test.png"
-                            : "icons/start_quiz.png",
-                        width: 100.w,
-                        color: primaryColor,
-                      ),
+                    Image.asset(
+                      testMode == TestMode.test
+                          ? "images/learn2.png"
+                          : "images/learn2.png",
+                      width: 400.w,
+                      // color: primaryColor,
                     ),
                     SizedBox(
                       height: 30.h,
@@ -71,8 +64,8 @@ class Start extends StatelessWidget {
                         "Let's See How Much \n You Remember",
                         textAlign: TextAlign.center,
                         style: GoogleFonts.nunito(
-                          fontSize: 50.sp,
-                          fontWeight: FontWeight.w900,
+                          fontSize: 35.sp,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
@@ -82,8 +75,8 @@ class Start extends StatelessWidget {
                         "Ready to Test \n Yourself?",
                         textAlign: TextAlign.center,
                         style: GoogleFonts.nunito(
-                          fontSize: 50.sp,
-                          fontWeight: FontWeight.w900,
+                          fontSize: 35.sp,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
@@ -94,7 +87,7 @@ class Start extends StatelessWidget {
                         text: TextSpan(
                           style: GoogleFonts.nunito(
                             color: Colors.black,
-                            fontSize: 50.sp,
+                            fontSize: 35.sp,
                             fontWeight: FontWeight.w900,
                           ),
                           children: [
@@ -102,6 +95,9 @@ class Start extends StatelessWidget {
                               text: lessonDone
                                   ? "Ready to Review On \n"
                                   : "Ready to Practice On \n",
+                              style: GoogleFonts.nunito(
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                             TextSpan(
                               text: "Nonfloweing Plants",
@@ -119,25 +115,30 @@ class Start extends StatelessWidget {
               ),
 
               // continue
-              MaterialButton(
-                color: Colors.white,
-                height: 100.h,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100.r),
-                ),
-                onPressed: () {
-                  if (testMode == TestMode.test) {
-                    Get.to(() => const TestTab());
-                  } else {
-                    Get.to(() => const QuizLessonTab());
-                  }
+              GestureDetector(
+                onTap: () {
+                  Get.to(() => const QuizLessonTab());
+                  // if (testMode == TestMode.test) {
+                  //   Get.to(() => const TestTab());
+                  // } else {
+                  // Get.to(() => const QuizLessonTab());
+                  // }
                 },
-                child: Text(
-                  "Continue",
-                  style: GoogleFonts.nunito(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100.r),
+                  child: Container(
                     color: primaryColor,
-                    fontSize: 40.sp,
-                    fontWeight: FontWeight.w800,
+                    height: 100.h,
+                    child: Center(
+                      child: Text(
+                        "Continue",
+                        style: GoogleFonts.nunito(
+                          color: Colors.white,
+                          fontSize: 40.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),

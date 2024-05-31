@@ -55,14 +55,6 @@ class Answer extends StatelessWidget {
                   width: 1, color: selected ? secondaryColor : grayColor),
               borderRadius: BorderRadius.circular(35.r),
             ),
-            // child: Visibility(
-            //   visible: selected,
-            //   child: Icon(
-            //     FontAwesomeIcons.check,
-            //     size: 25.h,
-            //     color: Colors.white,
-            //   ),
-            // ),
           ),
         ],
       ),

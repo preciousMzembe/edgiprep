@@ -1,5 +1,7 @@
+import 'package:edgiprep/screens/start.dart';
 import 'package:edgiprep/screens/subject.dart';
 import 'package:edgiprep/utils/constants.dart';
+import 'package:edgiprep/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -259,76 +261,86 @@ class _HomeState extends State<Home> {
                       children: [
                         // quiz
                         Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: const Color.fromRGBO(183, 207, 231, 0.5),
-                              borderRadius: BorderRadius.circular(20.r),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20.r),
-                                    topRight: Radius.circular(20.r),
-                                  ),
-                                  child: Container(
-                                    height: 170.h,
-                                    decoration: const BoxDecoration(
-                                      image: DecorationImage(
-                                        image: AssetImage('images/quiz.jpg'),
-                                        fit: BoxFit.cover,
-                                      ),
+                          child: GestureDetector(
+                            onTap: () {
+                              Get.to(
+                                () => const Start(
+                                  testMode: TestMode.quiz,
+                                  lessonDone: false,
+                                ),
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: const Color.fromRGBO(183, 207, 231, 0.5),
+                                borderRadius: BorderRadius.circular(20.r),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20.r),
+                                      topRight: Radius.circular(20.r),
                                     ),
                                     child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 40.h,
-                                        vertical: 60.h,
-                                      ),
-                                      // color: Color.fromARGB(55, 0, 0, 0),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 30.w, vertical: 30.w),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      Text(
-                                        "Biology",
-                                        style: GoogleFonts.nunito(
-                                          fontSize: 35.sp,
-                                          fontWeight: FontWeight.w900,
+                                      height: 170.h,
+                                      decoration: const BoxDecoration(
+                                        image: DecorationImage(
+                                          image: AssetImage('images/quiz.jpg'),
+                                          fit: BoxFit.cover,
                                         ),
                                       ),
-                                      SizedBox(
-                                        height: 10.h,
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 40.h,
+                                          vertical: 60.h,
+                                        ),
+                                        // color: Color.fromARGB(55, 0, 0, 0),
                                       ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "16 ",
-                                            style: GoogleFonts.nunito(
-                                              fontSize: 30.sp,
-                                              fontWeight: FontWeight.w900,
-                                            ),
-                                          ),
-                                          Text(
-                                            "questions",
-                                            style: GoogleFonts.nunito(
-                                              fontSize: 25.sp,
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.black54,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 30.w, vertical: 30.w),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        Text(
+                                          "Biology",
+                                          style: GoogleFonts.nunito(
+                                            fontSize: 35.sp,
+                                            fontWeight: FontWeight.w900,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 10.h,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "16 ",
+                                              style: GoogleFonts.nunito(
+                                                fontSize: 30.sp,
+                                                fontWeight: FontWeight.w900,
+                                              ),
+                                            ),
+                                            Text(
+                                              "questions",
+                                              style: GoogleFonts.nunito(
+                                                fontSize: 25.sp,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.black54,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -337,107 +349,118 @@ class _HomeState extends State<Home> {
                           width: 30.w,
                         ),
                         Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: const Color.fromRGBO(139, 160, 251, 0.5),
-                              borderRadius: BorderRadius.circular(20.r),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20.r),
-                                    topRight: Radius.circular(20.r),
-                                  ),
-                                  child: Container(
-                                    height: 170.h,
-                                    decoration: const BoxDecoration(
-                                      image: DecorationImage(
-                                        image: AssetImage('images/test.jpg'),
-                                        fit: BoxFit.cover,
-                                      ),
+                          child: GestureDetector(
+                            onTap: () {
+                              Get.to(
+                                () => const Start(
+                                  testMode: TestMode.test,
+                                  lessonDone: false,
+                                ),
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: const Color.fromRGBO(139, 160, 251, 0.5),
+                                borderRadius: BorderRadius.circular(20.r),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20.r),
+                                      topRight: Radius.circular(20.r),
                                     ),
                                     child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 40.h,
-                                        vertical: 60.h,
-                                      ),
-                                      // color: Color.fromARGB(55, 0, 0, 0),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 30.w, vertical: 30.w),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      Text(
-                                        "History",
-                                        style: GoogleFonts.nunito(
-                                          fontSize: 35.sp,
-                                          fontWeight: FontWeight.w900,
+                                      height: 170.h,
+                                      decoration: const BoxDecoration(
+                                        image: DecorationImage(
+                                          image: AssetImage('images/test.jpg'),
+                                          fit: BoxFit.cover,
                                         ),
                                       ),
-                                      SizedBox(
-                                        height: 10.h,
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 40.h,
+                                          vertical: 60.h,
+                                        ),
+                                        // color: Color.fromARGB(55, 0, 0, 0),
                                       ),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Row(
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 30.w, vertical: 30.w),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        Text(
+                                          "History",
+                                          style: GoogleFonts.nunito(
+                                            fontSize: 35.sp,
+                                            fontWeight: FontWeight.w900,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 10.h,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    "16 ",
+                                                    style: GoogleFonts.nunito(
+                                                      fontSize: 30.sp,
+                                                      fontWeight:
+                                                          FontWeight.w900,
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    child: Text(
+                                                      "questions",
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: GoogleFonts.nunito(
+                                                        fontSize: 25.sp,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color: Colors.black54,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Row(
                                               children: [
                                                 Text(
-                                                  "16 ",
+                                                  "2 ",
                                                   style: GoogleFonts.nunito(
                                                     fontSize: 30.sp,
                                                     fontWeight: FontWeight.w900,
                                                   ),
                                                 ),
-                                                Expanded(
-                                                  child: Text(
-                                                    "questions",
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: GoogleFonts.nunito(
-                                                      fontSize: 25.sp,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      color: Colors.black54,
-                                                    ),
+                                                Text(
+                                                  "hrs",
+                                                  style: GoogleFonts.nunito(
+                                                    fontSize: 25.sp,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Colors.black54,
                                                   ),
                                                 ),
                                               ],
                                             ),
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "2 ",
-                                                style: GoogleFonts.nunito(
-                                                  fontSize: 30.sp,
-                                                  fontWeight: FontWeight.w900,
-                                                ),
-                                              ),
-                                              Text(
-                                                "hrs",
-                                                style: GoogleFonts.nunito(
-                                                  fontSize: 25.sp,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: Colors.black54,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),

@@ -31,67 +31,52 @@ class _TopicState extends State<Topic> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 30.w),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // back
-                  SizedBox(
-                    width: 75.h,
-                    child: MaterialButton(
-                      color: primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(75.r),
-                      ),
-                      height: 75.h,
-                      onPressed: () {
-                        Get.back();
-                      },
-                      child: Center(
-                        child: Icon(
-                          FontAwesomeIcons.arrowLeft,
-                          color: Colors.white,
-                          size: 25.h,
-                        ),
+                  GestureDetector(
+                    onTap: () {
+                      Get.back();
+                    },
+                    child: Container(
+                      width: 50.w,
+                      height: 50.w,
+                      color: Colors.transparent,
+                      child: Icon(
+                        FontAwesomeIcons.arrowLeft,
+                        color: primaryColor,
+                        size: 40.w,
                       ),
                     ),
                   ),
                   // subject
                   SizedBox(
-                    width: 40.w,
+                    width: 20.w,
                   ),
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          "Biology",
-                          style: GoogleFonts.nunito(
-                            fontSize: 50.sp,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                        Text(
-                          "Plants Biology",
-                          style: TextStyle(
-                            fontSize: 35.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      "Plants Biology",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.nunito(
+                        fontSize: 50.sp,
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
             SizedBox(
-              height: 25.h,
+              height: 20.h,
             ),
             Divider(
-              height: 1,
-              color: grayColor,
+              height: 1.h,
+              color: const Color.fromARGB(48, 158, 158, 158),
             ),
 
-            // subjects
+            // lessons
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(
@@ -225,163 +210,126 @@ class Lesson extends StatelessWidget {
     return IntrinsicHeight(
       child: Row(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                width: 30.h,
-                height: 30.h,
-                decoration: BoxDecoration(
-                  color: currentLesson
-                      ? primaryColor
-                      : const Color.fromRGBO(47, 59, 98, 0.856),
-                  // color: Color.fromRGBO(47, 59, 98, 1),
-                  borderRadius: BorderRadius.circular(75.r),
-                ),
-              ),
-              // line
-              Expanded(
-                child: Visibility(
-                  visible: !finalLesson,
+          Padding(
+            padding: EdgeInsets.only(
+              left: !currentLesson ? 10.h : 0,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Visibility(
+                  visible: !currentLesson,
                   child: Container(
-                    width: 6.w,
-                    color: secondaryColor,
+                    width: 30.h,
+                    height: 30.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(75.r),
+                      border: Border.all(width: 2.0, color: primaryColor),
+                    ),
                   ),
                 ),
-              ),
-            ],
+                Visibility(
+                  visible: currentLesson,
+                  child: Container(
+                    width: 50.h,
+                    height: 50.h,
+                    padding: EdgeInsets.all(8.w),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(75.r),
+                      border: Border.all(width: 2.0, color: primaryColor),
+                    ),
+                    child: ClipOval(
+                      child: Container(
+                        color: primaryColor,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                // line
+                Expanded(
+                  child: Visibility(
+                    visible: true,
+                    // visible: !finalLesson,
+                    child: Container(
+                      width: 2.0,
+                      color: primaryColor,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+              ],
+            ),
           ),
           SizedBox(
-            width: 20.w,
+            width: 30.w,
           ),
           Expanded(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // name
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          if (lessonDone) {
-                            Get.to(() => const Start(
-                                  testMode: TestMode.lesson,
-                                  lessonDone: true,
-                                ));
-                          }
-                        },
-                        child: Container(
-                          color: Colors.transparent,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Text(
-                                "Lesson $lessonNumber",
-                                style: GoogleFonts.nunito(
-                                  fontSize: 25.sp,
-                                  color: textColor,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              // lesson name
-                              Text(
-                                lessonName,
-                                style: GoogleFonts.nunito(
-                                  color: currentLesson
-                                      ? Colors.black
-                                      : Colors.black54,
-                                  fontSize: 40.sp,
-                                  fontWeight: FontWeight.w900,
-                                ),
-                              ),
-                            ],
+                GestureDetector(
+                  onTap: () {
+                    if (lessonDone) {
+                      Get.to(() => const Start(
+                            testMode: TestMode.lesson,
+                            lessonDone: true,
+                          ));
+                    }
+
+                    if (currentLesson) {
+                      Get.to(() => const Start(
+                            testMode: TestMode.lesson,
+                            lessonDone: false,
+                          ));
+                    }
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(30.w),
+                    decoration: BoxDecoration(
+                      color: currentLesson
+                          ? primaryColor
+                          : lessonDone
+                              ? const Color.fromARGB(255, 224, 229, 255)
+                              : const Color.fromRGBO(248, 249, 253, 1),
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          "Lesson $lessonNumber",
+                          style: GoogleFonts.nunito(
+                            fontSize: 25.sp,
+                            color: currentLesson ? Colors.white : textColor,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                      ),
+                        // lesson name
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        Text(
+                          lessonName,
+                          style: GoogleFonts.nunito(
+                            color: currentLesson ? Colors.white : Colors.black,
+                            fontSize: 40.sp,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ],
                     ),
-                    // take lesson
-                    // Visibility(
-                    //   visible: lessonDone,
-                    //   child: Row(
-                    //     children: [
-                    //       SizedBox(
-                    //         width: 20.w,
-                    //       ),
-                    //       Icon(
-                    //         FontAwesomeIcons.angleRight,
-                    //         size: 30.h,
-                    //         color: Colors.orange,
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                  ],
-                ),
-
-                // start box
-                Visibility(
-                  visible: currentLesson,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      SizedBox(
-                        height: 20.h,
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 40.w,
-                          vertical: 40.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(40.r),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            // descriptioin
-                            Text(
-                              lessonDescription,
-                              style: GoogleFonts.nunito(
-                                fontSize: 25.sp,
-                                color: Colors.black,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 25.h,
-                            ),
-                            MaterialButton(
-                              color: primaryColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(700.r),
-                              ),
-                              height: 70.h,
-                              onPressed: () {
-                                Get.to(() =>
-                                    const Start(testMode: TestMode.lesson));
-                              },
-                              child: Center(
-                                child: Text(
-                                  "Start",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 25.sp,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
                   ),
                 ),
-
                 // last space
                 SizedBox(
-                  height: currentLesson ? 80.h : 60.h,
+                  // height: 50.h,
+                  height: finalLesson ? 30.h : 50.h,
                 ),
               ],
             ),

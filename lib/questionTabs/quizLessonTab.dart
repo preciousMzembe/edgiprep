@@ -69,10 +69,10 @@ class _QuizLessonTabState extends State<QuizLessonTab> {
                       ),
                       Expanded(
                         child: Text(
-                          "Biology",
-                          textAlign: TextAlign.center,
+                          "Nonflowering Plants",
+                          // textAlign: TextAlign.center,
                           style: GoogleFonts.nunito(
-                            fontSize: 50.sp,
+                            fontSize: 35.sp,
                             fontWeight: FontWeight.w900,
                           ),
                         ),
@@ -148,7 +148,7 @@ class _QuizLessonTabState extends State<QuizLessonTab> {
                       "During photosynthesis, plants capture energy from sunlight and convert it into usable energy. Which of the following molecules is the PRIMARY product of the light-dependent reactions in photosynthesis?",
                       style: GoogleFonts.nunito(
                         fontSize: 35.sp,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
 
@@ -263,7 +263,7 @@ class _QuizLessonTabState extends State<QuizLessonTab> {
                         style: GoogleFonts.nunito(
                           color: primaryColor,
                           fontSize: 40.sp,
-                          fontWeight: FontWeight.w800,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
