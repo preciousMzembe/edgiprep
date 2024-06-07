@@ -1,4 +1,4 @@
-import 'package:edgiprep/screens/start.dart';
+import 'package:edgiprep/start/start.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/enums.dart';
 import 'package:flutter/material.dart';

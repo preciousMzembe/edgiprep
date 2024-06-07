@@ -1,5 +1,5 @@
-import 'package:edgiprep/questionTabs/quizLessonTab.dart';
-import 'package:edgiprep/questionTabs/testTab.dart';
+import 'package:edgiprep/controllers/current_quiz_controller.dart';
+import 'package:edgiprep/questionTabs/quizTab.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/enums.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +15,19 @@ class Start extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // set quiz data
+    CurrentQuizController currentQuizController =
+        Get.find<CurrentQuizController>();
+    // refresh first
+    currentQuizController.refreshPage();
+    // testMode
+    currentQuizController.setTestMode(testMode);
+    // set title
+    currentQuizController
+        .setTitle("Flowering & Noneflowering Plants Flowering");
+    // questions
+    currentQuizController.setSampleQuetions();
+
     return Scaffold(
       backgroundColor: backgroundColor,
       body: SafeArea(
@@ -117,12 +130,7 @@ class Start extends StatelessWidget {
               // continue
               GestureDetector(
                 onTap: () {
-                  Get.to(() => const QuizLessonTab());
-                  // if (testMode == TestMode.test) {
-                  //   Get.to(() => const TestTab());
-                  // } else {
-                  // Get.to(() => const QuizLessonTab());
-                  // }
+                  Get.to(() => const QuizTab());
                 },
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(100.r),

@@ -33,113 +33,130 @@ class _LearnState extends State<Learn> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SizedBox(
-          height: 30.h,
-        ),
-        // search
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30.w),
-          child: TextField(
-            cursorColor: primaryColor,
-            decoration: InputDecoration(
-              fillColor: grayColor,
-              filled: true,
-              prefixIcon: Padding(
-                padding: EdgeInsets.only(
-                  left: 50.w,
-                  right: 30.w,
+    return LayoutBuilder(builder: (context, constants) {
+      final isTall = constants.maxHeight > constants.maxWidth;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(
+            height: isTall ? 30.h : 50.h,
+          ),
+          // search
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: isTall ? 30.w : 50.h,
+            ),
+            child: TextField(
+              cursorColor: primaryColor,
+              decoration: InputDecoration(
+                fillColor: grayColor,
+                filled: true,
+                prefixIcon: Padding(
+                  padding: EdgeInsets.only(
+                    left: isTall ? 50.w : 25.w,
+                    right: isTall ? 30.w : 20.w,
+                  ),
+                  child: Icon(
+                    FontAwesomeIcons.magnifyingGlass,
+                    color: Color.fromARGB(255, 139, 139, 139),
+                    size: isTall ? 30.h : 50.h,
+                  ),
                 ),
-                child: const Icon(
-                  FontAwesomeIcons.magnifyingGlass,
-                  color: Color.fromARGB(255, 139, 139, 139),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                  borderSide: BorderSide(
+                    color: grayColor,
+                    // color: Color.fromARGB(255, 139, 139, 139),
+                    width: 2.0,
+                  ),
                 ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                  borderSide: BorderSide(
+                    color: grayColor,
+                    // color: Color.fromARGB(255, 139, 139, 139),
+                    width: 2.0,
+                  ),
+                ),
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: isTall ? 25.h : 35.h,
+                ),
+                hintStyle: TextStyle(
+                  fontSize: isTall ? 30.sp : 15.sp,
+                ),
+                hintText: 'Search',
               ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                borderSide: BorderSide(
-                  color: grayColor,
-                  // color: Color.fromARGB(255, 139, 139, 139),
-                  width: 2.0,
-                ),
+              style: TextStyle(
+                fontSize: isTall ? 30.sp : 15.sp,
               ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                borderSide: BorderSide(
-                  color: grayColor,
-                  // color: Color.fromARGB(255, 139, 139, 139),
-                  width: 2.0,
-                ),
-              ),
-              hintText: 'Search',
             ),
           ),
-        ),
-        SizedBox(
-          height: 10.h,
-        ),
+          SizedBox(
+            height: 10.h,
+          ),
 
-        // subjects
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30.w),
-            child: ListView.separated(
-              itemCount: newSubjectList.length,
-              physics: const BouncingScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Visibility(
-                      visible: index == 0,
-                      child: SizedBox(
-                        height: 30.h,
+          // subjects
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: isTall ? 30.w : 50.h,
+              ),
+              child: ListView.separated(
+                itemCount: newSubjectList.length,
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (BuildContext context, int index) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Visibility(
+                        visible: index == 0,
+                        child: SizedBox(
+                          height: isTall ? 30.h : 15.w,
+                        ),
                       ),
-                    ),
-                    IntrinsicHeight(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: LearnSubject(
-                              subject: "${newSubjectList[index][0][0]}",
-                              image: "${newSubjectList[index][0][1]}",
-                              percent: .4,
+                      IntrinsicHeight(
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: LearnSubject(
+                                subject: "${newSubjectList[index][0][0]}",
+                                image: "${newSubjectList[index][0][1]}",
+                                percent: .4,
+                                isTall: isTall,
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            width: 20.w,
-                          ),
-                          Expanded(
-                            child: newSubjectList.length != index + 1
-                                ? LearnSubject(
-                                    subject: "${newSubjectList[index][1][0]}",
-                                    image: "${newSubjectList[index][1][1]}",
-                                    percent: .6,
-                                  )
-                                : const Text(""),
-                          ),
-                        ],
+                            SizedBox(width: isTall ? 20.h : 10.w),
+                            Expanded(
+                              child: newSubjectList.length != index + 1
+                                  ? LearnSubject(
+                                      subject: "${newSubjectList[index][1][0]}",
+                                      image: "${newSubjectList[index][1][1]}",
+                                      percent: .6,
+                                      isTall: isTall,
+                                    )
+                                  : const Text(""),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Visibility(
-                      visible: index == newSubjectList.length - 1,
-                      child: SizedBox(
-                        height: 80.h,
+                      Visibility(
+                        visible: index == newSubjectList.length - 1,
+                        child: SizedBox(
+                          height: 80.h,
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return SizedBox(height: 20.h);
-              },
+                    ],
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return SizedBox(height: isTall ? 20.h : 10.w);
+                },
+              ),
             ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 }
 
@@ -147,16 +164,18 @@ class LearnSubject extends StatelessWidget {
   final String subject;
   final double percent;
   final String image;
+  final bool isTall;
   const LearnSubject(
       {super.key,
       required this.subject,
       required this.percent,
-      required this.image});
+      required this.image,
+      required this.isTall});
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(20.r),
+      borderRadius: BorderRadius.circular(40.r),
       child: GestureDetector(
         onTap: () {
           Get.to(() => const Subject());
@@ -170,8 +189,8 @@ class LearnSubject extends StatelessWidget {
           ),
           child: Container(
             padding: EdgeInsets.symmetric(
-              horizontal: 30.w,
-              vertical: 30.w,
+              horizontal: isTall ? 30.w : 20.w,
+              vertical: isTall ? 30.w : 20.w,
             ),
             color: const Color.fromARGB(210, 0, 0, 0),
             child: Column(
@@ -181,8 +200,8 @@ class LearnSubject extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      width: 70.h,
-                      height: 70.h,
+                      width: isTall ? 70.h : 45.w,
+                      height: isTall ? 70.h : 45.w,
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage('images/$image'),
@@ -214,7 +233,7 @@ class LearnSubject extends StatelessWidget {
                           Text(
                             subject,
                             style: GoogleFonts.nunito(
-                              fontSize: 40.sp,
+                              fontSize: isTall ? 40.sp : 20.sp,
                               fontWeight: FontWeight.w900,
                               color: Colors.white,
                             ),
@@ -229,7 +248,7 @@ class LearnSubject extends StatelessWidget {
                               Text(
                                 "24 Topics",
                                 style: GoogleFonts.nunito(
-                                  fontSize: 20.sp,
+                                  fontSize: isTall ? 20.sp : 10.sp,
                                   fontWeight: FontWeight.w900,
                                   color:
                                       const Color.fromARGB(255, 197, 197, 197),
@@ -237,10 +256,10 @@ class LearnSubject extends StatelessWidget {
                               ),
                               // progress
                               SizedBox(
-                                width: 70.h,
-                                height: 70.h,
+                                width: isTall ? 70.h : 45.w,
+                                height: isTall ? 70.h : 45.w,
                                 child: CircularPercentIndicator(
-                                  radius: 35.h,
+                                  radius: isTall ? 35.h : 22.5.w,
                                   percent: percent,
                                   progressColor: secondaryColor,
                                   lineWidth: 3.0,
@@ -252,7 +271,7 @@ class LearnSubject extends StatelessWidget {
                                     "${(percent * 100).toStringAsFixed(0)}%",
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 20.sp,
+                                      fontSize: isTall ? 20.sp : 10.sp,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),

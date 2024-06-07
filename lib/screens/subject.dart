@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:animated_visibility/animated_visibility.dart';
 import 'package:edgiprep/screens/topic.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -21,105 +20,79 @@ class _SubjectState extends State<Subject> {
   final ScrollController _controller = ScrollController();
   bool _showDetails = true;
 
-  bool _chooseExam = false;
-
-  void changeChooseExam() {
-    setState(() {
-      _chooseExam = !_chooseExam;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
       body: SafeArea(
-        child: Stack(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // page info
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(
-                  height: 30.h,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30.w),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // back
-                      GestureDetector(
-                        onTap: () {
-                          Get.back();
-                        },
-                        child: Container(
-                          width: 50.w,
-                          height: 50.w,
-                          color: Colors.transparent,
-                          child: Icon(
-                            FontAwesomeIcons.arrowLeft,
-                            color: primaryColor,
-                            size: 40.w,
-                          ),
-                        ),
-                      ),
-                      // subject
-                      SizedBox(
-                        width: 20.w,
-                      ),
-                      Expanded(
-                        child: Text(
-                          "Biology",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.nunito(
-                            fontSize: 50.sp,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                      ),
-                      // image
-                      SizedBox(
-                        width: 20.w,
-                      ),
-                      GestureDetector(
-                        onTap: changeChooseExam,
-                        child: Container(
-                          color: Colors.transparent,
-                          width: 50.h,
-                          height: 50.h,
-                          child: Center(
+            // SizedBox(
+            //   height: 30.h,
+            // ),
+            Container(
+              color: primaryColor,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: 30.h,
+                      left: 30.w,
+                      right: 30.w,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // back
+                        GestureDetector(
+                          onTap: () {
+                            Get.back();
+                          },
+                          child: Container(
+                            width: 50.w,
+                            height: 50.w,
+                            color: Colors.transparent,
                             child: Icon(
-                              FontAwesomeIcons.ellipsisVertical,
-                              size: 35.h,
+                              FontAwesomeIcons.arrowLeft,
+                              color: Colors.white,
+                              size: 40.w,
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                // info
-                SizedBox(
-                  height: 20.h,
-                ),
-                AnimatedCrossFade(
-                  duration: const Duration(milliseconds: 500),
-                  crossFadeState: _showDetails
-                      ? CrossFadeState.showFirst
-                      : CrossFadeState.showSecond,
-                  firstChild: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30.w),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20.r),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 30.w,
-                          vertical: 30.w,
+                        // subject
+                        SizedBox(
+                          width: 20.w,
                         ),
-                        color: progressColor,
+                        Expanded(
+                          child: Text(
+                            "Biology",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.nunito(
+                              fontSize: 40.sp,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // info
+                  // SizedBox(
+                  //   height: 20.h,
+                  // ),
+                  AnimatedCrossFade(
+                    duration: const Duration(milliseconds: 500),
+                    crossFadeState: _showDetails
+                        ? CrossFadeState.showFirst
+                        : CrossFadeState.showSecond,
+                    firstChild: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 40.h),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
@@ -150,7 +123,7 @@ class _SubjectState extends State<Subject> {
                                     style: GoogleFonts.nunito(
                                       fontSize: 25.sp,
                                       fontWeight: FontWeight.w500,
-                                      color: primaryColor,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ),
@@ -188,7 +161,7 @@ class _SubjectState extends State<Subject> {
                                       style: GoogleFonts.nunito(
                                         fontSize: 25.sp,
                                         fontWeight: FontWeight.w700,
-                                        color: primaryColor,
+                                        color: secondaryColor,
                                       ),
                                     ),
                                   ],
@@ -198,7 +171,7 @@ class _SubjectState extends State<Subject> {
 
                             // progress
                             SizedBox(
-                              height: 20.h,
+                              height: 30.h,
                             ),
                             LinearPercentIndicator(
                               padding: const EdgeInsets.all(0),
@@ -216,129 +189,104 @@ class _SubjectState extends State<Subject> {
                         ),
                       ),
                     ),
-                  ),
-                  secondChild: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30.w),
-                    child: LinearPercentIndicator(
-                      padding: const EdgeInsets.all(0),
-                      animation: true,
-                      lineHeight: 15.h,
-                      animationDuration: 2000,
-                      // percent
-                      percent: .7,
-                      barRadius: Radius.circular(30.r),
-                      progressColor: primaryColor,
-                      backgroundColor: progressColor,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 30.h,
-                ),
-                Divider(
-                  height: 1.h,
-                  color: const Color.fromARGB(48, 158, 158, 158),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30.h),
-                    child: NotificationListener<ScrollUpdateNotification>(
-                      onNotification: (notification) {
-                        final pixels = notification.metrics.pixels;
-                        setState(() {
-                          _showDetails =
-                              pixels <= 0; // Hide details when scrolled down
-                        });
-                        return true;
-                      },
-                      child: ListView(
-                        controller: _controller,
-                        children: [
-                          SizedBox(
-                            height: 20.h,
-                          ),
-                          SubjectTopic(
-                            topic: "Research skills",
-                            color: getRandomColor(),
-                            percent: .7,
-                          ),
-                          SizedBox(
-                            height: 20.h,
-                          ),
-                          SubjectTopic(
-                            topic: "Plant Biology",
-                            color: getRandomColor(),
-                            percent: .3,
-                          ),
-
-                          // back to top
-                          SizedBox(
-                            height: 90.h,
-                          ),
-                          AnimatedCrossFade(
-                            duration: const Duration(milliseconds: 10),
-                            crossFadeState: _showDetails
-                                ? CrossFadeState.showFirst
-                                : CrossFadeState.showSecond,
-                            firstChild: Container(),
-                            secondChild: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                SizedBox(
-                                  width: 75.h,
-                                  child: MaterialButton(
-                                    color: primaryColor,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(75.r),
-                                    ),
-                                    height: 75.h,
-                                    onPressed: () {
-                                      _controller.animateTo(
-                                        0,
-                                        duration:
-                                            const Duration(milliseconds: 500),
-                                        curve: Curves.easeInOut,
-                                      );
-                                    },
-                                    child: Center(
-                                      child: Icon(
-                                        FontAwesomeIcons.arrowUp,
-                                        color: Colors.white,
-                                        size: 25.h,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          SizedBox(
-                            height: 100.h,
-                          ),
-                        ],
+                    secondChild: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 30.w,
+                        vertical: 30.h,
+                      ),
+                      child: LinearPercentIndicator(
+                        padding: const EdgeInsets.all(0),
+                        animation: true,
+                        lineHeight: 15.h,
+                        animationDuration: 2000,
+                        // percent
+                        percent: .7,
+                        barRadius: Radius.circular(30.r),
+                        progressColor: Colors.white,
+                        backgroundColor: textColor,
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            // choose exam
-            AnimatedVisibility(
-              visible: _chooseExam,
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
-                child: GestureDetector(
-                  onTap: () {
-                    changeChooseExam();
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30.h),
+                child: NotificationListener<ScrollUpdateNotification>(
+                  onNotification: (notification) {
+                    final pixels = notification.metrics.pixels;
+                    setState(() {
+                      _showDetails =
+                          pixels <= 0; // Hide details when scrolled down
+                    });
+                    return true;
                   },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 70.w,
-                      vertical: 90.h,
-                    ),
-                    color: const Color.fromARGB(29, 47, 59, 98),
-                    child: const ChooseExam(),
+                  child: ListView(
+                    controller: _controller,
+                    children: [
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      SubjectTopic(
+                        topic: "Research skills",
+                        color: getRandomColor(),
+                        percent: 1,
+                      ),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      SubjectTopic(
+                        topic: "Plant Biology",
+                        color: getRandomColor(),
+                        percent: .3,
+                      ),
+
+                      // back to top
+                      SizedBox(
+                        height: 90.h,
+                      ),
+                      AnimatedCrossFade(
+                        duration: const Duration(milliseconds: 10),
+                        crossFadeState: _showDetails
+                            ? CrossFadeState.showFirst
+                            : CrossFadeState.showSecond,
+                        firstChild: Container(),
+                        secondChild: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            SizedBox(
+                              width: 75.h,
+                              child: MaterialButton(
+                                color: primaryColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(75.r),
+                                ),
+                                height: 75.h,
+                                onPressed: () {
+                                  _controller.animateTo(
+                                    0,
+                                    duration: const Duration(milliseconds: 500),
+                                    curve: Curves.easeInOut,
+                                  );
+                                },
+                                child: Center(
+                                  child: Icon(
+                                    FontAwesomeIcons.arrowUp,
+                                    color: Colors.white,
+                                    size: 25.h,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(
+                        height: 100.h,
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -368,17 +316,19 @@ class SubjectTopic extends StatelessWidget {
         Get.to(() => const Topic());
       },
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(10.r),
+        borderRadius: BorderRadius.circular(0.r),
         child: Container(
           padding: EdgeInsets.symmetric(
             horizontal: 30.w,
             vertical: 30.w,
           ),
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 219, 223, 226),
+            color: percent == 1
+                ? const Color.fromARGB(255, 224, 229, 255)
+                : Color.fromARGB(255, 243, 245, 255),
             border: Border(
               left: BorderSide(
-                width: 5,
+                width: 3,
                 color: color,
               ),
             ),
@@ -420,8 +370,8 @@ class SubjectTopic extends StatelessWidget {
                       // percent
                       percent: percent,
                       barRadius: Radius.circular(30.r),
-                      progressColor: Colors.white,
-                      backgroundColor: const Color.fromARGB(94, 255, 255, 255),
+                      progressColor: Color.fromARGB(255, 66, 63, 63),
+                      backgroundColor: const Color.fromARGB(255, 196, 196, 196),
                     ),
                   ],
                 ),
@@ -440,83 +390,6 @@ class SubjectTopic extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class ChooseExam extends StatelessWidget {
-  const ChooseExam({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(20.r),
-              child: GestureDetector(
-                onTap: () {},
-                child: Container(
-                  width: 400.w,
-                  color: Colors.white,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 30.w,
-                    vertical: 30.w,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        "Quiz",
-                        style: GoogleFonts.nunito(
-                          fontSize: 30.sp,
-                          fontWeight: FontWeight.w900,
-                          // color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.h,
-                      ),
-                      Text(
-                        "Mock Test",
-                        style: GoogleFonts.nunito(
-                          fontSize: 30.sp,
-                          fontWeight: FontWeight.w900,
-                          // color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.h,
-                      ),
-                      Text(
-                        "Past Paper",
-                        style: GoogleFonts.nunito(
-                          fontSize: 30.sp,
-                          fontWeight: FontWeight.w900,
-                          // color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.h,
-                      ),
-                      Text(
-                        "Challange",
-                        style: GoogleFonts.nunito(
-                          fontSize: 30.sp,
-                          fontWeight: FontWeight.w900,
-                          // color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }

@@ -1,5 +1,9 @@
 enum TestMode {
-  test,
   quiz,
   lesson,
+  test,
+  paper,
+  challenge,
+  teacher,
+  other,
 }

@@ -1,4 +1,4 @@
-import 'package:edgiprep/screens/start.dart';
+import 'package:edgiprep/start/start.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/enums.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +60,7 @@ class _TopicState extends State<Topic> {
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.nunito(
-                        fontSize: 50.sp,
+                        fontSize: 40.sp,
                         fontWeight: FontWeight.w900,
                       ),
                     ),
@@ -318,7 +318,7 @@ class Lesson extends StatelessWidget {
                           lessonName,
                           style: GoogleFonts.nunito(
                             color: currentLesson ? Colors.white : Colors.black,
-                            fontSize: 40.sp,
+                            fontSize: 30.sp,
                             fontWeight: FontWeight.w900,
                           ),
                         ),

@@ -59,28 +59,28 @@ class _NotesState extends State<Notes> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                "Notes",
+                "Organize and Review Study Materials",
                 style: GoogleFonts.nunito(
-                  fontSize: 50.sp,
+                  fontSize: 45.sp,
                   fontWeight: FontWeight.w900,
                 ),
               ),
-              SizedBox(
-                height: 5.h,
-              ),
-              Text(
-                "Organize and Review Your Materials.",
-                style: TextStyle(
-                  fontSize: 25.sp,
-                  fontWeight: FontWeight.bold,
-                  color: textColor,
-                ),
-              ),
+              // SizedBox(
+              //   height: 5.h,
+              // ),
+              // Text(
+              //   "Organize and Review Your Materials.",
+              //   style: TextStyle(
+              //     fontSize: 25.sp,
+              //     fontWeight: FontWeight.bold,
+              //     color: textColor,
+              //   ),
+              // ),
             ],
           ),
         ),
         SizedBox(
-          height: 40.h,
+          height: 30.h,
         ),
 
         // notes types
@@ -103,7 +103,7 @@ class _NotesState extends State<Notes> {
                         width: 2.0,
                         color: _section == 1 ? secondaryColor : grayColor,
                       ),
-                      borderRadius: BorderRadius.circular(20.r),
+                      borderRadius: BorderRadius.circular(40.r),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -154,7 +154,7 @@ class _NotesState extends State<Notes> {
                         width: 2.0,
                         color: _section == 2 ? secondaryColor : grayColor,
                       ),
-                      borderRadius: BorderRadius.circular(20.r),
+                      borderRadius: BorderRadius.circular(40.r),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -190,70 +190,6 @@ class _NotesState extends State<Notes> {
             ],
           ),
         ),
-
-        // all and favourite
-        SizedBox(
-          height: 25.h,
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30.w),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // all
-              GestureDetector(
-                onTap: () {
-                  changeSubSection(1);
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 10.h,
-                    horizontal: 30.w,
-                  ),
-                  decoration: BoxDecoration(
-                    color: _subSection == 1 ? secondaryColor : grayColor,
-                    borderRadius: BorderRadius.circular(30.r),
-                  ),
-                  child: Text(
-                    "All",
-                    style: GoogleFonts.nunito(
-                      fontSize: 25.sp,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
-
-              // favorite
-              SizedBox(
-                width: 15.w,
-              ),
-              GestureDetector(
-                onTap: () {
-                  changeSubSection(2);
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 10.h,
-                    horizontal: 30.w,
-                  ),
-                  decoration: BoxDecoration(
-                    color: _subSection == 2 ? secondaryColor : grayColor,
-                    borderRadius: BorderRadius.circular(30.r),
-                  ),
-                  child: Text(
-                    "Favourite",
-                    style: GoogleFonts.nunito(
-                      fontSize: 25.sp,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-
         // subjects
         SizedBox(
           height: 10.h,
@@ -338,7 +274,7 @@ class NotesSubject extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(20.r),
+      borderRadius: BorderRadius.circular(40.r),
       child: GestureDetector(
         onTap: () {
           Get.to(() => const SubjectNotes());
@@ -352,87 +288,57 @@ class NotesSubject extends StatelessWidget {
           ),
           child: Container(
             color: const Color.fromARGB(210, 0, 0, 0),
-            child: Stack(
-              children: [
-                // subject details
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 30.w,
-                    vertical: 30.w,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 30.w,
+                vertical: 30.w,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // image
+                  Row(
                     children: [
-                      // image
-                      Row(
-                        children: [
-                          Container(
-                            width: 70.h,
-                            height: 70.h,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage('images/$image'),
-                                fit: BoxFit.cover,
-                              ),
-                              borderRadius: BorderRadius.circular(20.r),
-                            ),
+                      Container(
+                        width: 70.h,
+                        height: 70.h,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('images/$image'),
+                            fit: BoxFit.cover,
                           ),
-                        ],
-                      ),
-                      // subject
-                      SizedBox(
-                        height: 15.h,
-                      ),
-                      Text(
-                        subject,
-                        style: GoogleFonts.nunito(
-                          fontSize: 35.sp,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.h,
-                      ),
-                      // number of notes
-                      Text(
-                        "$numberOfNotes Topics",
-                        style: TextStyle(
-                          fontSize: 20.sp,
-                          color: const Color.fromARGB(255, 197, 197, 197),
-                          fontWeight: FontWeight.bold,
+                          borderRadius: BorderRadius.circular(20.r),
                         ),
                       ),
                     ],
                   ),
-                ),
-
-                // like button
-                Positioned(
-                  right: 0.0,
-                  top: 20.w,
-                  child: Container(
-                    width: 60.h,
-                    height: 60.h,
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(20.r),
-                      ),
-                    ),
-                    child: Center(
-                      child: Icon(
-                        like
-                            ? FontAwesomeIcons.solidHeart
-                            : FontAwesomeIcons.heart,
-                        color: like ? secondaryColor : Colors.white,
-                        size: 25.h,
-                      ),
+                  // subject
+                  SizedBox(
+                    height: 15.h,
+                  ),
+                  Text(
+                    subject,
+                    style: GoogleFonts.nunito(
+                      fontSize: 35.sp,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
                     ),
                   ),
-                ),
-              ],
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  // number of notes
+                  Text(
+                    "$numberOfNotes Topics",
+                    style: TextStyle(
+                      fontSize: 20.sp,
+                      color: const Color.fromARGB(255, 197, 197, 197),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

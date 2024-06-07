@@ -1,3 +1,4 @@
+import 'package:edgiprep/controllers/controllers.dart';
 import 'package:edgiprep/screens/wrapper.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -26,10 +26,12 @@ class MyApp extends StatelessWidget {
       builder: (_, child) {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
+          // initialize controllers
+          initialBinding: Controllers(),
           title: 'EdgiPrep',
           theme: ThemeData(
             fontFamily: GoogleFonts.nunito().fontFamily,
-            colorScheme: ColorScheme.fromSeed(seedColor: primaryColor), 
+            colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
             useMaterial3: true,
             navigationBarTheme: NavigationBarThemeData(
               labelTextStyle: WidgetStateProperty.resolveWith((state) {
@@ -48,12 +50,6 @@ class MyApp extends StatelessWidget {
             ),
           ),
           home: const Wrapper(),
-          // home: Scaffold(
-          //   body: SafeArea(
-          //       child: Center(
-          //     child: Text("data"),
-          //   )),
-          // ),
         );
       },
     );
