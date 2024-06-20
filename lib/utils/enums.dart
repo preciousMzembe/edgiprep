@@ -1,7 +1,7 @@
 enum TestMode {
   quiz,
   lesson,
-  test,
+  mock,
   paper,
   challenge,
   teacher,

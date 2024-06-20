@@ -1,4 +1,4 @@
-import 'package:edgiprep/start/start.dart';
+import 'package:edgiprep/start/start_quiz.dart';
 import 'package:edgiprep/screens/subject.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/enums.dart';
@@ -271,9 +271,8 @@ class _HomeState extends State<Home> {
                             child: GestureDetector(
                               onTap: () {
                                 Get.to(
-                                  () => const Start(
-                                    testMode: TestMode.quiz,
-                                    lessonDone: false,
+                                  () => const StartQuiz(
+                                    subject: "Biology",
                                   ),
                                 );
                               },
@@ -366,9 +365,8 @@ class _HomeState extends State<Home> {
                             child: GestureDetector(
                               onTap: () {
                                 Get.to(
-                                  () => const Start(
-                                    testMode: TestMode.test,
-                                    lessonDone: false,
+                                  () => const StartQuiz(
+                                    subject: "History",
                                   ),
                                 );
                               },

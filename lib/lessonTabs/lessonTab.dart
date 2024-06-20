@@ -1,8 +1,9 @@
 import 'dart:math';
 
-import 'package:edgiprep/controllers/current_quiz_controller.dart';
-import 'package:edgiprep/questionTabs/answer.dart';
-import 'package:edgiprep/questionTabs/retry_prompt.dart';
+import 'package:edgiprep/controllers/current_lesson_controller.dart';
+import 'package:edgiprep/quizTabs/answer.dart';
+import 'package:edgiprep/quizTabs/done.dart';
+import 'package:edgiprep/quizTabs/retry_prompt.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,24 +12,23 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-class QuizTab extends StatefulWidget {
-  const QuizTab({super.key});
+class LessonTab extends StatefulWidget {
+  const LessonTab({super.key});
 
   @override
-  State<QuizTab> createState() => _QuizTabState();
+  State<LessonTab> createState() => _LessonTabState();
 }
 
-class _QuizTabState extends State<QuizTab> {
-  CurrentQuizController currentQuizController =
-      Get.find<CurrentQuizController>();
+class _LessonTabState extends State<LessonTab> {
+  CurrentLessonController currentLessonController =
+      Get.find<CurrentLessonController>();
 
   @override
   Widget build(BuildContext context) {
-    List<String> shuffledOptions = currentQuizController
-        .questions[currentQuizController.currentQuestionIndex].options
-        .toList();
-    shuffledOptions.shuffle(Random());
     return Obx(() {
+      List<String> shuffledOptions = currentLessonController
+          .questions[currentLessonController.currentQuestionIndex].options
+          .toList();
       return Scaffold(
         backgroundColor: backgroundColor,
         body: SafeArea(
@@ -46,7 +46,7 @@ class _QuizTabState extends State<QuizTab> {
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         // close
                         IconButton(
@@ -65,8 +65,9 @@ class _QuizTabState extends State<QuizTab> {
                         ),
                         Expanded(
                           child: Text(
-                            currentQuizController.title,
-                            maxLines: 2,
+                            currentLessonController.title,
+                            maxLines: 1,
+                            textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.nunito(
                               fontSize: 35.sp,
@@ -88,44 +89,52 @@ class _QuizTabState extends State<QuizTab> {
                       ],
                     ),
                     // progress
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    LinearPercentIndicator(
-                      padding: const EdgeInsets.all(0),
-                      animation: true,
-                      lineHeight: 15.h,
-                      animationDuration: 2000,
-                      // percent
-                      percent: currentQuizController.currentQuestionIndex /
-                          currentQuizController.numberOfQuestions,
-                      barRadius: Radius.circular(30.r),
-                      progressColor: primaryColor,
-                      backgroundColor: progressColor,
-                    ),
-                    SizedBox(
-                      height: 5.h,
-                    ),
-                    // progress numbers
-                    RichText(
-                      text: TextSpan(
-                        style: GoogleFonts.nunito(
-                          color: Colors.black,
-                          fontSize: 25.sp,
-                          fontWeight: FontWeight.w900,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(
+                          height: 20.h,
                         ),
-                        children: [
-                          TextSpan(
-                            text:
-                                "${currentQuizController.currentQuestionIndex}",
-                            style: TextStyle(color: primaryColor),
+                        LinearPercentIndicator(
+                          padding: const EdgeInsets.all(0),
+                          // animation: true,
+                          lineHeight: 15.h,
+                          // animationDuration: 2000,
+                          // percent
+                          percent:
+                              (currentLessonController.currentQuestionIndex +
+                                      1) /
+                                  currentLessonController.numberOfQuestions,
+                          barRadius: Radius.circular(30.r),
+                          progressColor: primaryColor,
+                          backgroundColor: progressColor,
+                        ),
+                        SizedBox(
+                          height: 5.h,
+                        ),
+                        // progress numbers
+                        RichText(
+                          text: TextSpan(
+                            style: GoogleFonts.nunito(
+                              color: Colors.black,
+                              fontSize: 25.sp,
+                              fontWeight: FontWeight.w900,
+                            ),
+                            children: [
+                              TextSpan(
+                                text:
+                                    "${currentLessonController.currentQuestionIndex + 1}",
+                                style: TextStyle(color: primaryColor),
+                              ),
+                              TextSpan(
+                                text:
+                                    "/${currentLessonController.numberOfQuestions}",
+                                style: TextStyle(color: textColor),
+                              ),
+                            ],
                           ),
-                          TextSpan(
-                            text: "/${currentQuizController.numberOfQuestions}",
-                            style: TextStyle(color: textColor),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -136,66 +145,68 @@ class _QuizTabState extends State<QuizTab> {
                 height: 10.h,
               ),
               Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30.w),
-                  child: ListView(
-                    children: [
-                      SizedBox(
-                        height: 30.h,
-                      ),
-                      // question
-                      Text(
-                        currentQuizController
-                            .questions[
-                                currentQuizController.currentQuestionIndex]
-                            .question,
-                        style: GoogleFonts.nunito(
-                          fontSize: 35.sp,
-                          fontWeight: FontWeight.w700,
+                child: LayoutBuilder(builder: (context, constraints) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30.w),
+                    child: ListView(
+                      children: [
+                        SizedBox(
+                          height: 30.h,
                         ),
-                      ),
-
-                      // answers
-                      SizedBox(
-                        height: 80.h,
-                      ),
-
-                      for (int i = 0; i < shuffledOptions.length; i++)
-                        Column(
-                          children: [
-                            Answer(
-                              answer: shuffledOptions[i],
-                              selected:
-                                  currentQuizController.selectedIndex == i,
-                              select: () {
-                                if (!currentQuizController.checkAnswer) {
-                                  currentQuizController.setSelectedIndex(i);
-                                }
-                              },
-                            ),
-                            SizedBox(
-                              height: 20.h,
-                            ),
-                          ],
+                        // question
+                        Text(
+                          currentLessonController
+                              .questions[
+                                  currentLessonController.currentQuestionIndex]
+                              .question,
+                          style: GoogleFonts.nunito(
+                            fontSize: 35.sp,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
 
-                      // bottom
-                      SizedBox(
-                        height: 100.h,
-                      ),
-                    ],
-                  ),
-                ),
+                        // answers
+                        SizedBox(
+                          height: 80.h,
+                        ),
+
+                        for (int i = 0; i < shuffledOptions.length; i++)
+                          Column(
+                            children: [
+                              Answer(
+                                answer: shuffledOptions[i],
+                                selected:
+                                    currentLessonController.selectedIndex == i,
+                                select: () {
+                                  if (!currentLessonController.checkAnswer) {
+                                    currentLessonController.setSelectedIndex(i);
+                                  }
+                                },
+                              ),
+                              SizedBox(
+                                height: 20.h,
+                              ),
+                            ],
+                          ),
+
+                        // bottom
+                        SizedBox(
+                          height: 100.h,
+                        ),
+                      ],
+                    ),
+                  );
+                }),
               ),
 
               // check and continue
-              if (currentQuizController.selectedIndex >= 0)
+              if (currentLessonController.selectedIndex >= 0)
                 ClipRRect(
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(40.r),
                       topRight: Radius.circular(40.r)),
                   child: Container(
-                    color: Color.fromRGBO(47, 59, 98, 0.178),
+                    color: const Color.fromRGBO(47, 59, 98, 0.178),
                     padding: EdgeInsets.symmetric(
                       vertical: 40.h,
                       horizontal: 30.h,
@@ -205,7 +216,7 @@ class _QuizTabState extends State<QuizTab> {
                       children: [
                         // question status and answer
                         Visibility(
-                          visible: currentQuizController.checkAnswer,
+                          visible: currentLessonController.checkAnswer,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
@@ -213,17 +224,18 @@ class _QuizTabState extends State<QuizTab> {
                               Row(
                                 children: [
                                   // icon
-                                  if (currentQuizController.selectedIndex >= 0)
+                                  if (currentLessonController.selectedIndex >=
+                                      0)
                                     Container(
                                       width: 50.h,
                                       height: 50.h,
                                       decoration: BoxDecoration(
                                         color: shuffledOptions[
-                                                    currentQuizController
+                                                    currentLessonController
                                                         .selectedIndex] ==
-                                                currentQuizController
+                                                currentLessonController
                                                     .questions[
-                                                        currentQuizController
+                                                        currentLessonController
                                                             .currentQuestionIndex]
                                                     .answer
                                             ? Colors.green
@@ -232,11 +244,11 @@ class _QuizTabState extends State<QuizTab> {
                                             BorderRadius.circular(50.r),
                                       ),
                                       child: Icon(
-                                        shuffledOptions[currentQuizController
+                                        shuffledOptions[currentLessonController
                                                     .selectedIndex] ==
-                                                currentQuizController
+                                                currentLessonController
                                                     .questions[
-                                                        currentQuizController
+                                                        currentLessonController
                                                             .currentQuestionIndex]
                                                     .answer
                                             ? FontAwesomeIcons.check
@@ -249,13 +261,14 @@ class _QuizTabState extends State<QuizTab> {
                                     width: 15.w,
                                   ),
                                   // correct or wrong
-                                  if (currentQuizController.selectedIndex >= 0)
+                                  if (currentLessonController.selectedIndex >=
+                                      0)
                                     Text(
-                                      shuffledOptions[currentQuizController
+                                      shuffledOptions[currentLessonController
                                                   .selectedIndex] ==
-                                              currentQuizController
+                                              currentLessonController
                                                   .questions[
-                                                      currentQuizController
+                                                      currentLessonController
                                                           .currentQuestionIndex]
                                                   .answer
                                           ? "Correct"
@@ -264,11 +277,11 @@ class _QuizTabState extends State<QuizTab> {
                                         fontSize: 40.sp,
                                         fontWeight: FontWeight.w900,
                                         color: shuffledOptions[
-                                                    currentQuizController
+                                                    currentLessonController
                                                         .selectedIndex] ==
-                                                currentQuizController
+                                                currentLessonController
                                                     .questions[
-                                                        currentQuizController
+                                                        currentLessonController
                                                             .currentQuestionIndex]
                                                     .answer
                                             ? Colors.green
@@ -282,9 +295,9 @@ class _QuizTabState extends State<QuizTab> {
                               ),
                               // answer
                               if (shuffledOptions[
-                                      currentQuizController.selectedIndex] !=
-                                  currentQuizController
-                                      .questions[currentQuizController
+                                      currentLessonController.selectedIndex] !=
+                                  currentLessonController
+                                      .questions[currentLessonController
                                           .currentQuestionIndex]
                                       .answer)
                                 Column(
@@ -292,6 +305,8 @@ class _QuizTabState extends State<QuizTab> {
                                       CrossAxisAlignment.stretch,
                                   children: [
                                     Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           "Answer: ",
@@ -302,9 +317,10 @@ class _QuizTabState extends State<QuizTab> {
                                         ),
                                         Expanded(
                                           child: Text(
-                                            currentQuizController
-                                                .questions[currentQuizController
-                                                    .currentQuestionIndex]
+                                            currentLessonController
+                                                .questions[
+                                                    currentLessonController
+                                                        .currentQuestionIndex]
                                                 .answer,
                                             style: GoogleFonts.nunito(
                                               fontSize: 35.sp,
@@ -331,21 +347,49 @@ class _QuizTabState extends State<QuizTab> {
                             borderRadius: BorderRadius.circular(100.r),
                           ),
                           onPressed: () {
-                            if (!currentQuizController.checkAnswer) {
+                            if (!currentLessonController.checkAnswer) {
                               // check
-                              currentQuizController.setCheckAnswer(true);
+                              currentLessonController.setCheckAnswer(true);
                             } else {
-                              // continue
-                              Get.to(() => const RetryPrompt());
+                              // if last question
+                              if (currentLessonController.isLastQuestion()) {
+                                // mark
+                                currentLessonController.answerSelected(
+                                    shuffledOptions[
+                                        currentLessonController.selectedIndex],
+                                    currentLessonController
+                                        .questions[currentLessonController
+                                            .currentQuestionIndex]
+                                        .answer);
+
+                                // change page
+                                // if (currentLessonController.score !=
+                                //         currentLessonController
+                                //             .questions.length) {
+
+                                //   Get.to(() => const RetryPrompt());
+                                // } else {
+                                //   Get.to(() => const Done());
+                                // }
+                              } else {
+                                // next question
+                                currentLessonController.answerSelected(
+                                    shuffledOptions[
+                                        currentLessonController.selectedIndex],
+                                    currentLessonController
+                                        .questions[currentLessonController
+                                            .currentQuestionIndex]
+                                        .answer);
+                              }
                             }
                           },
                           child: Text(
-                            !currentQuizController.checkAnswer
+                            !currentLessonController.checkAnswer
                                 ? "Check"
-                                : shuffledOptions[currentQuizController
+                                : shuffledOptions[currentLessonController
                                             .selectedIndex] !=
-                                        currentQuizController
-                                            .questions[currentQuizController
+                                        currentLessonController
+                                            .questions[currentLessonController
                                                 .currentQuestionIndex]
                                             .answer
                                     ? "Got It"
@@ -366,5 +410,19 @@ class _QuizTabState extends State<QuizTab> {
         ),
       );
     });
+  }
+}
+
+class Question extends StatelessWidget {
+  const Question({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        
+      ],
+    );
   }
 }

@@ -1,4 +1,5 @@
-import 'package:edgiprep/questionTabs/done.dart';
+import 'package:edgiprep/quizTabs/done.dart';
+import 'package:edgiprep/quizTabs/quizTab.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -61,14 +62,14 @@ class _RetryPromptState extends State<RetryPrompt> {
                   borderRadius: BorderRadius.circular(100.r),
                 ),
                 onPressed: () {
-                  Get.to(() => const Done());
+                  Get.to(() => const QuizTab());
                 },
                 child: Text(
                   "Continue",
                   style: GoogleFonts.nunito(
                     color: primaryColor,
                     fontSize: 40.sp,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
               ),

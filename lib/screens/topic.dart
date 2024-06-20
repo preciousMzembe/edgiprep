@@ -1,4 +1,5 @@
-import 'package:edgiprep/start/start.dart';
+import 'package:edgiprep/start/start_lesson.dart';
+import 'package:edgiprep/start/start_quiz.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/enums.dart';
 import 'package:flutter/material.dart';
@@ -276,15 +277,15 @@ class Lesson extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     if (lessonDone) {
-                      Get.to(() => const Start(
-                            testMode: TestMode.lesson,
-                            lessonDone: true,
+                      Get.to(() => StartLesson(
+                            topic: lessonName,
+                            lessonDone: lessonDone,
                           ));
                     }
 
                     if (currentLesson) {
-                      Get.to(() => const Start(
-                            testMode: TestMode.lesson,
+                      Get.to(() => StartLesson(
+                            topic: lessonName,
                             lessonDone: false,
                           ));
                     }

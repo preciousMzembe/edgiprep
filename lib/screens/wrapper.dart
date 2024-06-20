@@ -103,7 +103,7 @@ class _WrapperState extends State<Wrapper> {
                       // home
                       NavOption(
                         name: "Home",
-                        image: "home.png",
+                        image: "home_2.png",
                         selected: navController.selectedIndex == 0,
                         click: () {
                           _onItemTapped(0);
@@ -112,8 +112,8 @@ class _WrapperState extends State<Wrapper> {
 
                       // learn
                       NavOption(
-                        name: "Learn",
-                        image: "bulb.png",
+                        name: "Subjects",
+                        image: "books.png",
                         selected: navController.selectedIndex == 1,
                         click: () {
                           _onItemTapped(1);
@@ -132,7 +132,7 @@ class _WrapperState extends State<Wrapper> {
                       // notes
                       NavOption(
                         name: "Notes",
-                        image: "notes.png",
+                        image: "notes_2.png",
                         selected: navController.selectedIndex == 3,
                         click: () {
                           _onItemTapped(3);

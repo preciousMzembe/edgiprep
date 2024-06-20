@@ -126,6 +126,7 @@ class Done extends StatelessWidget {
                   Get.back();
                   Get.back();
                   Get.back();
+                  Get.back();
                 },
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(100.r),
@@ -138,7 +139,7 @@ class Done extends StatelessWidget {
                         style: GoogleFonts.nunito(
                           color: Colors.white,
                           fontSize: 40.sp,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w900,
                         ),
                       ),
                     ),

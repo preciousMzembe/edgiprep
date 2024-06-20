@@ -1,6 +1,5 @@
 import 'dart:ui';
-import 'package:edgiprep/screens/papers.dart';
-import 'package:edgiprep/start/start.dart';
+import 'package:edgiprep/start/start_quiz.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/enums.dart';
 import 'package:flutter/material.dart';
@@ -17,14 +16,14 @@ class Test extends StatefulWidget {
 }
 
 class _TestState extends State<Test> {
-  void _openBottomSheet() {
+  void _openBottomSheet(TestMode testmode) {
     showModalBottomSheet<void>(
       context: context,
       builder: (BuildContext context) {
-        return Container(
+        return SizedBox(
           height: MediaQuery.of(context).size.height * 0.9,
           child: ChooseSubject(
-            type: TestMode.test,
+            type: testmode,
           ),
         );
       },
@@ -87,7 +86,9 @@ class _TestState extends State<Test> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(40.r),
                           child: GestureDetector(
-                            onTap: _openBottomSheet,
+                            onTap: () {
+                              _openBottomSheet(TestMode.mock);
+                            },
                             child: Container(
                               decoration: const BoxDecoration(
                                 image: DecorationImage(
@@ -185,139 +186,100 @@ class _TestState extends State<Test> {
                         ),
                         ClipRRect(
                           borderRadius: BorderRadius.circular(40.r),
-                          child: Container(
-                            decoration: const BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage('images/past.jpg'),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                          child: GestureDetector(
+                            onTap: () {
+                              _openBottomSheet(TestMode.paper);
+                            },
                             child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 30.w,
-                                  vertical: 30.w,
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage('images/past.jpg'),
+                                  fit: BoxFit.cover,
                                 ),
-                                height: 400.h,
-                                color: const Color.fromARGB(166, 0, 0, 0),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    Text(
-                                      "Past Papers",
-                                      style: GoogleFonts.nunito(
-                                        fontSize: 35.sp,
-                                        fontWeight: FontWeight.w900,
-                                        color: Colors.white,
+                              ),
+                              child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 30.w,
+                                    vertical: 30.w,
+                                  ),
+                                  height: 400.h,
+                                  color: const Color.fromARGB(166, 0, 0, 0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Text(
+                                        "Past Papers",
+                                        style: GoogleFonts.nunito(
+                                          fontSize: 35.sp,
+                                          fontWeight: FontWeight.w900,
+                                          color: Colors.white,
+                                        ),
                                       ),
-                                    ),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Take a look at Past Papers to help you prepare.",
+                                              style: GoogleFonts.nunito(
+                                                // fontSize: 40.sp,
+                                                // fontWeight: FontWeight.w900,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+
+                                      // time and play
+                                      Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         children: [
                                           Text(
-                                            "Take a look at Past Papers to help you prepare.",
+                                            "",
                                             style: GoogleFonts.nunito(
-                                              // fontSize: 40.sp,
-                                              // fontWeight: FontWeight.w900,
+                                              fontSize: 30.sp,
+                                              fontWeight: FontWeight.w900,
                                               color: Colors.white,
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            // select paper
+                                            onTap: () {},
+                                            child: Container(
+                                              height: 60.h,
+                                              width: 60.h,
+                                              decoration: BoxDecoration(
+                                                color: progressColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(80.r),
+                                                border: Border.all(
+                                                  width: 2.0,
+                                                  color: const Color.fromRGBO(
+                                                      27, 174, 252, 1),
+                                                ),
+                                              ),
+                                              child: Center(
+                                                child: Icon(
+                                                  FontAwesomeIcons.play,
+                                                  size: 25.h,
+                                                  color: const Color.fromRGBO(
+                                                      27, 174, 252, 1),
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ],
                                       ),
-                                    ),
-
-                                    // time and play
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "2 hours",
-                                          style: GoogleFonts.nunito(
-                                            fontSize: 30.sp,
-                                            fontWeight: FontWeight.w900,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                          // select paper
-                                          onTap: () {},
-                                          child: Container(
-                                            height: 60.h,
-                                            width: 60.h,
-                                            decoration: BoxDecoration(
-                                              color: progressColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(80.r),
-                                              border: Border.all(
-                                                width: 2.0,
-                                                color: const Color.fromRGBO(
-                                                    27, 174, 252, 1),
-                                              ),
-                                            ),
-                                            child: Center(
-                                              child: Icon(
-                                                FontAwesomeIcons.play,
-                                                size: 25.h,
-                                                color: const Color.fromRGBO(
-                                                    27, 174, 252, 1),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                )),
-                          ),
-                        ),
-
-                        // others
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(40.r),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 30.w,
-                              vertical: 30.w,
-                            ),
-                            height: 200.h,
-                            color: const Color.fromRGBO(0, 47, 99, 1),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Text(
-                                  "Other",
-                                  style: GoogleFonts.nunito(
-                                    fontSize: 35.sp,
-                                    fontWeight: FontWeight.w900,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "Check other exams",
-                                        style: GoogleFonts.nunito(
-                                          color: Colors.white,
-                                        ),
-                                      ),
                                     ],
-                                  ),
-                                ),
-                              ],
+                                  )),
                             ),
                           ),
                         ),
@@ -337,51 +299,96 @@ class _TestState extends State<Test> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(40.r),
                           child: GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              _openBottomSheet(TestMode.quiz);
+                            },
                             child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 30.w,
-                                vertical: 25.w,
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage('images/challenge.jpg'),
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                              height: 200.h,
-                              color: const Color.fromRGBO(170, 128, 255, 1),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Text(
-                                    "Quiz",
-                                    style: GoogleFonts.nunito(
-                                      fontSize: 35.sp,
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.white,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 30.w,
+                                  vertical: 25.w,
+                                ),
+                                height: 400.h,
+                                color: const Color.fromARGB(166, 0, 0, 0),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    Text(
+                                      "Quiz",
+                                      style: GoogleFonts.nunito(
+                                        fontSize: 35.sp,
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Take a quick quiz",
+                                            style: GoogleFonts.nunito(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    // time and play
+                                    Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
                                         Text(
-                                          "Take a quick quiz",
+                                          "5 questions",
                                           style: GoogleFonts.nunito(
+                                            fontSize: 30.sp,
+                                            fontWeight: FontWeight.w900,
                                             color: Colors.white,
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          // take challenge
+                                          onTap: () {},
+                                          child: Container(
+                                            height: 60.h,
+                                            width: 60.h,
+                                            decoration: BoxDecoration(
+                                              color: progressColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(80.r),
+                                              border: Border.all(
+                                                width: 2.0,
+                                                color: const Color.fromARGB(
+                                                    255, 56, 132, 224),
+                                              ),
+                                            ),
+                                            child: Center(
+                                              child: Icon(
+                                                FontAwesomeIcons.play,
+                                                size: 25.h,
+                                                color: const Color.fromARGB(
+                                                    255, 56, 132, 224),
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                  // time and play
-                                  Text(
-                                    "6 questions",
-                                    style: GoogleFonts.nunito(
-                                      fontSize: 25.sp,
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -393,192 +400,98 @@ class _TestState extends State<Test> {
                         ),
                         ClipRRect(
                           borderRadius: BorderRadius.circular(40.r),
-                          child: Container(
-                            decoration: const BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage('images/challenge_2.jpg'),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 30.w,
-                                vertical: 30.w,
-                              ),
-                              height: 400.h,
-                              color: const Color.fromARGB(166, 0, 0, 0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Text(
-                                    "Challenge",
-                                    style: GoogleFonts.nunito(
-                                      fontSize: 35.sp,
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "Challenge your knowledge with unlimited pool of questions.",
-                                          style: GoogleFonts.nunito(
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  // time and play
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "Nonstop",
-                                        style: GoogleFonts.nunito(
-                                          fontSize: 30.sp,
-                                          fontWeight: FontWeight.w900,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                        // take challenge
-                                        onTap: () {},
-                                        child: Container(
-                                          height: 60.h,
-                                          width: 60.h,
-                                          decoration: BoxDecoration(
-                                            color: progressColor,
-                                            borderRadius:
-                                                BorderRadius.circular(80.r),
-                                            border: Border.all(
-                                              width: 2.0,
-                                              color: const Color.fromRGBO(
-                                                  255, 25, 45, 1),
-                                            ),
-                                          ),
-                                          child: Center(
-                                            child: Icon(
-                                              FontAwesomeIcons.play,
-                                              size: 25.h,
-                                              color: const Color.fromRGBO(
-                                                  255, 25, 45, 1),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        // teachers
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(40.r),
                           child: GestureDetector(
-                            // take teacher
-                            onTap: () {},
+                            onTap: () {
+                              _openBottomSheet(TestMode.challenge);
+                            },
                             child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 30.w,
-                                vertical: 30.w,
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage('images/challenge_2.jpg'),
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                              height: 400.h,
-                              color: const Color.fromARGB(255, 19, 137, 201),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Text(
-                                    "Teacher Exams",
-                                    style: GoogleFonts.nunito(
-                                      fontSize: 35.sp,
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.white,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 30.w,
+                                  vertical: 30.w,
+                                ),
+                                height: 400.h,
+                                color: const Color.fromARGB(166, 0, 0, 0),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    Text(
+                                      "Challenge",
+                                      style: GoogleFonts.nunito(
+                                        fontSize: 35.sp,
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    child: Column(
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Challenge your knowledge with unlimited pool of questions.",
+                                            style: GoogleFonts.nunito(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                                    // time and play
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          "Practice exams by Teachers",
+                                          "Nonstop",
                                           style: GoogleFonts.nunito(
+                                            fontSize: 30.sp,
+                                            fontWeight: FontWeight.w900,
                                             color: Colors.white,
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          // take challenge
+                                          onTap: () {},
+                                          child: Container(
+                                            height: 60.h,
+                                            width: 60.h,
+                                            decoration: BoxDecoration(
+                                              color: progressColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(80.r),
+                                              border: Border.all(
+                                                width: 2.0,
+                                                color: const Color.fromRGBO(
+                                                    255, 25, 45, 1),
+                                              ),
+                                            ),
+                                            child: Center(
+                                              child: Icon(
+                                                FontAwesomeIcons.play,
+                                                size: 25.h,
+                                                color: const Color.fromRGBO(
+                                                    255, 25, 45, 1),
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ],
                                     ),
-                                  ),
-
-                                  // teachers
-                                  Row(
-                                    children: [
-                                      Container(
-                                        height: 60.h,
-                                        width: 60.h,
-                                        decoration: BoxDecoration(
-                                          image: const DecorationImage(
-                                            image:
-                                                AssetImage('images/male.jpg'),
-                                            fit: BoxFit.cover,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(80.r),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 5.w,
-                                      ),
-                                      Container(
-                                        height: 60.h,
-                                        width: 60.h,
-                                        decoration: BoxDecoration(
-                                          image: const DecorationImage(
-                                            image:
-                                                AssetImage('images/female.jpg'),
-                                            fit: BoxFit.cover,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(80.r),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 5.w,
-                                      ),
-                                      Container(
-                                        height: 60.h,
-                                        width: 60.h,
-                                        decoration: BoxDecoration(
-                                          image: const DecorationImage(
-                                            image:
-                                                AssetImage('images/male.jpg'),
-                                            fit: BoxFit.cover,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(80.r),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -618,7 +531,7 @@ class ChooseSubject extends StatelessWidget {
           children: [
             Center(
               child: Text(
-                type == TestMode.test
+                type == TestMode.mock
                     ? "Mock Exam"
                     : type == TestMode.quiz
                         ? "Quiz"
@@ -647,44 +560,75 @@ class ChooseSubject extends StatelessWidget {
                   scrollDirection: Axis.vertical,
                   itemCount: subjects.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      color: Colors.transparent,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // image
-                          Container(
-                            width: 60.h,
-                            height: 60.h,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image:
-                                    AssetImage('images/${subjects[index][1]}'),
-                                fit: BoxFit.cover,
-                              ),
-                              borderRadius: BorderRadius.circular(20.r),
-                            ),
-                          ),
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(20.r),
+                      child: MaterialButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          type == TestMode.mock
+                              ? () {}
+                              : type == TestMode.quiz
+                                  ? Get.to(
+                                      () => StartQuiz(
+                                        subject: "${subjects[index][0]}",
+                                      ),
+                                    )
+                                  : type == TestMode.paper
+                                      ? () {}
+                                      : type == TestMode.challenge
+                                          ? () {}
+                                          : type == TestMode.teacher
+                                              ? ()
+                                              : () {};
 
-                          // name
-                          SizedBox(
-                            width: 25.w,
-                          ),
-                          Text(
-                            "${subjects[index][0]}",
-                            style: GoogleFonts.nunito(
-                              fontSize: 28.sp,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black,
+                          // Get.to(
+                          //   () => StartQuiz(
+                          //     subject: "${subjects[index][0]}",
+                          //   ),
+                          // );
+                        },
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20.h,
+                          vertical: 20.h,
+                        ),
+                        // color: Colors.transparent,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // image
+                            Container(
+                              width: 60.h,
+                              height: 60.h,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage(
+                                      'images/${subjects[index][1]}'),
+                                  fit: BoxFit.cover,
+                                ),
+                                borderRadius: BorderRadius.circular(20.r),
+                              ),
                             ),
-                          ),
-                        ],
+
+                            // name
+                            SizedBox(
+                              width: 25.w,
+                            ),
+                            Text(
+                              "${subjects[index][0]}",
+                              style: GoogleFonts.nunito(
+                                fontSize: 28.sp,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
                   separatorBuilder: (BuildContext context, int index) {
                     return SizedBox(
-                      height: 25.h,
+                      height: 0.h,
                     );
                   },
                 ),

@@ -2,7 +2,7 @@ import 'package:edgiprep/models/question.dart';
 import 'package:edgiprep/utils/enums.dart';
 import 'package:get/get.dart';
 
-class CurrentQuizController extends GetxController {
+class CurrentLessonController extends GetxController {
   // Rx variables to store quiz data
   final RxString _title = "".obs;
   final RxInt _currentQuestionIndex = 0.obs;
@@ -11,7 +11,6 @@ class CurrentQuizController extends GetxController {
   final RxInt _selectedIndex = RxInt(-1);
   final RxBool _checkAnswer = false.obs;
   final RxList<Question> _wrongQuestions = RxList<Question>([]);
-  final RxBool _correctionRound = false.obs;
 
   // Getter methods for accessing data
   String get title => _title.value;
@@ -22,7 +21,6 @@ class CurrentQuizController extends GetxController {
   int get selectedIndex => _selectedIndex.value;
   bool get checkAnswer => _checkAnswer.value;
   List<Question> get wrongQuestions => _wrongQuestions.toList();
-  bool get correctionRound => _correctionRound.value;
 
   // Method to set parts of quiz
 
@@ -44,14 +42,6 @@ class CurrentQuizController extends GetxController {
 
   void emptyWrongQuestions() {
     _wrongQuestions.value = [];
-  }
-
-  void setCorrectionQuestions() {
-    _questions.value = _wrongQuestions;
-  }
-
-  void setCorrectionRound(bool correction) {
-    _correctionRound.value = correction;
   }
 
   void setCheckAnswer(bool check) {
@@ -76,10 +66,8 @@ class CurrentQuizController extends GetxController {
     if (userAnswer == correctAnswer) {
       _score.value++;
     } else {
-      // add correction question if is not correction round
-      if (!correctionRound) {
-        addCorrectionQuestion(questions[_currentQuestionIndex.value]);
-      }
+      // add wrong question
+      addCorrectionQuestion(questions[_currentQuestionIndex.value]);
     }
 
     if (!isLastQuestion()) {
