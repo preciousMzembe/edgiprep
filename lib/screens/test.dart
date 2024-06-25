@@ -1,4 +1,6 @@
-import 'dart:ui';
+import 'package:edgiprep/screens/papers.dart';
+import 'package:edgiprep/start/start_challenge.dart';
+import 'package:edgiprep/start/start_mock.dart';
 import 'package:edgiprep/start/start_quiz.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/enums.dart';
@@ -250,29 +252,25 @@ class _TestState extends State<Test> {
                                               color: Colors.white,
                                             ),
                                           ),
-                                          GestureDetector(
-                                            // select paper
-                                            onTap: () {},
-                                            child: Container(
-                                              height: 60.h,
-                                              width: 60.h,
-                                              decoration: BoxDecoration(
-                                                color: progressColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(80.r),
-                                                border: Border.all(
-                                                  width: 2.0,
-                                                  color: const Color.fromRGBO(
-                                                      27, 174, 252, 1),
-                                                ),
+                                          Container(
+                                            height: 60.h,
+                                            width: 60.h,
+                                            decoration: BoxDecoration(
+                                              color: progressColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(80.r),
+                                              border: Border.all(
+                                                width: 2.0,
+                                                color: const Color.fromRGBO(
+                                                    27, 174, 252, 1),
                                               ),
-                                              child: Center(
-                                                child: Icon(
-                                                  FontAwesomeIcons.play,
-                                                  size: 25.h,
-                                                  color: const Color.fromRGBO(
-                                                      27, 174, 252, 1),
-                                                ),
+                                            ),
+                                            child: Center(
+                                              child: Icon(
+                                                FontAwesomeIcons.play,
+                                                size: 25.h,
+                                                color: const Color.fromRGBO(
+                                                    27, 174, 252, 1),
                                               ),
                                             ),
                                           ),
@@ -359,29 +357,25 @@ class _TestState extends State<Test> {
                                             color: Colors.white,
                                           ),
                                         ),
-                                        GestureDetector(
-                                          // take challenge
-                                          onTap: () {},
-                                          child: Container(
-                                            height: 60.h,
-                                            width: 60.h,
-                                            decoration: BoxDecoration(
-                                              color: progressColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(80.r),
-                                              border: Border.all(
-                                                width: 2.0,
-                                                color: const Color.fromARGB(
-                                                    255, 56, 132, 224),
-                                              ),
+                                        Container(
+                                          height: 60.h,
+                                          width: 60.h,
+                                          decoration: BoxDecoration(
+                                            color: progressColor,
+                                            borderRadius:
+                                                BorderRadius.circular(80.r),
+                                            border: Border.all(
+                                              width: 2.0,
+                                              color: const Color.fromARGB(
+                                                  255, 56, 132, 224),
                                             ),
-                                            child: Center(
-                                              child: Icon(
-                                                FontAwesomeIcons.play,
-                                                size: 25.h,
-                                                color: const Color.fromARGB(
-                                                    255, 56, 132, 224),
-                                              ),
+                                          ),
+                                          child: Center(
+                                            child: Icon(
+                                              FontAwesomeIcons.play,
+                                              size: 25.h,
+                                              color: const Color.fromARGB(
+                                                  255, 56, 132, 224),
                                             ),
                                           ),
                                         ),
@@ -462,29 +456,25 @@ class _TestState extends State<Test> {
                                             color: Colors.white,
                                           ),
                                         ),
-                                        GestureDetector(
-                                          // take challenge
-                                          onTap: () {},
-                                          child: Container(
-                                            height: 60.h,
-                                            width: 60.h,
-                                            decoration: BoxDecoration(
-                                              color: progressColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(80.r),
-                                              border: Border.all(
-                                                width: 2.0,
-                                                color: const Color.fromRGBO(
-                                                    255, 25, 45, 1),
-                                              ),
+                                        Container(
+                                          height: 60.h,
+                                          width: 60.h,
+                                          decoration: BoxDecoration(
+                                            color: progressColor,
+                                            borderRadius:
+                                                BorderRadius.circular(80.r),
+                                            border: Border.all(
+                                              width: 2.0,
+                                              color: const Color.fromRGBO(
+                                                  255, 25, 45, 1),
                                             ),
-                                            child: Center(
-                                              child: Icon(
-                                                FontAwesomeIcons.play,
-                                                size: 25.h,
-                                                color: const Color.fromRGBO(
-                                                    255, 25, 45, 1),
-                                              ),
+                                          ),
+                                          child: Center(
+                                            child: Icon(
+                                              FontAwesomeIcons.play,
+                                              size: 25.h,
+                                              color: const Color.fromRGBO(
+                                                  255, 25, 45, 1),
                                             ),
                                           ),
                                         ),
@@ -566,7 +556,11 @@ class ChooseSubject extends StatelessWidget {
                         onPressed: () {
                           Navigator.pop(context);
                           type == TestMode.mock
-                              ? () {}
+                              ? Get.to(
+                                  () => StartMock(
+                                    subject: "${subjects[index][0]}",
+                                  ),
+                                )
                               : type == TestMode.quiz
                                   ? Get.to(
                                       () => StartQuiz(
@@ -574,9 +568,18 @@ class ChooseSubject extends StatelessWidget {
                                       ),
                                     )
                                   : type == TestMode.paper
-                                      ? () {}
+                                      ? Get.to(
+                                          () => Papers(
+                                            subject: "${subjects[index][0]}",
+                                          ),
+                                        )
                                       : type == TestMode.challenge
-                                          ? () {}
+                                          ? Get.to(
+                                              () => StartChallenge(
+                                                subject:
+                                                    "${subjects[index][0]}",
+                                              ),
+                                            )
                                           : type == TestMode.teacher
                                               ? ()
                                               : () {};

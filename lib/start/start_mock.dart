@@ -1,5 +1,5 @@
-import 'package:edgiprep/controllers/current_quiz_controller.dart';
-import 'package:edgiprep/quizTabs/quizTab.dart';
+import 'package:edgiprep/controllers/current_mock_controller.dart';
+import 'package:edgiprep/mockTabs/mockTab.dart';
 import 'package:edgiprep/start/start_content.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/utils.dart';
@@ -9,23 +9,30 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class StartQuiz extends StatelessWidget {
+class StartMock extends StatelessWidget {
   final String subject;
-  const StartQuiz({super.key, required this.subject});
+  const StartMock({
+    super.key,
+    required this.subject,
+  });
 
   @override
   Widget build(BuildContext context) {
     // set quiz data
-    CurrentQuizController currentQuizController =
-        Get.find<CurrentQuizController>();
+    CurrentMockController currentmockController =
+        Get.find<CurrentMockController>();
     // reset first
-    currentQuizController.resetQuiz();
-    currentQuizController.setCorrectionRound(false);
-    currentQuizController.emptyWrongQuestions();
+    currentmockController.resetQuiz();
+    currentmockController.emptyWrongQuestions();
     // set title
-    currentQuizController.setTitle(subject);
+    currentmockController.setTitle(subject);
     // questions
-    currentQuizController.setSampleQuetions();
+    currentmockController.setSampleQuetions();
+
+    // empty answers
+    for (int i = 0; i < currentmockController.questions.length; i++) {
+      currentmockController.questions[i].userAnswer = "";
+    }
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -60,29 +67,37 @@ class StartQuiz extends StatelessWidget {
                   message: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      text: "Let's See How Much \n You Remember",
+                      text: "Simulate a Real \n Exam Experience",
                       style: GoogleFonts.nunito(
                         fontSize: 35.sp,
                         fontWeight: FontWeight.w700,
                         color: Colors.black,
                       ),
+                      // children: [
+                      //   TextSpan(
+                      //     text: subject,
+                      //     style: GoogleFonts.nunito(
+                      //         fontSize: 35.sp,
+                      //         fontWeight: FontWeight.w900,
+                      //         color: primaryColor),
+                      //   ),
+                      // ],
                     ),
                   ),
-                  // message: "Let's See How Much \n You Remember",
                 ),
               ),
 
               // continue
               GestureDetector(
                 onTap: () async {
-                  showLoadingDialog(context, "Preparing Your Quiz",
-                      "Please wait while we load your personalized quiz. This will only take a moment.");
+                  showLoadingDialog(context, "Preparing Questions",
+                      "Please wait while we load lesson questions. This will only take a moment.");
 
                   // TODO: remove delay
                   await Future.delayed(const Duration(seconds: 3));
                   Navigator.pop(context);
 
-                  Get.to(() => const QuizTab());
+                  Get.to(() => const MockTab());
                 },
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(100.r),

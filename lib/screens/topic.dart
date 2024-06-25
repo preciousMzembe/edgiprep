@@ -1,7 +1,5 @@
 import 'package:edgiprep/start/start_lesson.dart';
-import 'package:edgiprep/start/start_quiz.dart';
 import 'package:edgiprep/utils/constants.dart';
-import 'package:edgiprep/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

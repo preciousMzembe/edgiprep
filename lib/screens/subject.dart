@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:edgiprep/screens/topic.dart';
 import 'package:edgiprep/utils/constants.dart';
@@ -325,7 +324,7 @@ class SubjectTopic extends StatelessWidget {
           decoration: BoxDecoration(
             color: percent == 1
                 ? const Color.fromARGB(255, 224, 229, 255)
-                : Color.fromARGB(255, 243, 245, 255),
+                : const Color.fromARGB(255, 243, 245, 255),
             border: Border(
               left: BorderSide(
                 width: 3,
@@ -370,7 +369,7 @@ class SubjectTopic extends StatelessWidget {
                       // percent
                       percent: percent,
                       barRadius: Radius.circular(30.r),
-                      progressColor: Color.fromARGB(255, 66, 63, 63),
+                      progressColor: const Color.fromARGB(255, 66, 63, 63),
                       backgroundColor: const Color.fromARGB(255, 196, 196, 196),
                     ),
                   ],

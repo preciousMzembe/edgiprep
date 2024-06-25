@@ -58,7 +58,7 @@ class _LearnState extends State<Learn> {
                   ),
                   child: Icon(
                     FontAwesomeIcons.magnifyingGlass,
-                    color: Color.fromARGB(255, 139, 139, 139),
+                    color: const Color.fromARGB(255, 139, 139, 139),
                     size: isTall ? 30.h : 50.h,
                   ),
                 ),

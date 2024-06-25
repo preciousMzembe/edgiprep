@@ -42,6 +42,8 @@ dependencies:
   dio: ^5.4.3+1
   percent_indicator: ^4.2.3
   animated_visibility: ^0.0.4
+  loading_animation_widget: ^1.2.1
+  loading_indicator: ^3.1.1
 
 dev_dependencies:
   flutter_test:

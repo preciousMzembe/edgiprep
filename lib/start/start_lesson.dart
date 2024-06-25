@@ -1,8 +1,8 @@
 import 'package:edgiprep/controllers/current_lesson_controller.dart';
-import 'package:edgiprep/controllers/current_quiz_controller.dart';
 import 'package:edgiprep/lessonTabs/lessonTab.dart';
 import 'package:edgiprep/start/start_content.dart';
 import 'package:edgiprep/utils/constants.dart';
+import 'package:edgiprep/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -26,6 +26,11 @@ class StartLesson extends StatelessWidget {
     currentLessonController.setTitle(topic);
     // questions
     currentLessonController.setSampleQuetions();
+
+    // empty answers
+    for (int i = 0; i < currentLessonController.questions.length; i++) {
+      currentLessonController.questions[i].userAnswer = "";
+    }
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -76,7 +81,7 @@ class StartLesson extends StatelessWidget {
                                 fontWeight: FontWeight.w900,
                                 color: primaryColor),
                           ),
-                          if (!lessonDone) TextSpan(text: "?"),
+                          if (!lessonDone) const TextSpan(text: "?"),
                         ]),
                   ),
                 ),
@@ -84,7 +89,14 @@ class StartLesson extends StatelessWidget {
 
               // continue
               GestureDetector(
-                onTap: () {
+                onTap: () async {
+                  showLoadingDialog(context, "Preparing Questions",
+                      "Please wait while we load lesson questions. This will only take a moment.");
+
+                  // TODO: remove delay
+                  await Future.delayed(const Duration(seconds: 3));
+                  Navigator.pop(context);
+
                   Get.to(() => const LessonTab());
                 },
                 child: ClipRRect(

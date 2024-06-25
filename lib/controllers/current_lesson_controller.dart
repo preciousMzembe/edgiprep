@@ -1,5 +1,4 @@
-import 'package:edgiprep/models/question.dart';
-import 'package:edgiprep/utils/enums.dart';
+import 'package:edgiprep/models/lesson_question.dart';
 import 'package:get/get.dart';
 
 class CurrentLessonController extends GetxController {
@@ -7,20 +6,22 @@ class CurrentLessonController extends GetxController {
   final RxString _title = "".obs;
   final RxInt _currentQuestionIndex = 0.obs;
   final RxInt _score = 0.obs;
-  final RxList<Question> _questions = RxList<Question>([]);
+  final RxList<LessonQuestion> _questions = RxList<LessonQuestion>([]);
   final RxInt _selectedIndex = RxInt(-1);
   final RxBool _checkAnswer = false.obs;
-  final RxList<Question> _wrongQuestions = RxList<Question>([]);
+  final RxList<LessonQuestion> _wrongQuestions = RxList<LessonQuestion>([]);
+  final RxBool _done = false.obs;
 
   // Getter methods for accessing data
   String get title => _title.value;
   int get currentQuestionIndex => _currentQuestionIndex.value;
   int get score => _score.value;
-  List<Question> get questions => _questions.toList();
+  List<LessonQuestion> get questions => _questions.toList();
   int get numberOfQuestions => _questions.length;
   int get selectedIndex => _selectedIndex.value;
   bool get checkAnswer => _checkAnswer.value;
-  List<Question> get wrongQuestions => _wrongQuestions.toList();
+  List<LessonQuestion> get wrongQuestions => _wrongQuestions.toList();
+  bool get done => _done.value;
 
   // Method to set parts of quiz
 
@@ -28,7 +29,7 @@ class CurrentLessonController extends GetxController {
     _title.value = title;
   }
 
-  void setQuestions(List<Question> questions) {
+  void setQuestions(List<LessonQuestion> questions) {
     _questions.value = questions;
   }
 
@@ -36,7 +37,7 @@ class CurrentLessonController extends GetxController {
     _questions.value = sampleQuestions;
   }
 
-  void addCorrectionQuestion(Question question) {
+  void addCorrectionQuestion(LessonQuestion question) {
     _wrongQuestions.add(question);
   }
 
@@ -52,6 +53,10 @@ class CurrentLessonController extends GetxController {
     _selectedIndex.value = index;
   }
 
+  void setDone(bool done) {
+    _done.value = done;
+  }
+
   void refreshPage() {
     setSelectedIndex(-1);
     setCheckAnswer(false);
@@ -61,7 +66,10 @@ class CurrentLessonController extends GetxController {
   bool isLastQuestion() => currentQuestionIndex == questions.length - 1;
 
   // Method to handle user's answer selection
-  void answerSelected(String userAnswer, String correctAnswer) {
+  void answerSelected(String userAnswer, String correctAnswer) async {
+    // set user answer
+    _questions[currentQuestionIndex].userAnswer = userAnswer;
+
     // correct or wrong
     if (userAnswer == correctAnswer) {
       _score.value++;
@@ -82,6 +90,7 @@ class CurrentLessonController extends GetxController {
   void resetQuiz() {
     _currentQuestionIndex.value = 0;
     _score.value = 0;
+    _done.value = false;
 
     // uncheck answer
     refreshPage();
@@ -89,22 +98,24 @@ class CurrentLessonController extends GetxController {
 }
 
 // Sample biology quiz questions (Multiple Choice)
-final List<Question> sampleQuestions = [
-  const Question(
-    question_id: 1,
+final List<LessonQuestion> sampleQuestions = [
+  LessonQuestion(
+    questionId: 1,
     question: "Which of the following is the basic unit of life?",
     options: ["Cell", "Organ", "Tissue", "System"],
     answer: "Cell",
+    userAnswer: "",
   ),
-  const Question(
-    question_id: 2,
+  LessonQuestion(
+    questionId: 2,
     question:
         "What process uses sunlight, water, and carbon dioxide to produce glucose and oxygen?",
     options: ["Cellular respiration", "Photosynthesis", "Mitosis", "Meiosis"],
     answer: "Photosynthesis",
+    userAnswer: "",
   ),
-  const Question(
-    question_id: 3,
+  LessonQuestion(
+    questionId: 3,
     question: "What is the function of DNA?",
     options: [
       "To transport materials within the cell",
@@ -113,29 +124,33 @@ final List<Question> sampleQuestions = [
       "To build proteins"
     ],
     answer: "To store genetic information",
+    userAnswer: "",
   ),
-  const Question(
-    question_id: 4,
+  LessonQuestion(
+    questionId: 4,
     question:
         "What is the process by which an organism inherits traits from its parents?",
     options: ["Adaptation", "Evolution", "Heredity", "Homeostasis"],
     answer: "Heredity",
+    userAnswer: "",
   ),
-  const Question(
-    question_id: 5,
+  LessonQuestion(
+    questionId: 5,
     question:
         "What are the structures in a plant cell that capture sunlight for photosynthesis?",
     options: ["Nucleus", "Chloroplasts", "Mitochondria", "Cell wall"],
     answer: "Chloroplasts",
+    userAnswer: "",
   ),
-  // const Question(
-  // question_id: 6,
+  // const LessonQuestion(
+  // questionId: 6,
   //   question: "What is the waste product of cellular respiration?",
   //   options: ["Glucose", "Oxygen", "Carbon dioxide", "Water"],
   //   answer: "Carbon dioxide",
+  // userAnswer: "",
   // ),
-  // const Question(
-  // question_id: 7,
+  // const LessonQuestion(
+  // questionId: 7,
   //   question: "What is the function of the digestive system?",
   //   options: [
   //     "To remove waste products from the body",
@@ -144,9 +159,10 @@ final List<Question> sampleQuestions = [
   //     "To control the body's temperature"
   //   ],
   //   answer: "To break down food into smaller molecules",
+  // userAnswer: "",
   // ),
-  // const Question(
-  // question_id: 8,
+  // const LessonQuestion(
+  // questionId: 8,
   //   question: "What is the difference between arteries and veins?",
   //   options: [
   //     "Arteries carry oxygen-rich blood, veins carry oxygen-depleted blood.",
@@ -156,9 +172,10 @@ final List<Question> sampleQuestions = [
   //   ],
   //   answer:
   //       "Arteries carry oxygen-rich blood, veins carry oxygen-depleted blood.",
+  // userAnswer: "",
   // ),
-  // const Question(
-  // question_id: 9,
+  // const LessonQuestion(
+  // questionId: 9,
   //   question: "What is the role of enzymes in the body?",
   //   options: [
   //     "To provide energy",
@@ -167,9 +184,10 @@ final List<Question> sampleQuestions = [
   //     "To transport materials"
   //   ],
   //   answer: "To speed up chemical reactions",
+  // userAnswer: "",
   // ),
-  // const Question(
-  // question_id: 10,
+  // const LessonQuestion(
+  // questionId: 10,
   //   question:
   //       "What is the process by which plants lose water vapor through their leaves?",
   //   options: [
@@ -179,5 +197,6 @@ final List<Question> sampleQuestions = [
   //     "Mitosis"
   //   ],
   //   answer: "Transpiration",
+  // userAnswer: "",
   // ),
 ];

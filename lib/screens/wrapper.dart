@@ -112,8 +112,8 @@ class _WrapperState extends State<Wrapper> {
 
                       // learn
                       NavOption(
-                        name: "Subjects",
-                        image: "books.png",
+                        name: "Learn",
+                        image: "bulb.png",
                         selected: navController.selectedIndex == 1,
                         click: () {
                           _onItemTapped(1);
@@ -152,7 +152,7 @@ class _WrapperState extends State<Wrapper> {
                 ),
               ),
             )
-          : SizedBox(
+          : const SizedBox(
               height: 0.0,
             ),
     );
