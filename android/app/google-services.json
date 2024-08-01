@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "760414053962",
+    "project_id": "edgiprep",
+    "storage_bucket": "edgiprep.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:760414053962:android:a1fcffa4b29e96ba5e28b3",
+        "android_client_info": {
+          "package_name": "com.edgicate.edgiprep"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeh2vjAXri0ttX6FsPE9JvuXAIZrygVwk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

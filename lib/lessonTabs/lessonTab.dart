@@ -1,6 +1,7 @@
 import 'package:edgiprep/controllers/current_lesson_controller.dart';
-import 'package:edgiprep/lessonTabs/answer.dart';
-import 'package:edgiprep/models/lesson_question.dart';
+import 'package:edgiprep/mockTabs/answer.dart';
+import 'package:edgiprep/models/lesson_slide.dart';
+import 'package:edgiprep/models/test_question.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -50,9 +51,6 @@ class _LessonTabState extends State<LessonTab> {
     return PopScope(
       canPop: false,
       child: Obx(() {
-        List<String> shuffledOptions = currentLessonController
-            .questions[currentLessonController.currentQuestionIndex].options
-            .toList();
         return Scaffold(
           backgroundColor: backgroundColor,
           body: SafeArea(
@@ -75,12 +73,10 @@ class _LessonTabState extends State<LessonTab> {
                           // close
                           IconButton(
                             onPressed: () {
-                              // show popup before closing
-
                               showCloseQuizDialog(
                                 context,
-                                "Quit Lesson?",
-                                "Are you sure you want to quit lesson?",
+                                "Quit Exam",
+                                "Are you sure you want to quit the exam?",
                                 () {
                                   Get.back();
                                   Get.back();
@@ -135,38 +131,13 @@ class _LessonTabState extends State<LessonTab> {
                             // animationDuration: 2000,
                             // percent
                             percent:
-                                (currentLessonController.currentQuestionIndex +
+                                (currentLessonController.currentSlideIndex +
                                         1) /
-                                    currentLessonController.numberOfQuestions,
+                                    currentLessonController.numberOfSlides,
                             barRadius: Radius.circular(30.r),
                             progressColor: primaryColor,
                             backgroundColor: progressColor,
                           ),
-                          SizedBox(
-                            height: 5.h,
-                          ),
-                          // progress numbers
-                          // RichText(
-                          //   text: TextSpan(
-                          //     style: GoogleFonts.nunito(
-                          //       color: Colors.black,
-                          //       fontSize: 25.sp,
-                          //       fontWeight: FontWeight.w900,
-                          //     ),
-                          //     children: [
-                          //       TextSpan(
-                          //         text:
-                          //             "${currentLessonController.currentQuestionIndex + 1}",
-                          //         style: TextStyle(color: primaryColor),
-                          //       ),
-                          //       TextSpan(
-                          //         text:
-                          //             "/${currentLessonController.numberOfQuestions}",
-                          //         style: TextStyle(color: textColor),
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
                         ],
                       ),
                     ],
@@ -191,15 +162,14 @@ class _LessonTabState extends State<LessonTab> {
                             // questions
 
                             for (int i = 0;
-                                i < currentLessonController.questions.length;
+                                i < currentLessonController.slides.length;
                                 i++)
-                              if (currentLessonController
-                                      .currentQuestionIndex >=
+                              if (currentLessonController.currentSlideIndex >=
                                   i)
                                 ConstrainedBox(
                                   constraints: BoxConstraints(
                                     minHeight: currentLessonController
-                                                .currentQuestionIndex ==
+                                                .currentSlideIndex ==
                                             i
                                         ? constraints.maxHeight - 100.h
                                         : 60.h,
@@ -208,11 +178,27 @@ class _LessonTabState extends State<LessonTab> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
                                     children: [
-                                      Question(
-                                        question: currentLessonController
-                                            .questions[i],
-                                        questionIndex: i,
-                                      ),
+                                      // Content or Question
+                                      if (currentLessonController
+                                              .slides[i].question !=
+                                          null)
+                                        Question(
+                                          question: currentLessonController
+                                              .slides[i].question,
+                                          questionIndex: i,
+                                        ),
+                                      if (currentLessonController
+                                              .slides[i].content !=
+                                          null)
+                                        Text(
+                                          currentLessonController
+                                                  .slides[i].content ??
+                                              "",
+                                          style: GoogleFonts.nunito(
+                                            fontSize: 30.sp,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
                                       SizedBox(
                                         height: 60.h,
                                       ),
@@ -231,6 +217,49 @@ class _LessonTabState extends State<LessonTab> {
                   ),
                 ),
 
+                // Continue to question button
+                if (currentLessonController
+                            .slides[currentLessonController.currentSlideIndex]
+                            .content !=
+                        null &&
+                    !currentLessonController.done)
+                  ClipRRect(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(40.r),
+                        topRight: Radius.circular(40.r)),
+                    child: Container(
+                      color: const Color.fromRGBO(47, 59, 98, 0.178),
+                      padding: EdgeInsets.symmetric(
+                        vertical: 40.h,
+                        horizontal: 30.h,
+                      ),
+                      child: MaterialButton(
+                        color: secondaryColor,
+                        height: 100.h,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100.r),
+                        ),
+                        onPressed: () {
+                          // go to question
+                          if (!currentLessonController.isLastSlide()) {
+                            currentLessonController.goToNextSlide();
+                          } else {
+                            // mark done
+                            currentLessonController.setDone(true);
+                          }
+                        },
+                        child: Text(
+                          "Continue",
+                          style: GoogleFonts.nunito(
+                            color: primaryColor,
+                            fontSize: 40.sp,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
                 // check and continue
                 if (currentLessonController.selectedIndex >= 0)
                   ClipRRect(
@@ -238,7 +267,21 @@ class _LessonTabState extends State<LessonTab> {
                         topLeft: Radius.circular(40.r),
                         topRight: Radius.circular(40.r)),
                     child: Container(
-                      color: const Color.fromRGBO(47, 59, 98, 0.178),
+                      color: !currentLessonController.checkAnswer
+                          ? const Color.fromRGBO(47, 59, 98, 0.178)
+                          : currentLessonController
+                                          .slides[currentLessonController
+                                              .currentSlideIndex]
+                                          .question!
+                                          .options[
+                                      currentLessonController.selectedIndex] ==
+                                  currentLessonController
+                                      .slides[currentLessonController
+                                          .currentSlideIndex]
+                                      .question!
+                                      .answer
+                              ? const Color.fromRGBO(76, 175, 79, 0.178)
+                              : const Color.fromRGBO(244, 67, 54, 0.178),
                       padding: EdgeInsets.symmetric(
                         vertical: 40.h,
                         horizontal: 30.h,
@@ -262,13 +305,18 @@ class _LessonTabState extends State<LessonTab> {
                                         width: 50.h,
                                         height: 50.h,
                                         decoration: BoxDecoration(
-                                          color: shuffledOptions[
+                                          color: currentLessonController
+                                                          .slides[currentLessonController
+                                                              .currentSlideIndex]
+                                                          .question!
+                                                          .options[
                                                       currentLessonController
                                                           .selectedIndex] ==
                                                   currentLessonController
-                                                      .questions[
+                                                      .slides[
                                                           currentLessonController
-                                                              .currentQuestionIndex]
+                                                              .currentSlideIndex]
+                                                      .question!
                                                       .answer
                                               ? Colors.green
                                               : Colors.red,
@@ -276,13 +324,18 @@ class _LessonTabState extends State<LessonTab> {
                                               BorderRadius.circular(50.r),
                                         ),
                                         child: Icon(
-                                          shuffledOptions[
+                                          currentLessonController
+                                                          .slides[currentLessonController
+                                                              .currentSlideIndex]
+                                                          .question!
+                                                          .options[
                                                       currentLessonController
                                                           .selectedIndex] ==
                                                   currentLessonController
-                                                      .questions[
+                                                      .slides[
                                                           currentLessonController
-                                                              .currentQuestionIndex]
+                                                              .currentSlideIndex]
+                                                      .question!
                                                       .answer
                                               ? FontAwesomeIcons.check
                                               : FontAwesomeIcons.xmark,
@@ -297,25 +350,37 @@ class _LessonTabState extends State<LessonTab> {
                                     if (currentLessonController.selectedIndex >=
                                         0)
                                       Text(
-                                        shuffledOptions[currentLessonController
-                                                    .selectedIndex] ==
+                                        currentLessonController
+                                                        .slides[
+                                                            currentLessonController
+                                                                .currentSlideIndex]
+                                                        .question!
+                                                        .options[
+                                                    currentLessonController
+                                                        .selectedIndex] ==
                                                 currentLessonController
-                                                    .questions[
+                                                    .slides[
                                                         currentLessonController
-                                                            .currentQuestionIndex]
+                                                            .currentSlideIndex]
+                                                    .question!
                                                     .answer
                                             ? "Correct"
                                             : "Wrong",
                                         style: GoogleFonts.nunito(
                                           fontSize: 40.sp,
                                           fontWeight: FontWeight.w900,
-                                          color: shuffledOptions[
+                                          color: currentLessonController
+                                                          .slides[currentLessonController
+                                                              .currentSlideIndex]
+                                                          .question!
+                                                          .options[
                                                       currentLessonController
                                                           .selectedIndex] ==
                                                   currentLessonController
-                                                      .questions[
+                                                      .slides[
                                                           currentLessonController
-                                                              .currentQuestionIndex]
+                                                              .currentSlideIndex]
+                                                      .question!
                                                       .answer
                                               ? Colors.green
                                               : Colors.red,
@@ -327,11 +392,17 @@ class _LessonTabState extends State<LessonTab> {
                                   height: 20.h,
                                 ),
                                 // answer
-                                if (shuffledOptions[currentLessonController
-                                        .selectedIndex] !=
+                                if (currentLessonController
+                                            .slides[currentLessonController
+                                                .currentSlideIndex]
+                                            .question!
+                                            .options[
+                                        currentLessonController
+                                            .selectedIndex] !=
                                     currentLessonController
-                                        .questions[currentLessonController
-                                            .currentQuestionIndex]
+                                        .slides[currentLessonController
+                                            .currentSlideIndex]
+                                        .question!
                                         .answer)
                                   Column(
                                     crossAxisAlignment:
@@ -351,14 +422,14 @@ class _LessonTabState extends State<LessonTab> {
                                           Expanded(
                                             child: Text(
                                               currentLessonController
-                                                  .questions[
+                                                  .slides[
                                                       currentLessonController
-                                                          .currentQuestionIndex]
+                                                          .currentSlideIndex]
+                                                  .question!
                                                   .answer,
                                               style: GoogleFonts.nunito(
-                                                fontSize: 35.sp,
+                                                fontSize: 25.sp,
                                                 fontWeight: FontWeight.w900,
-                                                color: Colors.green,
                                               ),
                                             ),
                                           ),
@@ -385,36 +456,38 @@ class _LessonTabState extends State<LessonTab> {
                                 currentLessonController.setCheckAnswer(true);
                               } else {
                                 // if last question
-                                if (currentLessonController.isLastQuestion()) {
+                                if (currentLessonController.isLastSlide()) {
                                   // mark
                                   currentLessonController.answerSelected(
-                                      shuffledOptions[currentLessonController
-                                          .selectedIndex],
                                       currentLessonController
-                                          .questions[currentLessonController
-                                              .currentQuestionIndex]
+                                              .slides[currentLessonController
+                                                  .currentSlideIndex]
+                                              .question!
+                                              .options[
+                                          currentLessonController
+                                              .selectedIndex],
+                                      currentLessonController
+                                          .slides[currentLessonController
+                                              .currentSlideIndex]
+                                          .question!
                                           .answer);
 
                                   // mark done
                                   currentLessonController.setDone(true);
-
-                                  // change page
-                                  // if (currentLessonController.score !=
-                                  //         currentLessonController
-                                  //             .questions.length) {
-
-                                  //   Get.to(() => const RetryPrompt());
-                                  // } else {
-                                  //   Get.to(() => const Done());
-                                  // }
                                 } else {
                                   // next question
                                   currentLessonController.answerSelected(
-                                      shuffledOptions[currentLessonController
-                                          .selectedIndex],
                                       currentLessonController
-                                          .questions[currentLessonController
-                                              .currentQuestionIndex]
+                                              .slides[currentLessonController
+                                                  .currentSlideIndex]
+                                              .question!
+                                              .options[
+                                          currentLessonController
+                                              .selectedIndex],
+                                      currentLessonController
+                                          .slides[currentLessonController
+                                              .currentSlideIndex]
+                                          .question!
                                           .answer);
                                 }
 
@@ -424,11 +497,18 @@ class _LessonTabState extends State<LessonTab> {
                             child: Text(
                               !currentLessonController.checkAnswer
                                   ? "Check"
-                                  : shuffledOptions[currentLessonController
-                                              .selectedIndex] !=
+                                  : currentLessonController
+                                                  .slides[
+                                                      currentLessonController
+                                                          .currentSlideIndex]
+                                                  .question!
+                                                  .options[
+                                              currentLessonController
+                                                  .selectedIndex] !=
                                           currentLessonController
-                                              .questions[currentLessonController
-                                                  .currentQuestionIndex]
+                                              .slides[currentLessonController
+                                                  .currentSlideIndex]
+                                              .question!
                                               .answer
                                       ? "Got It"
                                       : "Continue",
@@ -481,7 +561,7 @@ class _LessonTabState extends State<LessonTab> {
                                       ),
                                       TextSpan(
                                         text:
-                                            "/${currentLessonController.numberOfQuestions}",
+                                            "/${currentLessonController.getNumberOfQuestions()}",
                                         style: TextStyle(color: textColor),
                                       ),
                                     ],
@@ -554,7 +634,7 @@ class _LessonTabState extends State<LessonTab> {
 }
 
 class Question extends StatelessWidget {
-  final LessonQuestion question;
+  final LessonQuestion? question;
   final int questionIndex;
   const Question(
       {super.key, required this.question, required this.questionIndex});
@@ -568,10 +648,10 @@ class Question extends StatelessWidget {
       children: [
         // question
         Text(
-          question.question,
+          question!.question,
           style: GoogleFonts.nunito(
-            fontSize: 35.sp,
-            fontWeight: FontWeight.w700,
+            fontSize: 30.sp,
+            fontWeight: FontWeight.w900,
           ),
         ),
 
@@ -580,28 +660,27 @@ class Question extends StatelessWidget {
           height: 50.h,
         ),
 
-        for (int i = 0; i < question.options.length; i++)
+        for (int i = 0; i < question!.options.length; i++)
           Column(
             children: [
               Answer(
-                answer: question.options[i],
+                answer: question!.options[i],
                 selected: currentLessonController.selectedIndex == i &&
-                    currentLessonController.currentQuestionIndex ==
-                        questionIndex,
+                    currentLessonController.currentSlideIndex == questionIndex,
                 select: () {
                   if (!currentLessonController.checkAnswer &&
-                      currentLessonController.currentQuestionIndex ==
+                      currentLessonController.currentSlideIndex ==
                           questionIndex &&
                       !currentLessonController.done) {
                     currentLessonController.setSelectedIndex(i);
                   }
                 },
-                color: question.options[i] == question.answer &&
-                        question.userAnswer != ""
+                color: question?.options[i] == question?.answer &&
+                        question?.userAnswer != ""
                     ? Colors.green
-                    : question.userAnswer == question.options[i] &&
-                            question.userAnswer != question.answer &&
-                            question.userAnswer != ""
+                    : question?.userAnswer == question?.options[i] &&
+                            question?.userAnswer != question?.answer &&
+                            question?.userAnswer != ""
                         ? Colors.red
                         : Colors.transparent,
               ),

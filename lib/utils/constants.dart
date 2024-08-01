@@ -15,9 +15,6 @@ Color textColor = const Color.fromARGB(255, 119, 119, 119);
 Color accentColor = const Color.fromRGBO(255, 193, 7, 1);
 Color errorColor = const Color.fromRGBO(220, 53, 69, 1);
 
-String ApiUrl = "https://mwayiapi.edgicate.com";
-String ImageUrl = "https://mwayi.edgicate.com/files";
-
 List subjects = [
   ["Biology", "biology.jpg"],
   ["History", "history.jpg"],
@@ -25,6 +22,8 @@ List subjects = [
   ["Chemistry", "science.jpg"],
   ["Agriculture", "agriculture.jpg"],
 ];
+
+List exams = ["JCE", "MSCE"];
 
 Color getRandomColor() {
   final random = Random();

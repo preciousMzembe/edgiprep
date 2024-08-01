@@ -99,6 +99,9 @@ class CurrentQuizController extends GetxController {
   }
 }
 
+// Create Quiz
+Future<void> createQuiz() async {}
+
 // Sample biology quiz questions (Multiple Choice)
 final List<Question> sampleQuestions = [
   const Question(
@@ -139,56 +142,4 @@ final List<Question> sampleQuestions = [
     options: ["Nucleus", "Chloroplasts", "Mitochondria", "Cell wall"],
     answer: "Chloroplasts",
   ),
-  // const Question(
-  // questionId: 6,
-  //   question: "What is the waste product of cellular respiration?",
-  //   options: ["Glucose", "Oxygen", "Carbon dioxide", "Water"],
-  //   answer: "Carbon dioxide",
-  // ),
-  // const Question(
-  // questionId: 7,
-  //   question: "What is the function of the digestive system?",
-  //   options: [
-  //     "To remove waste products from the body",
-  //     "To transport materials throughout the body",
-  //     "To break down food into smaller molecules",
-  //     "To control the body's temperature"
-  //   ],
-  //   answer: "To break down food into smaller molecules",
-  // ),
-  // const Question(
-  // questionId: 8,
-  //   question: "What is the difference between arteries and veins?",
-  //   options: [
-  //     "Arteries carry oxygen-rich blood, veins carry oxygen-depleted blood.",
-  //     "Veins carry oxygen-rich blood, arteries carry oxygen-depleted blood.",
-  //     "Arteries are thinner and less muscular than veins.",
-  //     "Veins are thinner and less muscular than arteries."
-  //   ],
-  //   answer:
-  //       "Arteries carry oxygen-rich blood, veins carry oxygen-depleted blood.",
-  // ),
-  // const Question(
-  // questionId: 9,
-  //   question: "What is the role of enzymes in the body?",
-  //   options: [
-  //     "To provide energy",
-  //     "To speed up chemical reactions",
-  //     "To build structures",
-  //     "To transport materials"
-  //   ],
-  //   answer: "To speed up chemical reactions",
-  // ),
-  // const Question(
-  // questionId: 10,
-  //   question:
-  //       "What is the process by which plants lose water vapor through their leaves?",
-  //   options: [
-  //     "Transpiration",
-  //     "Cellular respiration",
-  //     "Photosynthesis",
-  //     "Mitosis"
-  //   ],
-  //   answer: "Transpiration",
-  // ),
 ];

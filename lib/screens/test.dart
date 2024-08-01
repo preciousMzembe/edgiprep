@@ -1,3 +1,4 @@
+import 'package:edgiprep/controllers/user_controller.dart';
 import 'package:edgiprep/screens/papers.dart';
 import 'package:edgiprep/start/start_challenge.dart';
 import 'package:edgiprep/start/start_mock.dart';
@@ -510,136 +511,137 @@ class ChooseSubject extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20.r),
-      child: Container(
-        color: Colors.white,
-        padding: EdgeInsets.symmetric(
-          vertical: 30.h,
-        ),
-        child: Column(
-          children: [
-            Center(
-              child: Text(
-                type == TestMode.mock
-                    ? "Mock Exam"
-                    : type == TestMode.quiz
-                        ? "Quiz"
-                        : type == TestMode.paper
-                            ? "Past Paper"
-                            : type == TestMode.challenge
-                                ? "Challenge"
-                                : type == TestMode.teacher
-                                    ? "Teacher Exams"
-                                    : "Other",
-                style: GoogleFonts.nunito(
-                  fontSize: 40.sp,
-                  fontWeight: FontWeight.w900,
-                  color: primaryColor,
+    UserController userController = Get.find<UserController>();
+
+    return Obx(() {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(20.r),
+        child: Container(
+          color: Colors.white,
+          padding: EdgeInsets.symmetric(
+            vertical: 30.h,
+          ),
+          child: Column(
+            children: [
+              Center(
+                child: Text(
+                  type == TestMode.mock
+                      ? "Mock Exam"
+                      : type == TestMode.quiz
+                          ? "Quiz"
+                          : type == TestMode.paper
+                              ? "Past Papers"
+                              : type == TestMode.challenge
+                                  ? "Challenge"
+                                  : type == TestMode.teacher
+                                      ? "Teacher Exams"
+                                      : "Other",
+                  style: GoogleFonts.nunito(
+                    fontSize: 40.sp,
+                    fontWeight: FontWeight.w900,
+                    color: primaryColor,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 50.h,
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 50.w),
-                child: ListView.separated(
-                  physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  itemCount: subjects.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(20.r),
-                      child: MaterialButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          type == TestMode.mock
-                              ? Get.to(
-                                  () => StartMock(
-                                    subject: "${subjects[index][0]}",
+              SizedBox(
+                height: 50.h,
+              ),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 50.w),
+                  child: ListView.separated(
+                    physics: const BouncingScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    itemCount: userController.currentSubjects.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(20.r),
+                        child: MaterialButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            type == TestMode.mock
+                                ? Get.to(
+                                    () => StartMock(
+                                      subject:
+                                          "${userController.currentSubjects[index]["subjectName"]}",
+                                    ),
+                                  )
+                                : type == TestMode.quiz
+                                    ? Get.to(
+                                        () => StartQuiz(
+                                          subject: userController
+                                              .currentSubjects[index],
+                                        ),
+                                      )
+                                    : type == TestMode.paper
+                                        ? Get.to(
+                                            () => Papers(
+                                              subject:
+                                                  "${userController.currentSubjects[index]["subjectName"]}",
+                                            ),
+                                          )
+                                        : type == TestMode.challenge
+                                            ? Get.to(
+                                                () => StartChallenge(
+                                                  subject:
+                                                      "${userController.currentSubjects[index]["subjectName"]}",
+                                                ),
+                                              )
+                                            : type == TestMode.teacher
+                                                ? ()
+                                                : () {};
+                          },
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20.h,
+                            vertical: 20.h,
+                          ),
+                          // color: Colors.transparent,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              // image
+                              Container(
+                                width: 60.h,
+                                height: 60.h,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                        "${userController.currentSubjects[index]["subjectImage"]}"),
+                                    fit: BoxFit.cover,
                                   ),
-                                )
-                              : type == TestMode.quiz
-                                  ? Get.to(
-                                      () => StartQuiz(
-                                        subject: "${subjects[index][0]}",
-                                      ),
-                                    )
-                                  : type == TestMode.paper
-                                      ? Get.to(
-                                          () => Papers(
-                                            subject: "${subjects[index][0]}",
-                                          ),
-                                        )
-                                      : type == TestMode.challenge
-                                          ? Get.to(
-                                              () => StartChallenge(
-                                                subject:
-                                                    "${subjects[index][0]}",
-                                              ),
-                                            )
-                                          : type == TestMode.teacher
-                                              ? ()
-                                              : () {};
-
-                          // Get.to(
-                          //   () => StartQuiz(
-                          //     subject: "${subjects[index][0]}",
-                          //   ),
-                          // );
-                        },
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20.h,
-                          vertical: 20.h,
-                        ),
-                        // color: Colors.transparent,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            // image
-                            Container(
-                              width: 60.h,
-                              height: 60.h,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage(
-                                      'images/${subjects[index][1]}'),
-                                  fit: BoxFit.cover,
+                                  borderRadius: BorderRadius.circular(20.r),
                                 ),
-                                borderRadius: BorderRadius.circular(20.r),
                               ),
-                            ),
 
-                            // name
-                            SizedBox(
-                              width: 25.w,
-                            ),
-                            Text(
-                              "${subjects[index][0]}",
-                              style: GoogleFonts.nunito(
-                                fontSize: 28.sp,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.black,
+                              // name
+                              SizedBox(
+                                width: 25.w,
                               ),
-                            ),
-                          ],
+                              Text(
+                                "${userController.currentSubjects[index]["subjectName"]}",
+                                style: GoogleFonts.nunito(
+                                  fontSize: 28.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return SizedBox(
-                      height: 0.h,
-                    );
-                  },
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return SizedBox(
+                        height: 0.h,
+                      );
+                    },
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

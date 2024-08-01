@@ -1,26 +1,24 @@
-import 'package:edgiprep/models/lesson_question.dart';
+import 'package:edgiprep/models/lesson_slide.dart';
 import 'package:get/get.dart';
 
 class CurrentLessonController extends GetxController {
   // Rx variables to store quiz data
   final RxString _title = "".obs;
-  final RxInt _currentQuestionIndex = 0.obs;
+  final RxInt _currentSlideIndex = 0.obs;
   final RxInt _score = 0.obs;
-  final RxList<LessonQuestion> _questions = RxList<LessonQuestion>([]);
+  final RxList<LessonSlide> _slides = RxList<LessonSlide>([]);
   final RxInt _selectedIndex = RxInt(-1);
   final RxBool _checkAnswer = false.obs;
-  final RxList<LessonQuestion> _wrongQuestions = RxList<LessonQuestion>([]);
   final RxBool _done = false.obs;
 
   // Getter methods for accessing data
   String get title => _title.value;
-  int get currentQuestionIndex => _currentQuestionIndex.value;
+  int get currentSlideIndex => _currentSlideIndex.value;
   int get score => _score.value;
-  List<LessonQuestion> get questions => _questions.toList();
-  int get numberOfQuestions => _questions.length;
+  List<LessonSlide> get slides => _slides.toList();
+  int get numberOfSlides => _slides.length;
   int get selectedIndex => _selectedIndex.value;
   bool get checkAnswer => _checkAnswer.value;
-  List<LessonQuestion> get wrongQuestions => _wrongQuestions.toList();
   bool get done => _done.value;
 
   // Method to set parts of quiz
@@ -29,20 +27,12 @@ class CurrentLessonController extends GetxController {
     _title.value = title;
   }
 
-  void setQuestions(List<LessonQuestion> questions) {
-    _questions.value = questions;
+  void setQuestions(List<LessonSlide> questions) {
+    _slides.value = questions;
   }
 
   void setSampleQuetions() {
-    _questions.value = sampleQuestions;
-  }
-
-  void addCorrectionQuestion(LessonQuestion question) {
-    _wrongQuestions.add(question);
-  }
-
-  void emptyWrongQuestions() {
-    _wrongQuestions.value = [];
+    _slides.value = sampleSlides;
   }
 
   void setCheckAnswer(bool check) {
@@ -62,24 +52,39 @@ class CurrentLessonController extends GetxController {
     setCheckAnswer(false);
   }
 
+  // get number of questions
+  int getNumberOfQuestions() {
+    int questionCount = 0;
+
+    for (var slide in slides) {
+      if (slide.question != null) {
+        questionCount++;
+      }
+    }
+
+    return questionCount;
+  }
+
+  // slide
+  void goToNextSlide() {
+    _currentSlideIndex.value++;
+  }
+
   // Method to check if the current question is the last one
-  bool isLastQuestion() => currentQuestionIndex == questions.length - 1;
+  bool isLastSlide() => currentSlideIndex == slides.length - 1;
 
   // Method to handle user's answer selection
   void answerSelected(String userAnswer, String correctAnswer) async {
     // set user answer
-    _questions[currentQuestionIndex].userAnswer = userAnswer;
+    _slides[currentSlideIndex].question?.userAnswer = userAnswer;
 
     // correct or wrong
     if (userAnswer == correctAnswer) {
       _score.value++;
-    } else {
-      // add wrong question
-      addCorrectionQuestion(questions[_currentQuestionIndex.value]);
     }
 
-    if (!isLastQuestion()) {
-      _currentQuestionIndex.value++; // Move to the next question
+    if (!isLastSlide()) {
+      _currentSlideIndex.value++;
     }
 
     // uncheck answer
@@ -88,7 +93,7 @@ class CurrentLessonController extends GetxController {
 
   // Method to reset the quiz (optional)
   void resetQuiz() {
-    _currentQuestionIndex.value = 0;
+    _currentSlideIndex.value = 0;
     _score.value = 0;
     _done.value = false;
 
@@ -98,105 +103,31 @@ class CurrentLessonController extends GetxController {
 }
 
 // Sample biology quiz questions (Multiple Choice)
-final List<LessonQuestion> sampleQuestions = [
-  LessonQuestion(
-    questionId: 1,
-    question: "Which of the following is the basic unit of life?",
-    options: ["Cell", "Organ", "Tissue", "System"],
-    answer: "Cell",
-    userAnswer: "",
+final List<LessonSlide> sampleSlides = [
+  LessonSlide(
+    lessonId: 1,
+    content: 'This is the introduction to the lesson.',
   ),
-  LessonQuestion(
-    questionId: 2,
-    question:
-        "What process uses sunlight, water, and carbon dioxide to produce glucose and oxygen?",
-    options: ["Cellular respiration", "Photosynthesis", "Mitosis", "Meiosis"],
-    answer: "Photosynthesis",
-    userAnswer: "",
+  LessonSlide(
+    lessonId: 2,
+    question: LessonQuestion(
+      question: 'Which of the following is the basic unit of life?',
+      options: ['Cell', 'Organ', 'Tissue', 'System'],
+      answer: 'Cell',
+    ),
   ),
-  LessonQuestion(
-    questionId: 3,
-    question: "What is the function of DNA?",
-    options: [
-      "To transport materials within the cell",
-      "To store genetic information",
-      "To provide energy for the cell",
-      "To build proteins"
-    ],
-    answer: "To store genetic information",
-    userAnswer: "",
+  LessonSlide(
+    lessonId: 3,
+    content:
+        'Photosynthesis is the process used by plants to convert light energy into chemical energy.',
   ),
-  LessonQuestion(
-    questionId: 4,
-    question:
-        "What is the process by which an organism inherits traits from its parents?",
-    options: ["Adaptation", "Evolution", "Heredity", "Homeostasis"],
-    answer: "Heredity",
-    userAnswer: "",
-  ),
-  LessonQuestion(
-    questionId: 5,
-    question:
-        "What are the structures in a plant cell that capture sunlight for photosynthesis?",
-    options: ["Nucleus", "Chloroplasts", "Mitochondria", "Cell wall"],
-    answer: "Chloroplasts",
-    userAnswer: "",
-  ),
-  // const LessonQuestion(
-  // questionId: 6,
-  //   question: "What is the waste product of cellular respiration?",
-  //   options: ["Glucose", "Oxygen", "Carbon dioxide", "Water"],
-  //   answer: "Carbon dioxide",
-  // userAnswer: "",
-  // ),
-  // const LessonQuestion(
-  // questionId: 7,
-  //   question: "What is the function of the digestive system?",
-  //   options: [
-  //     "To remove waste products from the body",
-  //     "To transport materials throughout the body",
-  //     "To break down food into smaller molecules",
-  //     "To control the body's temperature"
-  //   ],
-  //   answer: "To break down food into smaller molecules",
-  // userAnswer: "",
-  // ),
-  // const LessonQuestion(
-  // questionId: 8,
-  //   question: "What is the difference between arteries and veins?",
-  //   options: [
-  //     "Arteries carry oxygen-rich blood, veins carry oxygen-depleted blood.",
-  //     "Veins carry oxygen-rich blood, arteries carry oxygen-depleted blood.",
-  //     "Arteries are thinner and less muscular than veins.",
-  //     "Veins are thinner and less muscular than arteries."
-  //   ],
-  //   answer:
-  //       "Arteries carry oxygen-rich blood, veins carry oxygen-depleted blood.",
-  // userAnswer: "",
-  // ),
-  // const LessonQuestion(
-  // questionId: 9,
-  //   question: "What is the role of enzymes in the body?",
-  //   options: [
-  //     "To provide energy",
-  //     "To speed up chemical reactions",
-  //     "To build structures",
-  //     "To transport materials"
-  //   ],
-  //   answer: "To speed up chemical reactions",
-  // userAnswer: "",
-  // ),
-  // const LessonQuestion(
-  // questionId: 10,
-  //   question:
-  //       "What is the process by which plants lose water vapor through their leaves?",
-  //   options: [
-  //     "Transpiration",
-  //     "Cellular respiration",
-  //     "Photosynthesis",
-  //     "Mitosis"
-  //   ],
-  //   answer: "Transpiration",
-  // userAnswer: "",
+  // LessonSlide(
+  //   lessonId: 4,
+  //   question: LessonQuestion(
+  //     question:
+  //         'What process uses sunlight, water, and carbon dioxide to produce glucose and oxygen?',
+  //     options: ['Cellular respiration', 'Photosynthesis', 'Mitosis', 'Meiosis'],
+  //     answer: 'Photosynthesis',
+  //   ),
   // ),
 ];

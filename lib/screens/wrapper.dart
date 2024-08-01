@@ -71,7 +71,7 @@ class _WrapperState extends State<Wrapper> {
                   }),
                   const Learn(),
                   const Test(),
-                  const Notes(),
+                  // const Notes(),
                   const Settings(),
                 ],
               ),
@@ -130,21 +130,21 @@ class _WrapperState extends State<Wrapper> {
                       ),
 
                       // notes
-                      NavOption(
-                        name: "Notes",
-                        image: "notes_2.png",
-                        selected: navController.selectedIndex == 3,
-                        click: () {
-                          _onItemTapped(3);
-                        },
-                      ),
+                      // NavOption(
+                      //   name: "Notes",
+                      //   image: "notes_2.png",
+                      //   selected: navController.selectedIndex == 3,
+                      //   click: () {
+                      //     _onItemTapped(3);
+                      //   },
+                      // ),
                       // profile
                       NavOption(
                         name: "Settings",
                         image: "settings.png",
-                        selected: navController.selectedIndex == 4,
+                        selected: navController.selectedIndex == 3,
                         click: () {
-                          _onItemTapped(4);
+                          _onItemTapped(3);
                         },
                       ),
                     ],

@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class StartQuiz extends StatelessWidget {
-  final String subject;
+  final Map subject;
   const StartQuiz({super.key, required this.subject});
 
   @override
@@ -23,9 +23,9 @@ class StartQuiz extends StatelessWidget {
     currentQuizController.setCorrectionRound(false);
     currentQuizController.emptyWrongQuestions();
     // set title
-    currentQuizController.setTitle(subject);
+    currentQuizController.setTitle(subject['subjectName']);
     // questions
-    currentQuizController.setSampleQuetions();
+    // currentQuizController.setSampleQuetions();
 
     return Scaffold(
       backgroundColor: backgroundColor,

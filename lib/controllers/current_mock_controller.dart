@@ -1,4 +1,4 @@
-import 'package:edgiprep/models/lesson_question.dart';
+import 'package:edgiprep/models/test_question.dart';
 import 'package:get/get.dart';
 
 class CurrentMockController extends GetxController {
@@ -6,21 +6,21 @@ class CurrentMockController extends GetxController {
   final RxString _title = "".obs;
   final RxInt _currentQuestionIndex = 0.obs;
   final RxInt _score = 0.obs;
-  final RxList<LessonQuestion> _questions = RxList<LessonQuestion>([]);
+  final RxList<TestQuestion> _questions = RxList<TestQuestion>([]);
   final RxInt _selectedIndex = RxInt(-1);
   final RxBool _checkAnswer = false.obs;
-  final RxList<LessonQuestion> _wrongQuestions = RxList<LessonQuestion>([]);
+  final RxList<TestQuestion> _wrongQuestions = RxList<TestQuestion>([]);
   final RxBool _done = false.obs;
 
   // Getter methods for accessing data
   String get title => _title.value;
   int get currentQuestionIndex => _currentQuestionIndex.value;
   int get score => _score.value;
-  List<LessonQuestion> get questions => _questions.toList();
+  List<TestQuestion> get questions => _questions.toList();
   int get numberOfQuestions => _questions.length;
   int get selectedIndex => _selectedIndex.value;
   bool get checkAnswer => _checkAnswer.value;
-  List<LessonQuestion> get wrongQuestions => _wrongQuestions.toList();
+  List<TestQuestion> get wrongQuestions => _wrongQuestions.toList();
   bool get done => _done.value;
 
   // Method to set parts of quiz
@@ -29,7 +29,7 @@ class CurrentMockController extends GetxController {
     _title.value = title;
   }
 
-  void setQuestions(List<LessonQuestion> questions) {
+  void setQuestions(List<TestQuestion> questions) {
     _questions.value = questions;
   }
 
@@ -37,7 +37,7 @@ class CurrentMockController extends GetxController {
     _questions.value = sampleQuestions;
   }
 
-  void addCorrectionQuestion(LessonQuestion question) {
+  void addCorrectionQuestion(TestQuestion question) {
     _wrongQuestions.add(question);
   }
 
@@ -98,15 +98,15 @@ class CurrentMockController extends GetxController {
 }
 
 // Sample biology quiz questions (Multiple Choice)
-final List<LessonQuestion> sampleQuestions = [
-  LessonQuestion(
+final List<TestQuestion> sampleQuestions = [
+  TestQuestion(
     questionId: 1,
     question: "Which of the following is the basic unit of life?",
     options: ["Cell", "Organ", "Tissue", "System"],
     answer: "Cell",
     userAnswer: "",
   ),
-  LessonQuestion(
+  TestQuestion(
     questionId: 2,
     question:
         "What process uses sunlight, water, and carbon dioxide to produce glucose and oxygen?",
@@ -114,7 +114,7 @@ final List<LessonQuestion> sampleQuestions = [
     answer: "Photosynthesis",
     userAnswer: "",
   ),
-  LessonQuestion(
+  TestQuestion(
     questionId: 3,
     question: "What is the function of DNA?",
     options: [
@@ -126,7 +126,7 @@ final List<LessonQuestion> sampleQuestions = [
     answer: "To store genetic information",
     userAnswer: "",
   ),
-  LessonQuestion(
+  TestQuestion(
     questionId: 4,
     question:
         "What is the process by which an organism inherits traits from its parents?",
@@ -134,7 +134,7 @@ final List<LessonQuestion> sampleQuestions = [
     answer: "Heredity",
     userAnswer: "",
   ),
-  LessonQuestion(
+  TestQuestion(
     questionId: 5,
     question:
         "What are the structures in a plant cell that capture sunlight for photosynthesis?",
@@ -142,14 +142,14 @@ final List<LessonQuestion> sampleQuestions = [
     answer: "Chloroplasts",
     userAnswer: "",
   ),
-  // const LessonQuestion(
+  // const TestQuestion(
   // questionId: 6,
   //   question: "What is the waste product of cellular respiration?",
   //   options: ["Glucose", "Oxygen", "Carbon dioxide", "Water"],
   //   answer: "Carbon dioxide",
   // userAnswer: "",
   // ),
-  // const LessonQuestion(
+  // const TestQuestion(
   // questionId: 7,
   //   question: "What is the function of the digestive system?",
   //   options: [
@@ -161,7 +161,7 @@ final List<LessonQuestion> sampleQuestions = [
   //   answer: "To break down food into smaller molecules",
   // userAnswer: "",
   // ),
-  // const LessonQuestion(
+  // const TestQuestion(
   // questionId: 8,
   //   question: "What is the difference between arteries and veins?",
   //   options: [
@@ -174,7 +174,7 @@ final List<LessonQuestion> sampleQuestions = [
   //       "Arteries carry oxygen-rich blood, veins carry oxygen-depleted blood.",
   // userAnswer: "",
   // ),
-  // const LessonQuestion(
+  // const TestQuestion(
   // questionId: 9,
   //   question: "What is the role of enzymes in the body?",
   //   options: [
@@ -186,7 +186,7 @@ final List<LessonQuestion> sampleQuestions = [
   //   answer: "To speed up chemical reactions",
   // userAnswer: "",
   // ),
-  // const LessonQuestion(
+  // const TestQuestion(
   // questionId: 10,
   //   question:
   //       "What is the process by which plants lose water vapor through their leaves?",

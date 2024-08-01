@@ -21,15 +21,14 @@ class StartLesson extends StatelessWidget {
         Get.find<CurrentLessonController>();
     // reset first
     currentLessonController.resetQuiz();
-    currentLessonController.emptyWrongQuestions();
     // set title
     currentLessonController.setTitle(topic);
     // questions
     currentLessonController.setSampleQuetions();
 
     // empty answers
-    for (int i = 0; i < currentLessonController.questions.length; i++) {
-      currentLessonController.questions[i].userAnswer = "";
+    for (int i = 0; i < currentLessonController.slides.length; i++) {
+      currentLessonController.slides[i].question?.userAnswer = "";
     }
 
     return Scaffold(

@@ -1,6 +1,6 @@
 import 'package:edgiprep/controllers/current_mock_controller.dart';
 import 'package:edgiprep/mockTabs/answer.dart';
-import 'package:edgiprep/models/lesson_question.dart';
+import 'package:edgiprep/models/test_question.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -244,7 +244,16 @@ class _MockTabState extends State<MockTab> {
                         topLeft: Radius.circular(40.r),
                         topRight: Radius.circular(40.r)),
                     child: Container(
-                      color: const Color.fromRGBO(47, 59, 98, 0.178),
+                      color: !currentmockController.checkAnswer
+                          ? const Color.fromRGBO(47, 59, 98, 0.178)
+                          : shuffledOptions[
+                                      currentmockController.selectedIndex] ==
+                                  currentmockController
+                                      .questions[currentmockController
+                                          .currentQuestionIndex]
+                                      .answer
+                              ? const Color.fromRGBO(76, 175, 79, 0.178)
+                              : const Color.fromRGBO(244, 67, 54, 0.178),
                       padding: EdgeInsets.symmetric(
                         vertical: 40.h,
                         horizontal: 30.h,
@@ -361,9 +370,8 @@ class _MockTabState extends State<MockTab> {
                                                           .currentQuestionIndex]
                                                   .answer,
                                               style: GoogleFonts.nunito(
-                                                fontSize: 35.sp,
+                                                fontSize: 25.sp,
                                                 fontWeight: FontWeight.w900,
-                                                color: Colors.green,
                                               ),
                                             ),
                                           ),
@@ -558,7 +566,7 @@ class _MockTabState extends State<MockTab> {
 }
 
 class Question extends StatelessWidget {
-  final LessonQuestion question;
+  final TestQuestion question;
   final int questionIndex;
   const Question(
       {super.key, required this.question, required this.questionIndex});
@@ -574,8 +582,8 @@ class Question extends StatelessWidget {
         Text(
           question.question,
           style: GoogleFonts.nunito(
-            fontSize: 35.sp,
-            fontWeight: FontWeight.w700,
+            fontSize: 30.sp,
+            fontWeight: FontWeight.w900,
           ),
         ),
 

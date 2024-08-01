@@ -15,6 +15,7 @@ class Papers extends StatelessWidget {
       builder: (context, constants) {
         final isTall = constants.maxHeight > constants.maxWidth;
         return Scaffold(
+          backgroundColor: Colors.white,
           body: SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,

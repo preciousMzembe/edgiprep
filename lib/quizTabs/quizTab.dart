@@ -180,8 +180,8 @@ class _QuizTabState extends State<QuizTab> {
                                   currentQuizController.currentQuestionIndex]
                               .question,
                           style: GoogleFonts.nunito(
-                            fontSize: 35.sp,
-                            fontWeight: FontWeight.w700,
+                            fontSize: 30.sp,
+                            fontWeight: FontWeight.w900,
                           ),
                         ),
 

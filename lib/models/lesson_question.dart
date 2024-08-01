@@ -4,6 +4,7 @@ class LessonQuestion {
   final List<String> options;
   final String answer;
   String userAnswer = "";
+  final String lessonContent;
 
   LessonQuestion({
     required this.questionId,
@@ -11,5 +12,6 @@ class LessonQuestion {
     required this.options,
     required this.answer,
     required this.userAnswer,
+    required this.lessonContent,
   });
 }

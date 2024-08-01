@@ -35,7 +35,7 @@ class CloseQuizPane extends StatelessWidget {
                         40.w,
                       ),
                       child: const Icon(
-                        FontAwesomeIcons.faceFrownOpen,
+                        FontAwesomeIcons.exclamation,
                         color: Colors.red,
                         size: 40.0,
                       ),
