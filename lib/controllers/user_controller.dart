@@ -21,8 +21,9 @@ class UserController extends GetxController {
   }
 
   // User details
-  RxString userName = "Precious03".obs;
-  RxString xps = "100".obs;
+  RxString fullName = "".obs;
+  RxString userName = "".obs;
+  RxString xps = "".obs;
   RxString streak = "3".obs;
   RxString practiceHours = "10".obs;
 
@@ -30,6 +31,7 @@ class UserController extends GetxController {
   RxMap currentExam = {}.obs;
   RxList currentSubjects = [].obs;
   RxMap subjectsTopics = {}.obs;
+  RxMap topicsLessons = {}.obs;
 
   // check user key if logged in
   Future<void> checkUserKey() async {

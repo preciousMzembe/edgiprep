@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:edgiprep/controllers/user_controller.dart';
 import 'package:edgiprep/models/exam_model.dart';
+import 'package:edgiprep/models/lesson_model.dart';
 import 'package:edgiprep/models/subject_model.dart';
 import 'package:edgiprep/models/topic_model.dart';
 import 'package:edgiprep/utils/constants.dart';
@@ -16,7 +17,55 @@ final secureStorage = SecureStorageService();
 final Dio dio = Dio();
 
 // Get User Details
-Future<void> getUserDetails() async {}
+Future<void> getUserDetails() async {
+  try {
+    String? key = await secureStorage.readKey("userKey");
+
+    if (key != null && key.isNotEmpty) {
+      final Map<String, dynamic> headers = {
+        'AuthKey': key,
+        'Content-Type': 'application/json',
+      };
+      final response = await dio.get(
+        "${ApiUrl!}/LearnerProfile",
+        options: Options(
+          headers: headers,
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        // Update user details
+        var userData = response.data;
+
+        userController.fullName.value = userData['learnerFullName'];
+        userController.userName.value = userData['learnerUsername'];
+        userController.xps.value = userData['learnerXp'].toString();
+        // userController.streak.value = userData;
+        // userController.practiceHours.value = userData;
+      }
+    }
+  } on DioException catch (e) {
+    if (e.response != null) {
+      var errorData = e.response!.data;
+      if (errorData?['Detail'] != null &&
+          errorData?['Detail'] == "Unauthorized Request") {
+        // logout
+        await secureStorage.writeKey("userKey", "");
+        userController.changeUserKey("");
+      }
+      debugPrint(
+          "error getting user details -------------------------------- user details");
+    } else {
+      // Other errors like network issues
+      debugPrint(
+          "error getting user details -------------------------------- user details - connection");
+    }
+  } catch (e) {
+    // Handle any exceptions
+    debugPrint(
+        "error getting user details -------------------------------- user details - error occured");
+  }
+}
 
 // Get User Exams
 Future<void> getExams() async {
@@ -133,7 +182,7 @@ Future<void> getCurrentSubjects() async {
           userController.currentSubjects.value = tempSubjects;
 
           // get topics of subjects
-          await getTopicsOfCurrentSubjects();
+          getTopicsOfCurrentSubjects();
         }
       }
     } on DioException catch (e) {
@@ -213,6 +262,76 @@ Future<void> getTopicsOfCurrentSubjects() async {
 
   // Change Subjects Topics
   userController.subjectsTopics.value = tempSubjectsTopics;
+
+  // get Lessons of Topics
+  getLessonsOfTopics();
+}
+
+// Get Lessons of Topics
+Future<void> getLessonsOfTopics() async {
+  Map subjectsTopics = userController.subjectsTopics;
+
+  Map tempTopicsLessons = {};
+
+  for (var subjectTopics in subjectsTopics.entries) {
+    // print('Key: ${topic.key}, Value: ${topic.value}');
+
+    // get Lessons of topic
+    for (var i = 0; i < subjectTopics.value.length; i++) {
+      var topic = subjectTopics.value[i];
+      int topicId = topic['topicId'];
+
+      try {
+        String? key = await secureStorage.readKey("userKey");
+
+        if (key != null && key.isNotEmpty) {
+          final Map<String, dynamic> headers = {
+            'AuthKey': key,
+            'Content-Type': 'application/json',
+          };
+          final response = await dio.get(
+            "${ApiUrl!}/Lesson/GetLessons?topicId=$topicId",
+            options: Options(
+              headers: headers,
+            ),
+          );
+
+          if (response.statusCode == 200) {
+            // Update Lessons
+            var lessonsData = response.data;
+
+            List tempLessons = [];
+            for (var x = 0; x < lessonsData.length; x++) {
+              LessonModel lesson = LessonModel(
+                lessonId: lessonsData[x]['lessonId'],
+                lessonName: lessonsData[x]['lessonTitle'],
+              );
+
+              tempLessons.add(lesson.toMap);
+            }
+
+            tempTopicsLessons[topicId] = tempLessons;
+          }
+        }
+      } on DioException catch (e) {
+        if (e.response != null) {
+          debugPrint(
+              "error getting Lessons -------------------------------- topic lessons");
+        } else {
+          // Other errors like network issues
+          debugPrint(
+              "error getting Lessons -------------------------------- topic lessons - connection");
+        }
+      } catch (e) {
+        // Handle any exceptions
+        debugPrint(
+            "error getting Lessons -------------------------------- topic lessons - error occured");
+      }
+    }
+  }
+
+  // Change Topics Lessons
+  userController.topicsLessons.value = tempTopicsLessons;
 }
 
 Future<void> logout() async {

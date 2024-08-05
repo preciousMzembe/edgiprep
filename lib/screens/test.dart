@@ -5,6 +5,7 @@ import 'package:edgiprep/start/start_mock.dart';
 import 'package:edgiprep/start/start_quiz.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/enums.dart';
+import 'package:edgiprep/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -351,7 +352,7 @@ class _TestState extends State<Test> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         Text(
-                                          "5 questions",
+                                          "$QuizQuestionNumber questions",
                                           style: GoogleFonts.nunito(
                                             fontSize: 30.sp,
                                             fontWeight: FontWeight.w900,
@@ -583,8 +584,8 @@ class ChooseSubject extends StatelessWidget {
                                         : type == TestMode.challenge
                                             ? Get.to(
                                                 () => StartChallenge(
-                                                  subject:
-                                                      "${userController.currentSubjects[index]["subjectName"]}",
+                                                  subject: userController
+                                                      .currentSubjects[index],
                                                 ),
                                               )
                                             : type == TestMode.teacher

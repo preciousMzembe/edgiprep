@@ -1,3 +1,4 @@
+import 'package:edgiprep/controllers/user_controller.dart';
 import 'package:edgiprep/start/start_lesson.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -7,13 +8,15 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Topic extends StatefulWidget {
-  const Topic({super.key});
+  final Map topic;
+  const Topic({super.key, required this.topic});
 
   @override
   State<Topic> createState() => _TopicState();
 }
 
 class _TopicState extends State<Topic> {
+  UserController userController = Get.find<UserController>();
   final ScrollController _controller = ScrollController();
   bool _showDetails = true;
   @override
@@ -54,8 +57,8 @@ class _TopicState extends State<Topic> {
                   ),
                   Expanded(
                     child: Text(
-                      "Plants Biology",
-                      maxLines: 1,
+                      "${widget.topic['topicName']}",
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.nunito(
@@ -85,7 +88,7 @@ class _TopicState extends State<Topic> {
                   onNotification: (notification) {
                     final pixels = notification.metrics.pixels;
                     setState(() {
-                      _showDetails = pixels <= 0; // hide or show to top button
+                      _showDetails = pixels <= 0;
                     });
                     return true;
                   },
@@ -96,43 +99,73 @@ class _TopicState extends State<Topic> {
                       SizedBox(
                         height: 30.h,
                       ),
+                      ...userController.topicsLessons[widget.topic['topicId']]
+                          .asMap()
+                          .entries
+                          .map((entry) {
+                        int index = entry.key;
+                        var lesson = entry.value;
+                        return Lesson(
+                          lessonNumber:
+                              index + 1, // Adding 1 to make it 1-based index
+                          lessonName: lesson['lessonName'],
+                          lessonDone: lesson['lessonDone'] ?? false,
+                          currentLesson: index == 0
+                              ? true
+                              : lesson['currentLesson'] ?? false,
+                          finalLesson: lesson['finalLesson'] ?? false,
+                        );
+                      }).toList(),
+                      // ...userController.topicsLessons[widget.topic['topicId']]
+                      //     .map(
+                      //       (topic) => const Lesson(
+                      //         lessonNumber: 1,
+                      //         lessonName: "Flowering vs Nonflowering Plants",
+                      //         lessonDescription:
+                      //             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id odio nec nisi posuere sollicitudin.",
+                      //         lessonDone: true,
+                      //         currentLesson: false,
+                      //         finalLesson: false,
+                      //       ),
+                      //     )
+                      //     .toList(),
                       // lessons
-                      const Lesson(
-                        lessonNumber: 1,
-                        lessonName: "Flowering vs Nonflowering Plants",
-                        lessonDescription:
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id odio nec nisi posuere sollicitudin.",
-                        lessonDone: true,
-                        currentLesson: false,
-                        finalLesson: false,
-                      ),
-                      const Lesson(
-                        lessonNumber: 2,
-                        lessonName: "Parts of Flowering Plants",
-                        lessonDescription:
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id odio nec nisi posuere sollicitudin.",
-                        lessonDone: false,
-                        currentLesson: true,
-                        finalLesson: false,
-                      ),
-                      const Lesson(
-                        lessonNumber: 3,
-                        lessonName: "Parts of Nonflowering Plants",
-                        lessonDescription:
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id odio nec nisi posuere sollicitudin.",
-                        lessonDone: false,
-                        currentLesson: false,
-                        finalLesson: false,
-                      ),
-                      const Lesson(
-                        lessonNumber: 4,
-                        lessonName: "Plants Habitation",
-                        lessonDescription:
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id odio nec nisi posuere sollicitudin.",
-                        lessonDone: false,
-                        currentLesson: false,
-                        finalLesson: true,
-                      ),
+                      // const Lesson(
+                      //   lessonNumber: 1,
+                      //   lessonName: "Flowering vs Nonflowering Plants",
+                      //   lessonDescription:
+                      //       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id odio nec nisi posuere sollicitudin.",
+                      //   lessonDone: true,
+                      //   currentLesson: false,
+                      //   finalLesson: false,
+                      // ),
+                      // const Lesson(
+                      //   lessonNumber: 2,
+                      //   lessonName: "Parts of Flowering Plants",
+                      //   lessonDescription:
+                      //       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id odio nec nisi posuere sollicitudin.",
+                      //   lessonDone: false,
+                      //   currentLesson: true,
+                      //   finalLesson: false,
+                      // ),
+                      // const Lesson(
+                      //   lessonNumber: 3,
+                      //   lessonName: "Parts of Nonflowering Plants",
+                      //   lessonDescription:
+                      //       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id odio nec nisi posuere sollicitudin.",
+                      //   lessonDone: false,
+                      //   currentLesson: false,
+                      //   finalLesson: false,
+                      // ),
+                      // const Lesson(
+                      //   lessonNumber: 4,
+                      //   lessonName: "Plants Habitation",
+                      //   lessonDescription:
+                      //       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id odio nec nisi posuere sollicitudin.",
+                      //   lessonDone: false,
+                      //   currentLesson: false,
+                      //   finalLesson: true,
+                      // ),
                       // back to top
                       SizedBox(
                         height: 90.h,
@@ -191,7 +224,6 @@ class _TopicState extends State<Topic> {
 class Lesson extends StatelessWidget {
   final int lessonNumber;
   final String lessonName;
-  final String lessonDescription;
   final bool lessonDone;
   final bool currentLesson;
   final bool finalLesson;
@@ -199,7 +231,6 @@ class Lesson extends StatelessWidget {
       {super.key,
       required this.lessonNumber,
       required this.lessonName,
-      required this.lessonDescription,
       required this.lessonDone,
       required this.currentLesson,
       required this.finalLesson});

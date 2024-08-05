@@ -187,10 +187,10 @@ class AuthController extends GetxController {
       final response = await dio.post(
         "${ApiUrl!}/Register",
         data: {
-          "Name": fullName,
-          "Username": username,
-          "Password": pin,
-          "Device": userController.deviceId,
+          "fullName": fullName,
+          "username": username,
+          "password": pin,
+          "device": userController.deviceId,
         },
       );
 

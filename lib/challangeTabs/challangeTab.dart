@@ -1,7 +1,6 @@
-import 'package:edgiprep/controllers/current_quiz_controller.dart';
-import 'package:edgiprep/quizTabs/answer.dart';
-import 'package:edgiprep/quizTabs/done.dart';
-import 'package:edgiprep/quizTabs/retry_prompt.dart';
+import 'package:edgiprep/challangeTabs/answer.dart';
+import 'package:edgiprep/challangeTabs/done.dart';
+import 'package:edgiprep/controllers/current_challange_controller.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -9,18 +8,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 
-class QuizTab extends StatefulWidget {
-  const QuizTab({super.key});
+class ChallangeTab extends StatefulWidget {
+  const ChallangeTab({super.key});
 
   @override
-  State<QuizTab> createState() => _QuizTabState();
+  State<ChallangeTab> createState() => _ChallangeTabState();
 }
 
-class _QuizTabState extends State<QuizTab> {
-  CurrentQuizController currentQuizController =
-      Get.find<CurrentQuizController>();
+class _ChallangeTabState extends State<ChallangeTab> {
+  CurrentChallangeController currentChallangeController =
+      Get.find<CurrentChallangeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -28,19 +26,12 @@ class _QuizTabState extends State<QuizTab> {
       showCloseQuizDialog(
         context,
         "Quit Quiz?",
-        "Are you sure you want to quit the quiz? You will lose XPs you have already made.",
+        "Are you sure you want to quit the quiz?",
         () {
-          if (currentQuizController.correctionRound) {
-            Get.back();
-            Get.back();
-            Get.back();
-            Get.back();
-            Get.back();
-          } else {
-            Get.back();
-            Get.back();
-            Get.back();
-          }
+          Get.to(() => const Done());
+          // Get.back();
+          // Get.back();
+          // Get.back();
         },
       );
     }
@@ -48,8 +39,8 @@ class _QuizTabState extends State<QuizTab> {
     return PopScope(
       canPop: false,
       child: Obx(() {
-        List<String> shuffledOptions = currentQuizController
-            .questions[currentQuizController.currentQuestionIndex].options
+        List<String> shuffledOptions = currentChallangeController
+            .questions[currentChallangeController.currentQuestionIndex].options
             .toList();
         return Scaffold(
           backgroundColor: backgroundColor,
@@ -85,7 +76,7 @@ class _QuizTabState extends State<QuizTab> {
                           ),
                           Expanded(
                             child: Text(
-                              currentQuizController.title,
+                              currentChallangeController.title,
                               maxLines: 1,
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
@@ -109,54 +100,54 @@ class _QuizTabState extends State<QuizTab> {
                         ],
                       ),
                       // progress
-                      if (!currentQuizController.correctionRound)
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            SizedBox(
-                              height: 20.h,
-                            ),
-                            LinearPercentIndicator(
-                              padding: const EdgeInsets.all(0),
-                              // animation: true,
-                              lineHeight: 15.h,
-                              // animationDuration: 2000,
-                              // percent
-                              percent:
-                                  (currentQuizController.currentQuestionIndex +
-                                          1) /
-                                      currentQuizController.numberOfQuestions,
-                              barRadius: Radius.circular(30.r),
-                              progressColor: primaryColor,
-                              backgroundColor: progressColor,
-                            ),
-                            SizedBox(
-                              height: 5.h,
-                            ),
-                            // progress numbers
-                            // RichText(
-                            //   text: TextSpan(
-                            //     style: GoogleFonts.nunito(
-                            //       color: Colors.black,
-                            //       fontSize: 25.sp,
-                            //       fontWeight: FontWeight.w900,
-                            //     ),
-                            //     children: [
-                            //       TextSpan(
-                            //         text:
-                            //             "${currentQuizController.currentQuestionIndex + 1}",
-                            //         style: TextStyle(color: primaryColor),
-                            //       ),
-                            //       TextSpan(
-                            //         text:
-                            //             "/${currentQuizController.numberOfQuestions}",
-                            //         style: TextStyle(color: textColor),
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
-                          ],
-                        ),
+                      // if (!currentChallangeController.correctionRound)
+                      // Column(
+                      //   crossAxisAlignment: CrossAxisAlignment.stretch,
+                      //   children: [
+                      //     SizedBox(
+                      //       height: 20.h,
+                      //     ),
+                      // LinearPercentIndicator(
+                      //   padding: const EdgeInsets.all(0),
+                      //   // animation: true,
+                      //   lineHeight: 15.h,
+                      //   // animationDuration: 2000,
+                      //   // percent
+                      //   percent: (currentChallangeController
+                      //               .currentQuestionIndex +
+                      //           1) /
+                      //       currentChallangeController.numberOfQuestions,
+                      //   barRadius: Radius.circular(30.r),
+                      //   progressColor: primaryColor,
+                      //   backgroundColor: progressColor,
+                      // ),
+                      // SizedBox(
+                      //   height: 5.h,
+                      // ),
+                      // progress numbers
+                      // RichText(
+                      //   text: TextSpan(
+                      //     style: GoogleFonts.nunito(
+                      //       color: Colors.black,
+                      //       fontSize: 25.sp,
+                      //       fontWeight: FontWeight.w900,
+                      //     ),
+                      //     children: [
+                      //       TextSpan(
+                      //         text:
+                      //             "${currentChallangeController.currentQuestionIndex + 1}",
+                      //         style: TextStyle(color: primaryColor),
+                      //       ),
+                      //       TextSpan(
+                      //         text:
+                      //             "/${currentChallangeController.numberOfQuestions}",
+                      //         style: TextStyle(color: textColor),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      //   ],
+                      // ),
                     ],
                   ),
                 ),
@@ -175,9 +166,9 @@ class _QuizTabState extends State<QuizTab> {
                         ),
                         // question
                         Text(
-                          currentQuizController
-                              .questions[
-                                  currentQuizController.currentQuestionIndex]
+                          currentChallangeController
+                              .questions[currentChallangeController
+                                  .currentQuestionIndex]
                               .question,
                           style: GoogleFonts.nunito(
                             fontSize: 30.sp,
@@ -196,10 +187,12 @@ class _QuizTabState extends State<QuizTab> {
                               Answer(
                                 answer: shuffledOptions[i],
                                 selected:
-                                    currentQuizController.selectedIndex == i,
+                                    currentChallangeController.selectedIndex ==
+                                        i,
                                 select: () {
-                                  if (!currentQuizController.checkAnswer) {
-                                    currentQuizController.setSelectedIndex(i);
+                                  if (!currentChallangeController.checkAnswer) {
+                                    currentChallangeController
+                                        .setSelectedIndex(i);
                                   }
                                 },
                               ),
@@ -219,18 +212,18 @@ class _QuizTabState extends State<QuizTab> {
                 ),
 
                 // check and continue
-                if (currentQuizController.selectedIndex >= 0)
+                if (currentChallangeController.selectedIndex >= 0)
                   ClipRRect(
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(40.r),
                         topRight: Radius.circular(40.r)),
                     child: Container(
-                      color: !currentQuizController.checkAnswer
+                      color: !currentChallangeController.checkAnswer
                           ? const Color.fromRGBO(47, 59, 98, 0.178)
-                          : shuffledOptions[
-                                      currentQuizController.selectedIndex] ==
-                                  currentQuizController
-                                      .questions[currentQuizController
+                          : shuffledOptions[currentChallangeController
+                                      .selectedIndex] ==
+                                  currentChallangeController
+                                      .questions[currentChallangeController
                                           .currentQuestionIndex]
                                       .answer
                               ? const Color.fromRGBO(76, 175, 79, 0.178)
@@ -243,7 +236,7 @@ class _QuizTabState extends State<QuizTab> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           // question status and answer
-                          if (currentQuizController.checkAnswer)
+                          if (currentChallangeController.checkAnswer)
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
@@ -251,18 +244,19 @@ class _QuizTabState extends State<QuizTab> {
                                 Row(
                                   children: [
                                     // icon
-                                    if (currentQuizController.selectedIndex >=
+                                    if (currentChallangeController
+                                            .selectedIndex >=
                                         0)
                                       Container(
                                         width: 50.h,
                                         height: 50.h,
                                         decoration: BoxDecoration(
                                           color: shuffledOptions[
-                                                      currentQuizController
+                                                      currentChallangeController
                                                           .selectedIndex] ==
-                                                  currentQuizController
+                                                  currentChallangeController
                                                       .questions[
-                                                          currentQuizController
+                                                          currentChallangeController
                                                               .currentQuestionIndex]
                                                       .answer
                                               ? Colors.green
@@ -271,11 +265,12 @@ class _QuizTabState extends State<QuizTab> {
                                               BorderRadius.circular(50.r),
                                         ),
                                         child: Icon(
-                                          shuffledOptions[currentQuizController
-                                                      .selectedIndex] ==
-                                                  currentQuizController
+                                          shuffledOptions[
+                                                      currentChallangeController
+                                                          .selectedIndex] ==
+                                                  currentChallangeController
                                                       .questions[
-                                                          currentQuizController
+                                                          currentChallangeController
                                                               .currentQuestionIndex]
                                                       .answer
                                               ? FontAwesomeIcons.check
@@ -288,14 +283,16 @@ class _QuizTabState extends State<QuizTab> {
                                       width: 15.w,
                                     ),
                                     // correct or wrong
-                                    if (currentQuizController.selectedIndex >=
+                                    if (currentChallangeController
+                                            .selectedIndex >=
                                         0)
                                       Text(
-                                        shuffledOptions[currentQuizController
-                                                    .selectedIndex] ==
-                                                currentQuizController
+                                        shuffledOptions[
+                                                    currentChallangeController
+                                                        .selectedIndex] ==
+                                                currentChallangeController
                                                     .questions[
-                                                        currentQuizController
+                                                        currentChallangeController
                                                             .currentQuestionIndex]
                                                     .answer
                                             ? "Correct"
@@ -304,11 +301,11 @@ class _QuizTabState extends State<QuizTab> {
                                           fontSize: 40.sp,
                                           fontWeight: FontWeight.w900,
                                           color: shuffledOptions[
-                                                      currentQuizController
+                                                      currentChallangeController
                                                           .selectedIndex] ==
-                                                  currentQuizController
+                                                  currentChallangeController
                                                       .questions[
-                                                          currentQuizController
+                                                          currentChallangeController
                                                               .currentQuestionIndex]
                                                       .answer
                                               ? Colors.green
@@ -321,10 +318,10 @@ class _QuizTabState extends State<QuizTab> {
                                   height: 20.h,
                                 ),
                                 // answer
-                                if (shuffledOptions[
-                                        currentQuizController.selectedIndex] !=
-                                    currentQuizController
-                                        .questions[currentQuizController
+                                if (shuffledOptions[currentChallangeController
+                                        .selectedIndex] !=
+                                    currentChallangeController
+                                        .questions[currentChallangeController
                                             .currentQuestionIndex]
                                         .answer)
                                   Column(
@@ -344,9 +341,9 @@ class _QuizTabState extends State<QuizTab> {
                                           ),
                                           Expanded(
                                             child: Text(
-                                              currentQuizController
+                                              currentChallangeController
                                                   .questions[
-                                                      currentQuizController
+                                                      currentChallangeController
                                                           .currentQuestionIndex]
                                                   .answer,
                                               style: GoogleFonts.nunito(
@@ -372,58 +369,61 @@ class _QuizTabState extends State<QuizTab> {
                               borderRadius: BorderRadius.circular(100.r),
                             ),
                             onPressed: () {
-                              if (!currentQuizController.checkAnswer) {
+                              if (!currentChallangeController.checkAnswer) {
                                 // check
-                                currentQuizController.setCheckAnswer(true);
+                                currentChallangeController.setCheckAnswer(true);
                               } else {
                                 // if last question
-                                if (currentQuizController.isLastQuestion()) {
-                                  // mark
-                                  currentQuizController.answerSelected(
-                                      shuffledOptions[
-                                          currentQuizController.selectedIndex],
-                                      currentQuizController
-                                          .questions[currentQuizController
-                                              .currentQuestionIndex]
-                                          .answer);
+                                // if (currentChallangeController
+                                //     .isLastQuestion()) {
+                                //   // mark
+                                //   currentChallangeController.answerSelected(
+                                //       shuffledOptions[currentChallangeController
+                                //           .selectedIndex],
+                                //       currentChallangeController
+                                //           .questions[currentChallangeController
+                                //               .currentQuestionIndex]
+                                //           .answer);
 
-                                  // change page
-                                  if (currentQuizController.score !=
-                                          currentQuizController
-                                              .questions.length &&
-                                      !currentQuizController.correctionRound) {
-                                    // go for correction
-                                    currentQuizController
-                                        .setCorrectionRound(true);
-                                    currentQuizController
-                                        .setCorrectionQuestions();
-                                    currentQuizController
-                                        .setCurrentQuestionIndex(0);
+                                //   // change page
+                                //   if (currentChallangeController.score !=
+                                //           currentChallangeController
+                                //               .questions.length &&
+                                //       !currentChallangeController
+                                //           .correctionRound) {
+                                //     // go for correction
+                                //     currentChallangeController
+                                //         .setCorrectionRound(true);
+                                //     currentChallangeController
+                                //         .setCorrectionQuestions();
+                                //     currentChallangeController.resetQuiz();
 
-                                    Get.to(() => const RetryPrompt());
-                                  } else {
-                                    Get.to(() => const Done());
-                                  }
-                                } else {
-                                  // next question
-                                  currentQuizController.answerSelected(
-                                      shuffledOptions[
-                                          currentQuizController.selectedIndex],
-                                      currentQuizController
-                                          .questions[currentQuizController
-                                              .currentQuestionIndex]
-                                          .answer);
-                                }
+                                //     Get.to(() => const RetryPrompt());
+                                //   } else {
+                                //     Get.to(() => const Done());
+                                //   }
+                                // }
+                                // else {
+                                // next question
+                                currentChallangeController.answerSelected(
+                                    shuffledOptions[currentChallangeController
+                                        .selectedIndex],
+                                    currentChallangeController
+                                        .questions[currentChallangeController
+                                            .currentQuestionIndex]
+                                        .answer);
+                                // }
                               }
                             },
                             child: Text(
-                              !currentQuizController.checkAnswer
+                              !currentChallangeController.checkAnswer
                                   ? "Check"
-                                  : shuffledOptions[currentQuizController
+                                  : shuffledOptions[currentChallangeController
                                               .selectedIndex] !=
-                                          currentQuizController
-                                              .questions[currentQuizController
-                                                  .currentQuestionIndex]
+                                          currentChallangeController
+                                              .questions[
+                                                  currentChallangeController
+                                                      .currentQuestionIndex]
                                               .answer
                                       ? "Got It"
                                       : "Continue",

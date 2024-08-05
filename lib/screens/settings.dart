@@ -65,7 +65,7 @@ class _SettingsState extends State<Settings> {
                                   height: 15.h,
                                 ),
                                 Text(
-                                  "Precious Mzembe",
+                                  userController.fullName.value,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.center,
@@ -171,24 +171,36 @@ class _SettingsState extends State<Settings> {
                   ),
                   // profile image
                   Center(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(150.r),
+                    child: ClipOval(
                       child: Container(
-                        padding: const EdgeInsets.all(5.0),
+                        width: 160.h,
+                        height: 160.h,
                         color: Colors.white,
-                        child: Container(
-                          width: 160.h,
-                          height: 160.h,
-                          decoration: BoxDecoration(
-                            image: const DecorationImage(
-                              image: AssetImage('images/male.jpg'),
-                              fit: BoxFit.cover,
-                            ),
-                            // border: Border.all(
-                            //   width: 5.0,
-                            //   color: Colors.white,
+                        padding: const EdgeInsets.all(6),
+                        child: ClipOval(
+                          child: Container(
+                            color: primaryColor,
+                            // decoration: BoxDecoration(
+                            //   image: const DecorationImage(
+                            //     image: AssetImage('images/male.jpg'),
+                            //     fit: BoxFit.cover,
+                            //   ),
+                            //   // border: Border.all(
+                            //   //   width: 5.0,
+                            //   //   color: Colors.white,
+                            //   // ),
+                            //   borderRadius: BorderRadius.circular(150.r),
                             // ),
-                            borderRadius: BorderRadius.circular(150.r),
+                            child: Center(
+                              child: Text(
+                                userController.fullName.value[0],
+                                style: GoogleFonts.nunito(
+                                  color: Colors.white,
+                                  fontSize: 80.sp,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),

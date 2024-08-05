@@ -406,8 +406,7 @@ class _HomeState extends State<Home> {
                                         onTap: () {
                                           Get.to(
                                             () => StartQuiz(
-                                              subject: randomSubjects[0]
-                                                  ['subjectName'],
+                                              subject: randomSubjects[0],
                                             ),
                                           );
                                         },
@@ -479,7 +478,7 @@ class _HomeState extends State<Home> {
                                                     Row(
                                                       children: [
                                                         Text(
-                                                          "5 ",
+                                                          "$QuizQuestionNumber ",
                                                           style: GoogleFonts
                                                               .nunito(
                                                             fontSize: isTall
@@ -522,8 +521,7 @@ class _HomeState extends State<Home> {
                                               onTap: () {
                                                 Get.to(
                                                   () => StartQuiz(
-                                                    subject: randomSubjects[1]
-                                                        ['subjectName'],
+                                                    subject: randomSubjects[1],
                                                   ),
                                                 );
                                               },
@@ -610,7 +608,7 @@ class _HomeState extends State<Home> {
                                                                 child: Row(
                                                                   children: [
                                                                     Text(
-                                                                      "5 ",
+                                                                      "$QuizQuestionNumber ",
                                                                       style: GoogleFonts
                                                                           .nunito(
                                                                         fontSize: isTall

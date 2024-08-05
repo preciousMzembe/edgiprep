@@ -8,7 +8,6 @@ import 'package:edgiprep/screens/settings.dart';
 import 'package:edgiprep/screens/subjects_settings.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/helper_functions.dart';
-import 'package:edgiprep/utils/secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -37,182 +36,263 @@ class _UserSettingsState extends State<UserSettings> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constants) {
-        final isTall = constants.maxHeight > constants.maxWidth;
-        return Scaffold(
-          backgroundColor: Colors.white,
-          body: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(
-                  height: 30.h,
-                ),
-                // top
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30.w),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // back
-                      GestureDetector(
-                        onTap: () {
-                          Get.back();
-                        },
-                        child: Container(
-                          width: 50.w,
-                          height: 50.w,
-                          color: Colors.transparent,
-                          child: Icon(
-                            FontAwesomeIcons.arrowLeft,
-                            size: 40.w,
-                          ),
-                        ),
-                      ),
-                    ],
+        return Obx(() {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            body: SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(
+                    height: 30.h,
                   ),
-                ),
-
-                Expanded(
-                  child: ListView(
-                    children: [
-                      // profile image
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Center(
-                        child: Container(
-                          width: 160.h,
-                          height: 160.h,
-                          decoration: BoxDecoration(
-                            image: const DecorationImage(
-                              image: AssetImage('images/male.jpg'),
-                              fit: BoxFit.cover,
+                  // top
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30.w),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // back
+                        GestureDetector(
+                          onTap: () {
+                            Get.back();
+                          },
+                          child: Container(
+                            width: 50.w,
+                            height: 50.w,
+                            color: Colors.transparent,
+                            child: Icon(
+                              FontAwesomeIcons.arrowLeft,
+                              size: 40.w,
                             ),
-                            // border: Border.all(
-                            //   width: 5.0,
-                            //   color: Colors.white,
-                            // ),
-                            borderRadius: BorderRadius.circular(150.r),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Center(
-                        child: Text(
-                          "Change Photo",
-                          style: TextStyle(color: primaryColor),
-                        ),
-                      ),
+                      ],
+                    ),
+                  ),
 
-                      // settings
-                      SizedBox(
-                        height: 40.h,
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 40.w,
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        // profile image
+                        const SizedBox(
+                          height: 10,
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Text(
-                              "Account Settings",
-                              style: GoogleFonts.nunito(
-                                fontSize: 30.sp,
-                                fontWeight: FontWeight.w900,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20.h,
-                            ),
-                            Setting(
-                              name: "Exam",
-                              goTo: () {
-                                Get.to(() => const Exam());
-                              },
-                            ),
-                            SizedBox(
-                              height: 20.h,
-                            ),
-                            Setting(
-                              name: "Subjects",
-                              goTo: () {
-                                Get.to(() => const SubjectsSettings());
-                              },
-                            ),
-                            SizedBox(
-                              height: 20.h,
-                            ),
-                            Setting(
-                              name: "Personal information",
-                              goTo: () {
-                                Get.to(() => const PersonalInformation());
-                              },
-                            ),
-                            SizedBox(
-                              height: 20.h,
-                            ),
-                            Setting(
-                              name: "Account",
-                              goTo: () {
-                                Get.to(() => const Account());
-                              },
-                            ),
-                            const SizedBox(
-                              height: 50,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                showLogoutDialog(
-                                  context,
-                                );
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 50.w,
-                                ),
-                                height: 80.h,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    width: 1.0,
-                                    color: const Color.fromRGBO(244, 67, 54, 1),
-                                  ),
-                                  color:
-                                      const Color.fromRGBO(244, 67, 54, 0.123),
-                                  borderRadius: BorderRadius.circular(80.r),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    "Logout",
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.nunito(
-                                      fontWeight: FontWeight.w600,
-                                      color:
-                                          const Color.fromRGBO(244, 67, 54, 1),
+                        Center(
+                          child: ClipOval(
+                            child: Container(
+                              width: 160.h,
+                              height: 160.h,
+                              color: Colors.white,
+                              padding: const EdgeInsets.all(6),
+                              child: ClipOval(
+                                child: Container(
+                                  color: primaryColor,
+                                  // decoration: BoxDecoration(
+                                  //   image: const DecorationImage(
+                                  //     image: AssetImage('images/male.jpg'),
+                                  //     fit: BoxFit.cover,
+                                  //   ),
+                                  //   // border: Border.all(
+                                  //   //   width: 5.0,
+                                  //   //   color: Colors.white,
+                                  //   // ),
+                                  //   borderRadius: BorderRadius.circular(150.r),
+                                  // ),
+                                  child: Center(
+                                    child: Text(
+                                      userController.fullName.value[0],
+                                      style: GoogleFonts.nunito(
+                                        color: Colors.white,
+                                        fontSize: 80.sp,
+                                        fontWeight: FontWeight.w900,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ],
+                          ),
                         ),
-                      ),
+                        // Center(
+                        //   child: Container(
+                        //     width: 160.h,
+                        //     height: 160.h,
+                        //     decoration: BoxDecoration(
+                        //       image: const DecorationImage(
+                        //         image: AssetImage('images/male.jpg'),
+                        //         fit: BoxFit.cover,
+                        //       ),
+                        //       // border: Border.all(
+                        //       //   width: 5.0,
+                        //       //   color: Colors.white,
+                        //       // ),
+                        //       borderRadius: BorderRadius.circular(150.r),
+                        //     ),
+                        //   ),
+                        // ),
+                        // const SizedBox(
+                        //   height: 5,
+                        // ),
+                        // Center(
+                        //   child: Text(
+                        //     "Change Photo",
+                        //     style: TextStyle(color: primaryColor),
+                        //   ),
+                        // ),
 
-                      // bottom
-                      const SizedBox(
-                        height: 100,
-                      ),
-                    ],
+                        // Profile
+                        SizedBox(
+                          height: 40.h,
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 40.w,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                "My Profile",
+                                style: GoogleFonts.nunito(
+                                  fontSize: 30.sp,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20.h,
+                              ),
+                              Setting(
+                                name: "Full Name",
+                                goTo: () {},
+                              ),
+                              SizedBox(
+                                height: 20.h,
+                              ),
+                              Setting(
+                                name: "Contact",
+                                goTo: () {},
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // settings
+                        SizedBox(
+                          height: 40.h,
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 40.w,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                "Account Settings",
+                                style: GoogleFonts.nunito(
+                                  fontSize: 30.sp,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20.h,
+                              ),
+                              Setting(
+                                name: "Login Details",
+                                goTo: () {},
+                              ),
+                              SizedBox(
+                                height: 20.h,
+                              ),
+                              Setting(
+                                name: "Exam",
+                                goTo: () {
+                                  Get.to(() => const Exam());
+                                },
+                              ),
+                              SizedBox(
+                                height: 20.h,
+                              ),
+                              Setting(
+                                name: "Subjects",
+                                goTo: () {
+                                  Get.to(() => const SubjectsSettings());
+                                },
+                              ),
+                              SizedBox(
+                                height: 20.h,
+                              ),
+                              Setting(
+                                name: "Personal information",
+                                goTo: () {
+                                  Get.to(() => const PersonalInformation());
+                                },
+                              ),
+                              SizedBox(
+                                height: 20.h,
+                              ),
+                              Setting(
+                                name: "Account",
+                                goTo: () {
+                                  Get.to(() => const Account());
+                                },
+                              ),
+                              const SizedBox(
+                                height: 50,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  showLogoutDialog(
+                                    context,
+                                  );
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 50.w,
+                                  ),
+                                  height: 80.h,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      width: 1.0,
+                                      color:
+                                          const Color.fromRGBO(244, 67, 54, 1),
+                                    ),
+                                    color: const Color.fromRGBO(
+                                        244, 67, 54, 0.123),
+                                    borderRadius: BorderRadius.circular(80.r),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "Logout",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.nunito(
+                                        fontWeight: FontWeight.w600,
+                                        color: const Color.fromRGBO(
+                                            244, 67, 54, 1),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // bottom
+                        const SizedBox(
+                          height: 100,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
+          );
+        });
       },
     );
   }
@@ -220,7 +300,6 @@ class _UserSettingsState extends State<UserSettings> {
   Future<void> showLogoutDialog(BuildContext context) async {
     UserController userController = Get.find<UserController>();
     NavController navController = Get.find<NavController>();
-    final secureStorage = SecureStorageService();
     return showDialog<void>(
       context: context,
       barrierDismissible: true,

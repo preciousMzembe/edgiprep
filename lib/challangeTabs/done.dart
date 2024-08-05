@@ -1,4 +1,4 @@
-import 'package:edgiprep/controllers/current_quiz_controller.dart';
+import 'package:edgiprep/controllers/current_challange_controller.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,8 +10,8 @@ class Done extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CurrentQuizController currentQuizController =
-        Get.find<CurrentQuizController>();
+    CurrentChallangeController currentChallangeController =
+        Get.find<CurrentChallangeController>();
 
     return PopScope(
       canPop: false,
@@ -56,7 +56,9 @@ class Done extends StatelessWidget {
                                       height: 110.w,
                                     ),
                                     Text(
-                                      "Congraturations",
+                                      currentChallangeController.score == 0
+                                          ? "Better luck Next Time"
+                                          : "Congraturations",
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.nunito(
                                         fontSize: 45.sp,
@@ -84,7 +86,7 @@ class Done extends StatelessWidget {
                                           ),
                                           TextSpan(
                                             text:
-                                                "+${currentQuizController.score}  ",
+                                                "+${currentChallangeController.score}  ",
                                             style: TextStyle(
                                               color: Colors.orange,
                                               fontSize: 35.sp,

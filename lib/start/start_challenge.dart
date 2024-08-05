@@ -1,4 +1,5 @@
-import 'package:edgiprep/controllers/current_quiz_controller.dart';
+import 'package:edgiprep/challangeTabs/challangeTab.dart';
+import 'package:edgiprep/controllers/current_challange_controller.dart';
 import 'package:edgiprep/start/start_content.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/utils.dart';
@@ -9,22 +10,22 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class StartChallenge extends StatelessWidget {
-  final String subject;
+  final Map subject;
   const StartChallenge({super.key, required this.subject});
 
   @override
   Widget build(BuildContext context) {
     // set quiz data
-    CurrentQuizController currentQuizController =
-        Get.find<CurrentQuizController>();
+    CurrentChallangeController currentChallangeController =
+        Get.find<CurrentChallangeController>();
     // reset first
-    currentQuizController.resetQuiz();
-    currentQuizController.setCorrectionRound(false);
-    currentQuizController.emptyWrongQuestions();
+    currentChallangeController.resetQuiz();
+    currentChallangeController.setCorrectionRound(false);
+    currentChallangeController.emptyWrongQuestions();
     // set title
-    currentQuizController.setTitle(subject);
+    currentChallangeController.setTitle(subject['subjectName']);
     // questions
-    currentQuizController.setSampleQuetions();
+    currentChallangeController.setSampleQuetions();
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -73,14 +74,18 @@ class StartChallenge extends StatelessWidget {
               // continue
               GestureDetector(
                 onTap: () async {
+                  currentChallangeController.setQuizError(false);
                   showLoadingDialog(context, "Preparing Questions",
                       "Please wait while we load your personalized quiz. This will only take a moment.");
 
-                  // TODO: remove delay
-                  await Future.delayed(const Duration(seconds: 3));
+                  await currentChallangeController.createQuiz(subject['subjectId']);
                   Navigator.pop(context);
 
-                  // Get.to(() => const QuizTab());
+                  if (currentChallangeController.quizError) {
+                    showErrorLoading(context);
+                  } else {
+                    Get.to(() => const ChallangeTab());
+                  }
                 },
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(100.r),

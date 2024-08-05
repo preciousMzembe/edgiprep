@@ -1,6 +1,6 @@
+import 'package:edgiprep/controllers/user_controller.dart';
 import 'package:edgiprep/screens/topic.dart';
 import 'package:edgiprep/utils/constants.dart';
-import 'package:edgiprep/utils/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -17,6 +17,7 @@ class Subject extends StatefulWidget {
 }
 
 class _SubjectState extends State<Subject> {
+  UserController userController = Get.find<UserController>();
   final ScrollController _controller = ScrollController();
   bool _showDetails = true;
 
@@ -241,8 +242,7 @@ class _SubjectState extends State<Subject> {
                                     height: 20.h,
                                   ),
                                   SubjectTopic(
-                                    topic: topic['topicName'],
-                                    color: topic['topicColor'],
+                                    topic: topic,
                                     percent: 0.4,
                                   ),
                                 ],
@@ -309,21 +309,22 @@ class _SubjectState extends State<Subject> {
 }
 
 class SubjectTopic extends StatelessWidget {
-  final String topic;
-  final Color color;
+  final Map topic;
   final double percent;
   const SubjectTopic({
     super.key,
     required this.topic,
-    required this.color,
     required this.percent,
   });
 
   @override
   Widget build(BuildContext context) {
+    UserController userController = Get.find<UserController>();
     return GestureDetector(
       onTap: () {
-        Get.to(() => const Topic());
+        Get.to(() => Topic(
+              topic: topic,
+            ));
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(0.r),
@@ -339,7 +340,7 @@ class SubjectTopic extends StatelessWidget {
             border: Border(
               left: BorderSide(
                 width: 3,
-                color: color,
+                color: topic['topicColor'],
               ),
             ),
           ),
@@ -352,7 +353,7 @@ class SubjectTopic extends StatelessWidget {
                   children: [
                     //  topic
                     Text(
-                      topic,
+                      topic['topicName'],
                       style: GoogleFonts.nunito(
                         fontSize: 35.sp,
                         fontWeight: FontWeight.w800,
@@ -360,7 +361,7 @@ class SubjectTopic extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "3 lessons",
+                      "${userController.topicsLessons[topic['topicId']].length} lessons",
                       style: GoogleFonts.nunito(
                         fontSize: 25.sp,
                         fontWeight: FontWeight.w600,

@@ -68,21 +68,24 @@ class StartQuiz extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // message: "Let's See How Much \n You Remember",
                 ),
               ),
 
               // continue
               GestureDetector(
                 onTap: () async {
+                  currentQuizController.setQuizError(false);
                   showLoadingDialog(context, "Preparing Your Quiz",
                       "Please wait while we load your personalized quiz. This will only take a moment.");
 
-                  // TODO: remove delay
-                  await Future.delayed(const Duration(seconds: 3));
+                  await currentQuizController.createQuiz(subject['subjectId']);
                   Navigator.pop(context);
 
-                  Get.to(() => const QuizTab());
+                  if (currentQuizController.quizError) {
+                    showErrorLoading(context);
+                  } else {
+                    Get.to(() => const QuizTab());
+                  }
                 },
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(100.r),

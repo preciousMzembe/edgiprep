@@ -7,7 +7,7 @@ import 'package:edgiprep/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class CurrentQuizController extends GetxController {
+class CurrentChallangeController extends GetxController {
   // Rx variables to store quiz data
   final RxString _title = "".obs;
   final RxInt _quizId = 0.obs;
@@ -69,10 +69,6 @@ class CurrentQuizController extends GetxController {
     _correctionRound.value = correction;
   }
 
-  void setCurrentQuestionIndex(int index) {
-    _currentQuestionIndex.value = index;
-  }
-
   void setCheckAnswer(bool check) {
     _checkAnswer.value = check;
   }
@@ -91,7 +87,7 @@ class CurrentQuizController extends GetxController {
   }
 
   // Method to check if the current question is the last one
-  bool isLastQuestion() => currentQuestionIndex == questions.length - 1;
+  bool isTwoQuestionsToFinish() => currentQuestionIndex == questions.length - 3;
 
   // Method to handle user's answer selection
   void answerSelected(String userAnswer, String correctAnswer) {
@@ -105,9 +101,13 @@ class CurrentQuizController extends GetxController {
       }
     }
 
-    if (!isLastQuestion()) {
-      _currentQuestionIndex.value++; // Move to the next question
+    if (isTwoQuestionsToFinish()) {
+      // Add Questions
+      addQuizQuestions();
     }
+
+    // Next Question
+    _currentQuestionIndex.value++;
 
     // uncheck answer
     refreshPage();
@@ -210,6 +210,65 @@ class CurrentQuizController extends GetxController {
           if (totalQuestions == 0) {
             setQuizError(true);
           }
+        }
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        setQuizError(true);
+        debugPrint(
+            "error getting quiz questions -------------------------------- getting quiz questions");
+      } else {
+        // Other errors like network issues
+        setQuizError(true);
+        debugPrint(
+            "error getting quiz questions -------------------------------- getting quiz questions - connection");
+      }
+    } catch (e) {
+      // Handle any exceptions
+      setQuizError(true);
+      debugPrint(
+          "error getting quiz questions -------------------------------- getting quiz questions - error occured");
+    }
+  }
+
+  // Get Quiz Questions
+  Future<void> addQuizQuestions() async {
+    try {
+      String? key = await secureStorage.readKey("userKey");
+
+      if (key != null && key.isNotEmpty) {
+        final Map<String, dynamic> headers = {
+          'AuthKey': key,
+          'Content-Type': 'application/json',
+        };
+        final response = await dio.get(
+          "${ApiUrl!}/TestQuestion?TestId=$quizId&Limit=$QuizQuestionNumber",
+          options: Options(
+            headers: headers,
+          ),
+        );
+
+        if (response.statusCode == 200) {
+          // Set Questions
+          var responseData = response.data;
+
+          List<Question> tempQuestions = [];
+          for (var i = 0; i < responseData.length; i++) {
+            List<String> options =
+                responseData[i]['questionOptions'].split('<=>');
+            options.shuffle(Random());
+
+            Question question = Question(
+                questionId: responseData[i]['questionId'],
+                question: responseData[i]['questionText'],
+                options: options,
+                answer: responseData[i]['questionAnswer']);
+
+            tempQuestions.add(question);
+          }
+
+          // Add questions
+          _questions.addAll(tempQuestions);
         }
       }
     } on DioException catch (e) {
