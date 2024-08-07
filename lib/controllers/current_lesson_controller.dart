@@ -1,4 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:edgiprep/models/lesson_slide.dart';
+import 'package:edgiprep/utils/helper_functions.dart';
+import 'package:edgiprep/utils/utils.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CurrentLessonController extends GetxController {
@@ -10,6 +14,7 @@ class CurrentLessonController extends GetxController {
   final RxInt _selectedIndex = RxInt(-1);
   final RxBool _checkAnswer = false.obs;
   final RxBool _done = false.obs;
+  final RxBool _quizError = false.obs;
 
   // Getter methods for accessing data
   String get title => _title.value;
@@ -20,6 +25,7 @@ class CurrentLessonController extends GetxController {
   int get selectedIndex => _selectedIndex.value;
   bool get checkAnswer => _checkAnswer.value;
   bool get done => _done.value;
+  bool get quizError => _quizError.value;
 
   // Method to set parts of quiz
 
@@ -41,6 +47,10 @@ class CurrentLessonController extends GetxController {
 
   void setSelectedIndex(int index) {
     _selectedIndex.value = index;
+  }
+
+  void setQuizError(bool error) {
+    _quizError.value = error;
   }
 
   void setDone(bool done) {
@@ -99,6 +109,49 @@ class CurrentLessonController extends GetxController {
 
     // uncheck answer
     refreshPage();
+  }
+
+  // Create Lesson
+  Future<void> createLesson(int lessonId) async {
+    try {
+      String? key = await secureStorage.readKey("userKey");
+
+      if (key != null && key.isNotEmpty) {
+        final Map<String, dynamic> headers = {
+          'AuthKey': key,
+          'Content-Type': 'application/json',
+        };
+        final response = await dio.get(
+          "${ApiUrl!}/Lesson/GetLessonSlides?lessonId=$lessonId",
+          options: Options(
+            headers: headers,
+          ),
+        );
+
+        if (response.statusCode == 200) {
+          // Set Lesson Slides
+          var lessonData = response.data;
+
+          // TODO: Set Lesson Slides
+        }
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        setQuizError(true);
+        debugPrint(
+            "error creating lesson -------------------------------- creating lesson");
+      } else {
+        // Other errors like network issues
+        setQuizError(true);
+        debugPrint(
+            "error creating lesson -------------------------------- creating lesson - connection");
+      }
+    } catch (e) {
+      // Handle any exceptions
+      setQuizError(true);
+      debugPrint(
+          "error creating lesson -------------------------------- creating lesson - error occured");
+    }
   }
 }
 

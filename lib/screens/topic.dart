@@ -106,8 +106,8 @@ class _TopicState extends State<Topic> {
                         int index = entry.key;
                         var lesson = entry.value;
                         return Lesson(
-                          lessonNumber:
-                              index + 1, // Adding 1 to make it 1-based index
+                          lessonNumber: index + 1,
+                          lessonId: lesson['lessonId'],
                           lessonName: lesson['lessonName'],
                           lessonDone: lesson['lessonDone'] ?? false,
                           currentLesson: index == 0
@@ -116,56 +116,6 @@ class _TopicState extends State<Topic> {
                           finalLesson: lesson['finalLesson'] ?? false,
                         );
                       }).toList(),
-                      // ...userController.topicsLessons[widget.topic['topicId']]
-                      //     .map(
-                      //       (topic) => const Lesson(
-                      //         lessonNumber: 1,
-                      //         lessonName: "Flowering vs Nonflowering Plants",
-                      //         lessonDescription:
-                      //             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id odio nec nisi posuere sollicitudin.",
-                      //         lessonDone: true,
-                      //         currentLesson: false,
-                      //         finalLesson: false,
-                      //       ),
-                      //     )
-                      //     .toList(),
-                      // lessons
-                      // const Lesson(
-                      //   lessonNumber: 1,
-                      //   lessonName: "Flowering vs Nonflowering Plants",
-                      //   lessonDescription:
-                      //       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id odio nec nisi posuere sollicitudin.",
-                      //   lessonDone: true,
-                      //   currentLesson: false,
-                      //   finalLesson: false,
-                      // ),
-                      // const Lesson(
-                      //   lessonNumber: 2,
-                      //   lessonName: "Parts of Flowering Plants",
-                      //   lessonDescription:
-                      //       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id odio nec nisi posuere sollicitudin.",
-                      //   lessonDone: false,
-                      //   currentLesson: true,
-                      //   finalLesson: false,
-                      // ),
-                      // const Lesson(
-                      //   lessonNumber: 3,
-                      //   lessonName: "Parts of Nonflowering Plants",
-                      //   lessonDescription:
-                      //       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id odio nec nisi posuere sollicitudin.",
-                      //   lessonDone: false,
-                      //   currentLesson: false,
-                      //   finalLesson: false,
-                      // ),
-                      // const Lesson(
-                      //   lessonNumber: 4,
-                      //   lessonName: "Plants Habitation",
-                      //   lessonDescription:
-                      //       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id odio nec nisi posuere sollicitudin.",
-                      //   lessonDone: false,
-                      //   currentLesson: false,
-                      //   finalLesson: true,
-                      // ),
                       // back to top
                       SizedBox(
                         height: 90.h,
@@ -223,6 +173,7 @@ class _TopicState extends State<Topic> {
 
 class Lesson extends StatelessWidget {
   final int lessonNumber;
+  final int lessonId;
   final String lessonName;
   final bool lessonDone;
   final bool currentLesson;
@@ -233,7 +184,8 @@ class Lesson extends StatelessWidget {
       required this.lessonName,
       required this.lessonDone,
       required this.currentLesson,
-      required this.finalLesson});
+      required this.finalLesson,
+      required this.lessonId});
 
   @override
   Widget build(BuildContext context) {
@@ -309,6 +261,7 @@ class Lesson extends StatelessWidget {
                       Get.to(() => StartLesson(
                             topic: lessonName,
                             lessonDone: lessonDone,
+                            lessonId: lessonId,
                           ));
                     }
 
@@ -316,6 +269,7 @@ class Lesson extends StatelessWidget {
                       Get.to(() => StartLesson(
                             topic: lessonName,
                             lessonDone: false,
+                            lessonId: lessonId,
                           ));
                     }
                   },

@@ -11,8 +11,13 @@ import 'package:google_fonts/google_fonts.dart';
 
 class StartLesson extends StatelessWidget {
   final String topic;
+  final int lessonId;
   final bool lessonDone;
-  const StartLesson({super.key, required this.topic, required this.lessonDone});
+  const StartLesson(
+      {super.key,
+      required this.topic,
+      required this.lessonDone,
+      required this.lessonId});
 
   @override
   Widget build(BuildContext context) {
@@ -89,14 +94,24 @@ class StartLesson extends StatelessWidget {
               // continue
               GestureDetector(
                 onTap: () async {
+                  currentLessonController.setQuizError(false);
                   showLoadingDialog(context, "Preparing Questions",
                       "Please wait while we load lesson questions. This will only take a moment.");
 
-                  // TODO: remove delay
-                  await Future.delayed(const Duration(seconds: 3));
+                  await currentLessonController.createLesson(lessonId);
                   Navigator.pop(context);
 
-                  Get.to(() => const LessonTab());
+                  if (currentLessonController.quizError) {
+                    showErrorLoading(context);
+                  } else {
+                    Get.to(() => const LessonTab());
+                  }
+
+                  // // TODO: remove delay
+                  // await Future.delayed(const Duration(seconds: 3));
+                  // Navigator.pop(context);
+
+                  // Get.to(() => const LessonTab());
                 },
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(100.r),
