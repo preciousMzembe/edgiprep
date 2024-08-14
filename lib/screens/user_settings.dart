@@ -22,16 +22,6 @@ class UserSettings extends StatefulWidget {
 }
 
 class _UserSettingsState extends State<UserSettings> {
-  SubjectsSettingsController subjectsSettingsController =
-      Get.find<SubjectsSettingsController>();
-
-  @override
-  void initState() {
-    subjectsSettingsController.setSubjects();
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -142,40 +132,40 @@ class _UserSettingsState extends State<UserSettings> {
                         // ),
 
                         // Profile
-                        SizedBox(
-                          height: 40.h,
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 40.w,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Text(
-                                "My Profile",
-                                style: GoogleFonts.nunito(
-                                  fontSize: 30.sp,
-                                  fontWeight: FontWeight.w900,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 20.h,
-                              ),
-                              Setting(
-                                name: "Full Name",
-                                goTo: () {},
-                              ),
-                              SizedBox(
-                                height: 20.h,
-                              ),
-                              Setting(
-                                name: "Contact",
-                                goTo: () {},
-                              ),
-                            ],
-                          ),
-                        ),
+                        // SizedBox(
+                        //   height: 40.h,
+                        // ),
+                        // Container(
+                        //   padding: EdgeInsets.symmetric(
+                        //     horizontal: 40.w,
+                        //   ),
+                        //   child: Column(
+                        //     crossAxisAlignment: CrossAxisAlignment.stretch,
+                        //     children: [
+                        //       Text(
+                        //         "My Profile",
+                        //         style: GoogleFonts.nunito(
+                        //           fontSize: 30.sp,
+                        //           fontWeight: FontWeight.w900,
+                        //         ),
+                        //       ),
+                        //       SizedBox(
+                        //         height: 20.h,
+                        //       ),
+                        //       Setting(
+                        //         name: "Full Name",
+                        //         goTo: () {},
+                        //       ),
+                        //       SizedBox(
+                        //         height: 20.h,
+                        //       ),
+                        //       Setting(
+                        //         name: "Contact",
+                        //         goTo: () {},
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
 
                         // settings
                         SizedBox(
@@ -199,14 +189,16 @@ class _UserSettingsState extends State<UserSettings> {
                                 height: 20.h,
                               ),
                               Setting(
-                                name: "Login Details",
-                                goTo: () {},
+                                name: "Personal Information",
+                                goTo: () {
+                                  Get.to(() => const PersonalInformation());
+                                },
                               ),
                               SizedBox(
                                 height: 20.h,
                               ),
                               Setting(
-                                name: "Exam",
+                                name: "Exams",
                                 goTo: () {
                                   Get.to(() => const Exam());
                                 },
@@ -218,15 +210,6 @@ class _UserSettingsState extends State<UserSettings> {
                                 name: "Subjects",
                                 goTo: () {
                                   Get.to(() => const SubjectsSettings());
-                                },
-                              ),
-                              SizedBox(
-                                height: 20.h,
-                              ),
-                              Setting(
-                                name: "Personal information",
-                                goTo: () {
-                                  Get.to(() => const PersonalInformation());
                                 },
                               ),
                               SizedBox(

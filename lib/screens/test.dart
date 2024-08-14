@@ -146,7 +146,11 @@ class _TestState extends State<Test> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         Text(
-                                          "2 hours",
+                                          MockExamTime?['hours'] != 0
+                                              ? "${MockExamTime?['hours']} ${MockExamTime?['hours'] > 1 ? "hours" : "hour"}"
+                                              : MockExamTime?['minutes'] != 0
+                                                  ? "${MockExamTime?['minutes']} minutes"
+                                                  : "${MockExamTime?['seconds']} seconds",
                                           style: GoogleFonts.nunito(
                                             fontSize: 30.sp,
                                             fontWeight: FontWeight.w900,
@@ -564,7 +568,7 @@ class ChooseSubject extends StatelessWidget {
                                 ? Get.to(
                                     () => StartMock(
                                       subject:
-                                          "${userController.currentSubjects[index]["subjectName"]}",
+                                          userController.currentSubjects[index],
                                     ),
                                   )
                                 : type == TestMode.quiz
@@ -577,8 +581,8 @@ class ChooseSubject extends StatelessWidget {
                                     : type == TestMode.paper
                                         ? Get.to(
                                             () => Papers(
-                                              subject:
-                                                  "${userController.currentSubjects[index]["subjectName"]}",
+                                              subject: userController
+                                                  .currentSubjects[index],
                                             ),
                                           )
                                         : type == TestMode.challenge

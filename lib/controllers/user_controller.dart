@@ -30,6 +30,7 @@ class UserController extends GetxController {
   RxList userExams = [].obs;
   RxMap currentExam = {}.obs;
   RxList currentSubjects = [].obs;
+  RxList unerolledSubjects = [].obs;
   RxMap subjectsTopics = {}.obs;
   RxMap topicsLessons = {}.obs;
 
@@ -52,6 +53,9 @@ class UserController extends GetxController {
 
       // get current subjects
       await getCurrentSubjects();
+
+      // Get Unenrolled subjects
+      getUnenrolledSubjects();
     }
   }
 

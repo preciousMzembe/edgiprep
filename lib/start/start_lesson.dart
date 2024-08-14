@@ -29,12 +29,12 @@ class StartLesson extends StatelessWidget {
     // set title
     currentLessonController.setTitle(topic);
     // questions
-    currentLessonController.setSampleQuetions();
+    // currentLessonController.setSampleQuetions();
 
     // empty answers
-    for (int i = 0; i < currentLessonController.slides.length; i++) {
-      currentLessonController.slides[i].question?.userAnswer = "";
-    }
+    // for (int i = 0; i < currentLessonController.slides.length; i++) {
+    //   currentLessonController.slides[i].question?.userAnswer = "";
+    // }
 
     return Scaffold(
       backgroundColor: backgroundColor,

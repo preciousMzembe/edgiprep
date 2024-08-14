@@ -1,32 +1,50 @@
+import 'dart:math';
+
+import 'package:dio/dio.dart';
 import 'package:edgiprep/models/test_question.dart';
+import 'package:edgiprep/utils/helper_functions.dart';
+import 'package:edgiprep/utils/utils.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CurrentMockController extends GetxController {
   // Rx variables to store quiz data
   final RxString _title = "".obs;
+  final RxInt _mockId = 0.obs;
   final RxInt _currentQuestionIndex = 0.obs;
   final RxInt _score = 0.obs;
   final RxList<TestQuestion> _questions = RxList<TestQuestion>([]);
+  final RxInt _totalQuestions = 0.obs;
   final RxInt _selectedIndex = RxInt(-1);
   final RxBool _checkAnswer = false.obs;
   final RxList<TestQuestion> _wrongQuestions = RxList<TestQuestion>([]);
   final RxBool _done = false.obs;
+  final RxBool _mockError = false.obs;
+  final RxBool _timeAlmostUp = false.obs;
 
   // Getter methods for accessing data
   String get title => _title.value;
+  int get mockId => _mockId.value;
   int get currentQuestionIndex => _currentQuestionIndex.value;
   int get score => _score.value;
   List<TestQuestion> get questions => _questions.toList();
+  int get totalQuestions => _totalQuestions.value;
   int get numberOfQuestions => _questions.length;
   int get selectedIndex => _selectedIndex.value;
   bool get checkAnswer => _checkAnswer.value;
   List<TestQuestion> get wrongQuestions => _wrongQuestions.toList();
   bool get done => _done.value;
+  bool get mockError => _mockError.value;
+  bool get timeAlmostUp => _timeAlmostUp.value;
 
   // Method to set parts of quiz
 
   void setTitle(String title) {
     _title.value = title;
+  }
+
+  void setMockId(int id) {
+    _mockId.value = id;
   }
 
   void setQuestions(List<TestQuestion> questions) {
@@ -57,9 +75,128 @@ class CurrentMockController extends GetxController {
     _done.value = done;
   }
 
+  void setMockError(bool error) {
+    _mockError.value = error;
+  }
+
+  void setTimeAlmostUp(bool timeUp) {
+    _timeAlmostUp.value = timeUp;
+  }
+
   void refreshPage() {
     setSelectedIndex(-1);
     setCheckAnswer(false);
+  }
+
+  // Create Quiz
+  Future<void> createMock(int instanceId) async {
+    try {
+      String? key = await secureStorage.readKey("userKey");
+
+      if (key != null && key.isNotEmpty) {
+        final Map<String, dynamic> headers = {
+          'AuthKey': key,
+          'Content-Type': 'application/json',
+        };
+        final response = await dio.post(
+          "${ApiUrl!}/CreateTest?InstanceId=$instanceId&type=mock",
+          options: Options(
+            headers: headers,
+          ),
+        );
+
+        if (response.statusCode == 200) {
+          // Set mock id
+          var mockId = response.data;
+          setMockId(mockId);
+
+          // Get Mock Questions
+          await getMockQuestions();
+        }
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        setMockError(true);
+        debugPrint(
+            "error creating mock -------------------------------- creating mock");
+      } else {
+        // Other errors like network issues
+        setMockError(true);
+        debugPrint(
+            "error creating mock -------------------------------- creating mock - connection");
+      }
+    } catch (e) {
+      // Handle any exceptions
+      setMockError(true);
+      debugPrint(
+          "error creating mock -------------------------------- creating mock - error occured");
+    }
+  }
+
+  // Get Quiz Questions
+  Future<void> getMockQuestions() async {
+    try {
+      String? key = await secureStorage.readKey("userKey");
+
+      if (key != null && key.isNotEmpty) {
+        final Map<String, dynamic> headers = {
+          'AuthKey': key,
+          'Content-Type': 'application/json',
+        };
+        final response = await dio.get(
+          "${ApiUrl!}/TestQuestion?TestId=$mockId&Limit=$MockQuestionNumber",
+          options: Options(
+            headers: headers,
+          ),
+        );
+
+        if (response.statusCode == 200) {
+          // Set Questions
+          var responseData = response.data;
+
+          List<TestQuestion> tempQuestions = [];
+          for (var i = 0; i < responseData.length; i++) {
+            List<String> options =
+                responseData[i]['questionOptions'].split('<=>');
+            options.shuffle(Random());
+
+            TestQuestion question = TestQuestion(
+              questionId: responseData[i]['questionId'],
+              question: responseData[i]['questionText'],
+              options: options,
+              answer: responseData[i]['questionAnswer'],
+              userAnswer: '',
+            );
+
+            tempQuestions.add(question);
+          }
+
+          setQuestions(tempQuestions);
+
+          // set total questions for xps
+          _totalQuestions.value = tempQuestions.length;
+          if (totalQuestions == 0) {
+            setMockError(true);
+          }
+        }
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        setMockError(true);
+        debugPrint(
+            "error getting mock questions -------------------------------- getting mock questions");
+      } else {
+        // Other errors like network issues
+        setMockError(true);
+        debugPrint(
+            "error getting mock questions -------------------------------- getting mock questions - connection");
+      }
+    } catch (e) {
+      // Handle any exceptions
+      setMockError(true);
+      debugPrint(
+          "error getting mock questions -------------------------------- getting mock questions - error occured");
+    }
   }
 
   // Method to check if the current question is the last one
@@ -91,6 +228,7 @@ class CurrentMockController extends GetxController {
     _currentQuestionIndex.value = 0;
     _score.value = 0;
     _done.value = false;
+    _timeAlmostUp.value = false;
 
     // uncheck answer
     refreshPage();

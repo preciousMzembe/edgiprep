@@ -139,14 +139,14 @@ class _HomeState extends State<Home> {
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        Icon(
-                          FontAwesomeIcons.solidBell,
-                          size: isTall ? 40.h : 30.w,
-                          color: primaryColor,
-                        ),
+                        // const SizedBox(
+                        //   width: 20,
+                        // ),
+                        // Icon(
+                        //   FontAwesomeIcons.solidBell,
+                        //   size: isTall ? 40.h : 30.w,
+                        //   color: primaryColor,
+                        // ),
                       ],
                     ),
                   ),
@@ -230,7 +230,7 @@ class _HomeState extends State<Home> {
                       // rewards
                       if (isMobile)
                         SizedBox(
-                          height: isTall ? 50.h : 25.w,
+                          height: isTall ? 35.h : 25.w,
                         ),
                       Padding(
                         padding: EdgeInsets.symmetric(
@@ -393,7 +393,7 @@ class _HomeState extends State<Home> {
                                 borderRadius: BorderRadius.circular(20.r),
                                 child: Container(
                                   height: 200.h,
-                                  color: Color.fromARGB(15, 0, 0, 0),
+                                  color: const Color.fromARGB(15, 0, 0, 0),
                                 ),
                               ),
                             if (randomSubjects.isNotEmpty)

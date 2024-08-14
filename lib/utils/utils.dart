@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:edgiprep/components/close_quiz.dart';
@@ -17,7 +18,9 @@ String? ImagesUrl = "";
 String? PrivacyUrl = "";
 String? AppUrl = "";
 int? QuizQuestionNumber = 0;
-int? ChallangeQuestionNumber = 3;
+int? MockQuestionNumber = 0;
+Map? MockExamTime = {};
+int? ChallangeQuestionNumber = 0;
 
 List getRandomSubjects(List subjects, int count) {
   Random random = Random();
@@ -39,10 +42,13 @@ Future<void> fetchRemoteConfigValues() async {
     AppUrl = remoteConfig.getString('APP_URL');
     QuizQuestionNumber =
         int.parse(remoteConfig.getString('QUIZ_QUESTION_NUMBER'));
-    // ChallangeQuestionNumber =
-    //     int.parse(remoteConfig.getString('CHALLANGE_QUESTION_NUMBER'));
+    MockQuestionNumber =
+        int.parse(remoteConfig.getString('MOCK_QUESTION_NUMBER'));
+    MockExamTime = jsonDecode(remoteConfig.getString('MOCK_EXAM_TIME'));
+    ChallangeQuestionNumber =
+        int.parse(remoteConfig.getString('CHALLANGE_QUESTION_NUMBER'));
   } catch (e) {
-    print('Error fetching remote config: $e');
+    debugPrint('Error fetching remote config');
   }
 }
 

@@ -1,7 +1,6 @@
 import 'package:edgiprep/controllers/current_lesson_controller.dart';
 import 'package:edgiprep/mockTabs/answer.dart';
 import 'package:edgiprep/models/lesson_slide.dart';
-import 'package:edgiprep/models/test_question.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -577,9 +576,13 @@ class _LessonTabState extends State<LessonTab> {
                                     ),
                                     children: [
                                       TextSpan(
-                                        text: "+90  ",
+                                        text:
+                                            "+${currentLessonController.score}  ",
                                         style: TextStyle(
-                                          color: Colors.green,
+                                          color:
+                                              currentLessonController.score != 0
+                                                  ? Colors.green
+                                                  : Colors.red,
                                           fontSize: 35.sp,
                                         ),
                                       ),

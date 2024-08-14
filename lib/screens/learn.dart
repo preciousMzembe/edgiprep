@@ -37,58 +37,85 @@ class _LearnState extends State<Learn> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(
-              height: isTall ? 30.h : 50.h,
+              height: 30.h,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    // "Level Up",
+                    "Your Learning Pathway",
+                    style: GoogleFonts.nunito(
+                      fontSize: 45.sp,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  // SizedBox(
+                  //   height: 5.h,
+                  // ),
+                  // Text(
+                  //   "Take your skill to another level",
+                  //   style: TextStyle(
+                  //     fontSize: 25.sp,
+                  //     fontWeight: FontWeight.bold,
+                  //     color: textColor,
+                  //   ),
+                  // ),
+                ],
+              ),
             ),
             // search
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: isTall ? 30.w : 50.h,
-              ),
-              child: TextField(
-                cursorColor: primaryColor,
-                decoration: InputDecoration(
-                  fillColor: grayColor,
-                  filled: true,
-                  prefixIcon: Padding(
-                    padding: EdgeInsets.only(
-                      left: isTall ? 50.w : 25.w,
-                      right: isTall ? 30.w : 20.w,
-                    ),
-                    child: Icon(
-                      FontAwesomeIcons.magnifyingGlass,
-                      color: const Color.fromARGB(255, 139, 139, 139),
-                      size: isTall ? 30.h : 50.h,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(
-                      color: grayColor,
-                      // color: Color.fromARGB(255, 139, 139, 139),
-                      width: 2.0,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(
-                      color: grayColor,
-                      // color: Color.fromARGB(255, 139, 139, 139),
-                      width: 2.0,
-                    ),
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                    vertical: isTall ? 25.h : 35.h,
-                  ),
-                  hintStyle: TextStyle(
-                    fontSize: isTall ? 30.sp : 15.sp,
-                  ),
-                  hintText: 'Search',
-                ),
-                style: TextStyle(
-                  fontSize: isTall ? 30.sp : 15.sp,
-                ),
-              ),
-            ),
+            // Padding(
+            //   padding: EdgeInsets.symmetric(
+            //     horizontal: isTall ? 30.w : 50.h,
+            //   ),
+            //   child: TextField(
+            //     cursorColor: primaryColor,
+            //     decoration: InputDecoration(
+            //       fillColor: grayColor,
+            //       filled: true,
+            //       prefixIcon: Padding(
+            //         padding: EdgeInsets.only(
+            //           left: isTall ? 50.w : 25.w,
+            //           right: isTall ? 30.w : 20.w,
+            //         ),
+            //         child: Icon(
+            //           FontAwesomeIcons.magnifyingGlass,
+            //           color: const Color.fromARGB(255, 139, 139, 139),
+            //           size: isTall ? 30.h : 50.h,
+            //         ),
+            //       ),
+            //       focusedBorder: OutlineInputBorder(
+            //         borderRadius: BorderRadius.circular(20.0),
+            //         borderSide: BorderSide(
+            //           color: grayColor,
+            //           // color: Color.fromARGB(255, 139, 139, 139),
+            //           width: 2.0,
+            //         ),
+            //       ),
+            //       enabledBorder: OutlineInputBorder(
+            //         borderRadius: BorderRadius.circular(20.0),
+            //         borderSide: BorderSide(
+            //           color: grayColor,
+            //           // color: Color.fromARGB(255, 139, 139, 139),
+            //           width: 2.0,
+            //         ),
+            //       ),
+            //       contentPadding: EdgeInsets.symmetric(
+            //         vertical: isTall ? 25.h : 35.h,
+            //       ),
+            //       hintStyle: TextStyle(
+            //         fontSize: isTall ? 30.sp : 15.sp,
+            //       ),
+            //       hintText: 'Search',
+            //     ),
+            //     style: TextStyle(
+            //       fontSize: isTall ? 30.sp : 15.sp,
+            //     ),
+            //   ),
+            // ),
             SizedBox(
               height: 10.h,
             ),
@@ -109,7 +136,7 @@ class _LearnState extends State<Learn> {
                         Visibility(
                           visible: index == 0,
                           child: SizedBox(
-                            height: isTall ? 30.h : 15.w,
+                            height: 20.h,
                           ),
                         ),
                         IntrinsicHeight(

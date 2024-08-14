@@ -202,6 +202,53 @@ Future<void> getCurrentSubjects() async {
   }
 }
 
+Future<void> getUnenrolledSubjects() async {
+  var userExam = userController.currentExam;
+
+  if (userController.currentExam.isNotEmpty) {
+    try {
+      final response = await dio.get(
+        "${ApiUrl!}/Subjects/GetByExamId/${userExam['examId']}",
+      );
+
+      if (response.statusCode == 200) {
+        // Update Exams List
+        var subjectsData = response.data;
+        List tempSubjects = [];
+        for (var i = 0; i < subjectsData.length; i++) {
+          SubjectModel subject = SubjectModel(
+            subjectId: subjectsData[i]['subjectId'],
+            subjectName: subjectsData[i]['subjectName'],
+            subjectDescription: subjectsData[i]['subjectDescription'],
+            subjectImage: subjectsData[i]['subjectLink'],
+          );
+
+          bool currentSubjectsHaveSubjectWithId = userController.currentSubjects
+              .any((subject) =>
+                  subject['subjectId'] == subjectsData[i]['subjectId']);
+
+          if (!currentSubjectsHaveSubjectWithId) {
+            // add subject
+            tempSubjects.add(subject.toMap);
+          }
+        }
+
+        userController.unerolledSubjects.value = tempSubjects;
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        debugPrint("${e.response} ---------------- auth subjects.");
+      } else {
+        // Other errors like network issues
+        debugPrint("Connection error ------------------- auth subjects.");
+      }
+    } catch (e) {
+      // Handle any exceptions
+      debugPrint("An Error occured ------------ auth subjects");
+    }
+  }
+}
+
 // Get Topics of Current Subjects
 Future<void> getTopicsOfCurrentSubjects() async {
   var subjects = userController.currentSubjects;

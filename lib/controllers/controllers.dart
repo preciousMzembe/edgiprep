@@ -5,6 +5,7 @@ import 'package:edgiprep/controllers/current_lesson_controller.dart';
 import 'package:edgiprep/controllers/current_mock_controller.dart';
 import 'package:edgiprep/controllers/current_quiz_controller.dart';
 import 'package:edgiprep/controllers/nav_controller.dart';
+import 'package:edgiprep/controllers/papers_controller.dart';
 import 'package:edgiprep/controllers/subjects_settings_controller.dart';
 import 'package:edgiprep/controllers/user_controller.dart';
 import 'package:get/get.dart';
@@ -21,5 +22,6 @@ class Controllers extends Bindings {
     Get.put<CurrentMockController>(CurrentMockController());
     Get.put<AddExamController>(AddExamController());
     Get.put<SubjectsSettingsController>(SubjectsSettingsController());
+    Get.put<PapersController>(PapersController());
   }
 }

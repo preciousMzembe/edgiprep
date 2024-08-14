@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class StartMock extends StatelessWidget {
-  final String subject;
+  final Map subject;
   const StartMock({
     super.key,
     required this.subject,
@@ -19,20 +19,20 @@ class StartMock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // set quiz data
-    CurrentMockController currentmockController =
+    CurrentMockController currentMockController =
         Get.find<CurrentMockController>();
     // reset first
-    currentmockController.resetQuiz();
-    currentmockController.emptyWrongQuestions();
+    currentMockController.resetQuiz();
+    currentMockController.emptyWrongQuestions();
     // set title
-    currentmockController.setTitle(subject);
+    currentMockController.setTitle(subject['subjectName']);
     // questions
-    currentmockController.setSampleQuetions();
+    // currentMockController.setSampleQuetions();
 
     // empty answers
-    for (int i = 0; i < currentmockController.questions.length; i++) {
-      currentmockController.questions[i].userAnswer = "";
-    }
+    // for (int i = 0; i < currentMockController.questions.length; i++) {
+    //   currentMockController.questions[i].userAnswer = "";
+    // }
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -90,14 +90,18 @@ class StartMock extends StatelessWidget {
               // continue
               GestureDetector(
                 onTap: () async {
+                  currentMockController.setMockError(false);
                   showLoadingDialog(context, "Preparing Questions",
                       "Please wait while we load lesson questions. This will only take a moment.");
 
-                  // TODO: remove delay
-                  await Future.delayed(const Duration(seconds: 3));
+                  await currentMockController.createMock(subject['subjectId']);
                   Navigator.pop(context);
 
-                  Get.to(() => const MockTab());
+                  if (currentMockController.mockError) {
+                    showErrorLoading(context);
+                  } else {
+                    Get.to(() => const MockTab());
+                  }
                 },
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(100.r),

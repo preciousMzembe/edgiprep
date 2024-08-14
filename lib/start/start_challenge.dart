@@ -25,7 +25,7 @@ class StartChallenge extends StatelessWidget {
     // set title
     currentChallangeController.setTitle(subject['subjectName']);
     // questions
-    currentChallangeController.setSampleQuetions();
+    // currentChallangeController.setSampleQuetions();
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -78,7 +78,8 @@ class StartChallenge extends StatelessWidget {
                   showLoadingDialog(context, "Preparing Questions",
                       "Please wait while we load your personalized quiz. This will only take a moment.");
 
-                  await currentChallangeController.createQuiz(subject['subjectId']);
+                  await currentChallangeController
+                      .createQuiz(subject['subjectId']);
                   Navigator.pop(context);
 
                   if (currentChallangeController.quizError) {

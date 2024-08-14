@@ -11,15 +11,7 @@ class SubjectsSettingsController extends GetxController {
   final RxList allSubjects = [].obs;
   final RxList selectedSubjects = [].obs;
 
-  void addRemoveSelectedSubjects(Map subject) {
-    if (!selectedSubjects.contains(subject)) {
-      selectedSubjects.add(subject);
-    } else {
-      selectedSubjects.remove(subject);
-    }
-  }
-
-  Future<void> setSubjects() async {
+  Future<void> getAllSubjects() async {
     var userExam = userController.currentExam;
 
     if (userController.currentExam.isNotEmpty) {

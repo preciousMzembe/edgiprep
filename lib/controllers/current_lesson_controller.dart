@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dio/dio.dart';
 import 'package:edgiprep/models/lesson_slide.dart';
 import 'package:edgiprep/utils/helper_functions.dart';
@@ -33,7 +35,7 @@ class CurrentLessonController extends GetxController {
     _title.value = title;
   }
 
-  void setQuestions(List<LessonSlide> questions) {
+  void setSlides(List<LessonSlide> questions) {
     _slides.value = questions;
   }
 
@@ -132,7 +134,54 @@ class CurrentLessonController extends GetxController {
           // Set Lesson Slides
           var lessonData = response.data;
 
-          // TODO: Set Lesson Slides
+          // Set Lesson Slides
+          List<LessonSlide> tempSlides = [];
+          for (var i = 0; i < lessonData.length; i++) {
+            var lessonSlide = lessonData[i];
+            if (lessonSlide['slideType'] == 1) {
+              // content slide
+              LessonSlide contentSlide = LessonSlide(
+                lessonId: lessonSlide['slideId'],
+                content: lessonSlide['slideContent'],
+              );
+
+              tempSlides.add(contentSlide);
+            } else {
+              // question slide
+              int questionId = int.parse(lessonSlide['slideContent']);
+
+              // get question
+              final questionResponse = await dio.get(
+                "${ApiUrl!}/Question/$questionId",
+                options: Options(
+                  headers: headers,
+                ),
+              );
+
+              if (questionResponse.statusCode == 200) {
+                var questionData = questionResponse.data;
+
+                List<String> options =
+                    questionData['questionOptions'].split('<=>');
+                options.shuffle(Random());
+
+                LessonQuestion question = LessonQuestion(
+                    question: questionData['questionText'],
+                    options: options,
+                    answer: questionData['questionAnswer']);
+
+                // add question slide
+                LessonSlide contentSlide = LessonSlide(
+                  lessonId: lessonSlide['slideId'],
+                  question: question,
+                );
+
+                tempSlides.add(contentSlide);
+              }
+            }
+          }
+
+          setSlides(tempSlides);
         }
       }
     } on DioException catch (e) {
@@ -149,6 +198,7 @@ class CurrentLessonController extends GetxController {
     } catch (e) {
       // Handle any exceptions
       setQuizError(true);
+      print(e);
       debugPrint(
           "error creating lesson -------------------------------- creating lesson - error occured");
     }

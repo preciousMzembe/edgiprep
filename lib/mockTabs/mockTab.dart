@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:edgiprep/controllers/current_mock_controller.dart';
 import 'package:edgiprep/mockTabs/answer.dart';
 import 'package:edgiprep/models/test_question.dart';
@@ -18,7 +20,7 @@ class MockTab extends StatefulWidget {
 }
 
 class _MockTabState extends State<MockTab> {
-  CurrentMockController currentmockController =
+  CurrentMockController currentMockController =
       Get.find<CurrentMockController>();
 
   late ScrollController _scrollController;
@@ -27,6 +29,7 @@ class _MockTabState extends State<MockTab> {
   void initState() {
     super.initState();
     _scrollController = ScrollController();
+    _startTimer();
   }
 
   void _scrollToBottom() {
@@ -39,9 +42,42 @@ class _MockTabState extends State<MockTab> {
     });
   }
 
+  late Duration _remainingTime;
+  Timer? _timer;
+
+  void _startTimer() {
+    _remainingTime = Duration(
+        hours: MockExamTime?['hours'],
+        minutes: MockExamTime?['minutes'],
+        seconds: MockExamTime?['seconds']);
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_remainingTime.inMinutes < 2) {
+        currentMockController.setTimeAlmostUp(true);
+      }
+
+      if (_remainingTime.inSeconds > 0) {
+        setState(() {
+          _remainingTime = _remainingTime - const Duration(seconds: 1);
+        });
+      } else {
+        timer.cancel();
+        // TODO: End Exam
+        currentMockController.setDone(true);
+      }
+    });
+  }
+
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  }
+
   @override
   void dispose() {
     _scrollController.dispose();
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -50,8 +86,8 @@ class _MockTabState extends State<MockTab> {
     return PopScope(
       canPop: false,
       child: Obx(() {
-        List<String> shuffledOptions = currentmockController
-            .questions[currentmockController.currentQuestionIndex].options
+        List<String> questionOptions = currentMockController
+            .questions[currentMockController.currentQuestionIndex].options
             .toList();
         return Scaffold(
           backgroundColor: backgroundColor,
@@ -96,7 +132,7 @@ class _MockTabState extends State<MockTab> {
                           ),
                           Expanded(
                             child: Text(
-                              currentmockController.title,
+                              currentMockController.title,
                               maxLines: 1,
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
@@ -133,9 +169,9 @@ class _MockTabState extends State<MockTab> {
                             // animationDuration: 2000,
                             // percent
                             percent:
-                                (currentmockController.currentQuestionIndex +
+                                (currentMockController.currentQuestionIndex +
                                         1) /
-                                    currentmockController.numberOfQuestions,
+                                    currentMockController.numberOfQuestions,
                             barRadius: Radius.circular(30.r),
                             progressColor: primaryColor,
                             backgroundColor: progressColor,
@@ -158,12 +194,12 @@ class _MockTabState extends State<MockTab> {
                                   children: [
                                     TextSpan(
                                       text:
-                                          "${currentmockController.currentQuestionIndex + 1}",
+                                          "${currentMockController.currentQuestionIndex + 1}",
                                       style: TextStyle(color: primaryColor),
                                     ),
                                     TextSpan(
                                       text:
-                                          "/${currentmockController.numberOfQuestions}",
+                                          "/${currentMockController.numberOfQuestions}",
                                       style: TextStyle(color: textColor),
                                     ),
                                   ],
@@ -171,7 +207,13 @@ class _MockTabState extends State<MockTab> {
                               ),
 
                               // timer
-                              const Text("02:00:00"),
+                              Text(
+                                _formatDuration(_remainingTime),
+                                style: TextStyle(
+                                    color: currentMockController.timeAlmostUp
+                                        ? Colors.red
+                                        : textColor),
+                              ),
                             ],
                           ),
                         ],
@@ -198,13 +240,13 @@ class _MockTabState extends State<MockTab> {
                             // questions
 
                             for (int i = 0;
-                                i < currentmockController.questions.length;
+                                i < currentMockController.questions.length;
                                 i++)
-                              if (currentmockController.currentQuestionIndex >=
+                              if (currentMockController.currentQuestionIndex >=
                                   i)
                                 ConstrainedBox(
                                   constraints: BoxConstraints(
-                                    minHeight: currentmockController
+                                    minHeight: currentMockController
                                                 .currentQuestionIndex ==
                                             i
                                         ? constraints.maxHeight - 100.h
@@ -216,7 +258,7 @@ class _MockTabState extends State<MockTab> {
                                     children: [
                                       Question(
                                         question:
-                                            currentmockController.questions[i],
+                                            currentMockController.questions[i],
                                         questionIndex: i,
                                       ),
                                       SizedBox(
@@ -238,18 +280,19 @@ class _MockTabState extends State<MockTab> {
                 ),
 
                 // check and continue
-                if (currentmockController.selectedIndex >= 0)
+                if (currentMockController.selectedIndex >= 0 &&
+                    !currentMockController.done)
                   ClipRRect(
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(40.r),
                         topRight: Radius.circular(40.r)),
                     child: Container(
-                      color: !currentmockController.checkAnswer
+                      color: !currentMockController.checkAnswer
                           ? const Color.fromRGBO(47, 59, 98, 0.178)
-                          : shuffledOptions[
-                                      currentmockController.selectedIndex] ==
-                                  currentmockController
-                                      .questions[currentmockController
+                          : questionOptions[
+                                      currentMockController.selectedIndex] ==
+                                  currentMockController
+                                      .questions[currentMockController
                                           .currentQuestionIndex]
                                       .answer
                               ? const Color.fromRGBO(76, 175, 79, 0.178)
@@ -263,7 +306,7 @@ class _MockTabState extends State<MockTab> {
                         children: [
                           // question status and answer
                           Visibility(
-                            visible: currentmockController.checkAnswer,
+                            visible: currentMockController.checkAnswer,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
@@ -271,18 +314,18 @@ class _MockTabState extends State<MockTab> {
                                 Row(
                                   children: [
                                     // icon
-                                    if (currentmockController.selectedIndex >=
+                                    if (currentMockController.selectedIndex >=
                                         0)
                                       Container(
                                         width: 50.h,
                                         height: 50.h,
                                         decoration: BoxDecoration(
-                                          color: shuffledOptions[
-                                                      currentmockController
+                                          color: questionOptions[
+                                                      currentMockController
                                                           .selectedIndex] ==
-                                                  currentmockController
+                                                  currentMockController
                                                       .questions[
-                                                          currentmockController
+                                                          currentMockController
                                                               .currentQuestionIndex]
                                                       .answer
                                               ? Colors.green
@@ -291,11 +334,11 @@ class _MockTabState extends State<MockTab> {
                                               BorderRadius.circular(50.r),
                                         ),
                                         child: Icon(
-                                          shuffledOptions[currentmockController
+                                          questionOptions[currentMockController
                                                       .selectedIndex] ==
-                                                  currentmockController
+                                                  currentMockController
                                                       .questions[
-                                                          currentmockController
+                                                          currentMockController
                                                               .currentQuestionIndex]
                                                       .answer
                                               ? FontAwesomeIcons.check
@@ -308,14 +351,14 @@ class _MockTabState extends State<MockTab> {
                                       width: 15.w,
                                     ),
                                     // correct or wrong
-                                    if (currentmockController.selectedIndex >=
+                                    if (currentMockController.selectedIndex >=
                                         0)
                                       Text(
-                                        shuffledOptions[currentmockController
+                                        questionOptions[currentMockController
                                                     .selectedIndex] ==
-                                                currentmockController
+                                                currentMockController
                                                     .questions[
-                                                        currentmockController
+                                                        currentMockController
                                                             .currentQuestionIndex]
                                                     .answer
                                             ? "Correct"
@@ -323,12 +366,12 @@ class _MockTabState extends State<MockTab> {
                                         style: GoogleFonts.nunito(
                                           fontSize: 40.sp,
                                           fontWeight: FontWeight.w900,
-                                          color: shuffledOptions[
-                                                      currentmockController
+                                          color: questionOptions[
+                                                      currentMockController
                                                           .selectedIndex] ==
-                                                  currentmockController
+                                                  currentMockController
                                                       .questions[
-                                                          currentmockController
+                                                          currentMockController
                                                               .currentQuestionIndex]
                                                       .answer
                                               ? Colors.green
@@ -341,10 +384,10 @@ class _MockTabState extends State<MockTab> {
                                   height: 20.h,
                                 ),
                                 // answer
-                                if (shuffledOptions[
-                                        currentmockController.selectedIndex] !=
-                                    currentmockController
-                                        .questions[currentmockController
+                                if (questionOptions[
+                                        currentMockController.selectedIndex] !=
+                                    currentMockController
+                                        .questions[currentMockController
                                             .currentQuestionIndex]
                                         .answer)
                                   Column(
@@ -364,9 +407,9 @@ class _MockTabState extends State<MockTab> {
                                           ),
                                           Expanded(
                                             child: Text(
-                                              currentmockController
+                                              currentMockController
                                                   .questions[
-                                                      currentmockController
+                                                      currentMockController
                                                           .currentQuestionIndex]
                                                   .answer,
                                               style: GoogleFonts.nunito(
@@ -393,40 +436,30 @@ class _MockTabState extends State<MockTab> {
                               borderRadius: BorderRadius.circular(100.r),
                             ),
                             onPressed: () {
-                              if (!currentmockController.checkAnswer) {
+                              if (!currentMockController.checkAnswer) {
                                 // check
-                                currentmockController.setCheckAnswer(true);
+                                currentMockController.setCheckAnswer(true);
                               } else {
                                 // if last question
-                                if (currentmockController.isLastQuestion()) {
+                                if (currentMockController.isLastQuestion()) {
                                   // mark
-                                  currentmockController.answerSelected(
-                                      shuffledOptions[
-                                          currentmockController.selectedIndex],
-                                      currentmockController
-                                          .questions[currentmockController
+                                  currentMockController.answerSelected(
+                                      questionOptions[
+                                          currentMockController.selectedIndex],
+                                      currentMockController
+                                          .questions[currentMockController
                                               .currentQuestionIndex]
                                           .answer);
 
                                   // mark done
-                                  currentmockController.setDone(true);
-
-                                  // change page
-                                  // if (currentmockController.score !=
-                                  //         currentmockController
-                                  //             .questions.length) {
-
-                                  //   Get.to(() => const RetryPrompt());
-                                  // } else {
-                                  //   Get.to(() => const Done());
-                                  // }
+                                  currentMockController.setDone(true);
                                 } else {
                                   // next question
-                                  currentmockController.answerSelected(
-                                      shuffledOptions[
-                                          currentmockController.selectedIndex],
-                                      currentmockController
-                                          .questions[currentmockController
+                                  currentMockController.answerSelected(
+                                      questionOptions[
+                                          currentMockController.selectedIndex],
+                                      currentMockController
+                                          .questions[currentMockController
                                               .currentQuestionIndex]
                                           .answer);
                                 }
@@ -435,12 +468,12 @@ class _MockTabState extends State<MockTab> {
                               }
                             },
                             child: Text(
-                              !currentmockController.checkAnswer
+                              !currentMockController.checkAnswer
                                   ? "Check"
-                                  : shuffledOptions[currentmockController
+                                  : questionOptions[currentMockController
                                               .selectedIndex] !=
-                                          currentmockController
-                                              .questions[currentmockController
+                                          currentMockController
+                                              .questions[currentMockController
                                                   .currentQuestionIndex]
                                               .answer
                                       ? "Got It"
@@ -458,7 +491,7 @@ class _MockTabState extends State<MockTab> {
                   ),
 
                 // finish
-                if (currentmockController.done)
+                if (currentMockController.done)
                   ClipRRect(
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(40.r),
@@ -488,12 +521,12 @@ class _MockTabState extends State<MockTab> {
                                     ),
                                     children: [
                                       TextSpan(
-                                        text: "${currentmockController.score}",
+                                        text: "${currentMockController.score}",
                                         style: TextStyle(color: primaryColor),
                                       ),
                                       TextSpan(
                                         text:
-                                            "/${currentmockController.numberOfQuestions}",
+                                            "/${currentMockController.numberOfQuestions}",
                                         style: TextStyle(color: textColor),
                                       ),
                                     ],
@@ -509,7 +542,8 @@ class _MockTabState extends State<MockTab> {
                                     ),
                                     children: [
                                       TextSpan(
-                                        text: "+90  ",
+                                        text:
+                                            "+${currentMockController.score}  ",
                                         style: TextStyle(
                                           color: Colors.green,
                                           fontSize: 35.sp,
@@ -573,7 +607,7 @@ class Question extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CurrentMockController currentmockController =
+    CurrentMockController currentMockController =
         Get.find<CurrentMockController>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -597,14 +631,14 @@ class Question extends StatelessWidget {
             children: [
               Answer(
                 answer: question.options[i],
-                selected: currentmockController.selectedIndex == i &&
-                    currentmockController.currentQuestionIndex == questionIndex,
+                selected: currentMockController.selectedIndex == i &&
+                    currentMockController.currentQuestionIndex == questionIndex,
                 select: () {
-                  if (!currentmockController.checkAnswer &&
-                      currentmockController.currentQuestionIndex ==
+                  if (!currentMockController.checkAnswer &&
+                      currentMockController.currentQuestionIndex ==
                           questionIndex &&
-                      !currentmockController.done) {
-                    currentmockController.setSelectedIndex(i);
+                      !currentMockController.done) {
+                    currentMockController.setSelectedIndex(i);
                   }
                 },
                 color: question.options[i] == question.answer &&

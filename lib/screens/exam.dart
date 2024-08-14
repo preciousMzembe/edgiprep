@@ -55,21 +55,6 @@ class _ExamState extends State<Exam> {
                             ),
                           ),
                         ),
-                        Expanded(
-                          child: Center(
-                            child: Text(
-                              "Exam Settings",
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.nunito(
-                                fontSize: 40.sp,
-                                fontWeight: FontWeight.w900,
-                                // color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -79,6 +64,19 @@ class _ExamState extends State<Exam> {
                       padding: EdgeInsets.symmetric(horizontal: 30.w),
                       child: ListView(
                         children: [
+                          SizedBox(
+                            height: 30.h,
+                          ),
+                          Text(
+                            "Manage Your \nExams",
+                            style: GoogleFonts.nunito(
+                              fontSize: 70.sp,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                          const Text(
+                              "Choose the exams you're preparing for to have your customized learning path."),
+
                           // names
                           const SizedBox(
                             height: 30,
@@ -119,8 +117,7 @@ class _ExamState extends State<Exam> {
                                   child: Container(
                                     width: 40,
                                     height: 40,
-                                    color: const Color.fromRGBO(
-                                        158, 158, 158, 0.123),
+                                    color: const Color.fromARGB(33, 47, 59, 98),
                                     child: Center(
                                       child: Icon(
                                         FontAwesomeIcons.plus,
@@ -196,7 +193,7 @@ class _ExamState extends State<Exam> {
                           Text(
                             "Your Exams List",
                             style: GoogleFonts.nunito(
-                              fontSize: 30.sp,
+                              // fontSize: 20.sp,
                               fontWeight: FontWeight.w900,
                             ),
                           ),
@@ -258,7 +255,7 @@ class UserExam extends StatelessWidget {
               },
               child: const Icon(
                 FontAwesomeIcons.solidTrashCan,
-                size: 18,
+                size: 16,
                 color: Color.fromRGBO(244, 67, 54, 0.6),
               ),
             ),
@@ -335,7 +332,7 @@ Future<void> showDeleteExamDialog(BuildContext context, String name) async {
                       height: 10.h,
                     ),
                     Text(
-                      "Are you sure you want to delete your $name? This action is irreversible and all the progress will be lost.",
+                      "Are you sure you want to delete $name? This action is irreversible and all the progress will be lost.",
                       textAlign: TextAlign.center,
                       style: GoogleFonts.nunito(
                           fontSize: 20.sp,

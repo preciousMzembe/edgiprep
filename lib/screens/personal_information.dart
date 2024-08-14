@@ -73,36 +73,7 @@ class PersonalInformation extends StatelessWidget {
                           height: 30,
                         ),
                         Text(
-                          "First Name",
-                          style: GoogleFonts.nunito(
-                            fontSize: 25.sp,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        TextField(
-                          style: TextStyle(fontSize: 25.sp),
-                          decoration: InputDecoration(
-                            isDense: true,
-                            enabledBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 1.0,
-                                  color: Color.fromARGB(90, 158, 158, 158)),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: primaryColor),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 5.0,
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        Text(
-                          "Last Name",
+                          "Full Name",
                           style: GoogleFonts.nunito(
                             fontSize: 25.sp,
                             fontWeight: FontWeight.w700,
@@ -224,7 +195,7 @@ class PersonalInformation extends StatelessWidget {
                           height: 30,
                         ),
                         Text(
-                          "Ensure your details are accurate for the best personalized experience.",
+                          "Ensure your details are accurate.",
                           style: GoogleFonts.nunito(
                             fontWeight: FontWeight.w500,
                           ),

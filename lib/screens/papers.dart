@@ -1,3 +1,4 @@
+import 'package:edgiprep/controllers/papers_controller.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,178 +7,191 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Papers extends StatelessWidget {
-  final String subject;
+  final Map subject;
   const Papers({super.key, required this.subject});
 
   @override
   Widget build(BuildContext context) {
+    PapersController papersController = Get.find<PapersController>();
+    papersController.getPapers(subject['subjectId']);
+
     return LayoutBuilder(
       builder: (context, constants) {
         final isTall = constants.maxHeight > constants.maxWidth;
-        return Scaffold(
-          backgroundColor: Colors.white,
-          body: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(
-                  height: 30.h,
-                ),
-                // top
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30.w),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // back
-                      GestureDetector(
-                        onTap: () {
-                          Get.back();
-                        },
-                        child: Container(
-                          width: 50.w,
-                          height: 50.w,
-                          color: Colors.transparent,
-                          child: Icon(
-                            FontAwesomeIcons.arrowLeft,
-                            size: 40.w,
-                          ),
-                        ),
-                      ),
-                      // subject
-                      SizedBox(
-                        width: 20.w,
-                      ),
-                      Expanded(
-                        child: Text(
-                          subject,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.nunito(
-                            fontSize: 40.sp,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                      ),
-                    ],
+        return Obx(() {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            body: SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(
+                    height: 30.h,
                   ),
-                ),
-
-                // search
-                SizedBox(
-                  height: isTall ? 30.h : 50.h,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: isTall ? 30.w : 50.h,
-                  ),
-                  child: TextField(
-                    cursorColor: primaryColor,
-                    decoration: InputDecoration(
-                      fillColor: grayColor,
-                      filled: true,
-                      prefixIcon: Padding(
-                        padding: EdgeInsets.only(
-                          left: isTall ? 50.w : 25.w,
-                          right: isTall ? 30.w : 20.w,
-                        ),
-                        child: Icon(
-                          FontAwesomeIcons.magnifyingGlass,
-                          color: const Color.fromARGB(255, 139, 139, 139),
-                          size: isTall ? 30.h : 50.h,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                        borderSide: BorderSide(
-                          color: grayColor,
-                          // color: Color.fromARGB(255, 139, 139, 139),
-                          width: 2.0,
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                        borderSide: BorderSide(
-                          color: grayColor,
-                          // color: Color.fromARGB(255, 139, 139, 139),
-                          width: 2.0,
-                        ),
-                      ),
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: isTall ? 25.h : 35.h,
-                      ),
-                      hintStyle: TextStyle(
-                        fontSize: isTall ? 30.sp : 15.sp,
-                      ),
-                      hintText: 'Search',
-                    ),
-                    style: TextStyle(
-                      fontSize: isTall ? 30.sp : 15.sp,
-                    ),
-                  ),
-                ),
-
-                // list of papers
-                SizedBox(
-                  height: 20.h,
-                ),
-                Expanded(
-                  child: Padding(
+                  // top
+                  Padding(
                     padding: EdgeInsets.symmetric(horizontal: 30.w),
-                    child: ListView(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        // back
+                        GestureDetector(
+                          onTap: () {
+                            Get.back();
+                          },
+                          child: Container(
+                            width: 50.w,
+                            height: 50.w,
+                            color: Colors.transparent,
+                            child: Icon(
+                              FontAwesomeIcons.arrowLeft,
+                              size: 40.w,
+                            ),
+                          ),
+                        ),
+                        // subject
                         SizedBox(
-                          height: 20.h,
+                          width: 20.w,
                         ),
-                        const Paper(
-                          name: "2020 MANEB",
-                          date: "March 20, 2020",
-                          time: "2 hours",
-                          done: true,
-                        ),
-                        SizedBox(
-                          height: 35.h,
-                        ),
-                        const Paper(
-                          name: "2021 MANEB",
-                          date: "March 20, 2021",
-                          time: "2 hours",
-                          done: false,
-                        ),
-                        SizedBox(
-                          height: 35.h,
-                        ),
-                        const Paper(
-                          name: "2022 MANEB",
-                          date: "March 20, 2022",
-                          time: "2 hours",
-                          done: false,
+                        Expanded(
+                          child: Text(
+                            subject['subjectName'],
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.nunito(
+                              fontSize: 40.sp,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
                         ),
                       ],
                     ),
                   ),
-                ),
-              ],
+
+                  // search
+                  SizedBox(
+                    height: isTall ? 30.h : 50.h,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isTall ? 30.w : 50.h,
+                    ),
+                    child: TextField(
+                      cursorColor: primaryColor,
+                      decoration: InputDecoration(
+                        fillColor: grayColor,
+                        filled: true,
+                        prefixIcon: Padding(
+                          padding: EdgeInsets.only(
+                            left: isTall ? 50.w : 25.w,
+                            right: isTall ? 30.w : 20.w,
+                          ),
+                          child: Icon(
+                            FontAwesomeIcons.magnifyingGlass,
+                            color: const Color.fromARGB(255, 139, 139, 139),
+                            size: isTall ? 30.h : 50.h,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          borderSide: BorderSide(
+                            color: grayColor,
+                            // color: Color.fromARGB(255, 139, 139, 139),
+                            width: 2.0,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          borderSide: BorderSide(
+                            color: grayColor,
+                            // color: Color.fromARGB(255, 139, 139, 139),
+                            width: 2.0,
+                          ),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: isTall ? 25.h : 35.h,
+                        ),
+                        hintStyle: TextStyle(
+                          fontSize: isTall ? 30.sp : 15.sp,
+                        ),
+                        hintText: 'Search',
+                      ),
+                      style: TextStyle(
+                        fontSize: isTall ? 30.sp : 15.sp,
+                      ),
+                    ),
+                  ),
+
+                  // list of papers
+                  SizedBox(
+                    height: 20.h,
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
+                      child: ListView(
+                        children: [
+                          SizedBox(
+                            height: 20.h,
+                          ),
+                          ...papersController.papers.map(
+                            (paper) => Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Paper(
+                                  paper: paper,
+                                ),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                              ],
+                            ),
+                          ),
+                          // const Paper(
+                          //   name: "2020 MANEB",
+                          //   date: "March 20, 2020",
+                          //   time: "2 hours",
+                          //   done: true,
+                          // ),
+                          // SizedBox(
+                          //   height: 35.h,
+                          // ),
+                          // const Paper(
+                          //   name: "2021 MANEB",
+                          //   date: "March 20, 2021",
+                          //   time: "2 hours",
+                          //   done: false,
+                          // ),
+                          // SizedBox(
+                          //   height: 35.h,
+                          // ),
+                          // const Paper(
+                          //   name: "2022 MANEB",
+                          //   date: "March 20, 2022",
+                          //   time: "2 hours",
+                          //   done: false,
+                          // ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
+          );
+        });
       },
     );
   }
 }
 
 class Paper extends StatelessWidget {
-  final String name;
-  final String date;
-  final String time;
-  final bool done;
-  const Paper(
-      {super.key,
-      required this.name,
-      required this.date,
-      required this.time,
-      required this.done});
+  final Map paper;
+  const Paper({
+    super.key,
+    required this.paper,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -225,7 +239,7 @@ class Paper extends StatelessWidget {
                     // name
                     Expanded(
                       child: Text(
-                        name,
+                        paper['paperName'],
                         style: GoogleFonts.nunito(
                           fontSize: 35.sp,
                           fontWeight: FontWeight.w900,
@@ -240,7 +254,7 @@ class Paper extends StatelessWidget {
                       child: Container(
                         width: 30.h,
                         height: 30.h,
-                        color: done ? primaryColor : grayColor,
+                        color: paper['paperDone'] ? primaryColor : grayColor,
                         child: Center(
                           child: Icon(
                             FontAwesomeIcons.check,
@@ -265,7 +279,7 @@ class Paper extends StatelessWidget {
                     children: [
                       const TextSpan(text: "Held on:  "),
                       TextSpan(
-                        text: date,
+                        text: paper['paperDate'],
                         style: GoogleFonts.nunito(
                           fontWeight: FontWeight.w800,
                         ),
@@ -276,7 +290,7 @@ class Paper extends StatelessWidget {
                       ),
                       const TextSpan(text: "Duration:  "),
                       TextSpan(
-                        text: time,
+                        text: paper['paperDuration'],
                         style: GoogleFonts.nunito(
                           fontWeight: FontWeight.w800,
                         ),
@@ -284,7 +298,7 @@ class Paper extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (done)
+                if (paper['paperDone'])
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [

@@ -1,6 +1,7 @@
 import 'package:edgiprep/controllers/subjects_settings_controller.dart';
 import 'package:edgiprep/controllers/user_controller.dart';
 import 'package:edgiprep/utils/constants.dart';
+import 'package:edgiprep/utils/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -27,6 +28,30 @@ class SubjectsSettings extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                SizedBox(
+                  height: 30.h,
+                ),
+                // top
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // back
+                    GestureDetector(
+                      onTap: () {
+                        Get.back();
+                      },
+                      child: Container(
+                        width: 50.w,
+                        height: 50.w,
+                        color: Colors.transparent,
+                        child: Icon(
+                          FontAwesomeIcons.arrowLeft,
+                          size: 40.w,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 // body
                 Expanded(
                   child: ListView(
@@ -47,127 +72,58 @@ class SubjectsSettings extends StatelessWidget {
                         height: 40.h,
                       ),
                       Text(
-                        "${userController.currentExam['examName']} Subjects",
+                        "Your ${userController.currentExam['examName']} Subjects",
                         style: GoogleFonts.nunito(
                           fontWeight: FontWeight.w900,
                         ),
                       ),
                       SizedBox(
-                        height: 30.h,
+                        height: 20.h,
                       ),
-                      GridView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 20,
-                          crossAxisSpacing: 20,
-                          childAspectRatio: 1,
+
+                      ...userController.currentSubjects.map(
+                        (subject) => Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            UserSubject(name: subject['subjectName']),
+                            SizedBox(
+                              height: 20.h,
+                            ),
+                          ],
                         ),
-                        itemCount:
-                            subjectsSettingsController.allSubjects.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              // add/remove user subjects
-                              subjectsSettingsController
-                                  .addRemoveSelectedSubjects(
-                                      subjectsSettingsController
-                                          .allSubjects[index]);
+                      ),
 
-                              print(subjectsSettingsController
-                                  .selectedSubjects.length);
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: subjectsSettingsController
-                                        .selectedSubjects
-                                        .contains(subjectsSettingsController
-                                            .allSubjects[index])
-                                    ? const Color.fromRGBO(47, 59, 98, 0.123)
-                                    : Colors.transparent,
-                                borderRadius: BorderRadius.circular(40.r),
-                                border: Border.all(
-                                  width: 1,
-                                  color: subjectsSettingsController
-                                          .selectedSubjects
-                                          .contains(subjectsSettingsController
-                                              .allSubjects[index])
-                                      ? primaryColor
-                                      : const Color.fromRGBO(47, 59, 98, 0.523),
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(20),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    // indicator
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        ClipOval(
-                                          child: Container(
-                                            width: 30,
-                                            height: 30,
-                                            color: subjectsSettingsController
-                                                    .selectedSubjects
-                                                    .contains(
-                                                        subjectsSettingsController
-                                                            .allSubjects[index])
-                                                ? primaryColor
-                                                : const Color.fromRGBO(
-                                                    47, 59, 98, 0.523),
-                                            child: Icon(
-                                              FontAwesomeIcons.check,
-                                              size: 15,
-                                              color: subjectsSettingsController
-                                                      .selectedSubjects
-                                                      .contains(
-                                                          subjectsSettingsController
-                                                                  .allSubjects[
-                                                              index])
-                                                  ? Colors.white
-                                                  : const Color.fromARGB(
-                                                      99, 255, 255, 255),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-
-                                    // subject
-                                    Expanded(
-                                      child: Center(
-                                        child: Text(
-                                          subjectsSettingsController
-                                                  .allSubjects[index]
-                                              ['subjectName'],
-                                          textAlign: TextAlign.center,
-                                          style: GoogleFonts.nunito(
-                                            color: subjectsSettingsController
-                                                    .selectedSubjects
-                                                    .contains(
-                                                        subjectsSettingsController
-                                                            .allSubjects[index])
-                                                ? primaryColor
-                                                : const Color.fromRGBO(
-                                                    47, 59, 98, 0.523),
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w900,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                      // Other subjects
+                      if (userController.unerolledSubjects.isNotEmpty)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            SizedBox(
+                              height: 30.h,
+                            ),
+                            Text(
+                              "Other ${userController.currentExam['examName']} Subjects",
+                              style: GoogleFonts.nunito(
+                                fontWeight: FontWeight.w900,
                               ),
                             ),
-                          );
-                        },
-                      ),
+                            SizedBox(
+                              height: 20.h,
+                            ),
+                            ...userController.unerolledSubjects.map(
+                              (subject) => Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  UnenrolledSubject(
+                                      name: subject['subjectName']),
+                                  SizedBox(
+                                    height: 20.h,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
 
                       // bottom
                       const SizedBox(
@@ -176,72 +132,6 @@ class SubjectsSettings extends StatelessWidget {
                     ],
                   ),
                 ),
-
-                // continue button
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Row(
-                      children: [
-                        // back
-                        GestureDetector(
-                          onTap: () {
-                            Get.back();
-                          },
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(40.r),
-                            child: Container(
-                              color: grayColor,
-                              height: 95.h,
-                              width: 95.h,
-                              child: Center(
-                                child: Icon(
-                                  FontAwesomeIcons.arrowLeft,
-                                  color: primaryColor,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        // continue
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        if (subjectsSettingsController
-                            .selectedSubjects.isNotEmpty)
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {},
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(40.r),
-                                child: Container(
-                                  color: primaryColor,
-                                  height: 95.h,
-                                  child: Center(
-                                    child: Text(
-                                      "Update",
-                                      style: GoogleFonts.nunito(
-                                        color: Colors.white,
-                                        fontSize: 35.sp,
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                  ],
-                ),
               ],
             ),
           ),
@@ -249,4 +139,353 @@ class SubjectsSettings extends StatelessWidget {
       );
     });
   }
+}
+
+class UserSubject extends StatelessWidget {
+  final String name;
+  const UserSubject({super.key, required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            name,
+            style: GoogleFonts.nunito(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          if (userController.currentSubjects.length > 1)
+            GestureDetector(
+              onTap: () {
+                showDeleteSubjectDialog(context, name);
+              },
+              child: const Icon(
+                FontAwesomeIcons.solidTrashCan,
+                size: 16,
+                color: Color.fromRGBO(244, 67, 54, 0.6),
+              ),
+            ),
+        ],
+      );
+    });
+  }
+}
+
+class UnenrolledSubject extends StatelessWidget {
+  final String name;
+  const UnenrolledSubject({super.key, required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          name,
+          style: GoogleFonts.nunito(
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            showAddSubjectDialog(context, name);
+          },
+          child: Icon(
+            FontAwesomeIcons.plus,
+            size: 16,
+            color: primaryColor,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+Future<void> showDeleteSubjectDialog(BuildContext context, String name) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: true,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 20.h),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Stack(
+                      children: [
+                        SizedBox(
+                          width: 180.h,
+                          height: 180.h,
+                          child: Center(
+                            child: ClipOval(
+                              child: Container(
+                                color: const Color.fromARGB(57, 244, 67, 54),
+                                padding: EdgeInsets.all(
+                                  40.w,
+                                ),
+                                child: const Icon(
+                                  FontAwesomeIcons.solidTrashCan,
+                                  color: Colors.red,
+                                  size: 40.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 180.h,
+                          height: 180.h,
+                          child: Center(
+                            child: Container(
+                              width: 145.h,
+                              height: 145.h,
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(85, 244, 67, 54),
+                                borderRadius: BorderRadius.circular(140.r),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Text(
+                      "Delete $name?",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.nunito(
+                          fontSize: 40.sp,
+                          fontWeight: FontWeight.w900,
+                          color: primaryColor),
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Text(
+                      "Are you sure you want to delete $name? This action is irreversible and all the progress will be lost.",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.nunito(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey.shade600),
+                    ),
+
+                    // close
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10.r),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              height: 60.h,
+                              width: 200.w,
+                              color: grayColor,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 30.w,
+                              ),
+                              child: const Center(
+                                child: Text("Cancel"),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 20.w,
+                        ),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10.r),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              height: 60.h,
+                              width: 200.w,
+                              color: Colors.red,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 30.w,
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  "Delete",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+Future<void> showAddSubjectDialog(BuildContext context, String name) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: true,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 20.h),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Stack(
+                      children: [
+                        SizedBox(
+                          width: 180.h,
+                          height: 180.h,
+                          child: Center(
+                            child: ClipOval(
+                              child: Container(
+                                color: const Color.fromARGB(57, 47, 59, 98),
+                                padding: EdgeInsets.all(
+                                  40.w,
+                                ),
+                                child: Icon(
+                                  FontAwesomeIcons.solidTrashCan,
+                                  color: primaryColor,
+                                  size: 40.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 180.h,
+                          height: 180.h,
+                          child: Center(
+                            child: Container(
+                              width: 145.h,
+                              height: 145.h,
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(85, 47, 59, 98),
+                                borderRadius: BorderRadius.circular(140.r),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Text(
+                      "Add $name?",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.nunito(
+                          fontSize: 40.sp,
+                          fontWeight: FontWeight.w900,
+                          color: primaryColor),
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Text(
+                      "Are you sure you want to Add $name? This subject will be added to the list of your subjects.",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.nunito(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey.shade600),
+                    ),
+
+                    // close
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10.r),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              height: 60.h,
+                              width: 200.w,
+                              color: grayColor,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 30.w,
+                              ),
+                              child: const Center(
+                                child: Text("Cancel"),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 20.w,
+                        ),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10.r),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              height: 60.h,
+                              width: 200.w,
+                              color: primaryColor,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 30.w,
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  "Add",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }
