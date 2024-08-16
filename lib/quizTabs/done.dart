@@ -56,7 +56,9 @@ class Done extends StatelessWidget {
                                       height: 110.w,
                                     ),
                                     Text(
-                                      "Congraturations",
+                                      currentQuizController.score > 0
+                                          ? "Congraturations"
+                                          : "Better Luck Next Time",
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.nunito(
                                         fontSize: 45.sp,

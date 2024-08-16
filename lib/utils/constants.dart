@@ -23,7 +23,7 @@ List subjects = [
   ["Agriculture", "agriculture.jpg"],
 ];
 
-List exams = ["JCE", "MSCE"];
+List exams = ["JE", "ME"];
 
 Color getRandomColor() {
   final random = Random();

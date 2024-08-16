@@ -1,4 +1,5 @@
 import 'package:edgiprep/controllers/current_quiz_controller.dart';
+import 'package:edgiprep/controllers/xp_controller.dart';
 import 'package:edgiprep/quizTabs/answer.dart';
 import 'package:edgiprep/quizTabs/done.dart';
 import 'package:edgiprep/quizTabs/retry_prompt.dart';
@@ -21,6 +22,7 @@ class QuizTab extends StatefulWidget {
 class _QuizTabState extends State<QuizTab> {
   CurrentQuizController currentQuizController =
       Get.find<CurrentQuizController>();
+  XPController xpQuizController = Get.find<XPController>();
 
   @override
   Widget build(BuildContext context) {
@@ -402,6 +404,8 @@ class _QuizTabState extends State<QuizTab> {
 
                                     Get.to(() => const RetryPrompt());
                                   } else {
+                                    xpQuizController
+                                        .saveXP(currentQuizController.score);
                                     Get.to(() => const Done());
                                   }
                                 } else {

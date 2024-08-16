@@ -39,7 +39,7 @@ Future<void> getUserDetails() async {
 
         userController.fullName.value = userData['learnerFullName'];
         userController.userName.value = userData['learnerUsername'];
-        userController.xps.value = userData['learnerXp'].toString();
+        userController.xps.value = userData['learnerXp'];
         // userController.streak.value = userData;
         // userController.practiceHours.value = userData;
       }
@@ -47,8 +47,10 @@ Future<void> getUserDetails() async {
   } on DioException catch (e) {
     if (e.response != null) {
       var errorData = e.response!.data;
-      if (errorData?['Detail'] != null &&
-          errorData?['Detail'] == "Unauthorized Request") {
+      if (errorData is Map &&
+          errorData.containsKey('Detail') &&
+          errorData['Detail'] != null &&
+          errorData['Detail'] == "Unauthorized Request") {
         // logout
         await secureStorage.writeKey("userKey", "");
         userController.changeUserKey("");
@@ -387,7 +389,7 @@ Future<void> logout() async {
 
   // User details
   userController.userName = "".obs;
-  userController.xps = "".obs;
+  userController.xps = 0.obs;
   userController.streak = "".obs;
   userController.practiceHours = "".obs;
 

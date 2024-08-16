@@ -1,4 +1,5 @@
 import 'package:edgiprep/controllers/papers_controller.dart';
+import 'package:edgiprep/start/start_paper.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -139,8 +140,13 @@ class Papers extends StatelessWidget {
                             (paper) => Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                Paper(
-                                  paper: paper,
+                                GestureDetector(
+                                  onTap: () {
+                                    Get.to(() => StartPaper(paper: paper));
+                                  },
+                                  child: Paper(
+                                    paper: paper,
+                                  ),
                                 ),
                                 SizedBox(
                                   height: 20.h,
@@ -148,30 +154,6 @@ class Papers extends StatelessWidget {
                               ],
                             ),
                           ),
-                          // const Paper(
-                          //   name: "2020 MANEB",
-                          //   date: "March 20, 2020",
-                          //   time: "2 hours",
-                          //   done: true,
-                          // ),
-                          // SizedBox(
-                          //   height: 35.h,
-                          // ),
-                          // const Paper(
-                          //   name: "2021 MANEB",
-                          //   date: "March 20, 2021",
-                          //   time: "2 hours",
-                          //   done: false,
-                          // ),
-                          // SizedBox(
-                          //   height: 35.h,
-                          // ),
-                          // const Paper(
-                          //   name: "2022 MANEB",
-                          //   date: "March 20, 2022",
-                          //   time: "2 hours",
-                          //   done: false,
-                          // ),
                         ],
                       ),
                     ),

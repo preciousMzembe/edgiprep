@@ -1,6 +1,7 @@
 import 'package:edgiprep/challangeTabs/answer.dart';
 import 'package:edgiprep/challangeTabs/done.dart';
 import 'package:edgiprep/controllers/current_challange_controller.dart';
+import 'package:edgiprep/controllers/xp_controller.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class ChallangeTab extends StatefulWidget {
 class _ChallangeTabState extends State<ChallangeTab> {
   CurrentChallangeController currentChallangeController =
       Get.find<CurrentChallangeController>();
+  XPController xpQuizController = Get.find<XPController>();
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +28,10 @@ class _ChallangeTabState extends State<ChallangeTab> {
       showCloseQuizDialog(
         context,
         "Quit Quiz?",
-        "Are you sure you want to quit the quiz?",
+        "Are you sure you want to stop here?",
         () {
+          xpQuizController.saveXP(currentChallangeController.score);
           Get.to(() => const Done());
-          // Get.back();
-          // Get.back();
-          // Get.back();
         },
       );
     }

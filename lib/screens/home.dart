@@ -288,7 +288,7 @@ class _HomeState extends State<Home> {
                                               ),
                                             ),
                                             Text(
-                                              userController.xps.value,
+                                              "${userController.xps.value}",
                                               style: GoogleFonts.nunito(
                                                 fontSize:
                                                     isTall ? 50.sp : 20.sp,

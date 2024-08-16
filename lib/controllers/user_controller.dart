@@ -23,7 +23,7 @@ class UserController extends GetxController {
   // User details
   RxString fullName = "".obs;
   RxString userName = "".obs;
-  RxString xps = "".obs;
+  RxInt xps = 0.obs;
   RxString streak = "3".obs;
   RxString practiceHours = "10".obs;
 

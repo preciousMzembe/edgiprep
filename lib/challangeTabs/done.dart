@@ -57,7 +57,7 @@ class Done extends StatelessWidget {
                                     ),
                                     Text(
                                       currentChallangeController.score == 0
-                                          ? "Better luck Next Time"
+                                          ? "Better Luck Next Time"
                                           : "Congraturations",
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.nunito(
