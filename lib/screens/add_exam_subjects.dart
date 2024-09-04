@@ -1,11 +1,14 @@
 import 'package:edgiprep/controllers/add_exam_controller.dart';
 import 'package:edgiprep/utils/constants.dart';
+import 'package:edgiprep/utils/helper_functions.dart';
 import 'package:edgiprep/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 class AddExamSubjects extends StatelessWidget {
   const AddExamSubjects({super.key});
@@ -44,106 +47,184 @@ class AddExamSubjects extends StatelessWidget {
                       SizedBox(
                         height: 60.h,
                       ),
-                      GridView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 20,
-                          crossAxisSpacing: 20,
-                          childAspectRatio: 1,
-                        ),
-                        itemCount: addExamController.subjects.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              // add/remove user subjects
-                              addExamController.addRemoveUserSubjects(
-                                  addExamController.subjects[index]);
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: addExamController.userSubjects.contains(
-                                        addExamController.subjects[index])
-                                    // ? const Color.fromRGBO(243, 188, 92, 0.123)
-                                    ? const Color.fromRGBO(47, 59, 98, 0.123)
-                                    : Colors.transparent,
-                                borderRadius: BorderRadius.circular(40.r),
-                                border: Border.all(
-                                  width: 1,
+                      if (addExamController.subjects.isNotEmpty)
+                        GridView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 20,
+                            crossAxisSpacing: 20,
+                            childAspectRatio: 1,
+                          ),
+                          itemCount: addExamController.subjects.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () {
+                                // add/remove user subjects
+                                addExamController.addRemoveUserSubjects(
+                                    addExamController.subjects[index]);
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
                                   color: addExamController.userSubjects
                                           .contains(
                                               addExamController.subjects[index])
-                                      ? primaryColor
-                                      : const Color.fromRGBO(47, 59, 98, 0.523),
+                                      // ? const Color.fromRGBO(243, 188, 92, 0.123)
+                                      ? const Color.fromRGBO(47, 59, 98, 0.123)
+                                      : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(40.r),
+                                  border: Border.all(
+                                    width: 1,
+                                    color: addExamController.userSubjects
+                                            .contains(addExamController
+                                                .subjects[index])
+                                        ? primaryColor
+                                        : const Color.fromRGBO(
+                                            47, 59, 98, 0.523),
+                                  ),
                                 ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(20),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    // indicator
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        ClipOval(
-                                          child: Container(
-                                            width: 30,
-                                            height: 30,
-                                            color: addExamController
-                                                    .userSubjects
-                                                    .contains(addExamController
-                                                        .subjects[index])
-                                                ? primaryColor
-                                                : const Color.fromRGBO(
-                                                    47, 59, 98, 0.523),
-                                            child: Icon(
-                                              FontAwesomeIcons.check,
-                                              size: 15,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      // indicator
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          ClipOval(
+                                            child: Container(
+                                              width: 30,
+                                              height: 30,
                                               color: addExamController
                                                       .userSubjects
                                                       .contains(
                                                           addExamController
                                                               .subjects[index])
-                                                  ? Colors.white
-                                                  : const Color.fromARGB(
-                                                      99, 255, 255, 255),
+                                                  ? primaryColor
+                                                  : const Color.fromRGBO(
+                                                      47, 59, 98, 0.523),
+                                              child: Icon(
+                                                FontAwesomeIcons.check,
+                                                size: 15,
+                                                color: addExamController
+                                                        .userSubjects
+                                                        .contains(
+                                                            addExamController
+                                                                    .subjects[
+                                                                index])
+                                                    ? Colors.white
+                                                    : const Color.fromARGB(
+                                                        99, 255, 255, 255),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
+                                      // subject
+                                      Expanded(
+                                        child: Center(
+                                          child: Text(
+                                            addExamController.subjects[index]
+                                                ["subjectName"],
+                                            textAlign: TextAlign.center,
+                                            style: GoogleFonts.nunito(
+                                              color: addExamController
+                                                      .userSubjects
+                                                      .contains(
+                                                          addExamController
+                                                              .subjects[index])
+                                                  ? primaryColor
+                                                  : const Color.fromRGBO(
+                                                      47, 59, 98, 0.523),
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w900,
                                             ),
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
 
-                                    // subject
-                                    Expanded(
-                                      child: Center(
-                                        child: Text(
-                                          addExamController.subjects[index][0],
-                                          textAlign: TextAlign.center,
-                                          style: GoogleFonts.nunito(
-                                            color: addExamController
-                                                    .userSubjects
-                                                    .contains(addExamController
-                                                        .subjects[index])
-                                                ? primaryColor
-                                                : const Color.fromRGBO(
-                                                    47, 59, 98, 0.523),
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w900,
-                                          ),
+                      if (addExamController.subjects.isEmpty)
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Stack(
+                              children: [
+                                SizedBox(
+                                  width: 180.h,
+                                  height: 180.h,
+                                  child: Center(
+                                    child: ClipOval(
+                                      child: Container(
+                                        color: primaryColor,
+                                        padding: EdgeInsets.all(
+                                          40.w,
+                                        ),
+                                        child: LoadingAnimationWidget.waveDots(
+                                          color: Colors.white,
+                                          size: 50.h,
                                         ),
                                       ),
                                     ),
-                                  ],
+                                  ),
                                 ),
-                              ),
+                                SizedBox(
+                                  width: 180.h,
+                                  height: 180.h,
+                                  child: Center(
+                                    child: SizedBox(
+                                      width: 140.h,
+                                      height: 140.h,
+                                      child: LoadingIndicator(
+                                        indicatorType:
+                                            Indicator.circleStrokeSpin,
+                                        colors: [primaryColor],
+                                        strokeWidth: 3,
+                                        pathBackgroundColor:
+                                            Colors.grey.shade300,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
-                          );
-                        },
-                      ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            Text(
+                              "Getting Subjects",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.nunito(
+                                  fontSize: 40.sp,
+                                  fontWeight: FontWeight.w900,
+                                  color: primaryColor),
+                            ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            Text(
+                              "Wait while we get subjects for your exam.",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.nunito(
+                                  fontSize: 20.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey.shade600),
+                            ),
+                          ],
+                        ),
 
                       const SizedBox(
                         height: 20,
@@ -199,12 +280,27 @@ class AddExamSubjects extends StatelessWidget {
                                 showLoadingDialog(context, "Saving Data",
                                     "Please wait while we save your preferences.");
 
-                                // TODO: remove delay
-                                await Future.delayed(
-                                    const Duration(seconds: 3));
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.pop(context);
+                                bool enrolled =
+                                    await addExamController.enrollExam();
+
+                                if (enrolled) {
+                                  // change selected exam and fetch data
+                                  await changeExam(addExamController.userExam);
+
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                } else {
+                                  Navigator.pop(context);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      backgroundColor: primaryColor,
+                                      content: Text(
+                                          'An error occured while saving your information'),
+                                      duration: Duration(seconds: 2),
+                                    ),
+                                  );
+                                }
                               },
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(40.r),

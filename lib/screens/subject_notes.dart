@@ -151,7 +151,7 @@ class _SubjectNotesState extends State<SubjectNotes> {
                       ),
                       NotesTopic(
                         topic: "Research skills",
-                        color: getRandomColor(),
+                        color: getRandomColor(getRandomHexColor()),
                         lessons: 6,
                       ),
                       SizedBox(
@@ -159,7 +159,7 @@ class _SubjectNotesState extends State<SubjectNotes> {
                       ),
                       NotesTopic(
                         topic: "Plants Biology",
-                        color: getRandomColor(),
+                        color: getRandomColor(getRandomHexColor()),
                         lessons: 9,
                       ),
                       // back to top

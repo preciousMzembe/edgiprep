@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edgiprep/controllers/add_exam_controller.dart';
 import 'package:edgiprep/controllers/user_controller.dart';
 import 'package:edgiprep/screens/add_exam.dart';
 import 'package:edgiprep/start/start_quiz.dart';
 import 'package:edgiprep/screens/subject.dart';
 import 'package:edgiprep/utils/constants.dart';
+import 'package:edgiprep/utils/helper_functions.dart';
 import 'package:edgiprep/utils/responsive.dart';
 import 'package:edgiprep/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -89,7 +91,7 @@ class _HomeState extends State<Home> {
                                       ),
                                     ),
                                     Text(
-                                      userController.userName.value,
+                                      userController.user['username'] ?? "",
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: GoogleFonts.nunito(
@@ -288,7 +290,7 @@ class _HomeState extends State<Home> {
                                               ),
                                             ),
                                             Text(
-                                              "${userController.xps.value}",
+                                              "${userController.user['xps'] ?? 0}",
                                               style: GoogleFonts.nunito(
                                                 fontSize:
                                                     isTall ? 50.sp : 20.sp,
@@ -752,9 +754,20 @@ class _HomeState extends State<Home> {
                                           child: ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(20.r),
-                                            child: Image.network(
-                                              "${userController.currentSubjects[index]['subjectImage']}",
+                                            child: CachedNetworkImage(
+                                              imageUrl:
+                                                  "${userController.currentSubjects[index]['subjectImage']}",
                                               fit: BoxFit.cover,
+                                              placeholder: (context, url) =>
+                                                  Container(
+                                                color: Colors.grey.shade200,
+                                                child: Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    color: primaryColor,
+                                                  ),
+                                                ), // Loading indicator
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -831,13 +844,19 @@ class _HomeState extends State<Home> {
                       (exam) => Row(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          ExamSwitch(
-                            name: exam['examName'],
-                            color: exam['examId'] != null &&
-                                    userController.currentExam['examId'] ==
-                                        exam['examId']
-                                ? secondaryColor
-                                : const Color.fromRGBO(158, 158, 158, 0.6),
+                          GestureDetector(
+                            onTap: () {
+                              changeExam(exam);
+                              Navigator.pop(context);
+                            },
+                            child: ExamSwitch(
+                              name: exam['examName'],
+                              color: exam['examId'] != null &&
+                                      userController.currentExam['examId'] ==
+                                          exam['examId']
+                                  ? secondaryColor
+                                  : const Color.fromRGBO(158, 158, 158, 0.6),
+                            ),
                           ),
                           const SizedBox(
                             width: 10,
@@ -853,6 +872,8 @@ class _HomeState extends State<Home> {
                     // Add Exam
                     GestureDetector(
                       onTap: () {
+                        addExamController.setExams();
+                        addExamController.resetController();
                         Navigator.pop(context);
                         addExamController.resetController();
                         Get.to(() => const AddExam());

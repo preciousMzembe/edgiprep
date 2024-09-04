@@ -25,10 +25,14 @@ List subjects = [
 
 List exams = ["JE", "ME"];
 
-Color getRandomColor() {
+String getRandomHexColor() {
   final random = Random();
   final red = random.nextInt(256);
   final green = random.nextInt(256);
   final blue = random.nextInt(256);
-  return Color.fromRGBO(red, green, blue, 1.0);
+  return "#${(red << 16 | green << 8 | blue).toRadixString(16).padLeft(6, '0').toUpperCase()}";
+}
+
+Color getRandomColor(String hexColor) {
+  return Color(int.parse(hexColor.replaceFirst('#', '0xff')));
 }

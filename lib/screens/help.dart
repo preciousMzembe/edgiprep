@@ -1,3 +1,4 @@
+import 'package:edgiprep/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -86,38 +87,38 @@ class Help extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            const Contact(
-                              icon: Icon(
+                            Contact(
+                              icon: const Icon(
                                 FontAwesomeIcons.phone,
                                 size: 20,
                                 color: Color.fromRGBO(124, 180, 66, 1),
                               ),
                               name: 'Phone',
-                              detail: "+265 888 888 888",
+                              detail: "$Phone",
                             ),
                             const SizedBox(
                               height: 20,
                             ),
-                            const Contact(
-                              icon: Icon(
+                            Contact(
+                              icon: const Icon(
                                 FontAwesomeIcons.solidEnvelope,
                                 size: 20,
                                 color: Color.fromRGBO(124, 180, 66, 1),
                               ),
                               name: 'Email',
-                              detail: "examp@email.com",
+                              detail: "$Email",
                             ),
                             const SizedBox(
                               height: 20,
                             ),
-                            const Contact(
-                              icon: Icon(
+                            Contact(
+                              icon: const Icon(
                                 FontAwesomeIcons.locationDot,
                                 size: 20,
                                 color: Color.fromRGBO(124, 180, 66, 1),
                               ),
                               name: 'Address',
-                              detail: "Area 47, Sector 5, house 257",
+                              detail: "$Location",
                             ),
                             const SizedBox(
                               height: 40,
@@ -199,7 +200,7 @@ class Contact extends StatelessWidget {
                     fontWeight: FontWeight.w800,
                   ),
                 ),
-                Text(
+                SelectableText(
                   detail,
                   style: GoogleFonts.nunito(
                     fontWeight: FontWeight.w600,

@@ -65,7 +65,7 @@ class _SettingsState extends State<Settings> {
                                   height: 15.h,
                                 ),
                                 Text(
-                                  userController.fullName.value,
+                                  userController.user['fullName'],
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.center,
@@ -193,7 +193,7 @@ class _SettingsState extends State<Settings> {
                             // ),
                             child: Center(
                               child: Text(
-                                userController.fullName.value[0],
+                                userController.user['fullName'][0],
                                 style: GoogleFonts.nunito(
                                   color: Colors.white,
                                   fontSize: 80.sp,
@@ -228,7 +228,7 @@ class _SettingsState extends State<Settings> {
                       ),
                     ),
                     SizedBox(
-                      height: 20.h,
+                      height: 30.h,
                     ),
                     Setting(
                       name: "Terms of use",
@@ -237,7 +237,7 @@ class _SettingsState extends State<Settings> {
                       },
                     ),
                     SizedBox(
-                      height: 20.h,
+                      height: 30.h,
                     ),
                     Setting(
                       name: "Privacy poicy",
@@ -251,7 +251,7 @@ class _SettingsState extends State<Settings> {
 
               // help and support
               SizedBox(
-                height: 40.h,
+                height: 50.h,
               ),
               Container(
                 padding: EdgeInsets.symmetric(
@@ -269,7 +269,7 @@ class _SettingsState extends State<Settings> {
                       ),
                     ),
                     SizedBox(
-                      height: 20.h,
+                      height: 30.h,
                     ),
                     Setting(
                       name: "About EdgiPrep",
@@ -278,7 +278,7 @@ class _SettingsState extends State<Settings> {
                       },
                     ),
                     SizedBox(
-                      height: 20.h,
+                      height: 30.h,
                     ),
                     Setting(
                       name: "Sponsors",
@@ -287,7 +287,7 @@ class _SettingsState extends State<Settings> {
                       },
                     ),
                     SizedBox(
-                      height: 20.h,
+                      height: 30.h,
                     ),
                     Setting(
                       name: "Help center",
@@ -301,7 +301,7 @@ class _SettingsState extends State<Settings> {
 
               // Share
               SizedBox(
-                height: 40.h,
+                height: 50.h,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 30.w),
@@ -316,7 +316,7 @@ class _SettingsState extends State<Settings> {
                       ),
                     ),
                     SizedBox(
-                      height: 20.h,
+                      height: 30.h,
                     ),
                     SizedBox(
                       height: 80.h,
@@ -370,7 +370,7 @@ class _SettingsState extends State<Settings> {
 
                     // link
                     SizedBox(
-                      height: 25.h,
+                      height: 30.h,
                     ),
                     Row(
                       children: [

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:edgiprep/controllers/add_exam_controller.dart';
 import 'package:edgiprep/controllers/user_controller.dart';
 import 'package:edgiprep/screens/add_exam.dart';
 import 'package:edgiprep/utils/constants.dart';
@@ -19,6 +20,7 @@ class Exam extends StatefulWidget {
 
 class _ExamState extends State<Exam> {
   UserController userController = Get.find<UserController>();
+  AddExamController addExamController = Get.find<AddExamController>();
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -111,6 +113,8 @@ class _ExamState extends State<Exam> {
                               // add exam
                               GestureDetector(
                                 onTap: () {
+                                  addExamController.setExams();
+                                  addExamController.resetController();
                                   Get.to(() => const AddExam());
                                 },
                                 child: ClipOval(

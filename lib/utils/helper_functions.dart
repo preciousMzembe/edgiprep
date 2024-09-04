@@ -4,8 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:edgiprep/controllers/user_controller.dart';
 import 'package:edgiprep/models/exam_model.dart';
 import 'package:edgiprep/models/lesson_model.dart';
+import 'package:edgiprep/models/paper_model.dart';
 import 'package:edgiprep/models/subject_model.dart';
 import 'package:edgiprep/models/topic_model.dart';
+import 'package:edgiprep/models/user_model.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/secure_storage.dart';
 import 'package:edgiprep/utils/utils.dart';
@@ -16,10 +18,81 @@ UserController userController = Get.find<UserController>();
 final secureStorage = SecureStorageService();
 final Dio dio = Dio();
 
+// Get all offline data
+Future<void> getOfflineData() async {
+  // get local user details
+
+  String? userString = await secureStorage.readKey('user');
+
+  if (userString != null && userString.isNotEmpty) {
+    Map<dynamic, dynamic> user =
+        Map<dynamic, dynamic>.from(jsonDecode(userString));
+    userController.user.value = user;
+  }
+
+  // get local user exams
+
+  String? examsString = await secureStorage.readKey('userExams');
+
+  if (examsString != null && examsString.isNotEmpty) {
+    List userExams = List.from(jsonDecode(examsString));
+    userController.userExams.value = userExams;
+  }
+
+  // get local current subjects
+
+  String? subjectsString = await secureStorage.readKey('currentSubjects');
+
+  if (subjectsString != null && subjectsString.isNotEmpty) {
+    List currentSubjects = List.from(jsonDecode(subjectsString));
+    userController.currentSubjects.value = currentSubjects;
+  }
+
+  // get local subjects topics
+
+  String? topicsString = await secureStorage.readKey('subjectsTopics');
+
+  if (topicsString != null && topicsString.isNotEmpty) {
+    Map subjectsTopics = Map.from(jsonDecode(topicsString));
+    userController.subjectsTopics.value = subjectsTopics;
+  }
+
+  // get local subjects topics
+
+  String? lessonsString = await secureStorage.readKey('topicsLessons');
+
+  if (lessonsString != null && lessonsString.isNotEmpty) {
+    Map topicsLessons = Map.from(jsonDecode(lessonsString));
+    userController.topicsLessons.value = topicsLessons;
+  }
+
+  // get local subjects papers
+  String? papersString = await secureStorage.readKey('subjectsPapers');
+
+  if (papersString != null && papersString.isNotEmpty) {
+    // update from storage
+    Map subjectsPapers = Map.from(jsonDecode(papersString));
+    userController.subjectsPapers.value = subjectsPapers;
+  }
+}
+
 // Get User Details
 Future<void> getUserDetails() async {
   try {
     String? key = await secureStorage.readKey("userKey");
+
+    // get local user details
+
+    String? userString = await secureStorage.readKey('user');
+
+    if (userString != null && userString.isNotEmpty) {
+      // update from storage
+      Map<dynamic, dynamic> user =
+          Map<dynamic, dynamic>.from(jsonDecode(userString));
+      userController.user.value = user;
+    }
+
+    // get internet data
 
     if (key != null && key.isNotEmpty) {
       final Map<String, dynamic> headers = {
@@ -37,11 +110,20 @@ Future<void> getUserDetails() async {
         // Update user details
         var userData = response.data;
 
-        userController.fullName.value = userData['learnerFullName'];
-        userController.userName.value = userData['learnerUsername'];
-        userController.xps.value = userData['learnerXp'];
-        // userController.streak.value = userData;
-        // userController.practiceHours.value = userData;
+        // TODO: add streaks and practice hours
+
+        UserModel userModel = UserModel(
+          userId: userData['learnerId'],
+          fullName: userData['learnerFullName'],
+          username: userData['learnerUsername'],
+          xps: userData['learnerXp'],
+        );
+
+        userController.user.value = userModel.toMap;
+
+        // save local
+        String jsonString = jsonEncode(userModel.toMap);
+        await secureStorage.writeKey("user", jsonString);
       }
     }
   } on DioException catch (e) {
@@ -74,6 +156,18 @@ Future<void> getExams() async {
   try {
     String? key = await secureStorage.readKey("userKey");
 
+    // get local user exams
+
+    String? examsString = await secureStorage.readKey('userExams');
+
+    if (examsString != null && examsString.isNotEmpty) {
+      // update from storage
+      List userExams = List.from(jsonDecode(examsString));
+      userController.userExams.value = userExams;
+    }
+
+    // get internet data
+
     if (key != null && key.isNotEmpty) {
       final Map<String, dynamic> headers = {
         'AuthKey': key,
@@ -101,6 +195,10 @@ Future<void> getExams() async {
 
         // changr exams in user controller
         userController.userExams.value = tempExams;
+
+        // save local
+        String jsonString = jsonEncode(tempExams);
+        await secureStorage.writeKey("userExams", jsonString);
       }
     }
   } on DioException catch (e) {
@@ -138,6 +236,14 @@ Future<void> setCurrentExam() async {
   }
 }
 
+Future<void> changeExam(Map exam) async {
+  var tempExam = exam;
+  String jsonString = jsonEncode(tempExam);
+  await secureStorage.writeKey("currentExam", jsonString);
+
+  userController.checkUserKey();
+}
+
 // Get Current Subjects
 Future<void> getCurrentSubjects() async {
   // get current exam
@@ -148,6 +254,18 @@ Future<void> getCurrentSubjects() async {
     int examId = currentExam['examId'];
     try {
       String? key = await secureStorage.readKey("userKey");
+
+      // get local current subjects
+
+      String? subjectsString = await secureStorage.readKey('currentSubjects');
+
+      if (subjectsString != null && subjectsString.isNotEmpty) {
+        // update from storage
+        List currentSubjects = List.from(jsonDecode(subjectsString));
+        userController.currentSubjects.value = currentSubjects;
+      }
+
+      // get internet data
 
       if (key != null && key.isNotEmpty) {
         final Map<String, dynamic> headers = {
@@ -183,8 +301,15 @@ Future<void> getCurrentSubjects() async {
           // change subjects in user controller
           userController.currentSubjects.value = tempSubjects;
 
+          // save local
+          String jsonString = jsonEncode(tempSubjects);
+          await secureStorage.writeKey("currentSubjects", jsonString);
+
           // get topics of subjects
           getTopicsOfCurrentSubjects();
+
+          // Get past papers for all subjects
+          getSubjectsPapers();
         }
       }
     } on DioException catch (e) {
@@ -257,12 +382,24 @@ Future<void> getTopicsOfCurrentSubjects() async {
 
   Map tempSubjectsTopics = {};
 
+  // get local subjects topics
+
+  String? key = await secureStorage.readKey("userKey");
+
+  String? topicsString = await secureStorage.readKey('subjectsTopics');
+
+  if (topicsString != null && topicsString.isNotEmpty) {
+    // update from storage
+    Map subjectsTopics = Map.from(jsonDecode(topicsString));
+    userController.subjectsTopics.value = subjectsTopics;
+  }
+
+  // get internet data
+
   for (var i = 0; i < subjects.length; i++) {
     // get topics of subject
     int instanceId = subjects[i]['subjectId'];
     try {
-      String? key = await secureStorage.readKey("userKey");
-
       if (key != null && key.isNotEmpty) {
         final Map<String, dynamic> headers = {
           'AuthKey': key,
@@ -284,13 +421,20 @@ Future<void> getTopicsOfCurrentSubjects() async {
             TopicModel topic = TopicModel(
               topicId: topicsData[x]['topicId'],
               topicName: topicsData[x]['topicName'],
-              topicColor: getRandomColor(),
+              topicColor: getRandomHexColor(),
             );
 
             tempTopics.add(topic.toMap);
           }
 
-          tempSubjectsTopics[instanceId] = tempTopics;
+          tempSubjectsTopics[instanceId.toString()] = tempTopics;
+
+          // Change Subjects Topics
+          userController.subjectsTopics.value = tempSubjectsTopics;
+
+          // save local
+          String jsonString = jsonEncode(tempSubjectsTopics);
+          await secureStorage.writeKey("subjectsTopics", jsonString);
         }
       }
     } on DioException catch (e) {
@@ -309,9 +453,6 @@ Future<void> getTopicsOfCurrentSubjects() async {
     }
   }
 
-  // Change Subjects Topics
-  userController.subjectsTopics.value = tempSubjectsTopics;
-
   // get Lessons of Topics
   getLessonsOfTopics();
 }
@@ -322,6 +463,18 @@ Future<void> getLessonsOfTopics() async {
 
   Map tempTopicsLessons = {};
 
+  // get local subjects topics
+
+  String? key = await secureStorage.readKey("userKey");
+
+  String? lessonsString = await secureStorage.readKey('topicsLessons');
+
+  if (lessonsString != null && lessonsString.isNotEmpty) {
+    // update from storage
+    Map topicsLessons = Map.from(jsonDecode(lessonsString));
+    userController.topicsLessons.value = topicsLessons;
+  }
+
   for (var subjectTopics in subjectsTopics.entries) {
     // print('Key: ${topic.key}, Value: ${topic.value}');
 
@@ -331,8 +484,6 @@ Future<void> getLessonsOfTopics() async {
       int topicId = topic['topicId'];
 
       try {
-        String? key = await secureStorage.readKey("userKey");
-
         if (key != null && key.isNotEmpty) {
           final Map<String, dynamic> headers = {
             'AuthKey': key,
@@ -359,7 +510,14 @@ Future<void> getLessonsOfTopics() async {
               tempLessons.add(lesson.toMap);
             }
 
-            tempTopicsLessons[topicId] = tempLessons;
+            tempTopicsLessons[topicId.toString()] = tempLessons;
+
+            // Change Topics Lessons
+            userController.topicsLessons.value = tempTopicsLessons;
+
+            // save local
+            String jsonString = jsonEncode(tempTopicsLessons);
+            await secureStorage.writeKey("topicsLessons", jsonString);
           }
         }
       } on DioException catch (e) {
@@ -378,9 +536,86 @@ Future<void> getLessonsOfTopics() async {
       }
     }
   }
+}
 
-  // Change Topics Lessons
-  userController.topicsLessons.value = tempTopicsLessons;
+// Get Past Papers
+Future<void> getSubjectsPapers() async {
+  var subjects = userController.currentSubjects;
+
+  Map tempSubjectsPapers = {};
+
+  // get local subjects papers
+
+  String? key = await secureStorage.readKey("userKey");
+
+  String? papersString = await secureStorage.readKey('subjectsPapers');
+
+  if (papersString != null && papersString.isNotEmpty) {
+    // update from storage
+    Map subjectsPapers = Map.from(jsonDecode(papersString));
+    userController.subjectsPapers.value = subjectsPapers;
+  }
+
+  // get internet data
+
+  for (var i = 0; i < subjects.length; i++) {
+    // get papers of subject
+    int instanceId = subjects[i]['subjectId'];
+    try {
+      if (key != null && key.isNotEmpty) {
+        final Map<String, dynamic> headers = {
+          'AuthKey': key,
+          'Content-Type': 'application/json',
+        };
+        final response = await dio.get(
+          "${ApiUrl!}/PastPaper/PastPapersWithInstanceId?instanceId=$instanceId",
+          options: Options(
+            headers: headers,
+          ),
+        );
+
+        if (response.statusCode == 200) {
+          // Update user Papers
+          var papersData = response.data;
+
+          List tempPapers = [];
+          for (var x = 0; x < papersData.length; x++) {
+            PaperModel paper = PaperModel(
+              paperId: papersData[x]['pastPaperId'],
+              paperName: papersData[x]['pastPaperName'],
+              paperDate: papersData[x]['pastPaperDate'] ?? "March 20, 2020",
+              paperDuration: papersData[x]['paperDuration'] ?? "2 hours",
+              paperDone: papersData[x]['paperDone'] ?? false,
+            );
+
+            tempPapers.add(paper.toMap);
+          }
+
+          tempSubjectsPapers[instanceId.toString()] = tempPapers;
+
+          // Change Subjects Papers
+          userController.subjectsPapers.value = tempSubjectsPapers;
+
+          // save local
+          String jsonString = jsonEncode(tempSubjectsPapers);
+          await secureStorage.writeKey("subjectsPapers", jsonString);
+        }
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        debugPrint(
+            "error getting papers -------------------------------- subject papers");
+      } else {
+        // Other errors like network issues
+        debugPrint(
+            "error getting papers -------------------------------- subject papers - connection");
+      }
+    } catch (e) {
+      // Handle any exceptions
+      debugPrint(
+          "error getting papers -------------------------------- subject papers - error occured");
+    }
+  }
 }
 
 Future<void> logout() async {
@@ -388,8 +623,7 @@ Future<void> logout() async {
   await secureStorage.writeKey("currentExam", "");
 
   // User details
-  userController.userName = "".obs;
-  userController.xps = 0.obs;
+  userController.user = {}.obs;
   userController.streak = "".obs;
   userController.practiceHours = "".obs;
 

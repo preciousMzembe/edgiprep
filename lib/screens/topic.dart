@@ -99,7 +99,8 @@ class _TopicState extends State<Topic> {
                       SizedBox(
                         height: 30.h,
                       ),
-                      ...userController.topicsLessons[widget.topic['topicId']]
+                      ...userController
+                          .topicsLessons[widget.topic['topicId'].toString()]
                           .asMap()
                           .entries
                           .map((entry) {

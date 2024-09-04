@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class TopicModel {
   final int topicId;
   final String topicName;
-  final Color topicColor;
+  final String topicColor;
 
   const TopicModel({
     required this.topicId,

@@ -27,6 +27,10 @@ class _LessonTabState extends State<LessonTab> {
   void initState() {
     super.initState();
     _scrollController = ScrollController();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToBottom();
+    });
   }
 
   void _scrollToBottom() {
@@ -239,8 +243,19 @@ class _LessonTabState extends State<LessonTab> {
                           borderRadius: BorderRadius.circular(100.r),
                         ),
                         onPressed: () {
-                          // go to question
+                          // save and go to question
                           if (!currentLessonController.isLastSlide()) {
+                            // save content progress
+                            currentLessonController.saveProgress(
+                                false,
+                                currentLessonController
+                                    .slides[currentLessonController
+                                        .currentSlideIndex]
+                                    .lessonId
+                                    .toString(),
+                                "");
+
+                            // next
                             currentLessonController.goToNextSlide();
                           } else {
                             // mark done
@@ -451,8 +466,24 @@ class _LessonTabState extends State<LessonTab> {
                             ),
                             onPressed: () {
                               if (!currentLessonController.checkAnswer) {
-                                // check
+                                // check and save progress
                                 currentLessonController.setCheckAnswer(true);
+
+                                // save question progress
+                                currentLessonController.saveProgress(
+                                  true,
+                                  currentLessonController
+                                      .slides[currentLessonController
+                                          .currentSlideIndex]
+                                      .lessonId
+                                      .toString(),
+                                  currentLessonController
+                                          .slides[currentLessonController
+                                              .currentSlideIndex]
+                                          .question!
+                                          .options[
+                                      currentLessonController.selectedIndex],
+                                );
                               } else {
                                 // if last question
                                 if (currentLessonController.isLastSlide()) {
@@ -474,7 +505,7 @@ class _LessonTabState extends State<LessonTab> {
                                   // mark done
                                   currentLessonController.setDone(true);
                                 } else {
-                                  // next question
+                                  // mark and next question
                                   currentLessonController.answerSelected(
                                       currentLessonController
                                               .slides[currentLessonController
@@ -674,7 +705,8 @@ class Question extends StatelessWidget {
                   if (!currentLessonController.checkAnswer &&
                       currentLessonController.currentSlideIndex ==
                           questionIndex &&
-                      !currentLessonController.done) {
+                      !currentLessonController.done &&
+                      question?.userAnswer == "") {
                     currentLessonController.setSelectedIndex(i);
                   }
                 },

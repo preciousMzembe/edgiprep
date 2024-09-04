@@ -17,7 +17,8 @@ class XPController extends GetxController {
   }
 
   Future<void> incrementUserXps(int xp) async {
-    userController.xps.value = userController.xps.value + xp;
+    userController.user
+        .update('xps', (value) => userController.user['xps'] + xp);
   }
 
   // Save XPs

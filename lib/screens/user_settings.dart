@@ -91,7 +91,7 @@ class _UserSettingsState extends State<UserSettings> {
                                   // ),
                                   child: Center(
                                     child: Text(
-                                      userController.fullName.value[0],
+                                      userController.user['fullName'][0],
                                       style: GoogleFonts.nunito(
                                         color: Colors.white,
                                         fontSize: 80.sp,

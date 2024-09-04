@@ -63,16 +63,29 @@ class AddExam extends StatelessWidget {
                             },
                             child: Container(
                               decoration: BoxDecoration(
-                                color: addExamController.exams[index] ==
-                                        addExamController.userExam
-                                    // ? const Color.fromRGBO(243, 188, 92, 0.123)
+                                color: addExamController.exams[index]
+                                                ['examId'] !=
+                                            null &&
+                                        addExamController.userExam['examId'] !=
+                                            null &&
+                                        addExamController.exams[index]
+                                                ['examId'] ==
+                                            addExamController.userExam['examId']
                                     ? const Color.fromRGBO(47, 59, 98, 0.123)
                                     : Colors.transparent,
                                 borderRadius: BorderRadius.circular(40.r),
                                 border: Border.all(
                                   width: 1,
-                                  color: addExamController.exams[index] ==
-                                          addExamController.userExam
+                                  color: addExamController.exams[index]
+                                                  ['examId'] !=
+                                              null &&
+                                          addExamController
+                                                  .userExam['examId'] !=
+                                              null &&
+                                          addExamController.exams[index]
+                                                  ['examId'] ==
+                                              addExamController
+                                                  .userExam['examId']
                                       ? primaryColor
                                       : const Color.fromRGBO(47, 59, 98, 0.523),
                                 ),
@@ -92,8 +105,17 @@ class AddExam extends StatelessWidget {
                                             width: 30,
                                             height: 30,
                                             color: addExamController
-                                                        .exams[index] ==
-                                                    addExamController.userExam
+                                                                .exams[index]
+                                                            ['examId'] !=
+                                                        null &&
+                                                    addExamController.userExam[
+                                                            'examId'] !=
+                                                        null &&
+                                                    addExamController
+                                                                .exams[index]
+                                                            ['examId'] ==
+                                                        addExamController
+                                                            .userExam['examId']
                                                 ? primaryColor
                                                 : const Color.fromRGBO(
                                                     47, 59, 98, 0.523),
@@ -101,8 +123,19 @@ class AddExam extends StatelessWidget {
                                               FontAwesomeIcons.check,
                                               size: 15,
                                               color: addExamController
-                                                          .exams[index] ==
-                                                      addExamController.userExam
+                                                                  .exams[index]
+                                                              ['examId'] !=
+                                                          null &&
+                                                      addExamController
+                                                                  .userExam[
+                                                              'examId'] !=
+                                                          null &&
+                                                      addExamController
+                                                                  .exams[index]
+                                                              ['examId'] ==
+                                                          addExamController
+                                                                  .userExam[
+                                                              'examId']
                                                   ? Colors.white
                                                   : const Color.fromARGB(
                                                       99, 255, 255, 255),
@@ -116,12 +149,22 @@ class AddExam extends StatelessWidget {
                                     Expanded(
                                       child: Center(
                                         child: Text(
-                                          addExamController.exams[index],
+                                          addExamController.exams[index]
+                                              ['examName'],
                                           textAlign: TextAlign.center,
                                           style: GoogleFonts.nunito(
                                             color: addExamController
-                                                        .exams[index] ==
-                                                    addExamController.userExam
+                                                                .exams[index]
+                                                            ['examId'] !=
+                                                        null &&
+                                                    addExamController.userExam[
+                                                            'examId'] !=
+                                                        null &&
+                                                    addExamController
+                                                                .exams[index]
+                                                            ['examId'] ==
+                                                        addExamController
+                                                            .userExam['examId']
                                                 ? primaryColor
                                                 : const Color.fromRGBO(
                                                     47, 59, 98, 0.523),
@@ -181,10 +224,13 @@ class AddExam extends StatelessWidget {
                         const SizedBox(
                           width: 20,
                         ),
-                        if (addExamController.userExam != "")
+                        if (addExamController.userExam.isNotEmpty)
                           Expanded(
                             child: GestureDetector(
-                              onTap: () {
+                              onTap: () async{
+                                await addExamController.emptySubjects();
+                                await addExamController.emptyUserSubjects();
+                                addExamController.setSubjects();
                                 Get.to(() => const AddExamSubjects());
                               },
                               child: ClipRRect(

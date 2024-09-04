@@ -101,6 +101,7 @@ class AuthController extends GetxController {
           var subjectsData = response.data;
           List tempSubjects = [];
           for (var i = 0; i < subjectsData.length; i++) {
+            // TODO: use instance id
             SubjectModel subject = SubjectModel(
               subjectId: subjectsData[i]['subjectId'],
               subjectName: subjectsData[i]['subjectName'],
@@ -228,7 +229,6 @@ class AuthController extends GetxController {
       if (e.response != null) {
         nameError.value = true;
         nameErrorMessage.value = "username already taken.";
-        print(e.response);
       } else {
         // Other errors like network issues
         nameError.value = true;

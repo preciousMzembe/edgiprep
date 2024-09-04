@@ -21,9 +21,7 @@ class UserController extends GetxController {
   }
 
   // User details
-  RxString fullName = "".obs;
-  RxString userName = "".obs;
-  RxInt xps = 0.obs;
+  RxMap user = {}.obs;
   RxString streak = "3".obs;
   RxString practiceHours = "10".obs;
 
@@ -33,6 +31,7 @@ class UserController extends GetxController {
   RxList unerolledSubjects = [].obs;
   RxMap subjectsTopics = {}.obs;
   RxMap topicsLessons = {}.obs;
+  RxMap subjectsPapers = {}.obs;
 
   // check user key if logged in
   Future<void> checkUserKey() async {
@@ -42,6 +41,10 @@ class UserController extends GetxController {
       // set user key
       changeUserKey(storedUserKey);
 
+      // get all local data
+      getOfflineData();
+
+      //  Update all data from internet
       // get user details
       await getUserDetails();
 

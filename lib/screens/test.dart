@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edgiprep/controllers/user_controller.dart';
 import 'package:edgiprep/screens/papers.dart';
 import 'package:edgiprep/start/start_challenge.dart';
@@ -610,8 +611,9 @@ class ChooseSubject extends StatelessWidget {
                                 height: 60.h,
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
-                                    image: NetworkImage(
-                                        "${userController.currentSubjects[index]["subjectImage"]}"),
+                                    image: CachedNetworkImageProvider(
+                                      "${userController.currentSubjects[index]["subjectImage"]}",
+                                    ),
                                     fit: BoxFit.cover,
                                   ),
                                   borderRadius: BorderRadius.circular(20.r),

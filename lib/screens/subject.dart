@@ -150,7 +150,7 @@ class _SubjectState extends State<Subject> {
                                           height: 70.w,
                                           child: Center(
                                             child: Text(
-                                              "${userController.subjectsTopics[widget.subject['subjectId']]!.length}",
+                                              "${userController.subjectsTopics[widget.subject['subjectId'].toString()]!.length}",
                                               style: GoogleFonts.nunito(
                                                 fontSize: 30.sp,
                                                 fontWeight: FontWeight.w800,
@@ -232,8 +232,8 @@ class _SubjectState extends State<Subject> {
                     child: ListView(
                       controller: _controller,
                       children: [
-                        ...userController
-                            .subjectsTopics[widget.subject['subjectId']]
+                        ...userController.subjectsTopics[
+                                widget.subject['subjectId'].toString()]
                             .map(
                               (topic) => Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -340,7 +340,7 @@ class SubjectTopic extends StatelessWidget {
             border: Border(
               left: BorderSide(
                 width: 3,
-                color: topic['topicColor'],
+                color: getRandomColor(topic['topicColor']),
               ),
             ),
           ),
@@ -361,7 +361,7 @@ class SubjectTopic extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "${userController.topicsLessons[topic['topicId']].length} lessons",
+                      "${userController.topicsLessons[topic['topicId'].toString()].length} lessons",
                       style: GoogleFonts.nunito(
                         fontSize: 25.sp,
                         fontWeight: FontWeight.w600,

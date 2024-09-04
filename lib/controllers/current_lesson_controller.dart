@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:dio/dio.dart';
+import 'package:edgiprep/controllers/xp_controller.dart';
 import 'package:edgiprep/models/lesson_slide.dart';
 import 'package:edgiprep/utils/helper_functions.dart';
 import 'package:edgiprep/utils/utils.dart';
@@ -8,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CurrentLessonController extends GetxController {
+  XPController xpQuizController = Get.find<XPController>();
+
   // Rx variables to store quiz data
   final RxString _title = "".obs;
   final RxInt _currentSlideIndex = 0.obs;
@@ -37,10 +40,6 @@ class CurrentLessonController extends GetxController {
 
   void setSlides(List<LessonSlide> questions) {
     _slides.value = questions;
-  }
-
-  void setSampleQuetions() {
-    _slides.value = sampleSlides;
   }
 
   void setCheckAnswer(bool check) {
@@ -93,6 +92,9 @@ class CurrentLessonController extends GetxController {
     // correct or wrong
     if (userAnswer == correctAnswer) {
       _score.value++;
+
+      // save xp to database
+      xpQuizController.saveXP(1);
     }
 
     if (!isLastSlide()) {
@@ -101,6 +103,58 @@ class CurrentLessonController extends GetxController {
 
     // uncheck answer
     refreshPage();
+  }
+
+  // save progress
+  Future<void> saveProgress(
+      bool isQuestion, String slideId, String selectedAnswer) async {
+    try {
+      String? key = await secureStorage.readKey("userKey");
+
+      if (key != null && key.isNotEmpty) {
+        final Map<String, dynamic> headers = {
+          'AuthKey': key,
+          'Content-Type': 'application/json',
+        };
+
+        if (isQuestion) {
+          await dio.post(
+            "${ApiUrl!}/Slide/UpdateProgress/$slideId",
+            options: Options(
+              headers: headers,
+            ),
+            data: isQuestion
+                ? {
+                    "selectedAnswer": selectedAnswer,
+                    "userComment": "",
+                    "duration": ""
+                  }
+                : {},
+          );
+        } else {
+          await dio.post(
+            "${ApiUrl!}/Slide/UpdateProgress/$slideId",
+            options: Options(
+              headers: headers,
+            ),
+          );
+        }
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        debugPrint(
+            "error saving progress --------------------------------  saving progress");
+      } else {
+        // Other errors like network issues
+        debugPrint(
+            "error saving progress --------------------------------  saving progress - connection");
+      }
+    } catch (e) {
+      // Handle any exceptions
+      setQuizError(true);
+      debugPrint(
+          "error  saving progress --------------------------------  saving progress - error occured");
+    }
   }
 
   // Method to reset the quiz (optional)
@@ -124,7 +178,7 @@ class CurrentLessonController extends GetxController {
           'Content-Type': 'application/json',
         };
         final response = await dio.get(
-          "${ApiUrl!}/Lesson/GetLessonSlides?lessonId=$lessonId",
+          "${ApiUrl!}/Slide/GetSlideByLessonId?lessonId=$lessonId",
           options: Options(
             headers: headers,
           ),
@@ -138,11 +192,24 @@ class CurrentLessonController extends GetxController {
           List<LessonSlide> tempSlides = [];
           for (var i = 0; i < lessonData.length; i++) {
             var lessonSlide = lessonData[i];
+            bool slideDone = false;
+
+            // check if slide is done
+            if (lessonSlide['slideProgresses'].isNotEmpty) {
+              slideDone = true;
+
+              // change starting index
+              if (i != lessonData.length - 1) {
+                goToNextSlide();
+              }
+            }
+
             if (lessonSlide['slideType'] == 1) {
               // content slide
               LessonSlide contentSlide = LessonSlide(
                 lessonId: lessonSlide['slideId'],
                 content: lessonSlide['slideContent'],
+                done: slideDone,
               );
 
               tempSlides.add(contentSlide);
@@ -166,14 +233,26 @@ class CurrentLessonController extends GetxController {
                 options.shuffle(Random());
 
                 LessonQuestion question = LessonQuestion(
-                    question: questionData['questionText'],
-                    options: options,
-                    answer: questionData['questionAnswer']);
+                  question: questionData['questionText'],
+                  options: options,
+                  answer: questionData['questionAnswer'],
+                  userAnswer: slideDone
+                      ? lessonSlide['slideProgresses'][0]['selectedAnswer']
+                      : "",
+                );
+
+                // add score record if was correct anser
+                if (slideDone &&
+                    lessonSlide['slideProgresses'][0]['selectedAnswer'] ==
+                        questionData['questionAnswer']) {
+                  _score.value++;
+                }
 
                 // add question slide
                 LessonSlide contentSlide = LessonSlide(
                   lessonId: lessonSlide['slideId'],
                   question: question,
+                  done: slideDone,
                 );
 
                 tempSlides.add(contentSlide);
@@ -198,39 +277,8 @@ class CurrentLessonController extends GetxController {
     } catch (e) {
       // Handle any exceptions
       setQuizError(true);
-      print(e);
       debugPrint(
           "error creating lesson -------------------------------- creating lesson - error occured");
     }
   }
 }
-
-// Sample biology quiz questions (Multiple Choice)
-final List<LessonSlide> sampleSlides = [
-  LessonSlide(
-    lessonId: 1,
-    content: 'This is the introduction to the lesson.',
-  ),
-  LessonSlide(
-    lessonId: 2,
-    question: LessonQuestion(
-      question: 'Which of the following is the basic unit of life?',
-      options: ['Cell', 'Organ', 'Tissue', 'System'],
-      answer: 'Cell',
-    ),
-  ),
-  LessonSlide(
-    lessonId: 3,
-    content:
-        'Photosynthesis is the process used by plants to convert light energy into chemical energy.',
-  ),
-  // LessonSlide(
-  //   lessonId: 4,
-  //   question: LessonQuestion(
-  //     question:
-  //         'What process uses sunlight, water, and carbon dioxide to produce glucose and oxygen?',
-  //     options: ['Cellular respiration', 'Photosynthesis', 'Mitosis', 'Meiosis'],
-  //     answer: 'Photosynthesis',
-  //   ),
-  // ),
-];

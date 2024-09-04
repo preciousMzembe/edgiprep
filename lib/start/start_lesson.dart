@@ -102,7 +102,7 @@ class StartLesson extends StatelessWidget {
                   Navigator.pop(context);
 
                   if (currentLessonController.quizError) {
-                    showErrorLoading(context);
+                    showErrorLoading(context, );
                   } else {
                     Get.to(() => const LessonTab());
                   }

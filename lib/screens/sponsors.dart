@@ -107,65 +107,67 @@ class Organization extends StatelessWidget {
           vertical: 30,
         ),
         color: const Color.fromARGB(255, 243, 243, 243),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // logo
-            Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(100.r),
-                  child: Container(
-                    height: 80.w,
-                    width: 80.w,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('icons/logo.png'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            Image.asset(
+              'icons/logo.png',
+              width: 80.w,
             ),
 
             // name
             const SizedBox(
-              height: 5,
-            ),
-            Text(
-              "Edgicate",
-              style: GoogleFonts.nunito(
-                fontSize: 35.sp,
-                fontWeight: FontWeight.w800,
-              ),
+              width: 20,
             ),
 
-            // subject
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "Biology",
-                  style: GoogleFonts.nunito(
-                    // fontSize: 35.sp,
-                    fontWeight: FontWeight.w600,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    "Edgicate",
+                    style: GoogleFonts.nunito(
+                      fontSize: 30.sp,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 7),
-                const Icon(
-                  FontAwesomeIcons.minus,
-                  size: 12,
-                ),
-                const SizedBox(width: 7),
-                Text(
-                  "JCE",
-                  style: GoogleFonts.nunito(
-                    // fontSize: 35.sp,
-                    fontWeight: FontWeight.w600,
+
+                  // subjects
+                  Text(
+                    "JCE Biology, MSCE Biology",
+                    style: GoogleFonts.nunito(
+                      // fontSize: 35.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-              ],
+                  // Row(
+                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                  //   children: [
+                  //     Text(
+                  //       "Biology",
+                  //       style: GoogleFonts.nunito(
+                  //         // fontSize: 35.sp,
+                  //         fontWeight: FontWeight.w600,
+                  //       ),
+                  //     ),
+                  //     const SizedBox(width: 7),
+                  //     const Icon(
+                  //       FontAwesomeIcons.minus,
+                  //       size: 12,
+                  //     ),
+                  //     const SizedBox(width: 7),
+                  //     Text(
+                  //       "JCE",
+                  //       style: GoogleFonts.nunito(
+                  //         // fontSize: 35.sp,
+                  //         fontWeight: FontWeight.w600,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                ],
+              ),
             ),
           ],
         ),

@@ -1,9 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edgiprep/controllers/user_controller.dart';
 import 'package:edgiprep/screens/subject.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -209,7 +209,7 @@ class LearnSubject extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage(
+                image: CachedNetworkImageProvider(
                   subject['subjectImage'],
                 ),
                 fit: BoxFit.cover,
@@ -232,7 +232,7 @@ class LearnSubject extends StatelessWidget {
                         height: isTall ? 70.h : 45.w,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: NetworkImage(
+                            image: CachedNetworkImageProvider(
                               subject['subjectImage'],
                             ),
                             fit: BoxFit.cover,
@@ -276,7 +276,7 @@ class LearnSubject extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "${userController.subjectsTopics[subject['subjectId']]!.length} Topics",
+                                  "${userController.subjectsTopics[subject['subjectId'].toString()]!.length} Topics",
                                   style: GoogleFonts.nunito(
                                     fontSize: isTall ? 20.sp : 10.sp,
                                     fontWeight: FontWeight.w900,

@@ -22,6 +22,11 @@ int? MockQuestionNumber = 0;
 Map? MockExamTime = {};
 int? ChallangeQuestionNumber = 0;
 
+// contact details
+String? Phone = "";
+String? Email = "";
+String? Location = "";
+
 List getRandomSubjects(List subjects, int count) {
   Random random = Random();
   List shuffledSubjects = List.from(subjects)..shuffle(random);
@@ -47,6 +52,11 @@ Future<void> fetchRemoteConfigValues() async {
     MockExamTime = jsonDecode(remoteConfig.getString('MOCK_EXAM_TIME'));
     ChallangeQuestionNumber =
         int.parse(remoteConfig.getString('CHALLANGE_QUESTION_NUMBER'));
+
+    // contact details
+    Phone = remoteConfig.getString('PHONE');
+    Email = remoteConfig.getString('EMAIL');
+    Location = remoteConfig.getString('LOCATION');
   } catch (e) {
     debugPrint('Error fetching remote config');
   }
