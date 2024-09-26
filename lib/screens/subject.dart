@@ -186,7 +186,10 @@ class _SubjectState extends State<Subject> {
                                 lineHeight: 15.h,
                                 animationDuration: 2000,
                                 // percent
-                                percent: .7,
+                                percent: widget.subject['slidesNumber'] < 1
+                                    ? 0
+                                    : widget.subject['slidesNumber'] /
+                                        widget.subject['slidesDone'],
                                 barRadius: Radius.circular(30.r),
                                 progressColor: Colors.white,
                                 backgroundColor:
@@ -243,7 +246,10 @@ class _SubjectState extends State<Subject> {
                                   ),
                                   SubjectTopic(
                                     topic: topic,
-                                    percent: 0.4,
+                                    percent: topic['slidesNumber'] < 1
+                                        ? 0
+                                        : topic['slidesNumber'] /
+                                            topic['slidesDone'],
                                   ),
                                 ],
                               ),
@@ -320,87 +326,90 @@ class SubjectTopic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     UserController userController = Get.find<UserController>();
-    return GestureDetector(
-      onTap: () {
-        Get.to(() => Topic(
-              topic: topic,
-            ));
-      },
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(0.r),
-        child: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: 30.w,
-            vertical: 30.w,
-          ),
-          decoration: BoxDecoration(
-            color: percent == 1
-                ? const Color.fromARGB(255, 224, 229, 255)
-                : const Color.fromARGB(255, 243, 245, 255),
-            border: Border(
-              left: BorderSide(
-                width: 3,
-                color: getRandomColor(topic['topicColor']),
+    return Obx(() {
+      return GestureDetector(
+        onTap: () {
+          Get.to(() => Topic(
+                topic: topic,
+              ));
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(0.r),
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 30.w,
+              vertical: 30.w,
+            ),
+            decoration: BoxDecoration(
+              color: percent == 1
+                  ? const Color.fromARGB(255, 224, 229, 255)
+                  : const Color.fromARGB(255, 243, 245, 255),
+              border: Border(
+                left: BorderSide(
+                  width: 3,
+                  color: getRandomColor(topic['topicColor']),
+                ),
               ),
             ),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    //  topic
-                    Text(
-                      topic['topicName'],
-                      style: GoogleFonts.nunito(
-                        fontSize: 35.sp,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.black,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //  topic
+                      Text(
+                        topic['topicName'],
+                        style: GoogleFonts.nunito(
+                          fontSize: 35.sp,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.black,
+                        ),
                       ),
-                    ),
-                    Text(
-                      "${userController.topicsLessons[topic['topicId'].toString()].length} lessons",
-                      style: GoogleFonts.nunito(
-                        fontSize: 25.sp,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
+                      Text(
+                        "${userController.topicsLessons[topic['topicId'].toString()] != null ? userController.topicsLessons[topic['topicId'].toString()].length : 0} lessons",
+                        style: GoogleFonts.nunito(
+                          fontSize: 25.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ),
                       ),
-                    ),
 
-                    // progress
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    LinearPercentIndicator(
-                      padding: const EdgeInsets.all(0),
-                      animation: true,
-                      lineHeight: 10.h,
-                      animationDuration: 2000,
-                      // percent
-                      percent: percent,
-                      barRadius: Radius.circular(30.r),
-                      progressColor: const Color.fromARGB(255, 66, 63, 63),
-                      backgroundColor: const Color.fromARGB(255, 196, 196, 196),
-                    ),
-                  ],
+                      // progress
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      LinearPercentIndicator(
+                        padding: const EdgeInsets.all(0),
+                        animation: true,
+                        lineHeight: 10.h,
+                        animationDuration: 2000,
+                        // percent
+                        percent: percent,
+                        barRadius: Radius.circular(30.r),
+                        progressColor: const Color.fromARGB(255, 66, 63, 63),
+                        backgroundColor:
+                            const Color.fromARGB(255, 196, 196, 196),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(
-                width: 30.w,
-              ),
-              Center(
-                child: Icon(
-                  FontAwesomeIcons.angleRight,
-                  size: 30.h,
-                  color: primaryColor,
+                SizedBox(
+                  width: 30.w,
                 ),
-              ),
-            ],
+                Center(
+                  child: Icon(
+                    FontAwesomeIcons.angleRight,
+                    size: 30.h,
+                    color: primaryColor,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

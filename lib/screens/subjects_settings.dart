@@ -262,7 +262,7 @@ Future<void> showDeleteSubjectDialog(BuildContext context, String name) async {
                       height: 10.h,
                     ),
                     Text(
-                      "Delete $name?",
+                      "Remove $name?",
                       textAlign: TextAlign.center,
                       style: GoogleFonts.nunito(
                           fontSize: 40.sp,
@@ -273,7 +273,7 @@ Future<void> showDeleteSubjectDialog(BuildContext context, String name) async {
                       height: 10.h,
                     ),
                     Text(
-                      "Are you sure you want to delete $name? This action is irreversible and all the progress will be lost.",
+                      "Are you sure you want to remove $name? This action is irreversible and all the progress will be lost.",
                       textAlign: TextAlign.center,
                       style: GoogleFonts.nunito(
                           fontSize: 20.sp,
@@ -376,7 +376,7 @@ Future<void> showAddSubjectDialog(BuildContext context, String name) async {
                                   40.w,
                                 ),
                                 child: Icon(
-                                  FontAwesomeIcons.solidTrashCan,
+                                  FontAwesomeIcons.plus,
                                   color: primaryColor,
                                   size: 40.0,
                                 ),

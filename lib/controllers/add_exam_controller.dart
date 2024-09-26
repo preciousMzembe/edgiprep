@@ -82,12 +82,13 @@ class AddExamController extends GetxController {
           var subjectsData = response.data;
           List tempSubjects = [];
           for (var i = 0; i < subjectsData.length; i++) {
-            // TODO: use instance id
             SubjectModel subject = SubjectModel(
-              subjectId: subjectsData[i]['subjectId'],
+              subjectId: subjectsData[i]['esInstance']['insanceId'],
               subjectName: subjectsData[i]['subjectName'],
               subjectDescription: subjectsData[i]['subjectDescription'],
               subjectImage: subjectsData[i]['subjectLink'],
+              slidesNumber: 0,
+              slidesDone: 0,
             );
 
             tempSubjects.add(subject.toMap);

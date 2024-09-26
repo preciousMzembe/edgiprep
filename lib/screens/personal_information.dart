@@ -1,13 +1,44 @@
-import 'package:edgiprep/screens/settings.dart';
+import 'package:edgiprep/controllers/settings_controller.dart';
+import 'package:edgiprep/controllers/user_controller.dart';
 import 'package:edgiprep/utils/constants.dart';
+import 'package:edgiprep/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class PersonalInformation extends StatelessWidget {
+class PersonalInformation extends StatefulWidget {
   const PersonalInformation({super.key});
+
+  @override
+  State<PersonalInformation> createState() => _PersonalInformationState();
+}
+
+class _PersonalInformationState extends State<PersonalInformation> {
+  SettingsController settingsController = Get.find<SettingsController>();
+  UserController userController = Get.find<UserController>();
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+
+  @override
+  void initState() {
+    _nameController.text = userController.user['fullName'];
+    _emailController.text = userController.user['email'];
+    _phoneController.text = userController.user['phone'];
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +111,7 @@ class PersonalInformation extends StatelessWidget {
                           ),
                         ),
                         TextField(
+                          controller: _nameController,
                           style: TextStyle(fontSize: 25.sp),
                           decoration: InputDecoration(
                             isDense: true,
@@ -109,6 +141,7 @@ class PersonalInformation extends StatelessWidget {
                           ),
                         ),
                         TextField(
+                          controller: _emailController,
                           style: TextStyle(fontSize: 25.sp),
                           decoration: InputDecoration(
                             isDense: true,
@@ -138,6 +171,7 @@ class PersonalInformation extends StatelessWidget {
                           ),
                         ),
                         TextField(
+                          controller: _phoneController,
                           style: TextStyle(fontSize: 25.sp),
                           decoration: InputDecoration(
                             isDense: true,
@@ -162,7 +196,47 @@ class PersonalInformation extends StatelessWidget {
                           height: 40,
                         ),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () async {
+                            // update data
+                            String name = _nameController.text.trim();
+                            String email = _emailController.text.trim();
+                            String phone = _phoneController.text.trim();
+
+                            if (name.isNotEmpty) {
+                              settingsController.resetController();
+                              showLoadingDialog(context, "Updating Details",
+                                  "Please wait we update yor details.");
+
+                              await settingsController.updateUserDetails(
+                                  name, email, phone);
+                              Navigator.pop(context);
+
+                              if (settingsController.saveError.value) {
+                                showDataError(context, "Error Updating Details",
+                                    settingsController.saveErrorMessage.value);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: const Text(
+                                        "Your details updated successfully."),
+                                    duration: const Duration(seconds: 2),
+                                    backgroundColor: primaryColor,
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
+                                );
+                              }
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: const Text(
+                                      "Your full name can not be empty."),
+                                  duration: const Duration(seconds: 2),
+                                  backgroundColor: primaryColor,
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            }
+                          },
                           child: Container(
                             padding: EdgeInsets.symmetric(
                               horizontal: 50.w,

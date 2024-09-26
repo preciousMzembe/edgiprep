@@ -26,10 +26,12 @@ class SubjectsSettingsController extends GetxController {
           List tempSubjects = [];
           for (var i = 0; i < subjectsData.length; i++) {
             SubjectModel subject = SubjectModel(
-              subjectId: subjectsData[i]['subjectId'],
+              subjectId: subjectsData[i]['esInstance']['insanceId'],
               subjectName: subjectsData[i]['subjectName'],
               subjectDescription: subjectsData[i]['subjectDescription'],
               subjectImage: subjectsData[i]['subjectLink'],
+              slidesNumber: 0,
+              slidesDone: 0,
             );
 
             tempSubjects.add(subject.toMap);

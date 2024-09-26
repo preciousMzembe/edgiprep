@@ -110,13 +110,14 @@ Future<void> getUserDetails() async {
         // Update user details
         var userData = response.data;
 
-        // TODO: add streaks and practice hours
-
         UserModel userModel = UserModel(
           userId: userData['learnerId'],
           fullName: userData['learnerFullName'],
           username: userData['learnerUsername'],
+          email: userData['learnerEmail'],
+          phone: userData['learnerPhoneNumber'],
           xps: userData['learnerXp'],
+          streaks: userData['streaks'],
         );
 
         userController.user.value = userModel.toMap;
@@ -146,6 +147,7 @@ Future<void> getUserDetails() async {
     }
   } catch (e) {
     // Handle any exceptions
+    print(e);
     debugPrint(
         "error getting user details -------------------------------- user details - error occured");
   }
@@ -283,19 +285,32 @@ Future<void> getCurrentSubjects() async {
           // Update user Subjects
           var subjectsData = response.data;
 
-          // print(subjectsData);
-
           List tempSubjects = [];
           for (var i = 0; i < subjectsData.length; i++) {
-            SubjectModel subject = SubjectModel(
-              subjectId: subjectsData[i]['esInstance']['insanceId'],
-              subjectName: subjectsData[i]['subject']['subjectName'],
-              subjectDescription: subjectsData[i]['subject']
-                  ['subjectDescription'],
-              subjectImage: subjectsData[i]['subject']['subjectLink'],
+            var subjectId = subjectsData[i]['esInstance']['insanceId'];
+            // get progress
+            final progressResponse = await dio.get(
+              "${ApiUrl!}/Progress/GetSubjectProgress?subjectId=$subjectId",
+              options: Options(
+                headers: headers,
+              ),
             );
 
-            tempSubjects.add(subject.toMap);
+            if (progressResponse.statusCode == 200) {
+              var progressData = progressResponse.data;
+
+              SubjectModel subject = SubjectModel(
+                subjectId: subjectId,
+                subjectName: subjectsData[i]['subject']['subjectName'],
+                subjectDescription: subjectsData[i]['subject']
+                    ['subjectDescription'],
+                subjectImage: subjectsData[i]['subject']['subjectLink'],
+                slidesNumber: progressData['total'],
+                slidesDone: progressData['done'],
+              );
+
+              tempSubjects.add(subject.toMap);
+            }
           }
 
           // change subjects in user controller
@@ -348,6 +363,8 @@ Future<void> getUnenrolledSubjects() async {
             subjectName: subjectsData[i]['subjectName'],
             subjectDescription: subjectsData[i]['subjectDescription'],
             subjectImage: subjectsData[i]['subjectLink'],
+            slidesNumber: 0,
+            slidesDone: 0,
           );
 
           bool currentSubjectsHaveSubjectWithId = userController.currentSubjects
@@ -392,6 +409,7 @@ Future<void> getTopicsOfCurrentSubjects() async {
     // update from storage
     Map subjectsTopics = Map.from(jsonDecode(topicsString));
     userController.subjectsTopics.value = subjectsTopics;
+    tempSubjectsTopics = subjectsTopics;
   }
 
   // get internet data
@@ -418,23 +436,31 @@ Future<void> getTopicsOfCurrentSubjects() async {
 
           List tempTopics = [];
           for (var x = 0; x < topicsData.length; x++) {
-            TopicModel topic = TopicModel(
-              topicId: topicsData[x]['topicId'],
-              topicName: topicsData[x]['topicName'],
-              topicColor: getRandomHexColor(),
+            var topicId = topicsData[x]['topicId'];
+            // get progress
+            final progressResponse = await dio.get(
+              "${ApiUrl!}/Progress/GetTopicProgress?topicId=$topicId",
+              options: Options(
+                headers: headers,
+              ),
             );
 
-            tempTopics.add(topic.toMap);
+            if (progressResponse.statusCode == 200) {
+              var progressData = progressResponse.data;
+
+              TopicModel topic = TopicModel(
+                topicId: topicId,
+                topicName: topicsData[x]['topicName'],
+                topicColor: getRandomHexColor(),
+                slidesNumber: progressData['total'],
+                slidesDone: progressData['done'],
+              );
+
+              tempTopics.add(topic.toMap);
+            }
           }
 
           tempSubjectsTopics[instanceId.toString()] = tempTopics;
-
-          // Change Subjects Topics
-          userController.subjectsTopics.value = tempSubjectsTopics;
-
-          // save local
-          String jsonString = jsonEncode(tempSubjectsTopics);
-          await secureStorage.writeKey("subjectsTopics", jsonString);
         }
       }
     } on DioException catch (e) {
@@ -452,6 +478,13 @@ Future<void> getTopicsOfCurrentSubjects() async {
           "error getting topics -------------------------------- subject topics - error occured");
     }
   }
+
+  // Change Subjects Topics
+  userController.subjectsTopics.value = tempSubjectsTopics;
+
+  // save local
+  String jsonString = jsonEncode(tempSubjectsTopics);
+  await secureStorage.writeKey("subjectsTopics", jsonString);
 
   // get Lessons of Topics
   getLessonsOfTopics();
@@ -473,11 +506,10 @@ Future<void> getLessonsOfTopics() async {
     // update from storage
     Map topicsLessons = Map.from(jsonDecode(lessonsString));
     userController.topicsLessons.value = topicsLessons;
+    tempTopicsLessons = topicsLessons;
   }
 
   for (var subjectTopics in subjectsTopics.entries) {
-    // print('Key: ${topic.key}, Value: ${topic.value}');
-
     // get Lessons of topic
     for (var i = 0; i < subjectTopics.value.length; i++) {
       var topic = subjectTopics.value[i];
@@ -501,23 +533,43 @@ Future<void> getLessonsOfTopics() async {
             var lessonsData = response.data;
 
             List tempLessons = [];
+            int currentLesson = 0;
             for (var x = 0; x < lessonsData.length; x++) {
-              LessonModel lesson = LessonModel(
-                lessonId: lessonsData[x]['lessonId'],
-                lessonName: lessonsData[x]['lessonTitle'],
+              var lessonId = lessonsData[x]['lessonId'];
+              // get progress
+              final progressResponse = await dio.get(
+                "${ApiUrl!}/Progress/GetLessonProgress?lessonId=$lessonId",
+                options: Options(
+                  headers: headers,
+                ),
               );
 
-              tempLessons.add(lesson.toMap);
+              if (progressResponse.statusCode == 200) {
+                var progressData = progressResponse.data;
+
+                bool lessonDone = false;
+
+                if (progressData['total'] > 0 &&
+                    progressData['done'] == progressData['total']) {
+                  lessonDone = true;
+                  currentLesson += 1;
+                }
+
+                LessonModel lesson = LessonModel(
+                  lessonId: lessonId,
+                  lessonName: lessonsData[x]['lessonTitle'],
+                  slidesNumber: progressData['total'],
+                  slidesDone: progressData['done'],
+                  currentLesson: currentLesson == x,
+                  finalLesson: x == lessonsData.length - 1,
+                  lessonDone: lessonDone,
+                );
+
+                tempLessons.add(lesson.toMap);
+              }
             }
 
             tempTopicsLessons[topicId.toString()] = tempLessons;
-
-            // Change Topics Lessons
-            userController.topicsLessons.value = tempTopicsLessons;
-
-            // save local
-            String jsonString = jsonEncode(tempTopicsLessons);
-            await secureStorage.writeKey("topicsLessons", jsonString);
           }
         }
       } on DioException catch (e) {
@@ -536,6 +588,13 @@ Future<void> getLessonsOfTopics() async {
       }
     }
   }
+
+  // Change Topics Lessons
+  userController.topicsLessons.value = tempTopicsLessons;
+
+  // save local
+  String jsonString = jsonEncode(tempTopicsLessons);
+  await secureStorage.writeKey("topicsLessons", jsonString);
 }
 
 // Get Past Papers

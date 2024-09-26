@@ -163,7 +163,10 @@ class CurrentPaperController extends GetxController {
       // add wrong question
       addCorrectionQuestion(questions[_currentQuestionIndex.value]);
     }
+  }
 
+  // continue with paper
+  void continuePaper() {
     if (!isLastQuestion()) {
       _currentQuestionIndex.value++; // Move to the next question
     }

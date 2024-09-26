@@ -121,6 +121,10 @@ class Papers extends StatelessWidget {
                       style: TextStyle(
                         fontSize: isTall ? 30.sp : 15.sp,
                       ),
+                      // Search
+                      onChanged: (String value) {
+                        papersController.search(value.trim());
+                      },
                     ),
                   ),
 
@@ -136,7 +140,7 @@ class Papers extends StatelessWidget {
                           SizedBox(
                             height: 20.h,
                           ),
-                          ...papersController.papers.map(
+                          ...papersController.searchPapers.map(
                             (paper) => Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [

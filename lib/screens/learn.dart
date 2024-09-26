@@ -145,7 +145,14 @@ class _LearnState extends State<Learn> {
                               Expanded(
                                 child: LearnSubject(
                                   subject: newSubjectList[index][0],
-                                  percent: .4,
+                                  percent: newSubjectList[index][0]
+                                              ['slidesNumber'] <
+                                          1
+                                      ? 0
+                                      : newSubjectList[index][0]
+                                              ['slidesNumber'] /
+                                          newSubjectList[index][0]
+                                              ['slidesDone'],
                                   isTall: isTall,
                                 ),
                               ),
@@ -154,7 +161,14 @@ class _LearnState extends State<Learn> {
                                 child: newSubjectList[index].length != 1
                                     ? LearnSubject(
                                         subject: newSubjectList[index][1],
-                                        percent: .6,
+                                        percent: newSubjectList[index][1]
+                                                    ['slidesNumber'] <
+                                                1
+                                            ? 0
+                                            : newSubjectList[index][1]
+                                                    ['slidesNumber'] /
+                                                newSubjectList[index][1]
+                                                    ['slidesDone'],
                                         isTall: isTall,
                                       )
                                     : const Text(""),
@@ -275,8 +289,11 @@ class LearnSubject extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                // if (userController.subjectsTopics[
+                                //         subject['subjectId'].toString()] !=
+                                //     null)
                                 Text(
-                                  "${userController.subjectsTopics[subject['subjectId'].toString()]!.length} Topics",
+                                  "${userController.subjectsTopics[subject['subjectId'].toString()].length} Topics",
                                   style: GoogleFonts.nunito(
                                     fontSize: isTall ? 20.sp : 10.sp,
                                     fontWeight: FontWeight.w900,
@@ -284,6 +301,10 @@ class LearnSubject extends StatelessWidget {
                                         255, 197, 197, 197),
                                   ),
                                 ),
+                                // if (userController.subjectsTopics[
+                                //         subject['subjectId'].toString()] ==
+                                //     null)
+                                //   Container(),
                                 // progress
                                 SizedBox(
                                   width: isTall ? 70.h : 45.w,

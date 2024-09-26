@@ -111,10 +111,8 @@ class _TopicState extends State<Topic> {
                           lessonId: lesson['lessonId'],
                           lessonName: lesson['lessonName'],
                           lessonDone: lesson['lessonDone'] ?? false,
-                          currentLesson: index == 0
-                              ? true
-                              : lesson['currentLesson'] ?? false,
-                          finalLesson: lesson['finalLesson'] ?? false,
+                          currentLesson: lesson['currentLesson'],
+                          finalLesson: lesson['finalLesson'],
                         );
                       }).toList(),
                       // back to top

@@ -223,3 +223,119 @@ Future<void> showErrorLoading(BuildContext context) async {
     },
   );
 }
+
+Future<void> showDataError(
+    BuildContext context, String title, String subtitle) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: true,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 20.h),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Stack(
+                      children: [
+                        SizedBox(
+                          width: 180.h,
+                          height: 180.h,
+                          child: Center(
+                            child: ClipOval(
+                              child: Container(
+                                color: const Color.fromARGB(57, 244, 67, 54),
+                                padding: EdgeInsets.all(
+                                  40.w,
+                                ),
+                                child: const Icon(
+                                  FontAwesomeIcons.exclamation,
+                                  color: Colors.red,
+                                  size: 40.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 180.h,
+                          height: 180.h,
+                          child: Center(
+                            child: Container(
+                              width: 145.h,
+                              height: 145.h,
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(85, 244, 67, 54),
+                                borderRadius: BorderRadius.circular(140.r),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Text(
+                      title,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.nunito(
+                          fontSize: 40.sp,
+                          fontWeight: FontWeight.w900,
+                          color: primaryColor),
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Text(
+                      subtitle,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.nunito(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey.shade600),
+                    ),
+
+                    // close
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10.r),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              height: 60.h,
+                              width: 200.w,
+                              color: grayColor,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 30.w,
+                              ),
+                              child: const Center(
+                                child: Text("Close"),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}

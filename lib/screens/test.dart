@@ -147,7 +147,8 @@ class _TestState extends State<Test> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         Text(
-                                          MockExamTime?['hours'] != 0
+                                          MockExamTime?['hours'] != 0 &&
+                                                  MockExamTime?['hours'] != null
                                               ? "${MockExamTime?['hours']} ${MockExamTime?['hours'] > 1 ? "hours" : "hour"}"
                                               : MockExamTime?['minutes'] != 0
                                                   ? "${MockExamTime?['minutes']} minutes"

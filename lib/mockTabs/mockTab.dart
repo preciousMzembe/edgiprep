@@ -441,29 +441,23 @@ class _MockTabState extends State<MockTab> {
                               if (!currentMockController.checkAnswer) {
                                 // check
                                 currentMockController.setCheckAnswer(true);
+
+                                // mark
+                                currentMockController.answerSelected(
+                                    questionOptions[
+                                        currentMockController.selectedIndex],
+                                    currentMockController
+                                        .questions[currentMockController
+                                            .currentQuestionIndex]
+                                        .answer);
                               } else {
                                 // if last question
                                 if (currentMockController.isLastQuestion()) {
-                                  // mark
-                                  currentMockController.answerSelected(
-                                      questionOptions[
-                                          currentMockController.selectedIndex],
-                                      currentMockController
-                                          .questions[currentMockController
-                                              .currentQuestionIndex]
-                                          .answer);
-
                                   // mark done
                                   currentMockController.setDone(true);
                                 } else {
                                   // next question
-                                  currentMockController.answerSelected(
-                                      questionOptions[
-                                          currentMockController.selectedIndex],
-                                      currentMockController
-                                          .questions[currentMockController
-                                              .currentQuestionIndex]
-                                          .answer);
+                                  currentMockController.continueMock();
                                 }
 
                                 _scrollToBottom();

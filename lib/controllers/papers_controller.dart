@@ -1,66 +1,28 @@
-import 'package:dio/dio.dart';
-import 'package:edgiprep/models/paper_model.dart';
-import 'package:edgiprep/utils/helper_functions.dart';
-import 'package:edgiprep/utils/utils.dart';
-import 'package:flutter/material.dart';
+import 'package:edgiprep/controllers/user_controller.dart';
 import 'package:get/get.dart';
 
 class PapersController extends GetxController {
+  UserController userController = Get.find<UserController>();
   RxBool loading = false.obs;
   RxList papers = [].obs;
   RxList searchPapers = [].obs;
 
   Future<void> getPapers(int subjectId) async {
-    int instanceId = subjectId;
-    try {
-      String? key = await secureStorage.readKey("userKey");
+    papers.value = userController.subjectsPapers[subjectId.toString()];
+    searchPapers.value = userController.subjectsPapers[subjectId.toString()];
+  }
 
-      if (key != null && key.isNotEmpty) {
-        final Map<String, dynamic> headers = {
-          'AuthKey': key,
-          'Content-Type': 'application/json',
-        };
-        final response = await dio.get(
-          "${ApiUrl!}/PastPaper/PastPapersWithInstanceId?instanceId=$instanceId",
-          options: Options(
-            headers: headers,
-          ),
-        );
+  Future<void> search(String term) async {
+    if (term.isEmpty) {
+      searchPapers.value = papers; 
+    } else {
+      List<String> searchTerms = term.toLowerCase().split(' ');
 
-        if (response.statusCode == 200) {
-          // Update papers
-          var papersData = response.data;
+      searchPapers.value = papers.where((paper) {
+        String paperName = paper['paperName'].toString().toLowerCase();
 
-          List tempPapers = [];
-          for (var i = 0; i < papersData.length; i++) {
-            PaperModel paper = PaperModel(
-              paperId: papersData[i]['pastPaperId'],
-              paperName: papersData[i]['pastPaperName'],
-              paperDate: papersData[i]['pastPaperDate'] ?? "March 20, 2020",
-              paperDuration: papersData[i]['paperDuration'] ?? "2 hours",
-              paperDone: papersData[i]['paperDone'] ?? false,
-            );
-
-            tempPapers.add(paper.toMap);
-          }
-
-          // change papers
-          papers.value = tempPapers;
-        }
-      }
-    } on DioException catch (e) {
-      if (e.response != null) {
-        debugPrint(
-            "error getting papers -------------------------------- enrolled papers");
-      } else {
-        // Other errors like network issues
-        debugPrint(
-            "error getting papers -------------------------------- enrolled papers - connection");
-      }
-    } catch (e) {
-      // Handle any exceptions
-      debugPrint(
-          "error getting papers -------------------------------- enrolled papers - error occured");
+        return searchTerms.any((word) => paperName.contains(word));
+      }).toList();
     }
   }
 }

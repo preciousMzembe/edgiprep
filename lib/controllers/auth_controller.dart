@@ -101,12 +101,13 @@ class AuthController extends GetxController {
           var subjectsData = response.data;
           List tempSubjects = [];
           for (var i = 0; i < subjectsData.length; i++) {
-            // TODO: use instance id
             SubjectModel subject = SubjectModel(
-              subjectId: subjectsData[i]['subjectId'],
+              subjectId: subjectsData[i]['esInstance']['insanceId'],
               subjectName: subjectsData[i]['subjectName'],
               subjectDescription: subjectsData[i]['subjectDescription'],
               subjectImage: subjectsData[i]['subjectLink'],
+              slidesNumber: 0,
+              slidesDone: 0,
             );
 
             tempSubjects.add(subject.toMap);
@@ -246,12 +247,20 @@ class AuthController extends GetxController {
   Future<void> login() async {
     if (logUsername.isNotEmpty && logPin.isNotEmpty) {
       try {
+        final Map<String, dynamic> headers = {
+          'Content-Type': 'application/json',
+        };
+
         final response = await dio.post(
           "${ApiUrl!}/login",
+          options: Options(
+            headers: headers,
+          ),
           data: {
             'Username': logUsername.value,
             'Password': logPin.value,
-            "Device": userController.deviceId,
+            "Device": "23456",
+            // "Device": userController.deviceId,
           },
         );
 

@@ -86,68 +86,19 @@ class _ChallangeTabState extends State<ChallangeTab> {
                               ),
                             ),
                           ),
-                          SizedBox(
-                            width: 20.w,
-                          ),
-                          // report question
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              FontAwesomeIcons.solidFlag,
-                              size: 30.h,
-                            ),
-                          ),
+                          // SizedBox(
+                          //   width: 20.w,
+                          // ),
+                          // // report question
+                          // IconButton(
+                          //   onPressed: () {},
+                          //   icon: Icon(
+                          //     FontAwesomeIcons.solidFlag,
+                          //     size: 30.h,
+                          //   ),
+                          // ),
                         ],
                       ),
-                      // progress
-                      // if (!currentChallangeController.correctionRound)
-                      // Column(
-                      //   crossAxisAlignment: CrossAxisAlignment.stretch,
-                      //   children: [
-                      //     SizedBox(
-                      //       height: 20.h,
-                      //     ),
-                      // LinearPercentIndicator(
-                      //   padding: const EdgeInsets.all(0),
-                      //   // animation: true,
-                      //   lineHeight: 15.h,
-                      //   // animationDuration: 2000,
-                      //   // percent
-                      //   percent: (currentChallangeController
-                      //               .currentQuestionIndex +
-                      //           1) /
-                      //       currentChallangeController.numberOfQuestions,
-                      //   barRadius: Radius.circular(30.r),
-                      //   progressColor: primaryColor,
-                      //   backgroundColor: progressColor,
-                      // ),
-                      // SizedBox(
-                      //   height: 5.h,
-                      // ),
-                      // progress numbers
-                      // RichText(
-                      //   text: TextSpan(
-                      //     style: GoogleFonts.nunito(
-                      //       color: Colors.black,
-                      //       fontSize: 25.sp,
-                      //       fontWeight: FontWeight.w900,
-                      //     ),
-                      //     children: [
-                      //       TextSpan(
-                      //         text:
-                      //             "${currentChallangeController.currentQuestionIndex + 1}",
-                      //         style: TextStyle(color: primaryColor),
-                      //       ),
-                      //       TextSpan(
-                      //         text:
-                      //             "/${currentChallangeController.numberOfQuestions}",
-                      //         style: TextStyle(color: textColor),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-                      //   ],
-                      // ),
                     ],
                   ),
                 ),

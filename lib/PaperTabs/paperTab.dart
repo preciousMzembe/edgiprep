@@ -441,29 +441,23 @@ class _PaperTabState extends State<PaperTab> {
                               if (!currentPaperController.checkAnswer) {
                                 // check
                                 currentPaperController.setCheckAnswer(true);
+
+                                // mark
+                                currentPaperController.answerSelected(
+                                    questionOptions[
+                                        currentPaperController.selectedIndex],
+                                    currentPaperController
+                                        .questions[currentPaperController
+                                            .currentQuestionIndex]
+                                        .answer);
                               } else {
                                 // if last question
                                 if (currentPaperController.isLastQuestion()) {
-                                  // mark
-                                  currentPaperController.answerSelected(
-                                      questionOptions[
-                                          currentPaperController.selectedIndex],
-                                      currentPaperController
-                                          .questions[currentPaperController
-                                              .currentQuestionIndex]
-                                          .answer);
-
                                   // mark done
                                   currentPaperController.setDone(true);
                                 } else {
                                   // next question
-                                  currentPaperController.answerSelected(
-                                      questionOptions[
-                                          currentPaperController.selectedIndex],
-                                      currentPaperController
-                                          .questions[currentPaperController
-                                              .currentQuestionIndex]
-                                          .answer);
+                                  currentPaperController.continuePaper();
                                 }
 
                                 _scrollToBottom();

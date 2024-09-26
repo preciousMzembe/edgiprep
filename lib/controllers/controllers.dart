@@ -7,6 +7,8 @@ import 'package:edgiprep/controllers/current_paper_controller.dart';
 import 'package:edgiprep/controllers/current_quiz_controller.dart';
 import 'package:edgiprep/controllers/nav_controller.dart';
 import 'package:edgiprep/controllers/papers_controller.dart';
+import 'package:edgiprep/controllers/settings_controller.dart';
+import 'package:edgiprep/controllers/streak_controller.dart';
 import 'package:edgiprep/controllers/subjects_settings_controller.dart';
 import 'package:edgiprep/controllers/user_controller.dart';
 import 'package:edgiprep/controllers/xp_controller.dart';
@@ -16,6 +18,7 @@ class Controllers extends Bindings {
   @override
   void dependencies() {
     Get.put<UserController>(UserController());
+    Get.put<StreakController>(StreakController());
     Get.put<XPController>(XPController());
     Get.put<AuthController>(AuthController());
     Get.put<NavController>(NavController());
@@ -27,5 +30,6 @@ class Controllers extends Bindings {
     Get.put<AddExamController>(AddExamController());
     Get.put<SubjectsSettingsController>(SubjectsSettingsController());
     Get.put<PapersController>(PapersController());
+    Get.put<SettingsController>(SettingsController());
   }
 }

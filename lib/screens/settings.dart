@@ -85,7 +85,7 @@ class _SettingsState extends State<Settings> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     // exam
-                                    const Text("Exam: "),
+                                    // const Text("Exam: "),
                                     Text(
                                       userController.currentExam['examName'],
                                       style: const TextStyle(
@@ -94,25 +94,25 @@ class _SettingsState extends State<Settings> {
                                     ),
 
                                     // dot
-                                    SizedBox(
-                                      width: 20.w,
-                                    ),
-                                    Icon(
-                                      FontAwesomeIcons.solidCircle,
-                                      color: textColor,
-                                      size: 8,
-                                    ),
-                                    SizedBox(
-                                      width: 20.w,
-                                    ),
+                                    // SizedBox(
+                                    //   width: 20.w,
+                                    // ),
+                                    // Icon(
+                                    //   FontAwesomeIcons.solidCircle,
+                                    //   color: textColor,
+                                    //   size: 8,
+                                    // ),
+                                    // SizedBox(
+                                    //   width: 20.w,
+                                    // ),
 
-                                    // hours
-                                    const Text("Practice Hours:"),
-                                    const Text(
-                                      " 120",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                    // // hours
+                                    // const Text("Practice Hours:"),
+                                    // const Text(
+                                    //   " 120",
+                                    //   style: TextStyle(
+                                    //       fontWeight: FontWeight.bold),
+                                    // ),
                                   ],
                                 ),
 
@@ -129,7 +129,7 @@ class _SettingsState extends State<Settings> {
                                       },
                                       child: Container(
                                         padding: EdgeInsets.symmetric(
-                                          horizontal: 50.w,
+                                          horizontal: 90.w,
                                         ),
                                         height: 80.h,
                                         decoration: BoxDecoration(
@@ -240,7 +240,7 @@ class _SettingsState extends State<Settings> {
                       height: 30.h,
                     ),
                     Setting(
-                      name: "Privacy poicy",
+                      name: "Privacy policy",
                       goTo: () {
                         _openPrivacyPolicy();
                       },
@@ -380,7 +380,7 @@ class _SettingsState extends State<Settings> {
                           },
                           child: Container(
                             padding: EdgeInsets.symmetric(
-                              horizontal: 30.w,
+                              horizontal: 50.w,
                             ),
                             height: 80.h,
                             decoration: BoxDecoration(
@@ -474,6 +474,7 @@ class _SettingsState extends State<Settings> {
       SnackBar(
         content: const Text('Link copied to clipboard'),
         duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
         backgroundColor: primaryColor,
       ),
     );

@@ -97,17 +97,17 @@ class _QuizTabState extends State<QuizTab> {
                               ),
                             ),
                           ),
-                          SizedBox(
-                            width: 20.w,
-                          ),
-                          // report question
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              FontAwesomeIcons.solidFlag,
-                              size: 30.h,
-                            ),
-                          ),
+                          // SizedBox(
+                          //   width: 20.w,
+                          // ),
+                          // // report question
+                          // IconButton(
+                          //   onPressed: () {},
+                          //   icon: Icon(
+                          //     FontAwesomeIcons.solidFlag,
+                          //     size: 30.h,
+                          //   ),
+                          // ),
                         ],
                       ),
                       // progress

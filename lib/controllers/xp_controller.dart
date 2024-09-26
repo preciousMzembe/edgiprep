@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:edgiprep/controllers/streak_controller.dart';
 import 'package:edgiprep/controllers/user_controller.dart';
 import 'package:edgiprep/utils/secure_storage.dart';
 import 'package:edgiprep/utils/utils.dart';
@@ -7,6 +8,7 @@ import 'package:get/get.dart';
 
 class XPController extends GetxController {
   UserController userController = Get.find<UserController>();
+  StreakController streakController = Get.find<StreakController>();
   final secureStorage = SecureStorageService();
   final Dio dio = Dio();
 
@@ -23,6 +25,10 @@ class XPController extends GetxController {
 
   // Save XPs
   Future<void> saveXP(int xp) async {
+    // initialize streak save
+    streakController.saveStreak();
+
+    // save xp
     String? key = await secureStorage.readKey("userKey");
 
     if (key != null && key.isNotEmpty) {

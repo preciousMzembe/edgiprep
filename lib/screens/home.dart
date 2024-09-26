@@ -339,7 +339,7 @@ class _HomeState extends State<Home> {
                                             Row(
                                               children: [
                                                 Text(
-                                                  userController.streak.value,
+                                                  "${userController.user['streaks'] ?? 0}",
                                                   style: GoogleFonts.nunito(
                                                     fontSize:
                                                         isTall ? 50.sp : 20.sp,
