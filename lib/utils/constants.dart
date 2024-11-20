@@ -1,38 +1,67 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
-const appName = "EdgiPrep";
+const appName = "Open Events";
 
-// Color primaryColor = const Color.fromRGBO(3, 91, 205, 1);
-Color primaryColor = const Color.fromRGBO(47, 59, 98, 1);
-Color progressColor = const Color.fromRGBO(47, 59, 98, 0.404);
-Color secondaryColor = const Color.fromRGBO(243, 188, 92, 1);
-Color grayColor = const Color.fromARGB(92, 141, 141, 141);
-Color shadowColor = const Color.fromRGBO(0, 71, 163, 1);
-Color backgroundColor = Colors.white;
-Color textColor = const Color.fromARGB(255, 119, 119, 119);
-Color accentColor = const Color.fromRGBO(255, 193, 7, 1);
-Color errorColor = const Color.fromRGBO(220, 53, 69, 1);
+Color primaryColor = const Color.fromRGBO(35, 131, 226, 1);
+Color backgroundColor = const Color.fromRGBO(236, 239, 245, 1);
+Color primaryTextColor = Colors.white;
+Color secondaryTextColor = const Color.fromRGBO(97, 97, 97, 1);
 
-List subjects = [
-  ["Biology", "biology.jpg"],
-  ["History", "history.jpg"],
-  ["Geography", "geography.jpg"],
-  ["Chemistry", "science.jpg"],
-  ["Agriculture", "agriculture.jpg"],
-];
+Color appbarColor = const Color.fromRGBO(35, 131, 226, 1);
 
-List exams = ["JE", "ME"];
+// enrollment
+Color selectedExamColor = const Color.fromRGBO(104, 180, 255, 1);
+Color unselectedExamColor = const Color.fromRGBO(92, 101, 120, 1);
+Color unselectedButtonColor = const Color.fromRGBO(214, 220, 233, 1);
 
-String getRandomHexColor() {
-  final random = Random();
-  final red = random.nextInt(256);
-  final green = random.nextInt(256);
-  final blue = random.nextInt(256);
-  return "#${(red << 16 | green << 8 | blue).toRadixString(16).padLeft(6, '0').toUpperCase()}";
+// navigation
+Color unselectedNavOptionColor = const Color.fromRGBO(161, 168, 183, 1);
+
+// home
+Color homeFadeColor = const Color.fromRGBO(147, 152, 159, 1);
+Color homeLightBackgroundColor = const Color.fromRGBO(193, 224, 255, 1);
+
+Color getColorFromString(String colorString) {
+  final regex = RegExp(r'rgb\((\d+),\s*(\d+),\s*(\d+)\)');
+  final match = regex.firstMatch(colorString);
+
+  if (match != null) {
+    int red = int.parse(match.group(1)!);
+    int green = int.parse(match.group(2)!);
+    int blue = int.parse(match.group(3)!);
+
+    return Color.fromRGBO(red, green, blue, 1);
+  } else {
+    return primaryColor;
+  }
 }
 
-Color getRandomColor(String hexColor) {
-  return Color(int.parse(hexColor.replaceFirst('#', '0xff')));
+Color getFadeColorFromString(String colorString) {
+  final regex = RegExp(r'rgb\((\d+),\s*(\d+),\s*(\d+)\)');
+  final match = regex.firstMatch(colorString);
+
+  if (match != null) {
+    int red = int.parse(match.group(1)!);
+    int green = int.parse(match.group(2)!);
+    int blue = int.parse(match.group(3)!);
+
+    return Color.fromRGBO(red, green, blue, .5);
+  } else {
+    return primaryColor;
+  }
+}
+
+Color getBackgroundColorFromString(String colorString) {
+  final regex = RegExp(r'rgb\((\d+),\s*(\d+),\s*(\d+)\)');
+  final match = regex.firstMatch(colorString);
+
+  if (match != null) {
+    int red = int.parse(match.group(1)!);
+    int green = int.parse(match.group(2)!);
+    int blue = int.parse(match.group(3)!);
+
+    return Color.fromRGBO(red, green, blue, .8);
+  } else {
+    return primaryColor;
+  }
 }

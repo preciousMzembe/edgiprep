@@ -1,38 +1,27 @@
-import 'package:edgiprep/auth/auth.dart';
-import 'package:edgiprep/controllers/controllers.dart';
-import 'package:edgiprep/controllers/user_controller.dart';
+import 'package:edgiprep/controllers/auth/auth_controller.dart';
+import 'package:edgiprep/db/hive_initializer.dart';
 import 'package:edgiprep/firebase_options.dart';
-import 'package:edgiprep/screens/wrapper.dart';
+import 'package:edgiprep/views/screens/auth/welcome.dart';
+import 'package:edgiprep/controllers/constrollers.dart';
 import 'package:edgiprep/utils/constants.dart';
-import 'package:edgiprep/utils/firebase_api.dart';
-import 'package:edgiprep/utils/utils.dart';
+import 'package:edgiprep/views/screens/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-Future<void> main() async {
-  // firebase
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  } catch (e) {
-    debugPrint("Error initializing Firebase");
-  }
+  // Initialize Firebasr
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
-  await fetchRemoteConfigValues();
-
-  // FlutterError.onError = (errorDetails) {
-  //   FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-  // };
-  // PlatformDispatcher.instance.onError = (error, stack) {
-  //   FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-  //   return true;
-  // };
+  // Initialize Hive
+  HiveInitializer hiveInitializer = HiveInitializer();
+  await hiveInitializer.init();
 
   runApp(const MyApp());
 }
@@ -42,9 +31,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    //   statusBarColor: Color.fromRGBO(65, 75, 105, 1),
-    // ));
     return ScreenUtilInit(
       designSize: const Size(720, 1280),
       minTextAdapt: true,
@@ -52,40 +38,37 @@ class MyApp extends StatelessWidget {
       builder: (_, child) {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
-          // initialize controllers
           initialBinding: Controllers(),
-          onInit: () async {
-            await FirebaseApi().initNotifications();
-          },
           title: 'EdgiPrep',
           theme: ThemeData(
-            fontFamily: GoogleFonts.nunito().fontFamily,
+            fontFamily: GoogleFonts.inter().fontFamily,
             colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
             useMaterial3: true,
             navigationBarTheme: NavigationBarThemeData(
               labelTextStyle: WidgetStateProperty.resolveWith((state) {
                 if (state.contains(WidgetState.selected)) {
-                  return const TextStyle(
+                  return GoogleFonts.inter(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 12,
+                    fontSize: 22.sp,
                   );
                 }
-                return const TextStyle(
+                return GoogleFonts.inter(
                   color: Colors.white,
-                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22.sp,
                 );
               }),
             ),
           ),
-          home: Obx(() {
-            final userController = Get.find<UserController>();
-            if (userController.userKey.isEmpty) {
-              return const Auth();
-            } else {
-              return const Wrapper();
-            }
-          }),
+          home: Obx(
+            () {
+              final authController = Get.find<AuthController>();
+              return authController.authToken.value.isNotEmpty
+                  ? const Wrapper()
+                  : const Welcome();
+            },
+          ),
         );
       },
     );

@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBeh2vjAXri0ttX6FsPE9JvuXAIZrygVwk',
-    appId: '1:760414053962:android:a1fcffa4b29e96ba5e28b3',
-    messagingSenderId: '760414053962',
-    projectId: 'edgiprep',
-    storageBucket: 'edgiprep.appspot.com',
+    apiKey: 'AIzaSyDuxhPIKxTL2aQPPtW3KIp8ahLPH3avj4I',
+    appId: '1:934867179243:android:d5fd128ab4994ff48c10ae',
+    messagingSenderId: '934867179243',
+    projectId: 'edgiprep-f7fbf',
+    storageBucket: 'edgiprep-f7fbf.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCuTN4k7pqkpmKoiCshp34UuF1NUtQR0n4',
-    appId: '1:760414053962:ios:5e52e356c9f1d9385e28b3',
-    messagingSenderId: '760414053962',
-    projectId: 'edgiprep',
-    storageBucket: 'edgiprep.appspot.com',
+    apiKey: 'AIzaSyA8WrU9d1qY_afWmNl-9WCzN4kD6bWggmo',
+    appId: '1:934867179243:ios:6ed32d0b13e156428c10ae',
+    messagingSenderId: '934867179243',
+    projectId: 'edgiprep-f7fbf',
+    storageBucket: 'edgiprep-f7fbf.firebasestorage.app',
     iosBundleId: 'com.edgicate.edgiprep',
   );
 }

@@ -1,0 +1,254 @@
+import 'package:edgiprep/controllers/lesson/lesson_controller.dart';
+import 'package:edgiprep/utils/constants.dart';
+import 'package:edgiprep/utils/device_utils.dart';
+import 'package:edgiprep/views/components/general/normal_button.dart';
+import 'package:edgiprep/views/components/lesson/lesson_back_button.dart';
+import 'package:edgiprep/views/components/lesson/lesson_completed_detail.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+class LessonFinish extends StatelessWidget {
+  const LessonFinish({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    LessonController lessonController = Get.find<LessonController>();
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        bool isTablet = DeviceUtils.isTablet(context);
+        bool isSmallTablet = DeviceUtils.isSmallTablet(context);
+
+        double titleSize = isTablet
+            ? 36.sp
+            : isSmallTablet
+                ? 38.sp
+                : 40.sp;
+
+        double subtitleSize = isTablet
+            ? 18.sp
+            : isSmallTablet
+                ? 20.sp
+                : 22.sp;
+
+        double previewSize = isTablet
+            ? 22.sp
+            : isSmallTablet
+                ? 24.sp
+                : 26.sp;
+
+        double afterTextSize = isTablet
+            ? 16.sp
+            : isSmallTablet
+                ? 18.sp
+                : 20.sp;
+
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (bool didPop, other) async {
+            if (didPop) {
+              return;
+            }
+            Get.back();
+            Get.back();
+          },
+          child: Scaffold(
+            backgroundColor: primaryColor,
+            body: SafeArea(
+              child: Stack(
+                children: [
+                  // background
+                  Container(
+                    color: backgroundColor,
+                  ),
+                  Container(
+                    height: 550.h,
+                    color: primaryColor,
+                  ),
+
+                  // body
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(
+                          child: ListView(
+                            children: [
+                              // back
+                              SizedBox(
+                                height: 30.h,
+                              ),
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Get.back();
+                                      Get.back();
+                                    },
+                                    child: lessonBackButton(),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 50.h,
+                              ),
+                              // title
+                              Text(
+                                "Lesson Completed",
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.inter(
+                                  fontSize: titleSize,
+                                  fontWeight: FontWeight.w700,
+                                  color: const Color.fromRGBO(255, 255, 255, 1),
+                                ),
+                              ),
+
+                              // subtitle
+                              SizedBox(
+                                height: 10.h,
+                              ),
+                              Text(
+                                "Great Job, You've Completed the Lesson! Here's a summary of your performance.",
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.inter(
+                                  fontSize: subtitleSize,
+                                  fontWeight: FontWeight.w400,
+                                  color: const Color.fromRGBO(252, 255, 255, 1),
+                                ),
+                              ),
+
+                              // details
+                              SizedBox(
+                                height: 50.h,
+                              ),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(20.r),
+                                child: Container(
+                                  color: Colors.white,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 50.w,
+                                    vertical: 40.h,
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      // image
+                                      Image.asset("images/lesson_completed.png",
+                                          fit: BoxFit.contain),
+
+                                      // details
+                                      SizedBox(
+                                        height: 40.h,
+                                      ),
+                                      lessonCompletedDetail(
+                                        "Total Slides",
+                                        "${lessonController.slides.length} Slides",
+                                        true,
+                                      ),
+                                      SizedBox(
+                                        height: 20.h,
+                                      ),
+                                      lessonCompletedDetail(
+                                        "Total Questions",
+                                        "${lessonController.getNumberOfQuestions()} Questions",
+                                        true,
+                                      ),
+                                      SizedBox(
+                                        height: 20.h,
+                                      ),
+                                      lessonCompletedDetail(
+                                        "Scores",
+                                        "80%",
+                                        true,
+                                      ),
+                                      SizedBox(
+                                        height: 20.h,
+                                      ),
+                                      lessonCompletedDetail(
+                                        "Achievent Status",
+                                        "Excellent",
+                                        true,
+                                      ),
+                                      SizedBox(
+                                        height: 20.h,
+                                      ),
+                                      lessonCompletedDetail(
+                                        "Xps Earned",
+                                        "${lessonController.getCorrectAnswers()} XPs",
+                                        true,
+                                      ),
+
+                                      SizedBox(
+                                        height: 20.h,
+                                      ),
+                                      Text(
+                                        "Review the Lesson",
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.inter(
+                                          fontSize: previewSize,
+                                          fontWeight: FontWeight.w700,
+                                          color: const Color.fromRGBO(
+                                              73, 161, 249, 1),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+
+                              // after text
+                              SizedBox(
+                                height: 30.h,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 50.w),
+                                child: Text(
+                                  "Keep up the good work! You're one step closer to mastering the subject.",
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.inter(
+                                    fontSize: afterTextSize,
+                                    fontWeight: FontWeight.w400,
+                                    color:
+                                        const Color.fromRGBO(92, 101, 120, 1),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 100.h,
+                              )
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 30.h,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Get.back();
+                            Get.back();
+                          },
+                          child: normalButton(
+                            primaryColor,
+                            Colors.white,
+                            "Continue to Next Lesson",
+                            20,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 30.h,
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
