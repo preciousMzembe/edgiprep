@@ -1,6 +1,8 @@
+import 'package:edgiprep/controllers/notification/notification_controller.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TimePicker extends StatefulWidget {
@@ -11,9 +13,26 @@ class TimePicker extends StatefulWidget {
 }
 
 class _TimePickerState extends State<TimePicker> {
+  NotificationController notificationController =
+      Get.find<NotificationController>();
+
   int selectedHourIndex = 0;
   int selectedMinuteIndex = 0;
   bool isAm = true;
+
+  void setTimeString() {
+    String end = "AM";
+
+    if (!isAm) {
+      end = "PM";
+    }
+
+    String time =
+        "${(selectedHourIndex + 1).toString().padLeft(2, '0')}:${selectedMinuteIndex.toString().padLeft(2, '0')} $end";
+
+    notificationController.settingsTime.value = time;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -24,7 +43,10 @@ class _TimePickerState extends State<TimePicker> {
             List.generate(
                 12, (index) => (index + 1).toString().padLeft(2, '0')),
             selectedHourIndex,
-            (index) => setState(() => selectedHourIndex = index),
+            (index) {
+              setState(() => selectedHourIndex = index);
+              setTimeString();
+            },
           ),
         ),
         Text(
@@ -39,14 +61,20 @@ class _TimePickerState extends State<TimePicker> {
           child: _buildTimeWheel(
             List.generate(60, (index) => index.toString().padLeft(2, '0')),
             selectedMinuteIndex,
-            (index) => setState(() => selectedMinuteIndex = index),
+            (index) {
+              setState(() => selectedMinuteIndex = index);
+              setTimeString();
+            },
           ),
         ),
         Expanded(
           child: _buildTimeWheel(
             ['AM', 'PM'],
             isAm ? 0 : 1,
-            (index) => setState(() => isAm = index == 0),
+            (index) async {
+              setState(() => isAm = index == 0);
+              setTimeString();
+            },
           ),
         ),
       ],

@@ -2,7 +2,7 @@ import 'package:edgiprep/controllers/auth/auth_controller.dart';
 import 'package:edgiprep/db/hive_initializer.dart';
 import 'package:edgiprep/firebase_options.dart';
 import 'package:edgiprep/views/screens/auth/welcome.dart';
-import 'package:edgiprep/controllers/constrollers.dart';
+import 'package:edgiprep/controllers/controllers.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/views/screens/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';

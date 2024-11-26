@@ -4,7 +4,7 @@ import 'package:edgiprep/db/past%20paper/past_paper.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/db/topic/topic.dart';
 import 'package:edgiprep/db/unit/unit.dart';
-import 'package:edgiprep/services/user%20enrollment/user_enrollment_service.dart';
+import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
 import 'package:get/get.dart';
 
 class UserEnrollmentController extends GetxController {

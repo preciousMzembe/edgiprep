@@ -3,7 +3,9 @@ import 'package:edgiprep/db/config/config.dart';
 import 'package:edgiprep/db/exam/exam.dart';
 import 'package:edgiprep/db/exam/user_exam.dart';
 import 'package:edgiprep/db/lesson/lesson.dart';
+import 'package:edgiprep/db/notification/notification.dart';
 import 'package:edgiprep/db/past%20paper/past_paper.dart';
+import 'package:edgiprep/db/reminder/reminder.dart';
 import 'package:edgiprep/db/subject/subject.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/db/topic/topic.dart';
@@ -31,6 +33,8 @@ class HiveInitializer {
     Hive.registerAdapter(TopicAdapter());
     Hive.registerAdapter(LessonAdapter());
     Hive.registerAdapter(PastPaperAdapter());
+    Hive.registerAdapter(ReminderAdapter());
+    Hive.registerAdapter(UserNotificationAdapter());
 
     // Open boxes
     try {
@@ -44,6 +48,8 @@ class HiveInitializer {
       lessonBox = await Hive.openBox<Lesson>('lessonBox');
       pastPaperBox = await Hive.openBox<PastPaper>('pastPaperBox');
       configBox = await Hive.openBox<Config>('configBox');
+      reminderBox = await Hive.openBox<Reminder>('reminderBox');
+      notificationBox = await Hive.openBox<UserNotification>('notificationBox');
     } catch (e) {
       debugPrint("Error openig Hive boxes: $e");
     }
@@ -51,7 +57,7 @@ class HiveInitializer {
 
   Future<void> rebuildHiveOnFirstOpen() async {
     final prefs = await SharedPreferences.getInstance();
-    const currentVersion = 38; // Update this for each new version
+    const currentVersion = 46; // Update this for each new version
     final lastVersion = prefs.getInt('last_version') ?? 0;
 
     if (lastVersion < currentVersion) {
@@ -67,6 +73,8 @@ class HiveInitializer {
         'lessonBox',
         'pastPaperBox',
         'configBox',
+        'reminderBox',
+        'notificationBox',
       ];
 
       for (String boxName in boxNames) {

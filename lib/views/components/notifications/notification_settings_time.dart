@@ -1,10 +1,15 @@
+import 'package:edgiprep/controllers/notification/notification_controller.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/notifications/notification_change_time_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 Widget notificationSettingsTime() {
+  NotificationController notificationController =
+      Get.find<NotificationController>();
+
   return LayoutBuilder(
     builder: (context, constraints) {
       bool isTablet = DeviceUtils.isTablet(context);
@@ -43,12 +48,18 @@ Widget notificationSettingsTime() {
                 padding: EdgeInsets.symmetric(
                     horizontal: horizontal, vertical: vertical),
                 color: const Color.fromRGBO(222, 236, 251, 1),
-                child: Text("05:00 AM",
+                child: Obx(() {
+                  return Text(
+                    notificationController.reminder.value != null
+                        ? "${notificationController.reminder.value?.time}"
+                        : "08:00 AM",
                     style: GoogleFonts.inter(
                       fontSize: fontSize,
                       fontWeight: FontWeight.w700,
                       color: const Color.fromRGBO(52, 74, 106, 1),
-                    )),
+                    ),
+                  );
+                }),
               ),
             ),
           ),

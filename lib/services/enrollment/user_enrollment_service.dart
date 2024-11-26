@@ -10,6 +10,7 @@ import 'package:edgiprep/db/unit/unit.dart';
 import 'package:edgiprep/services/auth/auth_service.dart';
 import 'package:edgiprep/services/config/config_Service.dart';
 import 'package:edgiprep/utils/dio_client.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class UserEnrollmentService extends GetxService {
@@ -47,14 +48,72 @@ class UserEnrollmentService extends GetxService {
 
   // server user exams
   Future<void> getUserServerExams() async {
-    UserExam exam = UserExam(id: "1", title: "JCE", selected: true);
-    await userExamBox.clear();
-    await userExamBox.add(exam);
+    try {
+      final response = await _dio.get("${config?.apiUrl}/Exam/Exams");
 
-    doneFetchingUserExams.value = !doneFetchingUserExams.value;
+      if (response.statusCode == 200) {
+        List<dynamic> data = response.data;
 
-    // get subjects
-    getUserServerSubjects();
+        List<UserExam> serverExams = [];
+
+        if (data.isNotEmpty) {
+          for (var exam in data) {
+            serverExams.add(
+              UserExam(
+                id: exam['id'],
+                title: exam['name'],
+                selected: false,
+              ),
+            );
+          }
+        }
+
+        // UserExam exam = UserExam(id: "1", title: "JCE", selected: true);
+
+        UserExam selectedExam = await userExamBox.values.firstWhere(
+          (exam) => exam.selected == true,
+          orElse: () => UserExam(id: "", title: "", selected: false),
+        );
+
+        // mark selected exam
+        if (selectedExam.id != "") {
+          for (var exam in serverExams) {
+            if (exam.id == selectedExam.id) {
+              exam.selected = true;
+            }
+          }
+        }
+
+        // check if one is selected
+        selectedExam = serverExams.firstWhere(
+          (exam) => exam.selected == true,
+          orElse: () => UserExam(id: "", title: "", selected: false),
+        );
+
+        if (selectedExam.id == "") {
+          // mark first as selected
+          int position = 1;
+          for (var exam in serverExams) {
+            exam.selected = position == 1;
+            position++;
+          }
+        }
+
+        await userExamBox.clear();
+        await userExamBox.addAll(serverExams);
+
+        doneFetchingUserExams.value = !doneFetchingUserExams.value;
+
+        // get subjects
+        getUserServerSubjects();
+      } else {
+        debugPrint(
+            "Error fetching user exams ------------------------- user enrollment service");
+      }
+    } catch (e) {
+      debugPrint(
+          "Error fetching user exams ------------------------- user enrollment service : error");
+    }
   }
 
   // server user subjects
@@ -74,7 +133,7 @@ class UserEnrollmentService extends GetxService {
         color: "rgb(81, 157, 232)",
         icon: "biology.svg",
         image: "biology.png",
-        examId: "1",
+        examId: "04bac1a6-511c-49e4-b364-4be1d8f9ed1c",
         numberOfTopics: 2,
         numberOfTopicsDone: 1,
         currentTopic: "Introduction To Human Biology",
@@ -86,7 +145,7 @@ class UserEnrollmentService extends GetxService {
         color: "rgb(134, 214, 152)",
         icon: "maths.svg",
         image: "maths.png",
-        examId: "1",
+        examId: "04bac1a6-511c-49e4-b364-4be1d8f9ed1c",
         numberOfTopics: 2,
         numberOfTopicsDone: 0,
         currentTopic: "Introduction To Algebra One",

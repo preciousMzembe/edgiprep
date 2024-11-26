@@ -1,12 +1,17 @@
 import 'dart:ui';
 
+import 'package:edgiprep/controllers/notification/notification_controller.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/notifications/time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void notificationChangeTime(BuildContext context) {
+  NotificationController notificationController =
+      Get.find<NotificationController>();
+
   showDialog(
     context: context,
     barrierDismissible: true,
@@ -104,6 +109,7 @@ void notificationChangeTime(BuildContext context) {
                           ),
                           GestureDetector(
                             onTap: () {
+                              notificationController.changeTime();
                               Navigator.pop(context);
                             },
                             child: ClipRRect(
@@ -130,15 +136,6 @@ void notificationChangeTime(BuildContext context) {
                     ),
                   ),
                 ),
-                // child: AlertDialog(
-                //   backgroundColor: Colors.white,
-                //   shape: RoundedRectangleBorder(
-                //     borderRadius: BorderRadius.circular(30.r),
-                //   ),
-                //   contentPadding:
-                //       EdgeInsets.symmetric(horizontal: 80.w, vertical: 80.h),
-                //   content:
-                // ),
               ),
             ],
           );

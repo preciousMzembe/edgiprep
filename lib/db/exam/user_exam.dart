@@ -11,7 +11,7 @@ class UserExam {
   final String title;
 
   @HiveField(2)
-  final bool selected;
+  late bool selected;
 
   UserExam({required this.id, required this.title, required this.selected});
 
@@ -19,6 +19,7 @@ class UserExam {
     return {
       'id': id,
       'title': title,
+      'selected': selected,
     };
   }
 }

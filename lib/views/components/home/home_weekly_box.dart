@@ -33,7 +33,9 @@ Widget homeWeeklyBox(
         Obx(() {
           return CircularPercentIndicator(
             radius: radius,
-            percent: authController.user.value!.weeklyProgress / 100,
+            percent: authController.user.value != null
+                ? authController.user.value!.weeklyProgress / 100
+                : 0,
             progressColor: primaryColor,
             lineWidth: barWidth,
             animationDuration: 2000,
@@ -42,7 +44,7 @@ Widget homeWeeklyBox(
             startAngle: 0,
             animation: true,
             center: Text(
-              "${(authController.user.value!.weeklyProgress).toStringAsFixed(0)}%",
+              "${authController.user.value != null ? (authController.user.value!.weeklyProgress).toStringAsFixed(0) : 0}%",
               style: GoogleFonts.inter(
                 color: const Color.fromRGBO(52, 74, 106, 1),
                 fontSize: progFontSize,
