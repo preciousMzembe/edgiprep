@@ -20,14 +20,15 @@ class UserNotificationAdapter extends TypeAdapter<UserNotification> {
       title: fields[0] as String,
       message: fields[1] as String,
       seen: fields[2] as bool,
-      time: fields[3] as DateTime,
+      date: fields[3] as String,
+      time: fields[4] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserNotification obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -35,6 +36,8 @@ class UserNotificationAdapter extends TypeAdapter<UserNotification> {
       ..writeByte(2)
       ..write(obj.seen)
       ..writeByte(3)
+      ..write(obj.date)
+      ..writeByte(4)
       ..write(obj.time);
   }
 

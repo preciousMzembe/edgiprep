@@ -1,4 +1,5 @@
 import 'package:edgiprep/controllers/auth/auth_controller.dart';
+import 'package:edgiprep/controllers/notification/notification_controller.dart';
 import 'package:edgiprep/controllers/user%20enrollment/user_enrollment_controller.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/utils/constants.dart';
@@ -21,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 class Home extends StatelessWidget {
   final Function toSubjects;
@@ -35,8 +37,12 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthController authController = Get.find<AuthController>();
+
     UserEnrollmentController userEnrollmentController =
         Get.find<UserEnrollmentController>();
+
+    NotificationController notificationController =
+        Get.find<NotificationController>();
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -187,6 +193,7 @@ class Home extends StatelessWidget {
                           GestureDetector(
                             onTap: () {
                               Get.to(() => const Notifications());
+                              notificationController.openNotifications();
                             },
                             child: homeNotificationIcon(),
                           ),

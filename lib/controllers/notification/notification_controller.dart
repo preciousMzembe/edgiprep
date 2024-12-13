@@ -59,8 +59,6 @@ class NotificationController extends GetxController {
 
   Future<void> deleteNotifications() async {
     await notificationService.deleteNotifications();
-
-    getNotifications();
   }
 
   Future<void> openNotifications() async {
@@ -72,17 +70,25 @@ class NotificationController extends GetxController {
     final prefs = await SharedPreferences.getInstance();
     final firstTime = prefs.getInt('first_time') ?? 0;
 
-    // daily reminder
-    if (firstTime == 0) {
+    // first time notifications
+    if (firstTime == 0 && authController.user.value != null) {
+      await prefs.setInt('first_time', 1);
+
+      // daily reminders
       notificationService.sendNewNotification(
         1,
         "Let's Stay Consistent! 🌟",
-        "Turn on daily reminders in settings to stay aligned with your study goals.",
+        "Turn on daily reminders in settings 📅⏰ to stay aligned with your study goals 🎯📖.",
+      );
+
+      // subscription
+      notificationService.sendNewNotification(
+        2,
+        "Achieve More with Premium 🚀",
+        "Unlock your full potential with EdgiPrep Premium! 🚀 Upgrade now and take your exam preparation to the next level! 💪\nDon't miss out — success is just a step away! 🏆",
       );
     }
 
     // system update
-
-    // subscription
   }
 }

@@ -14,16 +14,25 @@ class UserNotification {
   late bool seen;
 
   @HiveField(3)
-  final DateTime time;
+  final String date;
 
-  UserNotification(
-      {required this.title, required this.message, required this.seen, required this.time});
+  @HiveField(4)
+  final String time;
+
+  UserNotification({
+    required this.title,
+    required this.message,
+    required this.seen,
+    required this.date,
+    required this.time,
+  });
 
   Map<String, dynamic> toJson() {
     return {
       'title': title,
       'message': message,
       'seen': seen,
+      'timDdatee': date,
       'time': time,
     };
   }

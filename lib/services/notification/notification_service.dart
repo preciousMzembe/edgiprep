@@ -161,7 +161,7 @@ class NotificationService extends GetxService {
   // time settings
   Future<void> setDefaultTime() async {
     if (reminderBox.isEmpty) {
-      Reminder reminder = Reminder(time: "09:00 AM", set: false);
+      Reminder reminder = Reminder(time: "08:00 AM", set: false);
 
       await reminderBox.clear();
       await reminderBox.add(reminder);
@@ -226,11 +226,13 @@ class NotificationService extends GetxService {
 
   // general notifications
   Future<void> sendNewNotification(int id, String title, String message) async {
+    DateTime now = DateTime.now();
     UserNotification notification = UserNotification(
       title: title,
       message: message,
       seen: false,
-      time: DateTime.now(),
+      date: DateFormat('dd MMM').format(now),
+      time: DateFormat('hh:mm a').format(now),
     );
 
     await notificationBox.add(notification);
@@ -256,13 +258,21 @@ class NotificationService extends GetxService {
     List<UserNotification> notifications =
         notificationBox.values.cast<UserNotification>().toList();
 
+    notifications.sort((a, b) => b.time.compareTo(a.time));
+
     return notifications;
   }
 
   Future<void> openNotifications() async {
-    for (UserNotification notification in notificationBox.values) {
+    List<UserNotification> notifications =
+        notificationBox.values.cast<UserNotification>().toList();
+
+    for (UserNotification notification in notifications) {
       notification.seen = true;
     }
+
+    await notificationBox.clear();
+    await notificationBox.addAll(notifications);
 
     newNotification.value = !newNotification.value;
   }

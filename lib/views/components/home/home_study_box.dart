@@ -3,7 +3,6 @@ import 'package:edgiprep/views/components/home/home_study_topic.dart';
 import 'package:edgiprep/views/components/home/home_study_topics_number.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 
 Widget homeStudyBox(
   double boxWidth,
@@ -74,11 +73,11 @@ Widget homeStudyBox(
                       animation: true,
                       animationDuration: 2000,
                       lineHeight: progressHeight,
-                      percent: percent,
+                      percent: percent.clamp(0.0, 1.0),
                       barRadius: Radius.circular(20.r),
                       backgroundColor: const Color.fromRGBO(234, 237, 244, 1),
                       progressColor: const Color.fromRGBO(73, 161, 249, 1),
-                    )
+                    ),
                   ],
                 ),
               ],
