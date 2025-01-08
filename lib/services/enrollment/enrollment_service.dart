@@ -35,28 +35,31 @@ class EnrollmentService extends GetxService {
 
   Future<void> getServerExams() async {
     try {
-      final response = await _dio.get("${config?.apiUrl}/Exam/Exams");
+      // final response = await _dio.get("${config?.apiUrl}/Exam/Exams");
 
-      if (response.statusCode == 200) {
-        List<dynamic> data = response.data;
+      // if (response.statusCode == 200) {
+      //   List<dynamic> data = response.data;
 
-        List<Exam> serverExams = [];
+      List<Exam> serverExams = [];
 
-        if (data.isNotEmpty) {
-          for (var exam in data) {
-            serverExams.add(Exam(id: exam['id'], title: exam['name']));
-          }
-        }
+      // if (data.isNotEmpty) {
+      //   for (var exam in data) {
+      //     serverExams.add(Exam(id: exam['id'], title: exam['name']));
+      //   }
+      // }
 
-        // save local
-        await examBox.clear();
-        await examBox.addAll(serverExams);
+      Exam exam = Exam(id: "1", title: "JCE");
+      serverExams.add(exam);
 
-        doneFetchingExams.value = !doneFetchingExams.value;
-      } else {
-        debugPrint(
-            "Error fetching exams ------------------------- enrollment service");
-      }
+      // save local
+      await examBox.clear();
+      await examBox.addAll(serverExams);
+
+      doneFetchingExams.value = !doneFetchingExams.value;
+      // } else {
+      //   debugPrint(
+      //       "Error fetching exams ------------------------- enrollment service");
+      // }
     } catch (e) {
       debugPrint(
           "Error fetching exams ------------------------- enrollment service : error");
@@ -69,38 +72,52 @@ class EnrollmentService extends GetxService {
       List<EnrollmentExamModel> exams = await getExams();
 
       if (exams.isNotEmpty) {
-        List<Subject> serverSubjects = [];
+        List<Subject> serverSubjects = [
+          Subject(
+            id: "1",
+            title: "Biology",
+            icon: "biology.svg",
+            examId: "1",
+          ),
+          Subject(
+            id: "2",
+            title: "Matematics",
+            icon: "maths.svg",
+            examId: "1",
+          ),
+        ];
 
-        for (EnrollmentExamModel exam in exams) {
-          final response = await _dio
-              .get("${config?.apiUrl}/Subject/Subjects?ExamId=${exam.id}");
+        // for (EnrollmentExamModel exam in exams) {
+        //   final response = await _dio
+        //       .get("${config?.apiUrl}/Subject/Subjects?ExamId=${exam.id}");
 
-          if (response.statusCode == 200) {
-            List<dynamic> data = response.data;
+        //   if (response.statusCode == 200) {
+        //     List<dynamic> data = response.data;
 
-            if (data.isNotEmpty) {
-              for (var subject in data) {
-                serverSubjects.add(
-                  Subject(
-                    id: subject['id'],
-                    title: subject['name'],
-                    icon: subject['icon'],
-                    examId: subject['examId'],
-                  ),
-                );
-              }
-            }
-          } else {
-            debugPrint(
-                "Error fetching subjects ------------------------- enrollment service");
-          }
-        }
+        //     if (data.isNotEmpty) {
+        //       for (var subject in data) {
+        //         serverSubjects.add(
+        //           Subject(
+        //             id: subject['id'],
+        //             title: subject['name'],
+        //             icon: subject['icon'],
+        //             examId: subject['examId'],
+        //           ),
+        //         );
+        //       }
+        //     }
+        //   } else {
+        //     debugPrint(
+        //         "Error fetching subjects ------------------------- enrollment service");
+        //   }
+        // }
 
         // save local data
         await subjectBox.clear();
         await subjectBox.addAll(serverSubjects);
       }
     } catch (e) {
+      print(e);
       debugPrint(
           "Error fetching subjects --------------------------- enrollment service : error");
     }

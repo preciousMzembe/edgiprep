@@ -54,7 +54,7 @@ class NotificationService extends GetxService {
     // set default time
     setDefaultTime();
 
-    checkBatteryOptimization();
+    // checkBatteryOptimization();
   }
 
   static const platform = MethodChannel('battery_optimization');

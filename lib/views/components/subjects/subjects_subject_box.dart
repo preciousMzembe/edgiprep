@@ -104,25 +104,30 @@ Widget subjectsSubjectBox(
                           height: 30.h,
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             // topics
-                            homeStudyTopicsNumber(topics, topicsFontSize),
+                            Expanded(
+                              child:
+                                  homeStudyTopicsNumber(topics, topicsFontSize),
+                            ),
 
                             // progress
-                            LinearPercentIndicator(
+                            SizedBox(
                               width: 130.w,
-                              animation: true,
-                              animationDuration: 2000,
-                              lineHeight: progressHeight,
-                              percent: percent,
-                              barRadius: Radius.circular(20.r),
-                              backgroundColor:
-                                  const Color.fromRGBO(234, 237, 244, 1),
-                              progressColor:
-                                  const Color.fromRGBO(73, 161, 249, 1),
-                            )
+                              height: progressHeight,
+                              child: LinearPercentIndicator(
+                                width: 130.w,
+                                animation: true,
+                                animationDuration: 2000,
+                                lineHeight: progressHeight,
+                                percent: percent,
+                                barRadius: Radius.circular(20.r),
+                                backgroundColor:
+                                    const Color.fromRGBO(234, 237, 244, 1),
+                                progressColor:
+                                    const Color.fromRGBO(73, 161, 249, 1),
+                              ),
+                            ),
                           ],
                         ),
                       ],

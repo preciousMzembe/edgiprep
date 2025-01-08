@@ -54,7 +54,9 @@ class UserEnrollmentService extends GetxService {
       // if (response.statusCode == 200) {
       // List<dynamic> data = response.data;
 
-      List<UserExam> serverExams = [];
+      List<UserExam> serverExams = [
+        UserExam(id: "1", title: "JCE", selected: false),
+      ];
 
       // if (data.isNotEmpty) {
       //   for (var exam in data) {
@@ -68,9 +70,6 @@ class UserEnrollmentService extends GetxService {
       //   }
       // }
 
-      UserExam exam = UserExam(id: "1", title: "JCE", selected: true);
-      serverExams.add(exam);
-
       UserExam selectedExam = await userExamBox.values.firstWhere(
         (exam) => exam.selected == true,
         orElse: () => UserExam(id: "", title: "", selected: false),
@@ -78,7 +77,7 @@ class UserEnrollmentService extends GetxService {
 
       // mark selected exam
       if (selectedExam.id != "") {
-        for (var exam in serverExams) {
+        for (UserExam exam in serverExams) {
           if (exam.id == selectedExam.id) {
             exam.selected = true;
           }
@@ -93,11 +92,7 @@ class UserEnrollmentService extends GetxService {
 
       if (selectedExam.id == "") {
         // mark first as selected
-        int position = 1;
-        for (var exam in serverExams) {
-          exam.selected = position == 1;
-          position++;
-        }
+        serverExams[0].selected = true;
       }
 
       await userExamBox.clear();

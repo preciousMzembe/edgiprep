@@ -25,8 +25,8 @@ class AuthController extends GetxController {
 
   // Check login status
   void checkLoginStatus() async {
-    // String? tocket = await authService.getToken();
-    String? tocket = "12345";
+    String? tocket = await authService.getToken();
+    // String? tocket = "12345";
 
     if (tocket != null) {
       await getUserData();

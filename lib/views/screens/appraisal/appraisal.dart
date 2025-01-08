@@ -44,7 +44,7 @@ class Appraisal extends StatelessWidget {
       {
         "icon": "star.svg",
         "name": "Challenges",
-        "description": 
+        "description":
             "Push yourself with unlimited challenges to sharpen your skills.",
         "backgroundColor": const Color.fromRGBO(85, 194, 103, 1),
         "iconBackgroundColor": const Color.fromRGBO(184, 229, 191, 1),
@@ -85,7 +85,7 @@ class Appraisal extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        subjectsTitle("Appraisal"),
+                        subjectsTitle("Tests"),
                         SizedBox(
                           height: 15.h,
                         ),

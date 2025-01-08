@@ -227,26 +227,31 @@ Widget topicLessonBox(
                                     height: 25.h,
                                   ),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      topicSlidesNumber(
-                                        slides,
-                                        const Color.fromRGBO(161, 168, 183, 1),
-                                        slidesFontSize,
+                                      Expanded(
+                                        child: topicSlidesNumber(
+                                          slides,
+                                          const Color.fromRGBO(
+                                              161, 168, 183, 1),
+                                          slidesFontSize,
+                                        ),
                                       ),
-                                      LinearPercentIndicator(
+                                      SizedBox(
                                         width: 130.w,
-                                        animation: true,
-                                        animationDuration: 2000,
-                                        lineHeight: progressHeight,
-                                        percent: percent,
-                                        barRadius: Radius.circular(20.r),
-                                        backgroundColor: const Color.fromRGBO(
-                                            234, 237, 244, 1),
-                                        progressColor: const Color.fromRGBO(
-                                            73, 161, 249, 1),
-                                      )
+                                        height: progressHeight,
+                                        child: LinearPercentIndicator(
+                                          width: 130.w,
+                                          animation: true,
+                                          animationDuration: 2000,
+                                          lineHeight: progressHeight,
+                                          percent: percent,
+                                          barRadius: Radius.circular(20.r),
+                                          backgroundColor: const Color.fromRGBO(
+                                              234, 237, 244, 1),
+                                          progressColor: const Color.fromRGBO(
+                                              73, 161, 249, 1),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ],

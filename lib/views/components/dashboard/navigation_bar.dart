@@ -77,7 +77,7 @@ Widget navigationBar(Function(int) navigate) {
                     navigate(2);
                   },
                   child: navOption(
-                    "Appraisal",
+                    "Tests",
                     "chart.svg",
                     navController.pageIndex.value == 2,
                   ),
