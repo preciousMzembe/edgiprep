@@ -8,6 +8,7 @@ import 'package:edgiprep/views/screens/settings/settings.dart';
 import 'package:edgiprep/views/screens/subjects/subject.dart';
 import 'package:edgiprep/views/screens/subjects/subjects.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class Dashboard extends StatefulWidget {
@@ -35,7 +36,9 @@ class _DashboardState extends State<Dashboard> {
 
     void openSubject(UserSubject subject) {
       Get.to(
-        () => Subject(subject: subject,),
+        () => Subject(
+          subject: subject,
+        ),
       );
     }
 
@@ -45,16 +48,16 @@ class _DashboardState extends State<Dashboard> {
     }
 
     return PopScope(
-      // canPop: false,
-      // onPopInvokedWithResult: (didPop, others) {
-      //   if (navController.pageIndex.value == 0) {
-      //     SystemNavigator.pop();
-      //     return;
-      //   } else {
-      //     navController.changePageIndex(0);
-      //     pageController.jumpToPage(0);
-      //   }
-      // },
+      canPop: false,
+      onPopInvokedWithResult: (didPop, others) {
+        if (navController.pageIndex.value == 0) {
+          SystemNavigator.pop();
+          return;
+        } else {
+          navController.changePageIndex(0);
+          pageController.jumpToPage(0);
+        }
+      },
       child: Scaffold(
         backgroundColor: primaryColor,
         // body

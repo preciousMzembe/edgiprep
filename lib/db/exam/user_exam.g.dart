@@ -20,19 +20,22 @@ class UserExamAdapter extends TypeAdapter<UserExam> {
       id: fields[0] as String,
       title: fields[1] as String,
       selected: fields[2] as bool,
+      enrollmentId: fields[3] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserExam obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.title)
       ..writeByte(2)
-      ..write(obj.selected);
+      ..write(obj.selected)
+      ..writeByte(3)
+      ..write(obj.enrollmentId);
   }
 
   @override

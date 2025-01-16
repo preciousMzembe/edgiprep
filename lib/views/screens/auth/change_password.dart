@@ -21,6 +21,16 @@ class ChangePassword extends StatefulWidget {
 }
 
 class _ChangePasswordState extends State<ChangePassword> {
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController verifyPasswordController = TextEditingController();
+
+  @override
+  dispose() {
+    passwordController.dispose();
+    verifyPasswordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,24 +99,26 @@ class _ChangePasswordState extends State<ChangePassword> {
                         SizedBox(
                           height: 35.h,
                         ),
-                        const AuthInput(
+                        AuthInput(
                           label: "New Password",
                           type: TextInputType.text,
                           isPassword: true,
                           icon: FontAwesomeIcons.lock,
                           radius: 16,
+                          controller: passwordController,
                         ),
 
                         // confirm password
                         SizedBox(
                           height: 25.h,
                         ),
-                        const AuthInput(
+                        AuthInput(
                           label: "Confirm Password",
                           type: TextInputType.text,
                           isPassword: true,
                           icon: FontAwesomeIcons.lock,
                           radius: 16,
+                          controller: verifyPasswordController,
                         ),
                         // continue
                         SizedBox(

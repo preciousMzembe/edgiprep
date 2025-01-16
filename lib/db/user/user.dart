@@ -16,18 +16,10 @@ class User {
   @HiveField(3)
   final int streak;
 
-  @HiveField(4)
-  final DateTime reminderTime;
-
-  @HiveField(5)
-  final double weeklyProgress;
-
   User({
     required this.name,
     required this.email,
     required this.xp,
     required this.streak,
-    required this.reminderTime,
-    required this.weeklyProgress,
   });
 }

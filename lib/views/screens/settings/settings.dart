@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:edgiprep/controllers/auth/auth_controller.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/views/components/general/normal_svg_button.dart';
+import 'package:edgiprep/views/components/settings/logout_content.dart';
 import 'package:edgiprep/views/components/settings/settings_icon.dart';
 import 'package:edgiprep/views/components/settings/settings_option_box.dart';
 import 'package:edgiprep/views/components/settings/settings_record_box.dart';
@@ -181,12 +184,31 @@ class Settings extends StatelessWidget {
                       SizedBox(
                         height: 50.h,
                       ),
-                      normalSvgButton(
-                        const Color.fromRGBO(35, 131, 226, 1),
-                        Colors.white,
-                        "SignOut",
-                        20,
-                        "power.svg",
+                      GestureDetector(
+                        onTap: () async {
+                          await showModalBottomSheet(
+                            backgroundColor: Colors.transparent,
+                            context: context,
+                            isScrollControlled: true,
+                            isDismissible: true,
+                            builder: (BuildContext context) => BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                              child: logoutContent(),
+                            ),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(0),
+                              ),
+                            ),
+                          );
+                        },
+                        child: normalSvgButton(
+                          const Color.fromRGBO(35, 131, 226, 1),
+                          Colors.white,
+                          "SignOut",
+                          20,
+                          "power.svg",
+                        ),
                       ),
                     ],
                   ),

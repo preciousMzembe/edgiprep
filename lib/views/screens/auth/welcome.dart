@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:edgiprep/controllers/navigation/navController.dart';
+import 'package:edgiprep/responsive/responsive_layout.dart';
 import 'package:edgiprep/views/screens/auth/auth.dart';
 import 'package:edgiprep/views/components/auth/welcome_fade_text.dart';
 import 'package:edgiprep/views/components/auth/nav_dots.dart';
@@ -18,6 +20,7 @@ class Welcome extends StatefulWidget {
 }
 
 class _WelcomeState extends State<Welcome> {
+  NavController navController = Get.find<NavController>();
   int currentIndex = 0;
 
   final List<String> images = [
@@ -69,119 +72,118 @@ class _WelcomeState extends State<Welcome> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: appbarColor,
-      body: SafeArea(
-        child: Container(
-          color: backgroundColor,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 50.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      SizedBox(height: 80.h),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Expanded(
-                              child: PageView.builder(
-                                controller: _pageController,
-                                itemCount: images.length,
-                                onPageChanged: (int index) {
-                                  setState(() {
-                                    currentIndex = index;
-                                  });
-                                },
-                                itemBuilder: (context, index) {
-                                  // pages
-                                  return welcomePage(
-                                    titles[index],
-                                    subTitles[index],
-                                    images[index],
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 30.h),
-                      // indicators
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+    return ResponsiveLayout(
+      body: Container(
+        color: backgroundColor,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 50.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(height: 80.h),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          navDot(
-                            currentIndex == 0,
-                          ),
-                          SizedBox(
-                            width: 10.w,
-                          ),
-                          navDot(
-                            currentIndex == 1,
-                          ),
-                          SizedBox(
-                            width: 10.w,
-                          ),
-                          navDot(
-                            currentIndex == 2,
+                          Expanded(
+                            child: PageView.builder(
+                              controller: _pageController,
+                              itemCount: images.length,
+                              onPageChanged: (int index) {
+                                setState(() {
+                                  currentIndex = index;
+                                });
+                              },
+                              itemBuilder: (context, index) {
+                                // pages
+                                return welcomePage(
+                                  titles[index],
+                                  subTitles[index],
+                                  images[index],
+                                );
+                              },
+                            ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 40.h),
-                      // message
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 30.w),
-                        child: welcomeFadeText(
-                          "Master Your Exams with Lessons, Practice, and Confidence!",
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // buttons
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
+                    ),
                     SizedBox(height: 30.h),
-                    GestureDetector(
-                      onTap: () {
-                        Get.to(() => const Auth(
-                              initialPage: 0,
-                            ));
-                      },
-                      child: normalButton(
-                        primaryColor,
-                        primaryTextColor,
-                        "Sign In",
-                        22,
+                    // indicators
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        navDot(
+                          currentIndex == 0,
+                        ),
+                        SizedBox(
+                          width: 10.w,
+                        ),
+                        navDot(
+                          currentIndex == 1,
+                        ),
+                        SizedBox(
+                          width: 10.w,
+                        ),
+                        navDot(
+                          currentIndex == 2,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 40.h),
+                    // message
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
+                      child: welcomeFadeText(
+                        "Master Your Exams with Lessons, Practice, and Confidence!",
                       ),
                     ),
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Get.to(() => const Auth(
-                              initialPage: 1,
-                            ));
-                      },
-                      child: normalButton(
-                        unselectedButtonColor,
-                        Colors.black,
-                        "Sign Up",
-                        22,
-                      ),
-                    ),
-                    SizedBox(height: 80.h),
                   ],
                 ),
-              ],
-            ),
+              ),
+              // buttons
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(height: 30.h),
+                  GestureDetector(
+                    onTap: () {
+                      navController.changePageIndex(0);
+                      Get.to(() => const Auth(
+                            initialPage: 0,
+                          ));
+                    },
+                    child: normalButton(
+                      primaryColor,
+                      primaryTextColor,
+                      "Sign In",
+                      22,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20.h,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      navController.changePageIndex(0);
+                      Get.to(() => const Auth(
+                            initialPage: 1,
+                          ));
+                    },
+                    child: normalButton(
+                      unselectedButtonColor,
+                      Colors.black,
+                      "Sign Up",
+                      22,
+                    ),
+                  ),
+                  SizedBox(height: 80.h),
+                ],
+              ),
+            ],
           ),
         ),
       ),

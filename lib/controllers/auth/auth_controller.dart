@@ -26,9 +26,8 @@ class AuthController extends GetxController {
   // Check login status
   void checkLoginStatus() async {
     String? tocket = await authService.getToken();
-    // String? tocket = "12345";
 
-    if (tocket != null) {
+    if (tocket != null && tocket != "") {
       await getUserData();
       authToken.value = tocket;
 
@@ -39,32 +38,43 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<void> login(String email, String password) async {
-    try {
-      isLoading.value = true;
-      final loggedInUser = await authService.login(email, password);
-      if (loggedInUser != null) {
-        checkLoginStatus();
-      }
-    } catch (e) {
-      debugPrint("Error logging in ----------------- auth controller");
-    } finally {
-      isLoading.value = false;
+  Future<Map<String, dynamic>> login(String email, String password) async {
+    isLoading.value = true;
+    final loginData = await authService.login(email, password);
+
+    if (loginData['status'] == 'success') {
+      checkLoginStatus();
     }
+
+    isLoading.value = false;
+    return loginData;
   }
 
-  Future<void> register(String name, String email, String password) async {
-    try {
-      isLoading.value = true;
-      final registeredUser = await authService.register(name, email, password);
-      if (registeredUser != null) {
-        checkLoginStatus();
-      }
-    } catch (e) {
-      debugPrint("Error registering user -------------- auth controller");
-    } finally {
+  Future<Map<String, dynamic>> register(
+      String name, String username, String password) async {
+    isLoading.value = true;
+
+    // check username
+    Map<String, dynamic> checkUsernameData = await checkUsername(username);
+
+    if (checkUsernameData['status'] == 'error') {
       isLoading.value = false;
+      return checkUsernameData;
     }
+
+    final registerData = await authService.register(name, username, password);
+    if (registerData['status'] == 'success') {
+      checkLoginStatus();
+    }
+
+    isLoading.value = false;
+    return registerData;
+  }
+
+  Future<Map<String, dynamic>> checkUsername(String username) async {
+    final checkingData = await authService.checkUsername(username);
+
+    return checkingData;
   }
 
   Future<void> logout() async {
@@ -77,8 +87,6 @@ class AuthController extends GetxController {
 
     if (localUser != null) {
       user.value = localUser;
-    } else {
-      logout();
     }
   }
 }

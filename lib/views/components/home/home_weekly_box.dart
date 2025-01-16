@@ -34,7 +34,7 @@ Widget homeWeeklyBox(
           return CircularPercentIndicator(
             radius: radius,
             percent: authController.user.value != null
-                ? authController.user.value!.weeklyProgress / 100
+                ? 30 / 100
                 : 0,
             progressColor: primaryColor,
             lineWidth: barWidth,
@@ -44,7 +44,7 @@ Widget homeWeeklyBox(
             startAngle: 0,
             animation: true,
             center: Text(
-              "${authController.user.value != null ? (authController.user.value!.weeklyProgress).toStringAsFixed(0) : 0}%",
+              "30%",
               style: GoogleFonts.inter(
                 color: const Color.fromRGBO(52, 74, 106, 1),
                 fontSize: progFontSize,

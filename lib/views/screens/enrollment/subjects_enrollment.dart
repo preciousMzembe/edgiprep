@@ -123,9 +123,34 @@ class SubjectsEnrollment extends StatelessWidget {
                       ),
                       Obx(() {
                         return GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             if (enrollmentController.subjectsSelected.value) {
-                              Get.to(() => const Premium());
+                              // Get.to(() => const Premium());
+                              bool done = await enrollmentController.enroll();
+
+                              if (done) {
+                                Get.back();
+                              } else {
+                                Get.snackbar(
+                                  "Enrollmet Error",
+                                  "There was a problem finishing your enrollment",
+                                  backgroundColor:
+                                      const Color.fromRGBO(254, 101, 93, 1),
+                                  colorText: Colors.white,
+                                  duration: const Duration(seconds: 2),
+                                  snackPosition: SnackPosition.BOTTOM,
+                                );
+                              }
+                            } else {
+                              Get.snackbar(
+                                "Enrollmet Error",
+                                "Please select at least one subject",
+                                backgroundColor:
+                                    const Color.fromRGBO(254, 101, 93, 1),
+                                colorText: Colors.white,
+                                duration: const Duration(seconds: 2),
+                                snackPosition: SnackPosition.BOTTOM,
+                              );
                             }
                           },
                           child: normalButton(

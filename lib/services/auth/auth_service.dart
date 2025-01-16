@@ -5,6 +5,7 @@ import 'package:edgiprep/db/config/config.dart';
 import 'package:edgiprep/db/user/user.dart';
 import 'package:edgiprep/services/config/config_Service.dart';
 import 'package:edgiprep/utils/dio_client.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,6 +15,7 @@ class AuthService extends GetxService {
   final Dio _dio = createDio();
 
   RxBool doneFetchingUserData = true.obs;
+  RxBool doneLogout = true.obs;
 
   @override
   Future<void> onInit() async {
@@ -27,35 +29,148 @@ class AuthService extends GetxService {
   }
 
   Future<void> getUserServerData() async {
-    // TODO: check if tocken is not empty first
-    User user = User(
-      name: "Levon James",
-      email: "eagleeyed@gmail.com",
-      xp: 20,
-      streak: 10,
-      reminderTime: DateTime(2021, 1, 2, 2),
-      weeklyProgress: 30,
-    );
+    // check if token is not empty first
+    String? token = await getToken();
 
-    await userBox.clear();
-    await userBox.add(user);
+    if (token != null && token != '') {
+      try {
+        final response = await _dio.get(
+          '${config?.apiUrl}/Learner/Mobile/Learner',
+          options: Options(
+            headers: {
+              'Authorization': 'Bearer $token',
+            },
+          ),
+        );
+
+        if (response.statusCode == 200) {
+          User user = User(
+            name: response.data['name'],
+            email: "eagleeyed@gmail.com",
+            xp: response.data['xp'],
+            streak: response.data['streak'],
+          );
+
+          await userBox.clear();
+          await userBox.add(user);
+        }
+      } on DioException catch (e) {
+        debugPrint("Error fetching learner data ------------ auth controller");
+
+        if (e.response != null) {
+          if (e.response?.statusCode == 401) {
+            await logout();
+          }
+        }
+      }
+    }
 
     doneFetchingUserData.value = !doneFetchingUserData.value;
   }
 
-  Future<User?> login(String email, String password) async {
-    // _saveToken(response.body['token']);
-    return null;
+  Future<Map<String, dynamic>> login(String email, String password) async {
+    try {
+      final response = await _dio.post('${config?.apiUrl}/Auth/Mobile/Login',
+          data: {'username': email, 'pin': password});
+
+      if (response.statusCode == 200) {
+        _saveToken(response.data['token']);
+
+        await getUserServerData();
+
+        return {
+          'status': "success",
+          'data': response.data['token'],
+        };
+      }
+    } on DioException catch (e) {
+      debugPrint("Error loggin in ------------ auth controller");
+      if (e.response != null) {
+        if (e.response?.statusCode == 404) {
+          return {
+            'status': "error",
+            'error': e.response?.data['message'],
+          };
+        }
+      }
+    }
+
+    return {
+      'status': "error",
+      'error': "Error logging in",
+    };
   }
 
-  Future<User?> register(String name, String email, String password) async {
-    // _saveToken(response.body['token']);
-    return null;
+  Future<Map<String, dynamic>> register(
+      String name, String username, String password) async {
+    try {
+      final response = await _dio.post('${config?.apiUrl}/Auth/Mobile/Register',
+          data: {'name': username, 'username': username, 'pin': password});
+
+      if (response.statusCode == 200) {
+        _saveToken(response.data['token']);
+
+        await getUserServerData();
+
+        return {
+          'status': "success",
+          'data': response.data['token'],
+        };
+      }
+    } on DioException catch (e) {
+      debugPrint("Error registering ------------ auth controller");
+
+      if (e.response != null) {
+        if (e.response?.statusCode == 404) {
+          return {
+            'status': "error",
+            'error': e.response?.data['message'],
+          };
+        }
+      }
+    }
+
+    return {
+      'status': "error",
+      'error': "Error logging in",
+    };
+  }
+
+  Future<Map<String, dynamic>> checkUsername(String username) async {
+    try {
+      final response = await _dio
+          .get('${config?.apiUrl}/Auth/Mobile/Username?username=$username');
+
+      if (response.statusCode == 200) {
+        return {
+          'status': "success",
+          'data': 'Username is available',
+        };
+      }
+    } on DioException catch (e) {
+      debugPrint("Error checking username ------------ auth controller");
+
+      if (e.response != null) {
+        if (e.response?.statusCode == 409) {
+          return {
+            'status': "error",
+            'error': 'Username is already taken',
+          };
+        }
+      }
+    }
+
+    return {
+      'status': "error",
+      'error': "Error checking username",
+    };
   }
 
   Future<void> logout() async {
     await _removeToken();
     await userExamBox.clear();
+
+    doneLogout.value = !doneLogout.value;
   }
 
   // Token handling

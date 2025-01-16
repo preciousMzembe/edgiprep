@@ -61,6 +61,13 @@ class MyApp extends StatelessWidget {
               }),
             ),
           ),
+          builder: (context, widget) {
+            return MediaQuery(
+              data: MediaQuery.of(context)
+                  .copyWith(textScaler: TextScaler.linear(1.0)),
+              child: widget!,
+            );
+          },
           home: Obx(
             () {
               final authController = Get.find<AuthController>();

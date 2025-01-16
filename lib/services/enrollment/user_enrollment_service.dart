@@ -9,6 +9,7 @@ import 'package:edgiprep/db/topic/topic.dart';
 import 'package:edgiprep/db/unit/unit.dart';
 import 'package:edgiprep/services/auth/auth_service.dart';
 import 'package:edgiprep/services/config/config_Service.dart';
+import 'package:edgiprep/services/enrollment/enrollment_service.dart';
 import 'package:edgiprep/utils/dio_client.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,6 +19,8 @@ class UserEnrollmentService extends GetxService {
   ConfigService configService = Get.find<ConfigService>();
   late Config? config;
   final Dio _dio = createDio();
+
+  final EnrollmentService enrollmentService = Get.find<EnrollmentService>();
 
   RxBool doneFetchingUserExams = true.obs;
   RxBool doneFetchingUserSubjects = true.obs;
@@ -31,132 +34,148 @@ class UserEnrollmentService extends GetxService {
 
     config = await configService.getConfig();
     await _fetchServerData();
+
+    config ??= await configService.getConfig();
+
+    // listen to change after enrollment
+    ever(enrollmentService.doneEnrollment, (_) async {
+      _fetchServerData();
+    });
   }
 
   // Initialize exams and subjects by fetching from server
   Future<void> _fetchServerData() async {
     config ??= await configService.getConfig();
 
-    // String? tocket = await authService.getToken();
+    // check if token is not empty first
+    String? token = await authService.getToken();
 
-    // if (tocket != null) {
-    //   await getUserServerExams();
-    // }
-
-    await getUserServerExams();
+    if (token != null && token != '') {
+      await getUserServerExams();
+    }
   }
 
   // server user exams
   Future<void> getUserServerExams() async {
     try {
-      // final response = await _dio.get("${config?.apiUrl}/Exam/Exams");
-
-      // if (response.statusCode == 200) {
-      // List<dynamic> data = response.data;
-
-      List<UserExam> serverExams = [
-        UserExam(id: "1", title: "JCE", selected: false),
-      ];
-
-      // if (data.isNotEmpty) {
-      //   for (var exam in data) {
-      //     serverExams.add(
-      //       UserExam(
-      //         id: exam['id'],
-      //         title: exam['name'],
-      //         selected: false,
-      //       ),
-      //     );
-      //   }
-      // }
-
-      UserExam selectedExam = await userExamBox.values.firstWhere(
-        (exam) => exam.selected == true,
-        orElse: () => UserExam(id: "", title: "", selected: false),
+      String? token = await authService.getToken();
+      final response = await _dio.get(
+        '${config?.apiUrl}/Enrollment/Mobile/Enrollments',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
       );
 
-      // mark selected exam
-      if (selectedExam.id != "") {
-        for (UserExam exam in serverExams) {
-          if (exam.id == selectedExam.id) {
-            exam.selected = true;
-          }
-        }
+      if (response.statusCode == 200) {
+        Map<String, dynamic> enrollment = response.data;
+
+        UserExam serverExam = UserExam(
+          id: enrollment['examId'],
+          title: enrollment['exam']['name'],
+          selected: false,
+          enrollmentId: enrollment['id'],
+        );
+
+        // UserExam selectedExam = await userExamBox.values.firstWhere(
+        //   (exam) => exam.selected == true,
+        //   orElse: () =>
+        //       UserExam(id: "", title: "", selected: false, enrollmentId: ""),
+        // );
+
+        // // mark selected exam
+        // if (selectedExam.id != "") {
+        //   for (UserExam exam in serverExams) {
+        //     if (exam.id == selectedExam.id) {
+        //       exam.selected = true;
+        //     }
+        //   }
+        // }
+
+        // // check if one is selected
+        // selectedExam = serverExams.firstWhere(
+        //   (exam) => exam.selected == true,
+        //   orElse: () =>
+        //       UserExam(id: "", title: "", selected: false, enrollmentId: ""),
+        // );
+
+        // if (selectedExam.id == "") {
+        //   // mark first as selected
+        //   serverExams[0].selected = true;
+        // }
+
+        await userExamBox.clear();
+        await userExamBox.add(serverExam);
+
+        doneFetchingUserExams.value = !doneFetchingUserExams.value;
+
+        // get subjects
+        getUserServerSubjects();
+      } else if (response.statusCode == 204) {
+        await userExamBox.clear();
+        doneFetchingUserExams.value = !doneFetchingUserExams.value;
       }
-
-      // check if one is selected
-      selectedExam = serverExams.firstWhere(
-        (exam) => exam.selected == true,
-        orElse: () => UserExam(id: "", title: "", selected: false),
-      );
-
-      if (selectedExam.id == "") {
-        // mark first as selected
-        serverExams[0].selected = true;
-      }
-
-      await userExamBox.clear();
-      await userExamBox.addAll(serverExams);
-
-      doneFetchingUserExams.value = !doneFetchingUserExams.value;
-
-      // get subjects
-      getUserServerSubjects();
-      // } else {
-      //   debugPrint(
-      //       "Error fetching user exams ------------------------- user enrollment service");
-      // }
-    } catch (e) {
+    } on DioException catch (e) {
       debugPrint(
-          "Error fetching user exams ------------------------- user enrollment service : error");
+          "Error fetching user exams ------------------------- user enrollment service");
     }
   }
 
   // server user subjects
   Future<void> getUserServerSubjects() async {
-    // get all subjects of selected exam
+    try {
+      // get all subjects of exam
+      String? token = await authService.getToken();
 
-    UserExam userExam = userExamBox.values.firstWhere(
-      (exam) => exam.selected == true,
-      orElse: () => UserExam(id: "", title: "", selected: false),
-    );
+      if (userExamBox.isNotEmpty) {
+        var userExam = userExamBox.values.first;
 
-    List<UserSubject> subjects = [
-      UserSubject(
-        id: "1",
-        title: "Biology",
-        description: "Biology Info",
-        color: "rgb(81, 157, 232)",
-        icon: "biology.svg",
-        image: "biology.png",
-        examId: "1",
-        numberOfTopics: 2,
-        numberOfTopicsDone: 1,
-        currentTopic: "Introduction To Human Biology",
-      ),
-      UserSubject(
-        id: "2",
-        title: "Matematics",
-        description: "Mathematics Info",
-        color: "rgb(134, 214, 152)",
-        icon: "maths.svg",
-        image: "maths.png",
-        examId: "1",
-        numberOfTopics: 2,
-        numberOfTopicsDone: 0,
-        currentTopic: "Introduction To Algebra One",
-      ),
-    ];
+        final response = await _dio.get(
+          '${config?.apiUrl}/Subject/Mobile/EnrolledSubjects?EnrollementId=${userExam.enrollmentId}',
+          options: Options(
+            headers: {
+              'Authorization': 'Bearer $token',
+            },
+          ),
+        );
 
-    await userSubjectBox.clear();
-    await userSubjectBox.addAll(subjects);
+        if (response.statusCode == 200) {
+          List<UserSubject> subjects = [];
 
-    doneFetchingUserSubjects.value = !doneFetchingUserSubjects.value;
+          for (var enrollment in response.data) {
+            subjects.add(
+              UserSubject(
+                id: enrollment['subject']['id'],
+                title: enrollment['subject']['name'],
+                description: enrollment['subject']['description'],
+                color: "rgb(81, 157, 232)",
+                icon: "biology.svg",
+                image: "biology.png",
+                examId: enrollment['subject']['examId'],
+                numberOfTopics: enrollment['totalTopics'],
+                numberOfTopicsDone: enrollment['doneTopics'],
+                currentTopic: "Introduction To Human Biology",
+                enrollmentId: enrollment['id'],
+              ),
+            );
+          }
 
-    // get units
-    getUserServerUnits();
-    // get subjects papers
-    getUserServerPapers();
+          await userSubjectBox.clear();
+          await userSubjectBox.addAll(subjects);
+
+          doneFetchingUserSubjects.value = !doneFetchingUserSubjects.value;
+
+          // get units
+          getUserServerUnits();
+          // get subjects papers
+          getUserServerPapers();
+        }
+      }
+    } on DioException catch (e) {
+      debugPrint(
+          "Error fetching exam subjects ------------------------- user enrollment service");
+    }
   }
 
   // server user units
@@ -376,7 +395,8 @@ class UserEnrollmentService extends GetxService {
 
     UserExam userExam = userExamBox.values.firstWhere(
       (exam) => exam.selected == true,
-      orElse: () => UserExam(id: "", title: "", selected: false),
+      orElse: () =>
+          UserExam(id: "", title: "", selected: false, enrollmentId: ""),
     );
 
     if (userExam.id != "") {

@@ -7,6 +7,9 @@ Color backgroundColor = const Color.fromRGBO(236, 239, 245, 1);
 Color primaryTextColor = Colors.white;
 Color secondaryTextColor = const Color.fromRGBO(97, 97, 97, 1);
 
+Color successColor = const Color.fromRGBO(102, 203, 124, 1);
+Color errorColor = const Color.fromRGBO(254, 101, 93, 1);
+
 Color appbarColor = const Color.fromRGBO(35, 131, 226, 1);
 
 // enrollment

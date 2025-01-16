@@ -1,7 +1,8 @@
+import 'package:edgiprep/controllers/auth/auth_controller.dart';
+import 'package:edgiprep/services/enrollment/enrollment_service.dart';
 import 'package:edgiprep/views/components/auth/auth_bottom_text.dart';
 import 'package:edgiprep/views/components/auth/auth_rich_text.dart';
 import 'package:edgiprep/views/components/auth/auth_title_dot.dart';
-import 'package:edgiprep/views/screens/auth/verify.dart';
 import 'package:edgiprep/views/components/auth/auth_input.dart';
 import 'package:edgiprep/views/components/auth/auth_title_text.dart';
 import 'package:edgiprep/views/components/general/normal_button.dart';
@@ -13,9 +14,30 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SignUp extends StatelessWidget {
+class SignUp extends StatefulWidget {
   final VoidCallback onSignInTap;
   const SignUp({super.key, required this.onSignInTap});
+
+  @override
+  State<SignUp> createState() => _SignUpState();
+}
+
+class _SignUpState extends State<SignUp> {
+  AuthController authController = Get.find<AuthController>();
+  EnrollmentService enrollmentService = Get.find<EnrollmentService>();
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
+  @override
+  dispose() {
+    nameController.dispose();
+    usernameController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,36 +63,52 @@ class SignUp extends StatelessWidget {
 
           // username
 
-          const AuthInput(
+          AuthInput(
             label: "Full Name",
             type: TextInputType.name,
             isPassword: false,
             icon: FontAwesomeIcons.solidUser,
             radius: 16,
+            controller: nameController,
           ),
 
           // email
           SizedBox(
             height: 25.h,
           ),
-          const AuthInput(
+          AuthInput(
             label: "Username",
             type: TextInputType.text,
             isPassword: false,
             icon: FontAwesomeIcons.solidUser,
             radius: 16,
+            controller: usernameController,
           ),
 
           // password
           SizedBox(
             height: 25.h,
           ),
-          const AuthInput(
+          AuthInput(
             label: "Password",
             type: TextInputType.text,
             isPassword: true,
             icon: FontAwesomeIcons.lock,
             radius: 16,
+            controller: passwordController,
+          ),
+
+          // confirm password
+          SizedBox(
+            height: 25.h,
+          ),
+          AuthInput(
+            label: "Confirm Password",
+            type: TextInputType.text,
+            isPassword: true,
+            icon: FontAwesomeIcons.lock,
+            radius: 16,
+            controller: confirmPasswordController,
           ),
 
           // terms
@@ -104,8 +142,56 @@ class SignUp extends StatelessWidget {
             height: 35.h,
           ),
           GestureDetector(
-            onTap: () {
-              Get.to(() => const Verify());
+            onTap: () async {
+              String name = nameController.text.trim();
+              String username = usernameController.text.trim();
+              String password = passwordController.text.trim();
+              String confirmPassword = confirmPasswordController.text.trim();
+
+              if (name.isNotEmpty &&
+                  username.isNotEmpty &&
+                  password.isNotEmpty &&
+                  confirmPassword.isNotEmpty) {
+                if (password == confirmPassword) {
+                  // register
+                  Map registerData =
+                      await authController.register(name, username, password);
+
+                  if (registerData['status'] == 'error') {
+                    Get.snackbar(
+                      "Register Error",
+                      registerData['error'],
+                      backgroundColor: const Color.fromRGBO(254, 101, 93, 1),
+                      colorText: Colors.white,
+                      duration: const Duration(seconds: 2),
+                      snackPosition: SnackPosition.BOTTOM,
+                    );
+                  } else {
+                    enrollmentService.restartFetch();
+                    Get.back();
+                  }
+                } else {
+                  // passwords error
+                  Get.snackbar(
+                    "Password Error",
+                    "Passwords do not match.",
+                    backgroundColor: const Color.fromRGBO(254, 101, 93, 1),
+                    colorText: Colors.white,
+                    duration: const Duration(seconds: 2),
+                    snackPosition: SnackPosition.BOTTOM,
+                  );
+                }
+              } else {
+                // empty fields
+                Get.snackbar(
+                  "Register Error",
+                  "Please fill all the fields",
+                  backgroundColor: const Color.fromRGBO(254, 101, 93, 1),
+                  colorText: Colors.white,
+                  duration: const Duration(seconds: 2),
+                  snackPosition: SnackPosition.BOTTOM,
+                );
+              }
             },
             child: normalButton(
               primaryColor,
@@ -159,7 +245,7 @@ class SignUp extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  onSignInTap();
+                  widget.onSignInTap();
                 },
                 child: authBottomText(
                   "Sign In",

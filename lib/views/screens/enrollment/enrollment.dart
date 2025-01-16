@@ -1,4 +1,3 @@
-import 'package:edgiprep/views/components/auth/auth_back.dart';
 import 'package:edgiprep/views/components/enrollment/enrollment_exam_option.dart';
 import 'package:edgiprep/views/components/enrollment/enrollment_rich_text.dart';
 import 'package:edgiprep/views/components/enrollment/enrollment_subtitle.dart';
@@ -55,27 +54,12 @@ class _EnrollmentState extends State<Enrollment> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    SizedBox(
-                      height: 30.h,
-                    ),
-                    // back
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: authBack(),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 30.h,
-                    ),
-
                     Expanded(
                       child: ListView(
                         children: [
+                          SizedBox(
+                            height: 40.h,
+                          ),
                           // title
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 30.w),

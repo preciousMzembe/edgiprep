@@ -34,6 +34,9 @@ class UserSubject {
   @HiveField(9)
   final String currentTopic;
 
+  @HiveField(10)
+  final String enrollmentId;
+
   UserSubject({
     required this.id,
     required this.title,
@@ -45,6 +48,7 @@ class UserSubject {
     required this.numberOfTopics,
     required this.numberOfTopicsDone,
     required this.currentTopic,
+    required this.enrollmentId,
   });
 
   Map<String, dynamic> toJson() {
@@ -57,6 +61,7 @@ class UserSubject {
       'image': image,
       'examId': examId,
       'currentTopic': currentTopic,
+      'enrollmentId': currentTopic,
     };
   }
 }

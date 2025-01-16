@@ -4,9 +4,16 @@ import 'package:dio/io.dart';
 
 Dio createDio() {
   var dio = Dio();
-  (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
-    client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
-    return client;
-  };
+  dio.httpClientAdapter = IOHttpClientAdapter(
+    createHttpClient: () {
+      // Don't trust any certificate just because their root cert is trusted.
+      final HttpClient client =
+          HttpClient(context: SecurityContext(withTrustedRoots: false));
+      // You can test the intermediate / root cert here. We just ignore it.
+      client.badCertificateCallback =
+          ((X509Certificate cert, String host, int port) => true);
+      return client;
+    },
+  );
   return dio;
 }

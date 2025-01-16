@@ -21,6 +21,14 @@ class ResetPassword extends StatefulWidget {
 }
 
 class _ResetPasswordState extends State<ResetPassword> {
+  TextEditingController emailController = TextEditingController();
+
+  @override
+  dispose() {
+    emailController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,12 +97,13 @@ class _ResetPasswordState extends State<ResetPassword> {
                         SizedBox(
                           height: 35.h,
                         ),
-                        const AuthInput(
+                         AuthInput(
                           label: "Email",
                           type: TextInputType.emailAddress,
                           isPassword: false,
                           icon: FontAwesomeIcons.solidEnvelope,
                           radius: 16,
+                          controller: emailController,
                         ),
                         // continue
                         SizedBox(

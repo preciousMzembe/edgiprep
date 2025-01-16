@@ -13,13 +13,21 @@ class UserExam {
   @HiveField(2)
   late bool selected;
 
-  UserExam({required this.id, required this.title, required this.selected});
+  @HiveField(3)
+  late String enrollmentId;
+
+  UserExam(
+      {required this.id,
+      required this.title,
+      required this.selected,
+      required this.enrollmentId});
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'title': title,
       'selected': selected,
+      'enrollmentId': enrollmentId,
     };
   }
 }

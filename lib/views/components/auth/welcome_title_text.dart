@@ -1,4 +1,5 @@
 import 'package:edgiprep/utils/device_utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,11 +10,13 @@ Widget welcomeTitleText(String text) {
       bool isTablet = DeviceUtils.isTablet(context);
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
-      double fontSize = isTablet
-          ? 40.sp
-          : isSmallTablet
-              ? 50.sp
-              : 60.sp;
+      double fontSize = kIsWeb
+          ? 40
+          : isTablet
+              ? 40.sp
+              : isSmallTablet
+                  ? 50.sp
+                  : 60.sp;
 
       return Text(
         text,

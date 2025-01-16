@@ -4,18 +4,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AuthInput extends StatefulWidget {
+  final TextEditingController controller;
   final String label;
   final TextInputType type;
   final bool isPassword;
   final IconData icon;
   final double radius;
-  const AuthInput(
-      {super.key,
-      required this.label,
-      required this.type,
-      required this.isPassword,
-      required this.icon,
-      required this.radius});
+  const AuthInput({
+    super.key,
+    required this.label,
+    required this.type,
+    required this.isPassword,
+    required this.icon,
+    required this.radius,
+    required this.controller,
+  });
 
   @override
   State<AuthInput> createState() => _AuthInputState();
@@ -63,6 +66,7 @@ class _AuthInputState extends State<AuthInput> {
             borderRadius: BorderRadius.circular(widget.radius.r),
             child: TextFormField(
               obscureText: _show,
+              controller: widget.controller,
               style: GoogleFonts.inter(
                 color: Colors.black,
                 fontSize: fontSize,

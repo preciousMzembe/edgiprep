@@ -1,6 +1,7 @@
+import 'package:edgiprep/controllers/auth/auth_controller.dart';
+import 'package:edgiprep/services/enrollment/enrollment_service.dart';
 import 'package:edgiprep/views/components/auth/auth_bottom_text.dart';
 import 'package:edgiprep/views/components/auth/auth_title_comma.dart';
-import 'package:edgiprep/views/screens/auth/verify.dart';
 import 'package:edgiprep/views/components/auth/auth_input.dart';
 import 'package:edgiprep/views/components/auth/auth_title_text.dart';
 import 'package:edgiprep/views/components/general/normal_button.dart';
@@ -12,12 +13,30 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SignIn extends StatelessWidget {
+class SignIn extends StatefulWidget {
   final VoidCallback onSignUpTap;
   const SignIn({
     super.key,
     required this.onSignUpTap,
   });
+
+  @override
+  State<SignIn> createState() => _SignInState();
+}
+
+class _SignInState extends State<SignIn> {
+  AuthController authController = Get.find<AuthController>();
+  EnrollmentService enrollmentService = Get.find<EnrollmentService>();
+
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  @override
+  dispose() {
+    usernameController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,62 +62,63 @@ class SignIn extends StatelessWidget {
           ),
 
           // email
-          const AuthInput(
+          AuthInput(
             label: "Username",
             type: TextInputType.text,
             isPassword: false,
             icon: FontAwesomeIcons.solidUser,
             radius: 16,
+            controller: usernameController,
           ),
 
           // password
           SizedBox(
             height: 25.h,
           ),
-          const AuthInput(
+          AuthInput(
             label: "Password",
             type: TextInputType.text,
             isPassword: true,
             icon: FontAwesomeIcons.lock,
             radius: 16,
+            controller: passwordController,
           ),
-
-          // forget password
-          // SizedBox(
-          //   height: 25.h,
-          // ),
-          // Padding(
-          //   padding: EdgeInsets.symmetric(horizontal: 8.w),
-          //   child: Row(
-          //     crossAxisAlignment: CrossAxisAlignment.center,
-          //     children: [
-          //       authBottomText(
-          //         "Forget Password?",
-          //         const Color.fromRGBO(115, 115, 115, 1),
-          //       ),
-          //       SizedBox(
-          //         width: 10.w,
-          //       ),
-          //       GestureDetector(
-          //         onTap: () {
-          //           Get.to(() => const ResetPassword());
-          //         },
-          //         child: authBottomText(
-          //           "Recover Here",
-          //           primaryColor,
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
 
           // continue
           SizedBox(
             height: 35.h,
           ),
           GestureDetector(
-            onTap: () {
-              Get.to(() => const Verify());
+            onTap: () async {
+              String username = usernameController.text.trim();
+              String password = passwordController.text.trim();
+
+              if (username.isNotEmpty && password.isNotEmpty) {
+                Map loginData = await authController.login(username, password);
+
+                if (loginData['status'] == 'error') {
+                  Get.snackbar(
+                    "Login Error",
+                    loginData['error'],
+                    backgroundColor: const Color.fromRGBO(254, 101, 93, 1),
+                    colorText: Colors.white,
+                    duration: const Duration(seconds: 2),
+                    snackPosition: SnackPosition.BOTTOM,
+                  );
+                } else {
+                  enrollmentService.restartFetch();
+                  Get.back();
+                }
+              } else {
+                Get.snackbar(
+                  "Login Error",
+                  "Please fill all the fields",
+                  backgroundColor: const Color.fromRGBO(254, 101, 93, 1),
+                  colorText: Colors.white,
+                  duration: const Duration(seconds: 2),
+                  snackPosition: SnackPosition.BOTTOM,
+                );
+              }
             },
             child: normalButton(
               primaryColor,
@@ -152,7 +172,7 @@ class SignIn extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  onSignUpTap();
+                  widget.onSignUpTap();
                 },
                 child: authBottomText(
                   "Sign Up",

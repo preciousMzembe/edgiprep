@@ -27,13 +27,14 @@ class UserSubjectAdapter extends TypeAdapter<UserSubject> {
       numberOfTopics: fields[7] as int,
       numberOfTopicsDone: fields[8] as int,
       currentTopic: fields[9] as String,
+      enrollmentId: fields[10] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserSubject obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -53,7 +54,9 @@ class UserSubjectAdapter extends TypeAdapter<UserSubject> {
       ..writeByte(8)
       ..write(obj.numberOfTopicsDone)
       ..writeByte(9)
-      ..write(obj.currentTopic);
+      ..write(obj.currentTopic)
+      ..writeByte(10)
+      ..write(obj.enrollmentId);
   }
 
   @override

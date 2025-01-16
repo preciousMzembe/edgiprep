@@ -54,4 +54,22 @@ class EnrollmentController extends GetxController {
     subjectsSelected.value = subjects.any((subject) => subject.selected);
     subjects.refresh();
   }
+
+  // Enroll Exam and Subjects
+  Future<bool> enroll() async {
+    EnrollmentExamModel selectedExam =
+        exams.firstWhere((exam) => exam.selected);
+
+    List<String> selectedSubjects = [];
+    for (var subject in subjects) {
+      if (subject.selected) {
+        selectedSubjects.add(subject.id);
+      }
+    }
+
+    bool done =
+        await enrollmentService.enroll(selectedExam.id, selectedSubjects);
+
+    return done;
+  }
 }

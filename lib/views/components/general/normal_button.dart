@@ -1,4 +1,5 @@
 import 'package:edgiprep/utils/device_utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,17 +15,21 @@ Widget normalButton(
       bool isTablet = DeviceUtils.isTablet(context);
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
-      double height = isTablet
-          ? 64.sp
-          : isSmallTablet
+      double height = kIsWeb
+          ? 60
+          : isTablet
               ? 74.h
-              : 84.h;
+              : isSmallTablet
+                  ? 74.h
+                  : 84.h;
 
-      double fontSize = isTablet
-          ? 18.sp
-          : isSmallTablet
-              ? 20.sp
-              : 24.sp;
+      double fontSize = kIsWeb
+          ? 18
+          : isTablet
+              ? 18.sp
+              : isSmallTablet
+                  ? 20.sp
+                  : 24.sp;
 
       return ClipRRect(
         borderRadius: BorderRadius.circular(radius.r),
