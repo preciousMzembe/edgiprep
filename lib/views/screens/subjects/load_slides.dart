@@ -3,6 +3,7 @@ import 'package:edgiprep/controllers/lesson/lesson_controller.dart';
 import 'package:edgiprep/controllers/mock/mock_controller.dart';
 import 'package:edgiprep/controllers/past%20paper/paper_controller.dart';
 import 'package:edgiprep/controllers/quiz/quiz_controller.dart';
+import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/subjects/subjects_back.dart';
@@ -21,11 +22,17 @@ class LoadSlides extends StatefulWidget {
   final String title;
   final String message;
   final String type;
-  const LoadSlides(
-      {super.key,
-      required this.title,
-      required this.message,
-      required this.type});
+
+  final UserSubject? subject;
+  final int? limit;
+  const LoadSlides({
+    super.key,
+    required this.title,
+    required this.message,
+    required this.type,
+    this.subject,
+    this.limit,
+  });
 
   @override
   State<LoadSlides> createState() => _LoadSlidesState();
@@ -38,31 +45,57 @@ class _LoadSlidesState extends State<LoadSlides> {
   MockController mockController = Get.find<MockController>();
   ChallengeController challengeController = Get.find<ChallengeController>();
 
+  bool error = false;
+
   @override
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 3), () {
-      lessonController.restartLesson();
-      quizController.restartLesson();
-      paperController.restartLesson();
-      mockController.restartLesson();
-      challengeController.restartLesson();
+    getData();
 
-      Get.back();
+    // Future.delayed(const Duration(seconds: 3), () {
+    //   lessonController.restartLesson();
+    //   quizController.restartLesson();
+    //   paperController.restartLesson();
+    //   mockController.restartLesson();
+    //   challengeController.restartLesson();
 
-      if (widget.type == "lesson") {
-        Get.to(() => const Lesson());
-      } else if (widget.type == "quiz") {
+    //   Get.back();
+
+    // });
+  }
+
+  Future<void> getData() async {
+    if (widget.type == "lesson") {
+      Get.to(() => const Lesson());
+    } else if (widget.type == "quiz") {
+      bool dataError = await quizController.restartLesson(
+          widget.subject!.enrollmentId, widget.limit!);
+      setState(() {
+        error = dataError;
+      });
+      if (!dataError) {
+        // start quiz
+        Get.back();
         Get.to(() => const Quiz());
-      } else if (widget.type == "paper") {
-        Get.to(() => const Paper());
-      } else if (widget.type == "mock") {
-        Get.to(() => const Mock());
-      } else if (widget.type == "challenge") {
-        Get.to(() => const Challenge());
+      } else {
+        // show error
+        Get.snackbar(
+          "Error getting quiz",
+          "There was a problem getting the quiz, please try again",
+          backgroundColor: const Color.fromRGBO(254, 101, 93, 1),
+          colorText: Colors.white,
+          duration: const Duration(seconds: 2),
+          snackPosition: SnackPosition.BOTTOM,
+        );
       }
-    });
+    } else if (widget.type == "paper") {
+      Get.to(() => const Paper());
+    } else if (widget.type == "mock") {
+      Get.to(() => const Mock());
+    } else if (widget.type == "challenge") {
+      Get.to(() => const Challenge());
+    }
   }
 
   @override
@@ -85,7 +118,7 @@ class _LoadSlidesState extends State<LoadSlides> {
                 : 22.sp;
 
         return PopScope(
-          canPop: false,
+          canPop: true,
           onPopInvokedWithResult: (bool didPop, other) async {
             if (didPop) {
               return;
@@ -105,18 +138,18 @@ class _LoadSlidesState extends State<LoadSlides> {
                         height: 30.h,
                       ),
                       // back
-
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Get.back();
-                            },
-                            child: subjectsBack(
-                                const Color.fromRGBO(52, 74, 106, 1)),
-                          ),
-                        ],
-                      ),
+                      if (error)
+                        Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Get.back();
+                              },
+                              child: subjectsBack(
+                                  const Color.fromRGBO(52, 74, 106, 1)),
+                            ),
+                          ],
+                        ),
                       // body
                       Expanded(
                         child: Column(

@@ -51,8 +51,8 @@ class _SubjectState extends State<Subject> {
   }
 
   Future<void> _fetchUnitsAndTopics() async {
-    unitTopicMap =
-        await userEnrollmentController.fetchUnitsAndTopics(widget.subject.id);
+    unitTopicMap = await userEnrollmentController
+        .fetchUnitsAndTopics(widget.subject.enrollmentId);
     setState(() {});
   }
 
@@ -162,94 +162,61 @@ class _SubjectState extends State<Subject> {
 
                       // data
                       ...unitTopicMap.entries.map((entry) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            SizedBox(
-                              height: 10.h,
-                            ),
-                            // unit
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10.w),
-                              child: subjectUnitName(entry.key.name),
-                            ),
-                            SizedBox(
-                              height: 25.h,
-                            ),
-                            ...entry.value.map((topic) {
-                              double percent = 0;
-
-                              if (topic.numberOfLessons > 0) {
-                                // calculate percent
-                                percent = topic.numberOfLessonsDone /
-                                    topic.numberOfLessons;
-                              }
-                              return Column(
+                        return entry.value.isNotEmpty
+                            ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      if (topic.active &&
-                                          !topic.needSubscrion) {
-                                        Get.to(() => SubjectTopic(
-                                              topic: topic,
-                                            ));
-                                      }
-                                    },
-                                    child: subjectTopicBox(
-                                      topic.needSubscrion,
-                                      topic.active,
-                                      topic.name,
-                                      "${topic.numberOfLessonsDone} of ${topic.numberOfLessons} Lessons",
-                                      percent,
-                                    ),
+                                  SizedBox(
+                                    height: 10.h,
+                                  ),
+                                  // unit
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 10.w),
+                                    child: subjectUnitName(entry.key.name),
                                   ),
                                   SizedBox(
-                                    height: 30.h,
+                                    height: 25.h,
                                   ),
-                                ],
-                              );
-                            }),
-                          ],
-                        );
-                      }),
+                                  ...entry.value.map((topic) {
+                                    double percent = 0;
 
-                      // topics
-                      // SizedBox(
-                      //   height: 25.h,
-                      // ),
-                      // GestureDetector(
-                      //   onTap: () {
-                      //     Get.to(() => const SubjectTopic());
-                      //   },
-                      //   child: subjectTopicBox(
-                      //     false,
-                      //     true,
-                      //     "Drawing Apparatus and Biological Diagrams",
-                      //     "5 of 17 Lessons",
-                      //     0.4,
-                      //   ),
-                      // ),
-                      // SizedBox(
-                      //   height: 30.h,
-                      // ),
-                      // subjectTopicBox(
-                      //   false,
-                      //   false,
-                      //   "Investigative Techniqes",
-                      //   "5 of 17 Lessons",
-                      //   0.4,
-                      // ),
-                      // SizedBox(
-                      //   height: 30.h,
-                      // ),
-                      // subjectTopicBox(
-                      //   true,
-                      //   false,
-                      //   "Recording Measurements",
-                      //   "5 of 17 Lessons",
-                      //   0.4,
-                      // ),
+                                    if (topic.numberOfLessons > 0) {
+                                      // calculate percent
+                                      percent = topic.numberOfLessonsDone /
+                                          topic.numberOfLessons;
+                                    }
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            if (topic.active &&
+                                                !topic.needSubscrion) {
+                                              Get.to(() => SubjectTopic(
+                                                    topic: topic,
+                                                  ));
+                                            }
+                                          },
+                                          child: subjectTopicBox(
+                                            topic.needSubscrion,
+                                            topic.active,
+                                            topic.name,
+                                            "${topic.numberOfLessonsDone} of ${topic.numberOfLessons} Lessons",
+                                            percent,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 30.h,
+                                        ),
+                                      ],
+                                    );
+                                  }),
+                                ],
+                              )
+                            : SizedBox();
+                      }),
 
                       SizedBox(
                         height: 100.h,

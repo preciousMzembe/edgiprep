@@ -63,11 +63,11 @@ Widget paperQuestion(LessonSlideQuestionModel? question, bool sideDone) {
                 GestureDetector(
                   onTap: () {
                     if (!sideDone) {
-                      paperController.answerCurrentQuestion(option);
+                      paperController.answerCurrentQuestion(option.id);
                     }
                   },
                   child: lessonQuestionResponse(
-                      option, option == question.userAnswer),
+                      option.text, option.id == question.userAnswerId),
                 ),
                 SizedBox(
                   height: 25.h,

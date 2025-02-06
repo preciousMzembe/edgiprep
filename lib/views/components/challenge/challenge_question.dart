@@ -63,11 +63,11 @@ Widget challengeQuestion(LessonSlideQuestionModel? question, bool sideDone) {
                 GestureDetector(
                   onTap: () {
                     if (!sideDone) {
-                      challengeController.answerCurrentQuestion(option);
+                      challengeController.answerCurrentQuestion(option.id);
                     }
                   },
                   child: lessonQuestionResponse(
-                      option, option == question.userAnswer),
+                      option.text, option.id == question.userAnswerId),
                 ),
                 SizedBox(
                   height: 25.h,
@@ -75,16 +75,6 @@ Widget challengeQuestion(LessonSlideQuestionModel? question, bool sideDone) {
               ],
             );
           }),
-
-          // lessonQuestionResponse("They are not drawn to scale", true),
-          // SizedBox(
-          //   height: 25.h,
-          // ),
-          // lessonQuestionResponse("They should be accurate", false),
-          // SizedBox(
-          //   height: 25.h,
-          // ),
-          // lessonQuestionResponse("They should be neat", false),
 
           // bottom
           SizedBox(

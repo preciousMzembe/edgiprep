@@ -49,14 +49,12 @@ class UserEnrollmentController extends GetxController {
   // Fetch subjects
   Future<void> fetchSubjects() async {
     subjects.value = await userEnrollmentService.getSubjects();
-
-    print(subjects);
   }
 
   // Fetch units and topics
-  Future<Map<Unit, List<Topic>>> fetchUnitsAndTopics(String subjectId) async {
+  Future<Map<Unit, List<Topic>>> fetchUnitsAndTopics(String subjectEnrollmentId) async {
     Map<Unit, List<Topic>> unitTopicMap =
-        await userEnrollmentService.getUnitsAndTopics(subjectId);
+        await userEnrollmentService.getUnitsAndTopics(subjectEnrollmentId);
 
     return unitTopicMap;
   }

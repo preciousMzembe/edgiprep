@@ -3,6 +3,7 @@ import 'package:edgiprep/controllers/lesson/lesson_controller.dart';
 import 'package:edgiprep/controllers/mock/mock_controller.dart';
 import 'package:edgiprep/controllers/past%20paper/paper_controller.dart';
 import 'package:edgiprep/controllers/quiz/quiz_controller.dart';
+import 'package:edgiprep/models/lesson/question_answer_model.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/general/normal_button.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ Widget lessonIncorrect(String type) {
   MockController mockController = Get.find<MockController>();
   ChallengeController challengeController = Get.find<ChallengeController>();
 
-  String correctAnswer = "";
+  QuestionAnswerModel? correctAnswer;
   String explanation = "";
 
   return LayoutBuilder(
@@ -52,55 +53,85 @@ Widget lessonIncorrect(String type) {
               : 22.sp;
 
       if (type == "lesson") {
-        correctAnswer = lessonController
+        List<QuestionAnswerModel> options = lessonController
                 .slides[lessonController.currentSlideIndex.value]
                 .question
-                ?.correctAnswer ??
-            "";
+                ?.options ??
+            [];
+
+        for (var option in options) {
+          if (option.isCorrect) {
+            correctAnswer = option;
+          }
+        }
+
         explanation = lessonController
                 .slides[lessonController.currentSlideIndex.value]
                 .question
                 ?.explanation ??
             "";
       } else if (type == "quiz") {
-        correctAnswer = quizController
+        List<QuestionAnswerModel> options = quizController
                 .slides[quizController.currentSlideIndex.value]
                 .question
-                ?.correctAnswer ??
-            "";
+                ?.options ??
+            [];
+
+        for (var option in options) {
+          if (option.isCorrect) {
+            correctAnswer = option;
+          }
+        }
         explanation = quizController
                 .slides[quizController.currentSlideIndex.value]
                 .question
                 ?.explanation ??
             "";
       } else if (type == "paper") {
-        correctAnswer = paperController
+        List<QuestionAnswerModel> options = paperController
                 .slides[paperController.currentSlideIndex.value]
                 .question
-                ?.correctAnswer ??
-            "";
+                ?.options ??
+            [];
+        for (var option in options) {
+          if (option.isCorrect) {
+            correctAnswer = option;
+          }
+        }
         explanation = paperController
                 .slides[paperController.currentSlideIndex.value]
                 .question
                 ?.explanation ??
             "";
       } else if (type == "mock") {
-        correctAnswer = mockController
+        List<QuestionAnswerModel> options = mockController
                 .slides[mockController.currentSlideIndex.value]
                 .question
-                ?.correctAnswer ??
-            "";
+                ?.options ??
+            [];
+
+        for (var option in options) {
+          if (option.isCorrect) {
+            correctAnswer = option;
+          }
+        }
         explanation = mockController
                 .slides[mockController.currentSlideIndex.value]
                 .question
                 ?.explanation ??
             "";
       } else if (type == "challenge") {
-        correctAnswer = challengeController
+        List<QuestionAnswerModel> options = challengeController
                 .slides[challengeController.currentSlideIndex.value]
                 .question
-                ?.correctAnswer ??
-            "";
+                ?.options ??
+            [];
+
+        for (var option in options) {
+          if (option.isCorrect) {
+            correctAnswer = option;
+          }
+        }
         explanation = challengeController
                 .slides[challengeController.currentSlideIndex.value]
                 .question
@@ -229,7 +260,7 @@ Widget lessonIncorrect(String type) {
                                           height: 8.h,
                                         ),
                                         Text(
-                                          correctAnswer,
+                                          correctAnswer?.text ?? "",
                                           style: GoogleFonts.inter(
                                             fontSize: answerSize,
                                             fontWeight: FontWeight.w700,

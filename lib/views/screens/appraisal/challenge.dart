@@ -168,7 +168,7 @@ class _ChallengeState extends State<Challenge> {
                                 .visibleSlides[
                                     challengeController.currentSlideIndex.value]
                                 .question
-                                ?.userAnswer
+                                ?.userAnswerId
                                 .trim() !=
                             "") {
                           // mark
@@ -181,12 +181,12 @@ class _ChallengeState extends State<Challenge> {
                                   .visibleSlides[challengeController
                                       .currentSlideIndex.value]
                                   .question
-                                  ?.correctAnswer ==
+                                  ?.correctAnswerId ==
                               challengeController
                                   .visibleSlides[challengeController
                                       .currentSlideIndex.value]
                                   .question
-                                  ?.userAnswer) {
+                                  ?.userAnswerId) {
                             // correct
                             await showModalBottomSheet(
                               backgroundColor: Colors.transparent,
@@ -257,7 +257,7 @@ class _ChallengeState extends State<Challenge> {
                                             .visibleSlides[challengeController
                                                 .currentSlideIndex.value]
                                             .question
-                                            ?.userAnswer
+                                            ?.userAnswerId
                                             .trim() !=
                                         ""
                                 ? primaryColor
@@ -277,7 +277,7 @@ class _ChallengeState extends State<Challenge> {
                                             .visibleSlides[challengeController
                                                 .currentSlideIndex.value]
                                             .question
-                                            ?.userAnswer
+                                            ?.userAnswerId
                                             .trim() !=
                                         ""
                                 ? Colors.white

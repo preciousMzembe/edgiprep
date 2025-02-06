@@ -74,7 +74,7 @@ class UserEnrollmentService extends GetxService {
         UserExam serverExam = UserExam(
           id: enrollment['examId'],
           title: enrollment['exam']['name'],
-          selected: false,
+          selected: true,
           enrollmentId: enrollment['id'],
         );
 
@@ -167,7 +167,7 @@ class UserEnrollmentService extends GetxService {
           doneFetchingUserSubjects.value = !doneFetchingUserSubjects.value;
 
           // get units
-          getUserServerUnits();
+          getUserServerUnitsAndTopics();
           // get subjects papers
           getUserServerPapers();
         }
@@ -179,85 +179,108 @@ class UserEnrollmentService extends GetxService {
   }
 
   // server user units
-  Future<void> getUserServerUnits() async {
-    // get all units using user subjects
+  Future<void> getUserServerUnitsAndTopics() async {
+    if (userSubjectBox.isNotEmpty) {
+      var userSubjects = userSubjectBox.values;
 
-    List<Unit> units = [
-      Unit(
-        id: "1",
-        name: "Cell Biology",
-        order: 1,
-        subjectId: "1",
-      ),
-      Unit(
-        id: "2",
-        name: "Genetics and Molecular Biology",
-        order: 2,
-        subjectId: "1",
-      ),
-      Unit(
-        id: "3",
-        name: "Algebra",
-        order: 1,
-        subjectId: "2",
-      ),
-    ];
+      for (UserSubject subject in userSubjects) {
+        await fetchSubjectUnitsAndTopics(subject.enrollmentId);
+      }
 
-    await unitBox.clear();
-    await unitBox.addAll(units);
+      // get lessons
+      getUserServerLessons();
 
-    // get topics
-    getUserServerTopics();
+      // TODO:  get subjects papers
+      // getUserServerPapers();
+    }
   }
 
-  // server user topics
-  Future<void> getUserServerTopics() async {
-    // get all topics using user units
+  Future<void> fetchSubjectUnitsAndTopics(String subjectEnrollmentId) async {
+    try {
+      String? token = await authService.getToken();
 
-    List<Topic> topics = [
-      Topic(
-        id: "1",
-        name: "Introduction to the Cell",
-        order: 1,
-        unitId: "1",
-        numberOfLessons: 3,
-        numberOfLessonsDone: 1,
-        needSubscrion: false,
-      ),
-      Topic(
-        id: "2",
-        name: "DNA Structure and Function",
-        order: 1,
-        unitId: "2",
-        numberOfLessons: 3,
-        numberOfLessonsDone: 0,
-        needSubscrion: true,
-      ),
-      Topic(
-        id: "3",
-        name: "Linear Equations and Inequalities",
-        order: 1,
-        unitId: "3",
-        numberOfLessons: 3,
-        numberOfLessonsDone: 0,
-        needSubscrion: false,
-      ),
-      Topic(
-        id: "4",
-        name: "Quadratic Equations",
-        order: 2,
-        unitId: "3",
-        numberOfLessons: 3,
-        numberOfLessonsDone: 0,
-        needSubscrion: false,
-      ),
-    ];
+      final response = await _dio.get(
+        '${config?.apiUrl}/Unit/Mobile/Units?SubjectEnrollmentId=$subjectEnrollmentId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
 
-    await topicBox.clear();
-    await topicBox.addAll(topics);
+      if (response.statusCode == 200) {
+        List<Unit> units = [];
+        List<Topic> topics = [];
 
-    // get lessons
-    getUserServerLessons();
+        String unitId = "";
+
+        for (var unit in response.data) {
+          unitId = unit['id'];
+
+          units.add(
+            Unit(
+              id: unit['id'],
+              name: unit['name'],
+              order: unit['order'],
+              subjectEnrollmentId: subjectEnrollmentId,
+            ),
+          );
+
+          for (var topic in unit['topics']) {
+            topics.add(
+              Topic(
+                id: topic['topic']['id'],
+                name: topic['topic']['name'],
+                order: topic['topic']['order'],
+                unitId: topic['topic']['unitId'],
+                numberOfLessons: topic['totalLessons'],
+                numberOfLessonsDone: topic['doneLessons'],
+                needSubscrion: false,
+              ),
+            );
+          }
+        }
+
+        // Save units locally
+        var unitKeysToDelete = [];
+
+        // Collect keys of units with  subjectEnrollmentId
+        for (var key in unitBox.keys) {
+          var entry = unitBox.get(key);
+          if (entry.subjectEnrollmentId == subjectEnrollmentId) {
+            unitKeysToDelete.add(key);
+          }
+        }
+
+        // Delete the collected units
+        for (var key in unitKeysToDelete) {
+          await unitBox.delete(key);
+        }
+
+        await unitBox.addAll(units);
+
+        // Save topics locally
+        var topicKeysToDelete = [];
+
+        // Collect keys of topics with  unitId
+        for (var key in topicBox.keys) {
+          var entry = topicBox.get(key);
+          if (entry.unitId == unitId) {
+            topicKeysToDelete.add(key);
+          }
+        }
+
+        // Delete the collected topics
+        for (var key in topicKeysToDelete) {
+          await topicBox.delete(key);
+        }
+
+        await topicBox.addAll(topics);
+      }
+    } on DioException catch (e) {
+      debugPrint(
+          "Error fetching subject units and topics ------------------------- user enrollment service");
+    }
   }
 
   // server user lessons
@@ -412,12 +435,13 @@ class UserEnrollmentService extends GetxService {
   }
 
   // Public getter for all units and topics of a subject
-  Future<Map<Unit, List<Topic>>> getUnitsAndTopics(String subjectId) async {
+  Future<Map<Unit, List<Topic>>> getUnitsAndTopics(
+      String subjectEnrollmentId) async {
     Map<Unit, List<Topic>> unitTopicMap = {};
 
     // get units
     List<Unit> units = unitBox.values
-        .where((unit) => unit.subjectId == subjectId)
+        .where((unit) => unit.subjectEnrollmentId == subjectEnrollmentId)
         .cast<Unit>()
         .toList();
 

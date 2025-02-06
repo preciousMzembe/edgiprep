@@ -130,6 +130,7 @@ class SubjectsEnrollment extends StatelessWidget {
 
                               if (done) {
                                 Get.back();
+                                Get.to(() => Premium());
                               } else {
                                 Get.snackbar(
                                   "Enrollmet Error",
@@ -141,16 +142,6 @@ class SubjectsEnrollment extends StatelessWidget {
                                   snackPosition: SnackPosition.BOTTOM,
                                 );
                               }
-                            } else {
-                              Get.snackbar(
-                                "Enrollmet Error",
-                                "Please select at least one subject",
-                                backgroundColor:
-                                    const Color.fromRGBO(254, 101, 93, 1),
-                                colorText: Colors.white,
-                                duration: const Duration(seconds: 2),
-                                snackPosition: SnackPosition.BOTTOM,
-                              );
                             }
                           },
                           child: normalButton(

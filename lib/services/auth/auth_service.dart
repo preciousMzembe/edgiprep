@@ -29,6 +29,8 @@ class AuthService extends GetxService {
   }
 
   Future<void> getUserServerData() async {
+    config ??= await configService.getConfig();
+
     // check if token is not empty first
     String? token = await getToken();
 
@@ -55,7 +57,7 @@ class AuthService extends GetxService {
           await userBox.add(user);
         }
       } on DioException catch (e) {
-        debugPrint("Error fetching learner data ------------ auth controller");
+        debugPrint("Error fetching learner data ------------ auth service");
 
         if (e.response != null) {
           if (e.response?.statusCode == 401) {
@@ -84,7 +86,7 @@ class AuthService extends GetxService {
         };
       }
     } on DioException catch (e) {
-      debugPrint("Error loggin in ------------ auth controller");
+      debugPrint("Error loggin in ------------ auth service");
       if (e.response != null) {
         if (e.response?.statusCode == 404) {
           return {
@@ -118,7 +120,7 @@ class AuthService extends GetxService {
         };
       }
     } on DioException catch (e) {
-      debugPrint("Error registering ------------ auth controller");
+      debugPrint("Error registering ------------ auth service");
 
       if (e.response != null) {
         if (e.response?.statusCode == 404) {
@@ -148,7 +150,7 @@ class AuthService extends GetxService {
         };
       }
     } on DioException catch (e) {
-      debugPrint("Error checking username ------------ auth controller");
+      debugPrint("Error checking username ------------ auth service");
 
       if (e.response != null) {
         if (e.response?.statusCode == 409) {

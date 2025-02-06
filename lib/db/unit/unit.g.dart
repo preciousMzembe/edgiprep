@@ -20,7 +20,7 @@ class UnitAdapter extends TypeAdapter<Unit> {
       id: fields[0] as String,
       name: fields[1] as String,
       order: fields[2] as int,
-      subjectId: fields[3] as String,
+      subjectEnrollmentId: fields[3] as String,
     );
   }
 
@@ -35,7 +35,7 @@ class UnitAdapter extends TypeAdapter<Unit> {
       ..writeByte(2)
       ..write(obj.order)
       ..writeByte(3)
-      ..write(obj.subjectId);
+      ..write(obj.subjectEnrollmentId);
   }
 
   @override

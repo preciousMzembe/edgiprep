@@ -22,7 +22,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 
 class Home extends StatelessWidget {
   final Function toSubjects;
@@ -401,11 +400,13 @@ class Home extends StatelessWidget {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      Get.to(() => const LoadSlides(
+                                      Get.to(() => LoadSlides(
                                             title: "Preparing Your Quiz...",
                                             message:
                                                 "Get ready to dive in! Your quiz is loading, and we're setting everything up for you.",
                                             type: "quiz",
+                                            subject: subject,
+                                            limit: 5,
                                           ));
                                     },
                                     child: homeQuizBox(

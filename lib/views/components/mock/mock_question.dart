@@ -63,11 +63,11 @@ Widget mockQuestion(LessonSlideQuestionModel? question, bool sideDone) {
                 GestureDetector(
                   onTap: () {
                     if (!sideDone) {
-                      mockController.answerCurrentQuestion(option);
+                      mockController.answerCurrentQuestion(option.id);
                     }
                   },
                   child: lessonQuestionResponse(
-                      option, option == question.userAnswer),
+                      option.text, option.id == question.userAnswerId),
                 ),
                 SizedBox(
                   height: 25.h,

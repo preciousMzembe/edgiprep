@@ -14,12 +14,12 @@ class Unit {
   final int order;
 
   @HiveField(3)
-  final String subjectId;
+  final String subjectEnrollmentId;
 
   Unit({
     required this.id,
     required this.name,
     required this.order,
-    required this.subjectId,
+    required this.subjectEnrollmentId,
   });
 }

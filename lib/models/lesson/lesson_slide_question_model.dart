@@ -1,20 +1,36 @@
+import 'package:edgiprep/models/lesson/question_answer_model.dart';
+
 class LessonSlideQuestionModel {
+  final String id;
   final String questionText;
-  final List<String> options;
+  final String? questionImage;
+  List<QuestionAnswerModel> options;
   final String explanation;
-  final String correctAnswer;
-  String userAnswer;
+  final String? explanationImage;
+  String correctAnswerId;
+  String userAnswerId;
 
   LessonSlideQuestionModel({
+    required this.id,
     required this.questionText,
+    required this.questionImage,
     required this.options,
     required this.explanation,
-    required this.correctAnswer,
-    this.userAnswer = "",
+    required this.explanationImage,
+    this.correctAnswerId = "",
+    this.userAnswerId = "",
   });
 
   // Method to set the user's answer
-  void setUserAnswer(String answer) {
-    userAnswer = answer;
+  void setCorrectUserAnswer(String answerId) {
+    correctAnswerId = answerId;
+  }
+
+  void setUserAnswer(String answerId) {
+    userAnswerId = answerId;
+  }
+
+  void setOptions(List<QuestionAnswerModel> newOptions) {
+    options = newOptions;
   }
 }

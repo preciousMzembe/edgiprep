@@ -168,7 +168,7 @@ class _LessonState extends State<Lesson> {
                                 .visibleSlides[
                                     lessonController.currentSlideIndex.value]
                                 .question
-                                ?.userAnswer
+                                ?.userAnswerId
                                 .trim() !=
                             "") {
                           // mark
@@ -181,12 +181,12 @@ class _LessonState extends State<Lesson> {
                                   .visibleSlides[
                                       lessonController.currentSlideIndex.value]
                                   .question
-                                  ?.correctAnswer ==
+                                  ?.correctAnswerId ==
                               lessonController
                                   .visibleSlides[
                                       lessonController.currentSlideIndex.value]
                                   .question
-                                  ?.userAnswer) {
+                                  ?.userAnswerId) {
                             // correct
                             await showModalBottomSheet(
                               backgroundColor: Colors.transparent,
@@ -253,7 +253,7 @@ class _LessonState extends State<Lesson> {
                                             .visibleSlides[lessonController
                                                 .currentSlideIndex.value]
                                             .question
-                                            ?.userAnswer
+                                            ?.userAnswerId
                                             .trim() !=
                                         ""
                                 ? primaryColor
@@ -273,7 +273,7 @@ class _LessonState extends State<Lesson> {
                                             .visibleSlides[lessonController
                                                 .currentSlideIndex.value]
                                             .question
-                                            ?.userAnswer
+                                            ?.userAnswerId
                                             .trim() !=
                                         ""
                                 ? Colors.white

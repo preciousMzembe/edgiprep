@@ -6,54 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LessonController extends GetxController {
-  final RxList<SlideModel> slides = [
-    SlideModel(
-      content: SlideContentModel(
-        title: "Introduction to Biological Diagrams: Purpose and Importance",
-        text:
-            "Biological diagrams are essential tools in the study of life sciences. They help students and scientists visually represent the structure and function of organisms, cells, and tissues. These diagrams simplify complex biological structures, making them easier to understand and communicate.",
-        slideMedia: SlideMediaModel(
-          MediaType.image,
-          "images/biology_lesson.jpg",
-        ),
-      ),
-    ),
-    SlideModel(
-      question: LessonSlideQuestionModel(
-        questionText:
-            "The following are characteristics of a good drawing except?",
-        options: [
-          "They should be large enough",
-          "They are not drawn to scale",
-          "They should be accurate",
-          "They should be neat",
-        ],
-        explanation:
-            "A good drawing  should accurately represent the subject, including proportions and measurements. Not drawing to scale distorts the representation, making it unreliable for analysis or understanding.",
-        correctAnswer: "They are not drawn to scale",
-      ),
-    ),
-    SlideModel(
-      content: SlideContentModel(
-        title: "Techniques for Drawing Accurate Biological Diagrams",
-        text:
-            "Drawing accurate biological diagrams is key to effectively visualizing and communicating complex structures in biology. This lesson covers the basic techniques needed to ensure your diagrams are clear, proportional, and properly labelled.",
-      ),
-      question: LessonSlideQuestionModel(
-        questionText:
-            "What is the most important step when starting a biological diagram?",
-        options: [
-          "Adding labels first",
-          "Drawing lightly to outline proportions",
-          "Using bold lines immediately",
-          "Skipping the title",
-        ],
-        explanation:
-            "A good drawing  should accurately represent the subject, including proportions and measurements. Not drawing to scale distorts the representation, making it unreliable for analysis or understanding.",
-        correctAnswer: "Drawing lightly to outline proportions",
-      ),
-    ),
-  ].obs;
+  final RxList<SlideModel> slides = <SlideModel>[].obs;
 
   // Tracks the list of slides and the currently visible slide index
   RxInt currentSlideIndex = 0.obs;
@@ -127,7 +80,7 @@ class LessonController extends GetxController {
   void resetSlides() {
     for (var slide in slides) {
       slide.slideDone = false;
-      slide.question?.userAnswer = "";
+      slide.question?.userAnswerId = "";
     }
   }
 
@@ -140,14 +93,14 @@ class LessonController extends GetxController {
   // Check if the current slide has a question and mark it answered if required
   bool isQuestionAnswered(int index) {
     final slide = slides[index];
-    return slide.question != null && slide.question!.userAnswer.isNotEmpty;
+    return slide.question != null && slide.question!.userAnswerId.isNotEmpty;
   }
 
   // Answer the current slide's question
   void answerCurrentQuestion(String answer) {
     final currentSlide = slides[currentSlideIndex.value];
     if (currentSlide.question != null) {
-      currentSlide.question!.userAnswer = answer;
+      currentSlide.question!.userAnswerId = answer;
       visibleSlides.refresh();
     }
   }
@@ -172,9 +125,12 @@ class LessonController extends GetxController {
   int getCorrectAnswers() {
     int number = 0;
     for (var slide in slides) {
-      if (slide.question != null &&
-          slide.question?.correctAnswer == slide.question?.userAnswer) {
-        number++;
+      if (slide.question != null) {
+        for (var option in slide.question!.options) {
+          if (option.isCorrect && option.id == slide.question!.userAnswerId) {
+            number++;
+          }
+        }
       }
     }
     return number;

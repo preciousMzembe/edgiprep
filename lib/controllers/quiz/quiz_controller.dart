@@ -1,48 +1,23 @@
+import 'dart:math';
+
+import 'package:edgiprep/models/lesson/question_answer_model.dart';
 import 'package:edgiprep/models/lesson/slide_model.dart';
 import 'package:edgiprep/models/lesson/lesson_slide_question_model.dart';
+import 'package:edgiprep/services/quiz/quiz_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class QuizController extends GetxController {
-  final RxList<SlideModel> slides = [
-    SlideModel(
-      question: LessonSlideQuestionModel(
-        questionText:
-            "The following are characteristics of a good drawing except?",
-        options: [
-          "They should be large enough",
-          "They are not drawn to scale",
-          "They should be accurate",
-          "They should be neat",
-        ],
-        explanation:
-            "A good drawing  should accurately represent the subject, including proportions and measurements. Not drawing to scale distorts the representation, making it unreliable for analysis or understanding.",
-        correctAnswer: "They are not drawn to scale",
-      ),
-    ),
-    SlideModel(
-      question: LessonSlideQuestionModel(
-        questionText:
-            "What is the most important step when starting a biological diagram?",
-        options: [
-          "Adding labels first",
-          "Drawing lightly to outline proportions",
-          "Using bold lines immediately",
-          "Skipping the title",
-        ],
-        explanation:
-            "A good drawing  should accurately represent the subject, including proportions and measurements. Not drawing to scale distorts the representation, making it unreliable for analysis or understanding.",
-        correctAnswer: "Drawing lightly to outline proportions",
-      ),
-    ),
-  ].obs;
+  QuizService quizService = QuizService();
+
+  RxString quizId = "".obs;
+
+  final RxList<SlideModel> slides = <SlideModel>[].obs;
 
   // Tracks the list of slides and the currently visible slide index
   RxInt currentSlideIndex = 0.obs;
   RxList<SlideModel> visibleSlides = <SlideModel>[].obs;
   PageController pageController = PageController();
-
-  void getData() {}
 
   // Load the first slide initially
   void loadInitialSlide() {
@@ -97,19 +72,81 @@ class QuizController extends GetxController {
     }
   }
 
-  // Reset lesson progress (optional)
-  void restartLesson() {
+  // Get quiz data
+  Future<bool> getData(String subjectEnrollmentId, int limit) async {
+    bool error = false;
+
+    Map data = await quizService.fetchData(subjectEnrollmentId, limit);
+
+    if (data['error']) {
+      error = true;
+    } else {
+      quizId.value = "";
+
+      Map quizData = data['quizData'];
+
+      List<SlideModel> tempSlides = [];
+
+      for (var question in quizData['questions']) {
+        SlideModel tempSlide = SlideModel(
+          question: LessonSlideQuestionModel(
+            id: question['id'],
+            questionText: question['name'],
+            questionImage: question['imageUrL'],
+            options: [],
+            explanation: question['explaination'],
+            explanationImage: question['explainationImage'],
+          ),
+        );
+
+        List<QuestionAnswerModel> tempOptions = [];
+
+        for (var option in question['answers']) {
+          tempOptions.add(
+            QuestionAnswerModel(
+              id: option['id'],
+              text: option['text'],
+              qusetionId: option['questionId'],
+              isCorrect: option['isCorrect'],
+            ),
+          );
+
+          if (option['isCorrect']) {
+            tempSlide.question!.setCorrectUserAnswer(option['id']);
+          }
+        }
+
+        // shuffle options before adding
+        tempOptions.shuffle(Random());
+
+        tempSlide.question!.setOptions(tempOptions);
+
+        tempSlides.add(tempSlide);
+      }
+
+      slides.value = tempSlides;
+    }
+
+    return error;
+  }
+
+  // Reset lesson progress
+  Future<bool> restartLesson(String subjectEnrollmentId, int limit) async {
+    bool error = await getData(subjectEnrollmentId, limit);
+
     currentSlideIndex.value = 0;
     visibleSlides.clear();
     resetSlides();
     loadInitialSlide();
     resetPageController();
+
+    return error;
   }
 
   void resetSlides() {
     for (var slide in slides) {
       slide.slideDone = false;
-      slide.question?.userAnswer = "";
+      slide.question?.userAnswerId = "";
     }
   }
 
@@ -122,14 +159,14 @@ class QuizController extends GetxController {
   // Check if the current slide has a question and mark it answered if required
   bool isQuestionAnswered(int index) {
     final slide = slides[index];
-    return slide.question != null && slide.question!.userAnswer.isNotEmpty;
+    return slide.question != null && slide.question!.userAnswerId.isNotEmpty;
   }
 
   // Answer the current slide's question
   void answerCurrentQuestion(String answer) {
     final currentSlide = slides[currentSlideIndex.value];
     if (currentSlide.question != null) {
-      currentSlide.question!.userAnswer = answer;
+      currentSlide.question!.userAnswerId = answer;
       visibleSlides.refresh();
     }
   }
@@ -154,9 +191,12 @@ class QuizController extends GetxController {
   int getCorrectAnswers() {
     int number = 0;
     for (var slide in slides) {
-      if (slide.question != null &&
-          slide.question?.correctAnswer == slide.question?.userAnswer) {
-        number++;
+      if (slide.question != null) {
+        for (var option in slide.question!.options) {
+          if (option.isCorrect && option.id == slide.question!.userAnswerId) {
+            number++;
+          }
+        }
       }
     }
     return number;
