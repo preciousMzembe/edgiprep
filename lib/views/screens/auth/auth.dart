@@ -76,7 +76,7 @@ class _AuthState extends State<Auth> {
                       ],
                     ),
                     SizedBox(
-                      height: 80.h,
+                      height: 20.h,
                     ),
                   ],
                 ),

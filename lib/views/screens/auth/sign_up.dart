@@ -45,6 +45,9 @@ class _SignUpState extends State<SignUp> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          SizedBox(
+            height: 60.h,
+          ),
           // title
           authTitleText("Create"),
           Row(

@@ -1,7 +1,6 @@
 // auth_controller.dart
 import 'package:edgiprep/db/user/user.dart';
 import 'package:edgiprep/services/auth/auth_service.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {

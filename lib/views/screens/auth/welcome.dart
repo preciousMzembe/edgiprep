@@ -84,7 +84,7 @@ class _WelcomeState extends State<Welcome> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    SizedBox(height: 80.h),
+                    SizedBox(height: 30.h),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,

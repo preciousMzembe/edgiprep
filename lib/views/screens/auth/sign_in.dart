@@ -44,6 +44,9 @@ class _SignInState extends State<SignIn> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          SizedBox(
+            height: 60.h,
+          ),
           // title
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,

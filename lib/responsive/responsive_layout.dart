@@ -16,7 +16,9 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kIsWeb ? backgroundColor : appbarColor,
-      body: kIsWeb ? WebLayout(body: widget.body) : widget.body,
+      body: SafeArea(
+        child: kIsWeb ? WebLayout(body: widget.body) : widget.body,
+      ),
     );
   }
 }
