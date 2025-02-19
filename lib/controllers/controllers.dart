@@ -22,8 +22,8 @@ class Controllers extends Bindings {
   void dependencies() {
     // Services
     Get.put<ConfigService>(ConfigService());
-    Get.put<NotificationService>(NotificationService());
     Get.put<AuthService>(AuthService());
+    Get.put<NotificationService>(NotificationService());
     Get.put<EnrollmentService>(EnrollmentService());
     Get.put<UserEnrollmentService>(UserEnrollmentService());
     Get.put<QuizService>(QuizService());
