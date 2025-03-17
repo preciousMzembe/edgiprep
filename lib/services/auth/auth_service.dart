@@ -15,6 +15,7 @@ class AuthService extends GetxService {
   final Dio _dio = createDio();
 
   RxBool doneFetchingUserData = true.obs;
+  RxBool doneLogin = true.obs;
   RxBool doneLogout = true.obs;
 
   @override
@@ -79,6 +80,8 @@ class AuthService extends GetxService {
         _saveToken(response.data['token']);
 
         await getUserServerData();
+
+        doneLogin.value = !doneLogin.value;
 
         return {
           'status': "success",

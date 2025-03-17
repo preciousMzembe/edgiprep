@@ -31,6 +31,9 @@ class _SignInState extends State<SignIn> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+  bool usernameError = false;
+  bool passwordError = false;
+
   @override
   dispose() {
     usernameController.dispose();
@@ -65,26 +68,46 @@ class _SignInState extends State<SignIn> {
           ),
 
           // email
-          AuthInput(
-            label: "Username",
-            type: TextInputType.text,
-            isPassword: false,
-            icon: FontAwesomeIcons.solidUser,
-            radius: 16,
-            controller: usernameController,
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                  width: 1,
+                  color: usernameError
+                      ? const Color.fromARGB(255, 254, 101, 93)
+                      : Colors.transparent),
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: AuthInput(
+              label: "Username",
+              type: TextInputType.text,
+              isPassword: false,
+              icon: FontAwesomeIcons.solidUser,
+              radius: 16,
+              controller: usernameController,
+            ),
           ),
 
           // password
           SizedBox(
             height: 25.h,
           ),
-          AuthInput(
-            label: "Password",
-            type: TextInputType.text,
-            isPassword: true,
-            icon: FontAwesomeIcons.lock,
-            radius: 16,
-            controller: passwordController,
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                  width: 1,
+                  color: passwordError
+                      ? const Color.fromARGB(255, 254, 101, 93)
+                      : Colors.transparent),
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: AuthInput(
+              label: "Password",
+              type: TextInputType.text,
+              isPassword: true,
+              icon: FontAwesomeIcons.lock,
+              radius: 16,
+              controller: passwordController,
+            ),
           ),
 
           // continue
@@ -93,6 +116,11 @@ class _SignInState extends State<SignIn> {
           ),
           GestureDetector(
             onTap: () async {
+              setState(() {
+                usernameError = false;
+                passwordError = false;
+              });
+
               String username = usernameController.text.trim();
               String password = passwordController.text.trim();
 
@@ -109,18 +137,22 @@ class _SignInState extends State<SignIn> {
                     snackPosition: SnackPosition.BOTTOM,
                   );
                 } else {
+                  // get enrollment data
                   enrollmentService.restartFetch();
                   Get.back();
                 }
               } else {
-                Get.snackbar(
-                  "Login Error",
-                  "Please fill all the fields",
-                  backgroundColor: const Color.fromRGBO(254, 101, 93, 1),
-                  colorText: Colors.white,
-                  duration: const Duration(seconds: 2),
-                  snackPosition: SnackPosition.BOTTOM,
-                );
+                if (username.isEmpty) {
+                  setState(() {
+                    usernameError = true;
+                  });
+                }
+
+                if (password.isEmpty) {
+                  setState(() {
+                    passwordError = true;
+                  });
+                }
               }
             },
             child: normalButton(

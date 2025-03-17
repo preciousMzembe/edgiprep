@@ -26,6 +26,7 @@ class UserEnrollmentController extends GetxController {
     ever(userEnrollmentService.doneFetchingUserExams, (_) async {
       fetchExams();
     });
+    
     ever(userEnrollmentService.doneFetchingUserSubjects, (_) async {
       fetchSubjects();
     });
@@ -52,7 +53,8 @@ class UserEnrollmentController extends GetxController {
   }
 
   // Fetch units and topics
-  Future<Map<Unit, List<Topic>>> fetchUnitsAndTopics(String subjectEnrollmentId) async {
+  Future<Map<Unit, List<Topic>>> fetchUnitsAndTopics(
+      String subjectEnrollmentId) async {
     Map<Unit, List<Topic>> unitTopicMap =
         await userEnrollmentService.getUnitsAndTopics(subjectEnrollmentId);
 

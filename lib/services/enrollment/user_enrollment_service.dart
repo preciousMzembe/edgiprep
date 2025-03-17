@@ -37,6 +37,11 @@ class UserEnrollmentService extends GetxService {
 
     config ??= await configService.getConfig();
 
+    // listen to change after login
+    ever(authService.doneLogin, (_) async {
+      _fetchServerData();
+    });
+
     // listen to change after enrollment
     ever(enrollmentService.doneEnrollment, (_) async {
       _fetchServerData();

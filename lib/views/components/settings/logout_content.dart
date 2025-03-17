@@ -105,14 +105,25 @@ Widget logoutContent() => LayoutBuilder(builder: (context, constraints) {
                         children: [
                           Expanded(
                             child: GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
+                              onTap: () async {
+                                await authController.logout();
+                                Get.back();
                               },
-                              child: normalButton(
-                                const Color.fromARGB(255, 161, 184, 231),
-                                Colors.white,
-                                "Cancel",
-                                100,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 1,
+                                    color:
+                                        const Color.fromARGB(255, 254, 101, 93),
+                                  ),
+                                  borderRadius: BorderRadius.circular(20.r),
+                                ),
+                                child: normalButton(
+                                  Colors.transparent,
+                                  Color.fromARGB(255, 254, 101, 93),
+                                  "SignOut",
+                                  100,
+                                ),
                               ),
                             ),
                           ),
@@ -121,15 +132,26 @@ Widget logoutContent() => LayoutBuilder(builder: (context, constraints) {
                           ),
                           Expanded(
                             child: GestureDetector(
-                              onTap: () async {
-                                await authController.logout();
-                                Get.back();
+                              onTap: () {
+                                Navigator.pop(context);
                               },
-                              child: normalButton(
-                                const Color.fromARGB(255, 228, 131, 131),
-                                Colors.white,
-                                "SignOut",
-                                100,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color:
+                                      const Color.fromARGB(255, 104, 180, 255),
+                                  border: Border.all(
+                                    width: 1,
+                                    color: const Color.fromARGB(
+                                        255, 104, 180, 255),
+                                  ),
+                                  borderRadius: BorderRadius.circular(20.r),
+                                ),
+                                child: normalButton(
+                                  Colors.transparent,
+                                  Colors.white,
+                                  "Cancel",
+                                  100,
+                                ),
                               ),
                             ),
                           ),
