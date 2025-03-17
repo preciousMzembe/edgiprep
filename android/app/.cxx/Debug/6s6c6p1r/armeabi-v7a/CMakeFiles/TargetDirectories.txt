@@ -1,0 +1,2 @@
+C:/Pre0303/Projects/Edgicate/edgiprep/android/app/.cxx/Debug/6s6c6p1r/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Pre0303/Projects/Edgicate/edgiprep/android/app/.cxx/Debug/6s6c6p1r/armeabi-v7a/CMakeFiles/rebuild_cache.dir
