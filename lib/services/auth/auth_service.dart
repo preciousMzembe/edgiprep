@@ -114,7 +114,7 @@ class AuthService extends GetxService {
       String name, String username, String password) async {
     try {
       final response = await _dio.post('${config?.apiUrl}/Auth/Mobile/Register',
-          data: {'name': username, 'username': username, 'pin': password});
+          data: {'name': name, 'username': username, 'pin': password});
 
       if (response.statusCode == 200) {
         _saveToken(response.data['token']);
