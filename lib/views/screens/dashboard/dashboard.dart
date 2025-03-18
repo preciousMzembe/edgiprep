@@ -42,11 +42,6 @@ class _DashboardState extends State<Dashboard> {
       );
     }
 
-    void goToAppraisal() {
-      navController.changePageIndex(2);
-      pageController.jumpToPage(2);
-    }
-
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, others) {
@@ -70,7 +65,6 @@ class _DashboardState extends State<Dashboard> {
             Home(
               toSubjects: goToSubjects,
               toSubject: openSubject,
-              goToAppraisal: goToAppraisal,
             ),
             const Subjects(),
             const Appraisal(),

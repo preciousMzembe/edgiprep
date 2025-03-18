@@ -16,6 +16,7 @@ import 'package:edgiprep/views/components/home/home_user_name.dart';
 import 'package:edgiprep/views/components/home/home_weekly_box.dart';
 import 'package:edgiprep/views/components/home/home_xp_streak_box.dart';
 import 'package:edgiprep/views/screens/appraisal/challenges.dart';
+import 'package:edgiprep/views/screens/appraisal/quizzes.dart';
 import 'package:edgiprep/views/screens/notifications/notifications.dart';
 import 'package:edgiprep/views/screens/subjects/load_slides.dart';
 import 'package:flutter/material.dart';
@@ -26,12 +27,10 @@ import 'package:get/get.dart';
 class Home extends StatelessWidget {
   final Function toSubjects;
   final Function(UserSubject) toSubject;
-  final Function goToAppraisal;
   const Home(
       {super.key,
       required this.toSubjects,
-      required this.toSubject,
-      required this.goToAppraisal});
+      required this.toSubject,});
 
   @override
   Widget build(BuildContext context) {
@@ -374,7 +373,7 @@ class Home extends StatelessWidget {
                           homeSectionTitle("Quick Quizzes"),
                           GestureDetector(
                             onTap: () {
-                              goToAppraisal();
+                              Get.to(() => const Quizzes());
                             },
                             child: homeSectionSeeAll("See all"),
                           ),

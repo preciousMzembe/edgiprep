@@ -192,21 +192,7 @@ class Settings extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () async {
-                          await showModalBottomSheet(
-                            backgroundColor: Colors.transparent,
-                            context: context,
-                            isScrollControlled: true,
-                            isDismissible: true,
-                            builder: (BuildContext context) => BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                              child: logoutContent(),
-                            ),
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(0),
-                              ),
-                            ),
-                          );
+                          showLogout(context);
                         },
                         child: normalSvgButton(
                           const Color.fromRGBO(35, 131, 226, 1),

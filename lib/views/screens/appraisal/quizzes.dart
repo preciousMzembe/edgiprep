@@ -108,11 +108,13 @@ class Quizzes extends StatelessWidget {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  Get.to(() => const LoadSlides(
+                                  Get.to(() => LoadSlides(
                                         title: "Preparing Your Quiz...",
                                         message:
                                             "Get ready to dive in! Your quiz is loading, and we're setting everything up for you.",
                                         type: "quiz",
+                                        subject: subject,
+                                        limit: 5,
                                       ));
                                 },
                                 child: quizSubject(

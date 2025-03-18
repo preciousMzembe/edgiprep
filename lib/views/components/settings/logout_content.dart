@@ -1,168 +1,177 @@
+import 'dart:ui';
+
 import 'package:edgiprep/controllers/auth/auth_controller.dart';
-import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
-import 'package:edgiprep/views/components/general/normal_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-Widget logoutContent() => LayoutBuilder(builder: (context, constraints) {
-      AuthController authController = Get.find<AuthController>();
+void showLogout(
+  BuildContext context,
+) {
+  AuthController authController = Get.find<AuthController>();
 
-      bool isTablet = DeviceUtils.isTablet(context);
-      bool isSmallTablet = DeviceUtils.isSmallTablet(context);
+  showDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (BuildContext context) {
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          bool isTablet = DeviceUtils.isTablet(context);
+          bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
-      double titleFontSize = isTablet
-          ? 46.sp
-          : isSmallTablet
-              ? 48.sp
-              : 50.sp;
-      double subtitleFontSize = isTablet
-          ? 18.sp
-          : isSmallTablet
-              ? 20.sp
-              : 22.sp;
+          double titleFontSize = isTablet
+              ? 32.sp
+              : isSmallTablet
+                  ? 34.sp
+                  : 36.sp;
 
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 30.h),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(30.r),
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Container(
-              color: errorColor,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(
-                    height: 30.h,
+          double subtitleFontSize = isTablet
+              ? 18.sp
+              : isSmallTablet
+                  ? 20.sp
+                  : 22.sp;
+
+          double height = isTablet
+              ? 80.sp
+              : isSmallTablet
+                  ? 84.h
+                  : 84.h;
+
+          double fontSize = isTablet
+              ? 18.sp
+              : isSmallTablet
+                  ? 20.sp
+                  : 24.sp;
+
+          return Stack(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                  child: Container(
+                    color: const Color.fromRGBO(0, 0, 0, 0.1),
                   ),
-                  // icon
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 50.w,
-                      vertical: 50.h,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
+                ),
+              ),
+              Center(
+                child: AlertDialog(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.r),
+                  ),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 40.w, vertical: 40.h),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[
+                        // image
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(30.r),
-                              child: SvgPicture.asset(
-                                'icons/sad.svg',
-                                height: 130.r,
-                                width: 130.r,
-                              ),
+                            SvgPicture.asset(
+                              'icons/sad_close.svg',
+                              height: 155.r,
+                              width: 155.r,
                             ),
                           ],
                         ),
-
                         // title
                         SizedBox(
-                          height: 30.h,
+                          height: 25.h,
                         ),
                         Text(
-                          "Confirm SignOut",
+                          "Are You Sure You \nWant to SignOut?",
                           textAlign: TextAlign.center,
                           style: GoogleFonts.inter(
                             fontSize: titleFontSize,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            color: const Color.fromRGBO(52, 74, 106, 1),
                           ),
                         ),
 
-                        // subtitle
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 80.w),
-                          child: Text(
-                            "After you sign out you will need to sign in again after you open the App. ",
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.inter(
-                              fontSize: subtitleFontSize,
-                              fontWeight: FontWeight.w600,
-                              color: const Color.fromARGB(255, 236, 236, 236),
+                        // text
+                        SizedBox(
+                          height: 15.h,
+                        ),
+                        Text(
+                          "After you sign out you will need to sign in again after you open the App.",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.inter(
+                            fontSize: subtitleFontSize,
+                            fontWeight: FontWeight.w400,
+                            color: const Color.fromRGBO(89, 89, 89, 1),
+                          ),
+                        ),
+
+                        // button
+                        SizedBox(
+                          height: 40.h,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20.r),
+                            child: Container(
+                              height: height,
+                              color: const Color.fromRGBO(35, 131, 226, 1),
+                              padding: EdgeInsets.symmetric(horizontal: 50.w),
+                              child: Center(
+                                child: Text(
+                                  "No, Cancel",
+                                  style: GoogleFonts.inter(
+                                    fontSize: fontSize,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20.h,
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            await authController.logout();
+                            Get.back();
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20.r),
+                            child: Container(
+                              height: height,
+                              color: const Color.fromRGBO(236, 239, 245, 1),
+                              padding: EdgeInsets.symmetric(horizontal: 50.w),
+                              child: Center(
+                                child: Text(
+                                  "Yes, SignOut",
+                                  style: GoogleFonts.inter(
+                                    fontSize: fontSize,
+                                    fontWeight: FontWeight.w700,
+                                    color: const Color.fromRGBO(52, 74, 106, 1),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-
-                  // button
-                  Container(
-                    color: const Color.fromRGBO(254, 232, 232, 1),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 50.w,
-                        vertical: 50.h,
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () async {
-                                await authController.logout();
-                                Get.back();
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    width: 1,
-                                    color:
-                                        const Color.fromARGB(255, 254, 101, 93),
-                                  ),
-                                  borderRadius: BorderRadius.circular(20.r),
-                                ),
-                                child: normalButton(
-                                  Colors.transparent,
-                                  Color.fromARGB(255, 254, 101, 93),
-                                  "SignOut",
-                                  100,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 20.w,
-                          ),
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color:
-                                      const Color.fromARGB(255, 104, 180, 255),
-                                  border: Border.all(
-                                    width: 1,
-                                    color: const Color.fromARGB(
-                                        255, 104, 180, 255),
-                                  ),
-                                  borderRadius: BorderRadius.circular(20.r),
-                                ),
-                                child: normalButton(
-                                  Colors.transparent,
-                                  Colors.white,
-                                  "Cancel",
-                                  100,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
+                ),
               ),
-            ),
-          ),
-        ),
+            ],
+          );
+        },
       );
-    });
+    },
+  );
+}
