@@ -8,13 +8,15 @@ import 'package:edgiprep/utils/dio_client.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService extends GetxService {
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+
   ConfigService configService = Get.find<ConfigService>();
   late Config? config;
   final Dio _dio = createDio();
+
+  final String _tokenKey = "authToken";
 
   RxBool doneFetchingUserData = true.obs;
   RxBool doneLogin = true.obs;
@@ -182,22 +184,19 @@ class AuthService extends GetxService {
 
   // Token handling
   Future<void> _saveToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('authToken', token);
+    await _secureStorage.write(key: _tokenKey, value: token);
   }
 
   Future<void> _removeToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('authToken');
+    await _secureStorage.delete(key: _tokenKey);
   }
 
   Future<String?> getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('authToken');
+    return await _secureStorage.read(key: _tokenKey);
   }
 
   Future<bool> isLoggedIn() async {
-    final token = await getToken();
+    String? token = await getToken();
     return token != null;
   }
 

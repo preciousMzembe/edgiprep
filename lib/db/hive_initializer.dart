@@ -12,10 +12,49 @@ import 'package:edgiprep/db/topic/topic.dart';
 import 'package:edgiprep/db/unit/unit.dart';
 import 'package:edgiprep/db/user/user.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HiveInitializer {
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+
+  final String _encryptionKey = "hiveEncryptionKey";
+
+  // Generate & Store Secure Key
+  Future<void> generateAndStoreKey() async {
+    final encryptionKey = Hive.generateSecureKey();
+
+    await _secureStorage.write(
+      key: _encryptionKey,
+      value: encryptionKey.join(','),
+    );
+  }
+
+  // Retrieve Encryption Key from Secure Storage or Generate If Not There
+  Future<List<int>> getEncryptionKey() async {
+    String? keyString = await _secureStorage.read(key: _encryptionKey);
+
+    if (keyString == null) {
+      await generateAndStoreKey();
+      keyString = await _secureStorage.read(key: _encryptionKey);
+    }
+
+    return keyString!.split(',').map(int.parse).toList();
+  }
+
+  // Open Hive Box with Encryption
+  Future<Box<T>> openSecureBox<T>(String boxName) async {
+    final encryptionKey = await getEncryptionKey();
+
+    final encryptedBox = await Hive.openBox<T>(
+      boxName,
+      encryptionCipher: HiveAesCipher(encryptionKey),
+    );
+
+    return encryptedBox;
+  }
+
   Future<void> init() async {
     await Hive.initFlutter();
 
@@ -38,18 +77,19 @@ class HiveInitializer {
 
     // Open boxes
     try {
-      userBox = await Hive.openBox<User>('userBox');
-      examBox = await Hive.openBox<Exam>('examBox');
-      userExamBox = await Hive.openBox<UserExam>('userExamBox');
-      subjectBox = await Hive.openBox<Subject>('subjectBox');
-      userSubjectBox = await Hive.openBox<UserSubject>('userSubjectBox');
-      unitBox = await Hive.openBox<Unit>('unitBox');
-      topicBox = await Hive.openBox<Topic>('topicBox');
-      lessonBox = await Hive.openBox<Lesson>('lessonBox');
-      pastPaperBox = await Hive.openBox<PastPaper>('pastPaperBox');
-      configBox = await Hive.openBox<Config>('configBox');
-      reminderBox = await Hive.openBox<Reminder>('reminderBox');
-      notificationBox = await Hive.openBox<UserNotification>('notificationBox');
+      userBox = await openSecureBox<User>('userBox');
+      examBox = await openSecureBox<Exam>('examBox');
+      userExamBox = await openSecureBox<UserExam>('userExamBox');
+      subjectBox = await openSecureBox<Subject>('subjectBox');
+      userSubjectBox = await openSecureBox<UserSubject>('userSubjectBox');
+      unitBox = await openSecureBox<Unit>('unitBox');
+      topicBox = await openSecureBox<Topic>('topicBox');
+      lessonBox = await openSecureBox<Lesson>('lessonBox');
+      pastPaperBox = await openSecureBox<PastPaper>('pastPaperBox');
+      configBox = await openSecureBox<Config>('configBox');
+      reminderBox = await openSecureBox<Reminder>('reminderBox');
+      notificationBox =
+          await openSecureBox<UserNotification>('notificationBox');
     } catch (e) {
       debugPrint("Error openig Hive boxes: $e");
     }
@@ -57,7 +97,7 @@ class HiveInitializer {
 
   Future<void> rebuildHiveOnFirstOpen() async {
     final prefs = await SharedPreferences.getInstance();
-    const currentVersion = 60; // Update this for each new version
+    const currentVersion = 1; // Update this for each new version
     final lastVersion = prefs.getInt('last_version') ?? 0;
 
     if (lastVersion < currentVersion) {
