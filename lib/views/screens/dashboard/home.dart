@@ -1,7 +1,9 @@
 import 'package:edgiprep/controllers/auth/auth_controller.dart';
 import 'package:edgiprep/controllers/notification/notification_controller.dart';
-import 'package:edgiprep/controllers/user%20enrollment/user_enrollment_controller.dart';
+import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.dart';
+import 'package:edgiprep/db/config/config.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
+import 'package:edgiprep/services/config/config_Service.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/general/normal_input.dart';
@@ -24,24 +26,48 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   final Function toSubjects;
   final Function(UserSubject) toSubject;
-  const Home(
-      {super.key,
-      required this.toSubjects,
-      required this.toSubject,});
+  const Home({
+    super.key,
+    required this.toSubjects,
+    required this.toSubject,
+  });
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  ConfigService configService = Get.find<ConfigService>();
+  AuthController authController = Get.find<AuthController>();
+
+  UserEnrollmentController userEnrollmentController =
+      Get.find<UserEnrollmentController>();
+
+  NotificationController notificationController =
+      Get.find<NotificationController>();
+
+  int quizQuestions = 5;
+
+  Future<void> getConfigValues() async {
+    Config? config = await configService.getConfig();
+
+    setState(() {
+      quizQuestions = config!.quizQuestions;
+    });
+  }
+
+  @override
+  void initState() {
+    getConfigValues();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    AuthController authController = Get.find<AuthController>();
-
-    UserEnrollmentController userEnrollmentController =
-        Get.find<UserEnrollmentController>();
-
-    NotificationController notificationController =
-        Get.find<NotificationController>();
-
     return LayoutBuilder(
       builder: (context, constraints) {
         bool isTablet = DeviceUtils.isTablet(context);
@@ -301,7 +327,7 @@ class Home extends StatelessWidget {
                           homeSectionTitle("Studying"),
                           GestureDetector(
                             onTap: () {
-                              toSubjects();
+                              widget.toSubjects();
                             },
                             child: homeSectionSeeAll("See all"),
                           ),
@@ -333,7 +359,7 @@ class Home extends StatelessWidget {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      toSubject(subject);
+                                      widget.toSubject(subject);
                                     },
                                     child: homeStudyBox(
                                       studyBoxWidth,
@@ -405,7 +431,6 @@ class Home extends StatelessWidget {
                                                 "Get ready to dive in! Your quiz is loading, and we're setting everything up for you.",
                                             type: "quiz",
                                             subject: subject,
-                                            limit: 5,
                                           ));
                                     },
                                     child: homeQuizBox(
@@ -416,7 +441,7 @@ class Home extends StatelessWidget {
                                       quizSubjectFontSize,
                                       quizQuestionsFontSize,
                                       subject.title,
-                                      "20 questions | 5 minutes",
+                                      "$quizQuestions questions | 5 minutes",
                                     ),
                                   ),
                                   SizedBox(

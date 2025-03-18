@@ -25,9 +25,35 @@ class AppraisalFinish extends StatelessWidget {
 
     String title = "";
     int questions = 0;
-    double scores = 80;
-    String status = "Good";
+    String scores = "0.0";
+    String status = "No Questions";
     int xps = 0;
+
+    Map<String, dynamic> getStudentGrade(
+        int correctAnswers, int totalQuestions) {
+      if (totalQuestions == 0) {
+        return {"percentage": 0.0, "grade": "No Questions"};
+      }
+
+      double percentage = (correctAnswers / totalQuestions) * 100;
+      String grade;
+
+      if (percentage >= 90) {
+        grade = "Excellent";
+      } else if (percentage >= 75) {
+        grade = "Very Good";
+      } else if (percentage >= 60) {
+        grade = "Good";
+      } else if (percentage >= 40) {
+        grade = "Average";
+      } else if (percentage >= 20) {
+        grade = "Poor";
+      } else {
+        grade = "Very Poor";
+      }
+
+      return {"percentage": percentage.toStringAsFixed(1), "grade": grade};
+    }
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -54,25 +80,31 @@ class AppraisalFinish extends StatelessWidget {
 
         if (type == "quiz") {
           questions = quizController.getNumberOfQuestions();
-          scores = 80;
-          status = "Good";
           xps = quizController.getCorrectAnswers();
           title = "Quiz";
+
+          Map grades = getStudentGrade(xps, questions);
+
+          scores = grades['percentage'];
+          status = grades['grade'];
+
+          // save quiz score
+          quizController.saveQuizScore(xps);
         } else if (type == "paper") {
           questions = paperController.getNumberOfQuestions();
-          scores = 80;
+          scores = "80";
           status = "Good";
           xps = paperController.getCorrectAnswers();
           title = "Paper";
         } else if (type == "mock") {
           questions = mockController.getNumberOfQuestions();
-          scores = 80;
+          scores = "80";
           status = "Good";
           xps = mockController.getCorrectAnswers();
           title = "Exam";
         } else if (type == "challenge") {
           questions = challengeController.getNumberOfQuestions();
-          scores = 80;
+          scores = "80";
           status = "Good";
           xps = challengeController.getCorrectAnswers();
           title = "Challenge";
@@ -144,7 +176,7 @@ class AppraisalFinish extends StatelessWidget {
                                 height: 10.h,
                               ),
                               Text(
-                                "Great Job, You've Completed the title! Here's a summary of your performance.",
+                                "Great Job, You've Completed the $title! Here's a summary of your performance.",
                                 textAlign: TextAlign.center,
                                 style: GoogleFonts.inter(
                                   fontSize: subtitleSize,

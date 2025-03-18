@@ -1,4 +1,6 @@
-import 'package:edgiprep/controllers/user%20enrollment/user_enrollment_controller.dart';
+import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.dart';
+import 'package:edgiprep/db/config/config.dart';
+import 'package:edgiprep/services/config/config_Service.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/views/components/appraisal/appraisal_back_button.dart';
 import 'package:edgiprep/views/components/appraisal/appraisal_heading.dart';
@@ -11,14 +13,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-class Quizzes extends StatelessWidget {
+class Quizzes extends StatefulWidget {
   const Quizzes({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    UserEnrollmentController userEnrollmentController =
-        Get.find<UserEnrollmentController>();
+  State<Quizzes> createState() => _QuizzesState();
+}
 
+class _QuizzesState extends State<Quizzes> {
+  ConfigService configService = Get.find<ConfigService>();
+  UserEnrollmentController userEnrollmentController =
+      Get.find<UserEnrollmentController>();
+
+  int quizQuestions = 5;
+
+  Future<void> getConfigValues() async {
+    Config? config = await configService.getConfig();
+
+    setState(() {
+      quizQuestions = config!.quizQuestions;
+    });
+  }
+
+  @override
+  void initState() {
+    getConfigValues();
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(35, 131, 226, 1),
       // backgroundColor: backgroundColor,
@@ -114,14 +139,13 @@ class Quizzes extends StatelessWidget {
                                             "Get ready to dive in! Your quiz is loading, and we're setting everything up for you.",
                                         type: "quiz",
                                         subject: subject,
-                                        limit: 5,
                                       ));
                                 },
                                 child: quizSubject(
                                   getColorFromString(subject.color),
                                   subject.icon,
                                   subject.title,
-                                  20,
+                                  quizQuestions,
                                 ),
                               ),
                               SizedBox(

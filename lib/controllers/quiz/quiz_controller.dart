@@ -11,6 +11,7 @@ class QuizController extends GetxController {
   QuizService quizService = QuizService();
 
   RxString quizId = "".obs;
+  RxString subjectEnrollmentID = "".obs;
 
   final RxList<SlideModel> slides = <SlideModel>[].obs;
 
@@ -31,6 +32,10 @@ class QuizController extends GetxController {
     if (!visibleSlides[currentSlideIndex.value].slideDone) {
       // if not, mark done and add next slide
       visibleSlides[currentSlideIndex.value].slideDone = true;
+
+      // save question progress
+      saveQuestionScore(subjectEnrollmentID.value, quizId.string,
+          visibleSlides[currentSlideIndex.value].question!.userAnswerId);
 
       // add slide
       if (currentSlideIndex.value < slides.length - 1) {
@@ -81,9 +86,9 @@ class QuizController extends GetxController {
     if (data['error']) {
       error = true;
     } else {
-      quizId.value = "";
-
       Map quizData = data['quizData'];
+
+      quizId.value = quizData['quizId'];
 
       List<SlideModel> tempSlides = [];
 
@@ -132,6 +137,7 @@ class QuizController extends GetxController {
 
   // Reset lesson progress
   Future<bool> restartLesson(String subjectEnrollmentId, int limit) async {
+    subjectEnrollmentID.value = subjectEnrollmentId;
     bool error = await getData(subjectEnrollmentId, limit);
 
     currentSlideIndex.value = 0;
@@ -200,5 +206,16 @@ class QuizController extends GetxController {
       }
     }
     return number;
+  }
+
+  // save question score
+  Future<void> saveQuestionScore(
+      String sEnrollId, String qId, String aId) async {
+    quizService.saveQuestionScore(sEnrollId, qId, aId);
+  }
+
+  // Save quiz score
+  Future<void> saveQuizScore(int score) async {
+    quizService.saveQuizScore(quizId.value, score);
   }
 }

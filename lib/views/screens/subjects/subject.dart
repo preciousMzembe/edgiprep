@@ -1,4 +1,4 @@
-import 'package:edgiprep/controllers/user%20enrollment/user_enrollment_controller.dart';
+import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/db/topic/topic.dart';
 import 'package:edgiprep/db/unit/unit.dart';

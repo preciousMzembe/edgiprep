@@ -6,10 +6,12 @@ import 'package:edgiprep/db/user/user.dart';
 import 'package:edgiprep/services/config/config_Service.dart';
 import 'package:edgiprep/utils/dio_client.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService extends GetxService {
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
   ConfigService configService = Get.find<ConfigService>();
   late Config? config;
   final Dio _dio = createDio();

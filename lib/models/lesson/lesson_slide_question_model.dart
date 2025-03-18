@@ -33,4 +33,17 @@ class LessonSlideQuestionModel {
   void setOptions(List<QuestionAnswerModel> newOptions) {
     options = newOptions;
   }
+
+  toJson() {
+    return {
+      'id': id,
+      'questionText': questionText,
+      'questionImage': questionImage,
+      'options': options,
+      'explanation': explanation,
+      'explanationImage': explanationImage,
+      'correctAnswerId': correctAnswerId,
+      'userAnswerId': userAnswerId,
+    };
+  }
 }

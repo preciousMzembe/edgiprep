@@ -17,11 +17,15 @@ class Config {
   @HiveField(3)
   final String appUrl;
 
+  @HiveField(4)
+  final int quizQuestions;
+
   Config({
     required this.apiUrl,
     required this.imagesUrl,
     required this.privacyPolicyUrl,
     required this.appUrl,
+    required this.quizQuestions,
   });
 
   Map<String, dynamic> toJson() {
@@ -30,6 +34,7 @@ class Config {
       'imagesUrl': imagesUrl,
       'privacyPolicyUrl': privacyPolicyUrl,
       'appUrl': appUrl,
+      'quizQuestions': quizQuestions,
     };
   }
 }

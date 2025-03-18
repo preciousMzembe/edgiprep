@@ -1,4 +1,4 @@
-import 'package:edgiprep/controllers/user%20enrollment/user_enrollment_controller.dart';
+import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/views/components/general/normal_input.dart';
 import 'package:edgiprep/views/components/subjects/subjects_add_subject.dart';

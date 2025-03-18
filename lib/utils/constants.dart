@@ -68,3 +68,10 @@ Color getBackgroundColorFromString(String colorString) {
     return primaryColor;
   }
 }
+
+String capitalizeWords(String text) {
+  return text.split(" ").map((word) {
+    if (word.isEmpty) return word;
+    return word[0].toUpperCase() + word.substring(1);
+  }).join(" ");
+}

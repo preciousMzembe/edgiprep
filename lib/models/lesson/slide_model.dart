@@ -11,4 +11,10 @@ class SlideModel {
     this.question,
     this.slideDone = false,
   });
+
+  toJson() => {
+        'content': content?.toJson(),
+        'question': question?.toJson(),
+        'slideDone': slideDone,
+      };
 }

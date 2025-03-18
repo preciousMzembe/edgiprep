@@ -10,4 +10,10 @@ class SlideContentModel {
     this.slideMedia,
     this.text,
   });
+
+  toJson() => {
+        'title': title,
+        'text': text,
+        'slideMedia': slideMedia,
+      };
 }

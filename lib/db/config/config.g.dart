@@ -21,13 +21,14 @@ class ConfigAdapter extends TypeAdapter<Config> {
       imagesUrl: fields[1] as String,
       privacyPolicyUrl: fields[2] as String,
       appUrl: fields[3] as String,
+      quizQuestions: fields[4] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, Config obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.apiUrl)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class ConfigAdapter extends TypeAdapter<Config> {
       ..writeByte(2)
       ..write(obj.privacyPolicyUrl)
       ..writeByte(3)
-      ..write(obj.appUrl);
+      ..write(obj.appUrl)
+      ..writeByte(4)
+      ..write(obj.quizQuestions);
   }
 
   @override

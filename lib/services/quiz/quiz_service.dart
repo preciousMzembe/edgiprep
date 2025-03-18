@@ -61,4 +61,60 @@ class QuizService extends GetxService {
     // Return error true in case of failure
     return {'error': error};
   }
+
+  Future<void> saveQuestionScore(
+      String subjectEnrollmentId, String quizId, String answerId) async {
+    config ??= await configService.getConfig();
+
+    // Check if token is not empty first
+    String? token = await authService.getToken();
+
+    if (token != null && token.isNotEmpty) {
+      try {
+        await _dio.put(
+          '${config?.apiUrl}/Quiz/Mobile/QuizQuestionProgress',
+          options: Options(
+            headers: {
+              'Authorization': 'Bearer $token',
+            },
+          ),
+          data: {
+            "subjectEnrollmentId": subjectEnrollmentId,
+            "quizId": quizId,
+            "answerId": answerId,
+          },
+        );
+      } on DioException catch (e) {
+        debugPrint(
+            "Error fetching saving question score ------------------------- quiz service");
+      }
+    }
+  }
+
+  Future<void> saveQuizScore(String quizId, int score) async {
+    config ??= await configService.getConfig();
+
+    // Check if token is not empty first
+    String? token = await authService.getToken();
+
+    if (token != null && token.isNotEmpty) {
+      try {
+        await _dio.put(
+          '${config?.apiUrl}/Quiz/Mobile/QuizScore',
+          options: Options(
+            headers: {
+              'Authorization': 'Bearer $token',
+            },
+          ),
+          data: {
+            "quizId": quizId,
+            "score": score,
+          },
+        );
+      } on DioException catch (e) {
+        debugPrint(
+            "Error fetching saving quiz score ------------------------- quiz service");
+      }
+    }
+  }
 }

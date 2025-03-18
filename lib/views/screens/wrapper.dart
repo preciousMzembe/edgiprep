@@ -1,4 +1,4 @@
-import 'package:edgiprep/controllers/user%20enrollment/user_enrollment_controller.dart';
+import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.dart';
 import 'package:edgiprep/views/screens/dashboard/dashboard.dart';
 import 'package:edgiprep/views/screens/enrollment/enrollment.dart';
 import 'package:flutter/material.dart';

@@ -57,7 +57,7 @@ class HiveInitializer {
 
   Future<void> rebuildHiveOnFirstOpen() async {
     final prefs = await SharedPreferences.getInstance();
-    const currentVersion = 59; // Update this for each new version
+    const currentVersion = 60; // Update this for each new version
     final lastVersion = prefs.getInt('last_version') ?? 0;
 
     if (lastVersion < currentVersion) {
