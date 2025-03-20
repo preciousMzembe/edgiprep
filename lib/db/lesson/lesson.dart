@@ -34,6 +34,9 @@ class Lesson {
   @HiveField(9)
   late bool isLast;
 
+  @HiveField(10)
+  final String subjectEnrollmentId;
+
   Lesson({
     required this.id,
     required this.name,
@@ -45,6 +48,7 @@ class Lesson {
     this.lessonNumber = 0,
     this.isFirst = false,
     this.isLast = false,
+    required this.subjectEnrollmentId,
   });
 
   toJson() => {

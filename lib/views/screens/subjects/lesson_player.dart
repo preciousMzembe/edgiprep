@@ -15,14 +15,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
-class Lesson extends StatefulWidget {
-  const Lesson({super.key});
+class LessonPlayer extends StatefulWidget {
+  const LessonPlayer({super.key});
 
   @override
-  State<Lesson> createState() => _LessonState();
+  State<LessonPlayer> createState() => _LessonPlayerState();
 }
 
-class _LessonState extends State<Lesson> {
+class _LessonPlayerState extends State<LessonPlayer> {
   LessonController lessonController = Get.find<LessonController>();
 
   @override

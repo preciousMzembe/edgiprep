@@ -300,6 +300,7 @@ class UserEnrollmentService extends GetxService {
                   topicId: lesson['lesson']['topicId'],
                   numberOfSlides: lesson['totalSlides'],
                   numberOfSlidesDone: lesson['doneSlides'],
+                  subjectEnrollmentId: topic.subjectEnrollmentId,
                 ),
               );
             }

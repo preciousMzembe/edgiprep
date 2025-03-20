@@ -13,6 +13,7 @@ import 'package:edgiprep/services/auth/auth_service.dart';
 import 'package:edgiprep/services/config/config_Service.dart';
 import 'package:edgiprep/services/enrollment/enrollment_service.dart';
 import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
+import 'package:edgiprep/services/lesson/lesson_service.dart';
 import 'package:edgiprep/services/notification/notification_service.dart';
 import 'package:edgiprep/services/quiz/quiz_service.dart';
 import 'package:get/get.dart';
@@ -26,6 +27,7 @@ class Controllers extends Bindings {
     Get.put<NotificationService>(NotificationService());
     Get.put<EnrollmentService>(EnrollmentService());
     Get.put<UserEnrollmentService>(UserEnrollmentService());
+    Get.put<LessonService>(LessonService());
     Get.put<QuizService>(QuizService());
 
     // Controllers

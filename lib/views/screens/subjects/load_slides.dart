@@ -4,7 +4,9 @@ import 'package:edgiprep/controllers/mock/mock_controller.dart';
 import 'package:edgiprep/controllers/past%20paper/paper_controller.dart';
 import 'package:edgiprep/controllers/quiz/quiz_controller.dart';
 import 'package:edgiprep/db/config/config.dart';
+import 'package:edgiprep/db/lesson/lesson.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
+import 'package:edgiprep/db/topic/topic.dart';
 import 'package:edgiprep/services/config/config_Service.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
@@ -13,7 +15,7 @@ import 'package:edgiprep/views/screens/appraisal/challenge.dart';
 import 'package:edgiprep/views/screens/appraisal/mock.dart';
 import 'package:edgiprep/views/screens/appraisal/paper.dart';
 import 'package:edgiprep/views/screens/appraisal/quiz.dart';
-import 'package:edgiprep/views/screens/subjects/lesson.dart';
+import 'package:edgiprep/views/screens/subjects/lesson_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -27,12 +29,16 @@ class LoadSlides extends StatefulWidget {
   final String type;
 
   final UserSubject? subject;
+  final Topic? topic;
+  final Lesson? lesson;
   const LoadSlides({
     super.key,
     required this.title,
     required this.message,
     required this.type,
     this.subject,
+    this.topic,
+    this.lesson,
   });
 
   @override
@@ -71,11 +77,15 @@ class _LoadSlidesState extends State<LoadSlides> {
     Config? config = await configService.getConfig();
 
     if (widget.type == "lesson") {
+      // Lesson -------------------------------------------------------------
       setState(() {
         error = true;
       });
-      // Get.to(() => const Lesson());
+
+      bool dataError = await lessonController.restartLesson(widget.topic!, widget.lesson!);
+      // Get.to(() => const LessonPlayer());
     } else if (widget.type == "quiz") {
+      // Quiz ----------------------------------------------------------------
       bool dataError = await quizController.restartLesson(
           widget.subject!.enrollmentId, config!.quizQuestions);
       setState(() {
@@ -97,16 +107,19 @@ class _LoadSlidesState extends State<LoadSlides> {
         );
       }
     } else if (widget.type == "paper") {
+      // Paper ---------------------------------------------------------------
       setState(() {
         error = true;
       });
       // Get.to(() => const Paper());
     } else if (widget.type == "mock") {
+      // Mock ---------------------------------------------------------------
       setState(() {
         error = true;
       });
       // Get.to(() => const Mock());
     } else if (widget.type == "challenge") {
+      // Challenge -----------------------------------------------------------
       setState(() {
         error = true;
       });

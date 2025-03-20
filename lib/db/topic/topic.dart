@@ -42,4 +42,18 @@ class Topic {
     this.active = false,
     required this.subjectEnrollmentId,
   });
+
+  toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'order': order,
+      'unitId': unitId,
+      'numberOfLessons': numberOfLessons,
+      'numberOfLessonsDone': numberOfLessonsDone,
+      'needSubscrion': needSubscrion,
+      'active': active,
+      'subjectEnrollmentId': subjectEnrollmentId,
+    };
+  }
 }

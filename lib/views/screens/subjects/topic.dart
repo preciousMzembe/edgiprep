@@ -134,11 +134,13 @@ class _SubjectTopicState extends State<SubjectTopic> {
                         return GestureDetector(
                           onTap: () {
                             if (lesson.active) {
-                              Get.to(() => const LoadSlides(
+                              Get.to(() => LoadSlides(
                                     title: "Preparing Your Lesson...",
                                     message:
                                         "Get ready to dive in! Your lesson is loading, and we're setting everything up for you.",
                                     type: "lesson",
+                                    topic: widget.topic,
+                                    lesson: lesson,
                                   ));
                             }
                           },

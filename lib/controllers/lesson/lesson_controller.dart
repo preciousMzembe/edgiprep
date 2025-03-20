@@ -1,19 +1,24 @@
+import 'package:edgiprep/db/lesson/lesson.dart';
+import 'package:edgiprep/db/topic/topic.dart';
 import 'package:edgiprep/models/lesson/slide_content_model.dart';
 import 'package:edgiprep/models/lesson/slide_media_model.dart';
 import 'package:edgiprep/models/lesson/slide_model.dart';
 import 'package:edgiprep/models/lesson/lesson_slide_question_model.dart';
+import 'package:edgiprep/services/lesson/lesson_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LessonController extends GetxController {
+  LessonService lessonService = LessonService();
+
+  RxString subjectEnrollmentID = "".obs;
+
   final RxList<SlideModel> slides = <SlideModel>[].obs;
 
   // Tracks the list of slides and the currently visible slide index
   RxInt currentSlideIndex = 0.obs;
   RxList<SlideModel> visibleSlides = <SlideModel>[].obs;
   PageController pageController = PageController();
-
-  void getData() {}
 
   // Load the first slide initially
   void loadInitialSlide() {
@@ -68,13 +73,33 @@ class LessonController extends GetxController {
     }
   }
 
+  // Fetch the lesson data
+  Future<bool> getData(Topic topic, Lesson lesson) async {
+    bool error = false;
+
+    Map data = await lessonService.fetchData(topic, lesson);
+
+    if (data['error']) {
+      error = true;
+    } else {
+      print(data['lessonData'].length);
+    }
+
+    return error;
+  }
+
   // Reset lesson progress (optional)
-  void restartLesson() {
+  Future<bool> restartLesson(Topic topic, Lesson lesson) async {
+    subjectEnrollmentID.value = topic.subjectEnrollmentId;
+    bool error = await getData(topic, lesson);
+
     currentSlideIndex.value = 0;
     visibleSlides.clear();
     resetSlides();
     loadInitialSlide();
     resetPageController();
+
+    return error;
   }
 
   void resetSlides() {
@@ -134,5 +159,14 @@ class LessonController extends GetxController {
       }
     }
     return number;
+  }
+
+  // Save slide progress
+  Future<void> saveSlideProgress(
+      String sEnrollId, String sId, String aId) async {
+    bool error = await lessonService.saveSlideProgress(sEnrollId, sId, aId);
+
+    // save local progress on error
+    if (error) {}
   }
 }

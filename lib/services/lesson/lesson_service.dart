@@ -1,12 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:edgiprep/db/config/config.dart';
+import 'package:edgiprep/db/lesson/lesson.dart';
+import 'package:edgiprep/db/topic/topic.dart';
 import 'package:edgiprep/services/auth/auth_service.dart';
 import 'package:edgiprep/services/config/config_Service.dart';
 import 'package:edgiprep/utils/dio_client.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class QuizService extends GetxService {
+class LessonService extends GetxService {
   ConfigService configService = Get.find<ConfigService>();
   AuthService authService = Get.find<AuthService>();
 
@@ -20,7 +22,7 @@ class QuizService extends GetxService {
     config = await configService.getConfig();
   }
 
-  Future<Map> fetchData(String subjectEnrollmentId, int limit) async {
+  Future<Map> fetchData(Topic topic, Lesson lesson) async {
     bool error = false;
     config ??= await configService.getConfig();
 
@@ -30,30 +32,30 @@ class QuizService extends GetxService {
     if (token != null && token.isNotEmpty) {
       try {
         final response = await _dio.post(
-          '${config?.apiUrl}/Quiz/Mobile/Quiz',
+          '${config?.apiUrl}/Slide/Mobile/Slides',
           options: Options(
             headers: {
               'Authorization': 'Bearer $token',
             },
           ),
           data: {
-            "subjectEnrollmentId": subjectEnrollmentId,
-            "limit": limit,
+            "subjectEnrollmentId": topic.subjectEnrollmentId,
+            "lessonId": lesson.id,
           },
         );
 
         if (response.statusCode == 200) {
-          Map quizData = response.data;
+          var lessonData = response.data;
 
           return {
             'error': error,
-            'quizData': quizData,
+            'lessonData': lessonData,
           };
         }
       } on DioException catch (e) {
         error = true;
         debugPrint(
-            "Error fetching quiz ------------------------- quiz service");
+            "Error fetching lesson ------------------------- lesson service");
       }
     }
 
@@ -61,8 +63,8 @@ class QuizService extends GetxService {
     return {'error': error};
   }
 
-  Future<void> saveQuestionScore(
-      String subjectEnrollmentId, String quizId, String answerId) async {
+  Future<bool> saveSlideProgress(
+      String subjectEnrollmentId, String slideId, String answerId) async {
     config ??= await configService.getConfig();
 
     // Check if token is not empty first
@@ -70,8 +72,8 @@ class QuizService extends GetxService {
 
     if (token != null && token.isNotEmpty) {
       try {
-        await _dio.put(
-          '${config?.apiUrl}/Quiz/Mobile/QuizQuestionProgress',
+        var response = await _dio.put(
+          '${config?.apiUrl}/Slide/Mobile/SlideProgress',
           options: Options(
             headers: {
               'Authorization': 'Bearer $token',
@@ -79,41 +81,20 @@ class QuizService extends GetxService {
           ),
           data: {
             "subjectEnrollmentId": subjectEnrollmentId,
-            "quizId": quizId,
+            "slideId": slideId,
             "answerId": answerId,
           },
         );
+
+        if (response.statusCode == 200) {
+          return false;
+        }
       } on DioException catch (e) {
         debugPrint(
-            "Error saving question score ------------------------- quiz service");
+            "Error saving slide progress ------------------------- lesson service");
       }
     }
-  }
 
-  Future<void> saveQuizScore(String quizId, int score) async {
-    config ??= await configService.getConfig();
-
-    // Check if token is not empty first
-    String? token = await authService.getToken();
-
-    if (token != null && token.isNotEmpty) {
-      try {
-        await _dio.put(
-          '${config?.apiUrl}/Quiz/Mobile/QuizScore',
-          options: Options(
-            headers: {
-              'Authorization': 'Bearer $token',
-            },
-          ),
-          data: {
-            "quizId": quizId,
-            "score": score,
-          },
-        );
-      } on DioException catch (e) {
-        debugPrint(
-            "Error saving quiz score ------------------------- quiz service");
-      }
-    }
+    return true;
   }
 }
