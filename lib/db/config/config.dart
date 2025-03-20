@@ -20,21 +20,26 @@ class Config {
   @HiveField(4)
   final int quizQuestions;
 
+  @HiveField(5)
+  final String premiumPrice;
+
   Config({
     required this.apiUrl,
     required this.imagesUrl,
     required this.privacyPolicyUrl,
     required this.appUrl,
     required this.quizQuestions,
+    required this.premiumPrice,
   });
 
-  Map<String, dynamic> toJson() {
+  toJson() {
     return {
       'apiUrl': apiUrl,
       'imagesUrl': imagesUrl,
       'privacyPolicyUrl': privacyPolicyUrl,
       'appUrl': appUrl,
       'quizQuestions': quizQuestions,
+      'premiumPrice': premiumPrice,
     };
   }
 }

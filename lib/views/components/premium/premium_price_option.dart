@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-Widget premiumPriceOption() {
+Widget premiumPriceOption(String price) {
   return LayoutBuilder(
     builder: (context, constraints) {
       bool isTablet = DeviceUtils.isTablet(context);
@@ -52,7 +52,7 @@ Widget premiumPriceOption() {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      "MK 15,000 Annually",
+                      "MK $price Annually",
                       style: GoogleFonts.inter(
                         fontSize: fontSize,
                         fontWeight: FontWeight.w700,
@@ -62,7 +62,7 @@ Widget premiumPriceOption() {
                       height: 10.h,
                     ),
                     premiumFadeText(
-                        "Go to premium with only MK 15,000 per year"),
+                        "Go to premium with only MK $price per year"),
                   ],
                 ),
               ),

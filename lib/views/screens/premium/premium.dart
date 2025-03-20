@@ -1,3 +1,5 @@
+import 'package:edgiprep/db/config/config.dart';
+import 'package:edgiprep/services/config/config_Service.dart';
 import 'package:edgiprep/views/components/general/normal_svg_button.dart';
 import 'package:edgiprep/views/components/premium/premium_close.dart';
 import 'package:edgiprep/views/components/premium/premium_detail.dart';
@@ -10,8 +12,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-class Premium extends StatelessWidget {
+class Premium extends StatefulWidget {
   const Premium({super.key});
+
+  @override
+  State<Premium> createState() => _PremiumState();
+}
+
+class _PremiumState extends State<Premium> {
+  ConfigService configService = Get.find<ConfigService>();
+
+  String premiumPrice = "--";
+
+  Future<void> getConfigValues() async {
+    Config? config = await configService.getConfig();
+
+    setState(() {
+      premiumPrice = config!.premiumPrice;
+    });
+  }
+
+  @override
+  void initState() {
+    getConfigValues();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +116,7 @@ class Premium extends StatelessWidget {
                           SizedBox(
                             height: 30.h,
                           ),
-                          premiumPriceOption(),
+                          premiumPriceOption(premiumPrice),
 
                           // details
                           SizedBox(
