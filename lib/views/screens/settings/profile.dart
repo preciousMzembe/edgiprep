@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -29,6 +30,7 @@ class _ProfileState extends State<Profile> {
   bool editName = false;
   bool editPassword = false;
   bool editEmail = false;
+  bool editPhone = false;
 
   void toggleName() {
     setState(() {
@@ -45,6 +47,12 @@ class _ProfileState extends State<Profile> {
   void toggleEmail() {
     setState(() {
       editEmail = !editEmail;
+    });
+  }
+
+  void togglePhone() {
+    setState(() {
+      editPhone = !editPhone;
     });
   }
 
@@ -411,7 +419,7 @@ class _ProfileState extends State<Profile> {
                                           height: 20.h,
                                         ),
                                         settingsErrorText(
-                                            "The email address already used for another account."),
+                                            "The email address is already used for another account."),
                                       ],
                                     ),
 
@@ -437,6 +445,126 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                 ),
+
+                // phone
+                SizedBox(
+                  height: 30.h,
+                ),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(25.r),
+                  child: Container(
+                    color: Colors.white,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 30.w,
+                      vertical: 30.h,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // icon
+                        profileDetailIcon(FontAwesomeIcons.solidEnvelope),
+
+                        // details
+                        SizedBox(
+                          width: 30.w,
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              // values
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        profileDetailTitle("Phone Number"),
+                                        profileDetaillSubtitle(
+                                            "265 000 000 000"),
+                                      ],
+                                    ),
+                                  ),
+
+                                  // edit button
+                                  if (!editEmail)
+                                    GestureDetector(
+                                      onTap: () {
+                                        togglePhone();
+                                      },
+                                      child: profileDetailEditIcon(
+                                          FontAwesomeIcons.pen),
+                                    ),
+
+                                  if (editEmail)
+                                    GestureDetector(
+                                      onTap: () {
+                                        togglePhone();
+                                      },
+                                      child: settingsCancelText("Cancel"),
+                                    ),
+                                ],
+                              ),
+
+                              // edit
+                              if (editPhone)
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    SizedBox(
+                                      height: 25.h,
+                                    ),
+                                    const SettingsInput(
+                                      label: "New Phone Number",
+                                      type: TextInputType.emailAddress,
+                                      isPassword: false,
+                                      radius: 20,
+                                    ),
+
+                                    // error
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        SizedBox(
+                                          height: 20.h,
+                                        ),
+                                        settingsErrorText(
+                                            "The phone number is already used for another account."),
+                                      ],
+                                    ),
+
+                                    SizedBox(
+                                      height: 20.h,
+                                    ),
+                                    Row(
+                                      children: [
+                                        settingsButton(
+                                          const Color.fromRGBO(35, 131, 226, 1),
+                                          Colors.white,
+                                          "Update",
+                                          16,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                SizedBox(
+                  height: 30.h,
+                ),
+                profileSubtitle(
+                    "We recommend adding your email or phone number to ensure you can easily recover your account if you ever forget your password."),
 
                 // delete account
                 SizedBox(

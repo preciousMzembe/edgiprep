@@ -5,6 +5,7 @@ import 'package:edgiprep/views/components/auth/auth_rich_text.dart';
 import 'package:edgiprep/views/components/auth/auth_title_dot.dart';
 import 'package:edgiprep/views/components/auth/auth_input.dart';
 import 'package:edgiprep/views/components/auth/auth_title_text.dart';
+import 'package:edgiprep/views/components/general/button_loading.dart';
 import 'package:edgiprep/views/components/general/normal_button.dart';
 import 'package:edgiprep/views/components/general/normal_image_button.dart';
 import 'package:edgiprep/utils/constants.dart';
@@ -30,6 +31,26 @@ class _SignUpState extends State<SignUp> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+
+  bool nameError = false;
+  bool usernameError = false;
+  bool passwordError = false;
+  bool verifyPasswordError = false;
+
+  bool loginLoading = false;
+  bool googleLoading = false;
+
+  void changeLoginLoading() {
+    setState(() {
+      loginLoading = !loginLoading;
+    });
+  }
+
+  void changeGoogleLoading() {
+    setState(() {
+      googleLoading = !googleLoading;
+    });
+  }
 
   @override
   dispose() {
@@ -66,52 +87,92 @@ class _SignUpState extends State<SignUp> {
 
           // username
 
-          AuthInput(
-            label: "Full Name",
-            type: TextInputType.name,
-            isPassword: false,
-            icon: FontAwesomeIcons.solidUser,
-            radius: 16,
-            controller: nameController,
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                  width: 1,
+                  color: nameError
+                      ? const Color.fromARGB(255, 254, 101, 93)
+                      : Colors.transparent),
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: AuthInput(
+              label: "Full Name",
+              type: TextInputType.name,
+              isPassword: false,
+              icon: FontAwesomeIcons.solidUser,
+              radius: 16,
+              controller: nameController,
+            ),
           ),
 
           // email
           SizedBox(
             height: 25.h,
           ),
-          AuthInput(
-            label: "Username",
-            type: TextInputType.text,
-            isPassword: false,
-            icon: FontAwesomeIcons.solidUser,
-            radius: 16,
-            controller: usernameController,
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                  width: 1,
+                  color: usernameError
+                      ? const Color.fromARGB(255, 254, 101, 93)
+                      : Colors.transparent),
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: AuthInput(
+              label: "Username",
+              type: TextInputType.text,
+              isPassword: false,
+              icon: FontAwesomeIcons.solidUser,
+              radius: 16,
+              controller: usernameController,
+            ),
           ),
 
           // password
           SizedBox(
             height: 25.h,
           ),
-          AuthInput(
-            label: "Password",
-            type: TextInputType.text,
-            isPassword: true,
-            icon: FontAwesomeIcons.lock,
-            radius: 16,
-            controller: passwordController,
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                  width: 1,
+                  color: passwordError
+                      ? const Color.fromARGB(255, 254, 101, 93)
+                      : Colors.transparent),
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: AuthInput(
+              label: "Password",
+              type: TextInputType.text,
+              isPassword: true,
+              icon: FontAwesomeIcons.lock,
+              radius: 16,
+              controller: passwordController,
+            ),
           ),
 
           // confirm password
           SizedBox(
             height: 25.h,
           ),
-          AuthInput(
-            label: "Confirm Password",
-            type: TextInputType.text,
-            isPassword: true,
-            icon: FontAwesomeIcons.lock,
-            radius: 16,
-            controller: confirmPasswordController,
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                  width: 1,
+                  color: verifyPasswordError
+                      ? const Color.fromARGB(255, 254, 101, 93)
+                      : Colors.transparent),
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: AuthInput(
+              label: "Confirm Password",
+              type: TextInputType.text,
+              isPassword: true,
+              icon: FontAwesomeIcons.lock,
+              radius: 16,
+              controller: confirmPasswordController,
+            ),
           ),
 
           // terms
@@ -144,64 +205,97 @@ class _SignUpState extends State<SignUp> {
           SizedBox(
             height: 35.h,
           ),
-          GestureDetector(
-            onTap: () async {
-              String name = nameController.text.trim();
-              String username = usernameController.text.trim();
-              String password = passwordController.text.trim();
-              String confirmPassword = confirmPasswordController.text.trim();
+          Stack(
+            children: [
+              GestureDetector(
+                onTap: () async {
+                  if (!loginLoading && !googleLoading) {
+                    changeLoginLoading();
 
-              if (name.isNotEmpty &&
-                  username.isNotEmpty &&
-                  password.isNotEmpty &&
-                  confirmPassword.isNotEmpty) {
-                if (password == confirmPassword) {
-                  // register
-                  Map registerData =
-                      await authController.register(name, username, password);
+                    nameError = false;
+                    usernameError = false;
+                    passwordError = false;
+                    verifyPasswordError = false;
 
-                  if (registerData['status'] == 'error') {
-                    Get.snackbar(
-                      "Register Error",
-                      registerData['error'],
-                      backgroundColor: const Color.fromRGBO(254, 101, 93, 1),
-                      colorText: Colors.white,
-                      duration: const Duration(seconds: 2),
-                      snackPosition: SnackPosition.BOTTOM,
-                    );
-                  } else {
-                    enrollmentService.restartFetch();
-                    Get.back();
+                    String name = nameController.text.trim();
+                    String username = usernameController.text.trim();
+                    String password = passwordController.text.trim();
+                    String confirmPassword =
+                        confirmPasswordController.text.trim();
+
+                    if (name.isNotEmpty &&
+                        username.isNotEmpty &&
+                        password.isNotEmpty &&
+                        confirmPassword.isNotEmpty) {
+                      if (password == confirmPassword) {
+                        // register
+                        Map registerData = await authController.register(
+                            name, username, password);
+
+                        if (registerData['status'] == 'error') {
+                          if (registerData['error'] ==
+                              "Username is already taken") {
+                            usernameError = true;
+                          }
+                          Get.snackbar(
+                            "Register Error",
+                            registerData['error'],
+                            backgroundColor:
+                                const Color.fromRGBO(254, 101, 93, 1),
+                            colorText: Colors.white,
+                            duration: const Duration(seconds: 2),
+                            snackPosition: SnackPosition.BOTTOM,
+                          );
+                        } else {
+                          enrollmentService.restartFetch();
+                          Get.back();
+                        }
+                      } else {
+                        // passwords error
+                        verifyPasswordError = true;
+                        Get.snackbar(
+                          "Password Error",
+                          "Passwords do not match.",
+                          backgroundColor:
+                              const Color.fromRGBO(254, 101, 93, 1),
+                          colorText: Colors.white,
+                          duration: const Duration(seconds: 2),
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
+                      }
+                    } else {
+                      // empty fields
+                      if (name.isEmpty) {
+                        nameError = true;
+                      }
+
+                      if (username.isEmpty) {
+                        usernameError = true;
+                      }
+
+                      if (password.isEmpty) {
+                        passwordError = true;
+                      }
+
+                      if (confirmPassword.isEmpty) {
+                        verifyPasswordError = true;
+                      }
+                    }
+
+                    changeLoginLoading();
                   }
-                } else {
-                  // passwords error
-                  Get.snackbar(
-                    "Password Error",
-                    "Passwords do not match.",
-                    backgroundColor: const Color.fromRGBO(254, 101, 93, 1),
-                    colorText: Colors.white,
-                    duration: const Duration(seconds: 2),
-                    snackPosition: SnackPosition.BOTTOM,
-                  );
-                }
-              } else {
-                // empty fields
-                Get.snackbar(
-                  "Register Error",
-                  "Please fill all the fields",
-                  backgroundColor: const Color.fromRGBO(254, 101, 93, 1),
-                  colorText: Colors.white,
-                  duration: const Duration(seconds: 2),
-                  snackPosition: SnackPosition.BOTTOM,
-                );
-              }
-            },
-            child: normalButton(
-              primaryColor,
-              Colors.white,
-              "Continue",
-              16,
-            ),
+                },
+                child: normalButton(
+                  primaryColor,
+                  Colors.white,
+                  "Continue",
+                  16,
+                ),
+              ),
+
+              // loading
+              if (loginLoading) buttonLoading(unselectedButtonColor, 16),
+            ],
           ),
 
           // or
@@ -223,12 +317,19 @@ class _SignUpState extends State<SignUp> {
           SizedBox(
             height: 30.h,
           ),
-          normalImageButton(
-            unselectedButtonColor,
-            Colors.black,
-            "Continue with google",
-            16,
-            "icons/google.png",
+          Stack(
+            children: [
+              normalImageButton(
+                unselectedButtonColor,
+                Colors.black,
+                "Continue with google",
+                16,
+                "icons/google.png",
+              ),
+
+              // loading
+              if (googleLoading) buttonLoading(unselectedButtonColor, 16),
+            ],
           ),
 
           // login
@@ -248,11 +349,15 @@ class _SignUpState extends State<SignUp> {
               ),
               GestureDetector(
                 onTap: () {
-                  widget.onSignInTap();
+                  if (!loginLoading && !googleLoading) {
+                    widget.onSignInTap();
+                  }
                 },
                 child: authBottomText(
                   "Sign In",
-                  primaryColor,
+                  loginLoading || googleLoading
+                      ? const Color.fromRGBO(115, 115, 115, 1)
+                      : primaryColor,
                 ),
               ),
             ],

@@ -241,45 +241,16 @@ class UserEnrollmentService extends GetxService {
                 numberOfLessons: topic['totalLessons'],
                 numberOfLessonsDone: topic['doneLessons'],
                 needSubscrion: false,
+                subjectEnrollmentId: subjectEnrollmentId,
               ),
             );
           }
         }
 
-        // Save units locally
-        var unitKeysToDelete = [];
-
-        // Collect keys of units with  subjectEnrollmentId
-        for (var key in unitBox.keys) {
-          var entry = unitBox.get(key);
-          if (entry.subjectEnrollmentId == subjectEnrollmentId) {
-            unitKeysToDelete.add(key);
-          }
-        }
-
-        // Delete the collected units
-        for (var key in unitKeysToDelete) {
-          await unitBox.delete(key);
-        }
-
+        await unitBox.clear();
         await unitBox.addAll(units);
 
-        // Save topics locally
-        var topicKeysToDelete = [];
-
-        // Collect keys of topics with  unitId
-        for (var key in topicBox.keys) {
-          var entry = topicBox.get(key);
-          if (entry.unitId == unitId) {
-            topicKeysToDelete.add(key);
-          }
-        }
-
-        // Delete the collected topics
-        for (var key in topicKeysToDelete) {
-          await topicBox.delete(key);
-        }
-
+        await topicBox.clear();
         await topicBox.addAll(topics);
       }
     } on DioException catch (e) {
@@ -290,61 +261,58 @@ class UserEnrollmentService extends GetxService {
 
   // server user lessons
   Future<void> getUserServerLessons() async {
-    // get all lessons using topics
+    if (topicBox.isNotEmpty) {
+      try {
+        String? token = await authService.getToken();
 
-    List<Lesson> lessons = [
-      Lesson(
-        id: "1",
-        name: "Overview of Cell Theory",
-        order: 1,
-        topicId: "1",
-        numberOfSlides: 4,
-        numberOfSlidesDone: 4,
-      ),
-      Lesson(
-        id: "2",
-        name: "Prokaryotic vs. Eukaryotic Cells",
-        order: 2,
-        topicId: "1",
-        numberOfSlides: 5,
-        numberOfSlidesDone: 1,
-      ),
-      Lesson(
-        id: "3",
-        name: "Plant vs. Animal Cells",
-        order: 3,
-        topicId: "1",
-        numberOfSlides: 5,
-        numberOfSlidesDone: 0,
-      ),
-      Lesson(
-        id: "4",
-        name: "Basics of Linear Equations",
-        order: 1,
-        topicId: "3",
-        numberOfSlides: 5,
-        numberOfSlidesDone: 0,
-      ),
-      Lesson(
-        id: "5",
-        name: "Graphing Linear Equations",
-        order: 2,
-        topicId: "3",
-        numberOfSlides: 6,
-        numberOfSlidesDone: 0,
-      ),
-      Lesson(
-        id: "6",
-        name: "Solving and Graphing Linear Inequalities",
-        order: 3,
-        topicId: "3",
-        numberOfSlides: 4,
-        numberOfSlidesDone: 0,
-      ),
-    ];
+        var userTopics = topicBox.values;
 
-    await lessonBox.clear();
-    await lessonBox.addAll(lessons);
+        List<Lesson> userLessons = [
+          // Lesson(
+          //   id: "1",
+          //   name: "Overview of Cell Theory",
+          //   order: 1,
+          //   topicId: "1",
+          //   numberOfSlides: 4,
+          //   numberOfSlidesDone: 4,
+          // ),
+        ];
+
+        // get lessons
+
+        for (Topic topic in userTopics) {
+          final response = await _dio.get(
+            '${config?.apiUrl}/Lesson/Mobile/Lessons?SubjectEnrollmentId=${topic.subjectEnrollmentId}&TopicId=${topic.id}',
+            options: Options(
+              headers: {
+                'Authorization': 'Bearer $token',
+              },
+            ),
+          );
+
+          if (response.statusCode == 200) {
+            for (var lesson in response.data) {
+              userLessons.add(
+                Lesson(
+                  id: lesson['lesson']['id'],
+                  name: lesson['lesson']['name'],
+                  order: lesson['lesson']['order'],
+                  topicId: lesson['lesson']['topicId'],
+                  numberOfSlides: lesson['totalSlides'],
+                  numberOfSlidesDone: lesson['doneSlides'],
+                ),
+              );
+            }
+          }
+        }
+
+        await lessonBox.clear();
+        await lessonBox.addAll(userLessons);
+      } on DioException catch (e) {
+        debugPrint(
+            "Error fetching topic lessons ------------------------- user enrollment service");
+      }
+    }
   }
 
   // server user papers

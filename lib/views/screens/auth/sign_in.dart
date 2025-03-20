@@ -4,6 +4,7 @@ import 'package:edgiprep/views/components/auth/auth_bottom_text.dart';
 import 'package:edgiprep/views/components/auth/auth_title_comma.dart';
 import 'package:edgiprep/views/components/auth/auth_input.dart';
 import 'package:edgiprep/views/components/auth/auth_title_text.dart';
+import 'package:edgiprep/views/components/general/button_loading.dart';
 import 'package:edgiprep/views/components/general/normal_button.dart';
 import 'package:edgiprep/views/components/general/normal_image_button.dart';
 import 'package:edgiprep/utils/constants.dart';
@@ -33,6 +34,21 @@ class _SignInState extends State<SignIn> {
 
   bool usernameError = false;
   bool passwordError = false;
+
+  bool loginLoading = false;
+  bool googleLoading = false;
+
+  void changeLoginLoading() {
+    setState(() {
+      loginLoading = !loginLoading;
+    });
+  }
+
+  void changeGoogleLoading() {
+    setState(() {
+      googleLoading = !googleLoading;
+    });
+  }
 
   @override
   dispose() {
@@ -114,53 +130,62 @@ class _SignInState extends State<SignIn> {
           SizedBox(
             height: 35.h,
           ),
-          GestureDetector(
-            onTap: () async {
-              setState(() {
-                usernameError = false;
-                passwordError = false;
-              });
+          Stack(
+            children: [
+              GestureDetector(
+                onTap: () async {
+                  if (!loginLoading && !googleLoading) {
+                    changeLoginLoading();
 
-              String username = usernameController.text.trim();
-              String password = passwordController.text.trim();
+                    usernameError = false;
+                    passwordError = false;
 
-              if (username.isNotEmpty && password.isNotEmpty) {
-                Map loginData = await authController.login(username, password);
+                    String username = usernameController.text.trim();
+                    String password = passwordController.text.trim();
 
-                if (loginData['status'] == 'error') {
-                  Get.snackbar(
-                    "Login Error",
-                    loginData['error'],
-                    backgroundColor: const Color.fromRGBO(254, 101, 93, 1),
-                    colorText: Colors.white,
-                    duration: const Duration(seconds: 2),
-                    snackPosition: SnackPosition.BOTTOM,
-                  );
-                } else {
-                  // get enrollment data
-                  enrollmentService.restartFetch();
-                  Get.back();
-                }
-              } else {
-                if (username.isEmpty) {
-                  setState(() {
-                    usernameError = true;
-                  });
-                }
+                    if (username.isNotEmpty && password.isNotEmpty) {
+                      Map loginData =
+                          await authController.login(username, password);
 
-                if (password.isEmpty) {
-                  setState(() {
-                    passwordError = true;
-                  });
-                }
-              }
-            },
-            child: normalButton(
-              primaryColor,
-              Colors.white,
-              "Continue",
-              16,
-            ),
+                      if (loginData['status'] == 'error') {
+                        Get.snackbar(
+                          "Login Error",
+                          loginData['error'],
+                          backgroundColor:
+                              const Color.fromRGBO(254, 101, 93, 1),
+                          colorText: Colors.white,
+                          duration: const Duration(seconds: 2),
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
+                      } else {
+                        // get enrollment data
+                        enrollmentService.restartFetch();
+                        Get.back();
+                      }
+                    } else {
+                      if (username.isEmpty) {
+                        usernameError = true;
+                      }
+
+                      if (password.isEmpty) {
+                        passwordError = true;
+                      }
+                    }
+
+                    changeLoginLoading();
+                  }
+                },
+                child: normalButton(
+                  primaryColor,
+                  Colors.white,
+                  "Continue",
+                  16,
+                ),
+              ),
+
+              // loading
+              if (loginLoading) buttonLoading(unselectedButtonColor, 16),
+            ],
           ),
 
           // or
@@ -182,12 +207,19 @@ class _SignInState extends State<SignIn> {
           SizedBox(
             height: 30.h,
           ),
-          normalImageButton(
-            unselectedButtonColor,
-            Colors.black,
-            "Continue with google",
-            16,
-            "icons/google.png",
+          Stack(
+            children: [
+              normalImageButton(
+                unselectedButtonColor,
+                Colors.black,
+                "Continue with google",
+                16,
+                "icons/google.png",
+              ),
+
+              // loading
+              if (googleLoading) buttonLoading(unselectedButtonColor, 16),
+            ],
           ),
 
           // login
@@ -207,11 +239,15 @@ class _SignInState extends State<SignIn> {
               ),
               GestureDetector(
                 onTap: () {
-                  widget.onSignUpTap();
+                  if (!loginLoading && !googleLoading) {
+                    widget.onSignUpTap();
+                  }
                 },
                 child: authBottomText(
                   "Sign Up",
-                  primaryColor,
+                  loginLoading || googleLoading
+                      ? const Color.fromRGBO(115, 115, 115, 1)
+                      : primaryColor,
                 ),
               ),
             ],

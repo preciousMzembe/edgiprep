@@ -28,6 +28,9 @@ class Topic {
   @HiveField(7)
   late bool active;
 
+  @HiveField(8)
+  final String subjectEnrollmentId;
+
   Topic({
     required this.id,
     required this.name,
@@ -37,5 +40,6 @@ class Topic {
     required this.numberOfLessonsDone,
     required this.needSubscrion,
     this.active = false,
+    required this.subjectEnrollmentId,
   });
 }

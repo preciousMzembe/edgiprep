@@ -71,7 +71,10 @@ class _LoadSlidesState extends State<LoadSlides> {
     Config? config = await configService.getConfig();
 
     if (widget.type == "lesson") {
-      Get.to(() => const Lesson());
+      setState(() {
+        error = true;
+      });
+      // Get.to(() => const Lesson());
     } else if (widget.type == "quiz") {
       bool dataError = await quizController.restartLesson(
           widget.subject!.enrollmentId, config!.quizQuestions);
@@ -94,7 +97,10 @@ class _LoadSlidesState extends State<LoadSlides> {
         );
       }
     } else if (widget.type == "paper") {
-      Get.to(() => const Paper());
+      setState(() {
+        error = true;
+      });
+      // Get.to(() => const Paper());
     } else if (widget.type == "mock") {
       setState(() {
         error = true;

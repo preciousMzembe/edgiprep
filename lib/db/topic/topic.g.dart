@@ -25,13 +25,14 @@ class TopicAdapter extends TypeAdapter<Topic> {
       numberOfLessonsDone: fields[5] as int,
       needSubscrion: fields[6] as bool,
       active: fields[7] as bool,
+      subjectEnrollmentId: fields[8] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, Topic obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class TopicAdapter extends TypeAdapter<Topic> {
       ..writeByte(6)
       ..write(obj.needSubscrion)
       ..writeByte(7)
-      ..write(obj.active);
+      ..write(obj.active)
+      ..writeByte(8)
+      ..write(obj.subjectEnrollmentId);
   }
 
   @override

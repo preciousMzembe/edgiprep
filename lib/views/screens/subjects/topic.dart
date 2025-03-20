@@ -145,7 +145,9 @@ class _SubjectTopicState extends State<SubjectTopic> {
                           child: topicLessonBox(
                             lesson.lessonNumber,
                             lesson.active,
-                            lesson.numberOfSlides == lesson.numberOfSlidesDone,
+                            lesson.numberOfSlides > 0 &&
+                                lesson.numberOfSlides ==
+                                    lesson.numberOfSlidesDone,
                             lesson.isFirst,
                             lesson.isLast,
                             lesson.name,

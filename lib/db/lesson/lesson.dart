@@ -46,4 +46,17 @@ class Lesson {
     this.isFirst = false,
     this.isLast = false,
   });
+
+  toJson() => {
+        'id': id,
+        'name': name,
+        'order': order,
+        'topicId': topicId,
+        'numberOfSlides': numberOfSlides,
+        'numberOfSlidesDone': numberOfSlidesDone,
+        'active': active,
+        'lessonNumber': lessonNumber,
+        'isFirst': isFirst,
+        'isLast': isLast,
+      };
 }
