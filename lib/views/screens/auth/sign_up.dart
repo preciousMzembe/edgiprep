@@ -229,26 +229,40 @@ class _SignUpState extends State<SignUp> {
                         password.isNotEmpty &&
                         confirmPassword.isNotEmpty) {
                       if (password == confirmPassword) {
-                        if (password.length < 4) {
-                          passwordError = true;
-                          showSnackbar(context, "Something Went Wrong",
-                              "Pin should have 4 or more digits.", true);
+                        if (username.length < 5) {
+                          usernameError = true;
+                          showSnackbar(
+                              context,
+                              "Something Went Wrong",
+                              "Username should have 5 or more characters.",
+                              true);
                         } else {
-                          // register
-                          Map registerData = await authController.register(
-                              name, username, password);
-
-                          if (registerData['status'] == 'error') {
-                            if (registerData['error'] ==
-                                "Username is already taken") {
-                              usernameError = true;
-                            }
-
+                          if (password.length < 4) {
+                            passwordError = true;
                             showSnackbar(context, "Something Went Wrong",
-                                registerData['error'], true);
+                                "Pin should have 4 or more digits.", true);
                           } else {
-                            enrollmentService.restartFetch();
-                            Get.back();
+                            // register
+                            Map registerData = await authController.register(
+                                name, username, password);
+
+                            if (registerData['status'] == 'error') {
+                              if (registerData['error'] ==
+                                  "Username is already taken") {
+                                usernameError = true;
+                                showSnackbar(context, "Something Went Wrong",
+                                    registerData['error'], true);
+                              } else {
+                                showSnackbar(
+                                    context,
+                                    "Something Went Wrong",
+                                    "There was a problem creating your account.",
+                                    true);
+                              }
+                            } else {
+                              enrollmentService.restartFetch();
+                              Get.back();
+                            }
                           }
                         }
                       } else {
