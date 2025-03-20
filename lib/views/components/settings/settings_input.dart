@@ -4,16 +4,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SettingsInput extends StatefulWidget {
+  final TextEditingController controller;
   final String label;
   final TextInputType type;
   final bool isPassword;
   final double radius;
-  const SettingsInput(
-      {super.key,
-      required this.label,
-      required this.type,
-      required this.isPassword,
-      required this.radius});
+  const SettingsInput({
+    super.key,
+    required this.controller,
+    required this.label,
+    required this.type,
+    required this.isPassword,
+    required this.radius,
+  });
 
   @override
   State<SettingsInput> createState() => _SettingsInputState();
@@ -67,6 +70,7 @@ class _SettingsInputState extends State<SettingsInput> {
             borderRadius: BorderRadius.circular(widget.radius.r),
             child: TextFormField(
               obscureText: _show,
+              controller: widget.controller,
               keyboardType: widget.type,
               style: GoogleFonts.inter(
                 color: Colors.black,

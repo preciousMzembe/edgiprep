@@ -98,7 +98,7 @@ class AuthService extends GetxService {
         if (e.response?.statusCode == 404) {
           return {
             'status': "error",
-            'error': e.response?.data['message'],
+            'error': "Incorrect Username or Pin",
           };
         }
       }

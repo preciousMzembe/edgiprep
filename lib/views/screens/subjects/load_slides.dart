@@ -82,7 +82,8 @@ class _LoadSlidesState extends State<LoadSlides> {
         error = true;
       });
 
-      bool dataError = await lessonController.restartLesson(widget.topic!, widget.lesson!);
+      bool dataError =
+          await lessonController.restartLesson(widget.topic!, widget.lesson!);
       // Get.to(() => const LessonPlayer());
     } else if (widget.type == "quiz") {
       // Quiz ----------------------------------------------------------------
@@ -98,7 +99,7 @@ class _LoadSlidesState extends State<LoadSlides> {
       } else {
         // show error
         Get.snackbar(
-          "Error getting quiz",
+          "Something went wrong",
           "There was a problem getting the quiz, please try again",
           backgroundColor: const Color.fromRGBO(254, 101, 93, 1),
           colorText: Colors.white,
@@ -241,8 +242,7 @@ class _LoadSlidesState extends State<LoadSlides> {
                                       height: 30.h,
                                     ),
                                     Text(
-                                      capitalizeWords(
-                                          "Error Loading Your ${widget.type}"),
+                                      capitalizeWords("Something Went Wrong"),
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.inter(
                                         fontSize: titleSize,

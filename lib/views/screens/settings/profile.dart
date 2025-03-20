@@ -17,7 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -27,7 +26,15 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+
   bool editName = false;
+  bool editUsername = false;
   bool editPassword = false;
   bool editEmail = false;
   bool editPhone = false;
@@ -35,6 +42,12 @@ class _ProfileState extends State<Profile> {
   void toggleName() {
     setState(() {
       editName = !editName;
+    });
+  }
+
+  void toggleUsername() {
+    setState(() {
+      editUsername = !editUsername;
     });
   }
 
@@ -54,6 +67,18 @@ class _ProfileState extends State<Profile> {
     setState(() {
       editPhone = !editPhone;
     });
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    usernameController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -167,7 +192,8 @@ class _ProfileState extends State<Profile> {
                                     SizedBox(
                                       height: 25.h,
                                     ),
-                                    const SettingsInput(
+                                    SettingsInput(
+                                      controller: nameController,
                                       label: "New Name",
                                       type: TextInputType.text,
                                       isPassword: false,
@@ -184,6 +210,121 @@ class _ProfileState extends State<Profile> {
                                         ),
                                         settingsErrorText(
                                             "The name should have at least 2 characters and not contain special characters."),
+                                      ],
+                                    ),
+
+                                    SizedBox(
+                                      height: 20.h,
+                                    ),
+                                    Row(
+                                      children: [
+                                        settingsButton(
+                                          const Color.fromRGBO(35, 131, 226, 1),
+                                          Colors.white,
+                                          "Update",
+                                          16,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // username
+                SizedBox(
+                  height: 30.h,
+                ),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(25.r),
+                  child: Container(
+                    color: Colors.white,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 30.w,
+                      vertical: 30.h,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // icon
+                        profileDetailIcon(FontAwesomeIcons.alignLeft),
+
+                        // details
+                        SizedBox(
+                          width: 30.w,
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              // values
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        profileDetailTitle("Username"),
+                                        profileDetaillSubtitle(
+                                            "${authController.user.value?.name}"),
+                                      ],
+                                    ),
+                                  ),
+
+                                  // edit button
+                                  if (!editUsername)
+                                    GestureDetector(
+                                      onTap: () {
+                                        toggleUsername();
+                                      },
+                                      child: profileDetailEditIcon(
+                                          FontAwesomeIcons.pen),
+                                    ),
+
+                                  if (editUsername)
+                                    GestureDetector(
+                                      onTap: () {
+                                        toggleUsername();
+                                      },
+                                      child: settingsCancelText("Cancel"),
+                                    ),
+                                ],
+                              ),
+
+                              // edit
+                              if (editUsername)
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    SizedBox(
+                                      height: 25.h,
+                                    ),
+                                    SettingsInput(
+                                      controller: usernameController,
+                                      label: "New Username",
+                                      type: TextInputType.text,
+                                      isPassword: false,
+                                      radius: 20,
+                                    ),
+
+                                    // error
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        SizedBox(
+                                          height: 20.h,
+                                        ),
+                                        settingsErrorText(
+                                            "The username should have at least 2 characters and not contain special characters."),
                                       ],
                                     ),
 
@@ -280,18 +421,20 @@ class _ProfileState extends State<Profile> {
                                     SizedBox(
                                       height: 25.h,
                                     ),
-                                    const SettingsInput(
-                                      label: "New Password",
-                                      type: TextInputType.text,
+                                    SettingsInput(
+                                      controller: passwordController,
+                                      label: "New Pin",
+                                      type: TextInputType.number,
                                       isPassword: true,
                                       radius: 20,
                                     ),
                                     SizedBox(
                                       height: 20.h,
                                     ),
-                                    const SettingsInput(
-                                      label: "Confirm Password",
-                                      type: TextInputType.text,
+                                    SettingsInput(
+                                      controller: confirmPasswordController,
+                                      label: "Confirm Pin",
+                                      type: TextInputType.number,
                                       isPassword: true,
                                       radius: 20,
                                     ),
@@ -305,7 +448,7 @@ class _ProfileState extends State<Profile> {
                                           height: 20.h,
                                         ),
                                         settingsErrorText(
-                                            "The password should not be less than 8 characters."),
+                                            "The pin should not be less than 4 digits."),
                                       ],
                                     ),
 
@@ -403,7 +546,8 @@ class _ProfileState extends State<Profile> {
                                     SizedBox(
                                       height: 25.h,
                                     ),
-                                    const SettingsInput(
+                                    SettingsInput(
+                                      controller: emailController,
                                       label: "New Email Address",
                                       type: TextInputType.emailAddress,
                                       isPassword: false,
@@ -489,7 +633,7 @@ class _ProfileState extends State<Profile> {
                                   ),
 
                                   // edit button
-                                  if (!editEmail)
+                                  if (!editPhone)
                                     GestureDetector(
                                       onTap: () {
                                         togglePhone();
@@ -498,7 +642,7 @@ class _ProfileState extends State<Profile> {
                                           FontAwesomeIcons.pen),
                                     ),
 
-                                  if (editEmail)
+                                  if (editPhone)
                                     GestureDetector(
                                       onTap: () {
                                         togglePhone();
@@ -517,9 +661,10 @@ class _ProfileState extends State<Profile> {
                                     SizedBox(
                                       height: 25.h,
                                     ),
-                                    const SettingsInput(
+                                    SettingsInput(
+                                      controller: phoneController,
                                       label: "New Phone Number",
-                                      type: TextInputType.emailAddress,
+                                      type: TextInputType.number,
                                       isPassword: false,
                                       radius: 20,
                                     ),

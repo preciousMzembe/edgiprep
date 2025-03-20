@@ -8,6 +8,7 @@ import 'package:edgiprep/views/components/general/button_loading.dart';
 import 'package:edgiprep/views/components/general/normal_button.dart';
 import 'package:edgiprep/views/components/general/normal_image_button.dart';
 import 'package:edgiprep/utils/constants.dart';
+import 'package:edgiprep/views/components/general/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -117,8 +118,8 @@ class _SignInState extends State<SignIn> {
               borderRadius: BorderRadius.circular(16.r),
             ),
             child: AuthInput(
-              label: "Password",
-              type: TextInputType.text,
+              label: "Pin",
+              type: TextInputType.number,
               isPassword: true,
               icon: FontAwesomeIcons.lock,
               radius: 16,
@@ -148,15 +149,8 @@ class _SignInState extends State<SignIn> {
                           await authController.login(username, password);
 
                       if (loginData['status'] == 'error') {
-                        Get.snackbar(
-                          "Login Error",
-                          loginData['error'],
-                          backgroundColor:
-                              const Color.fromRGBO(254, 101, 93, 1),
-                          colorText: Colors.white,
-                          duration: const Duration(seconds: 2),
-                          snackPosition: SnackPosition.BOTTOM,
-                        );
+                        showSnackbar(context, "Something Went Wrong",
+                            loginData['error'], true);
                       } else {
                         // get enrollment data
                         enrollmentService.restartFetch();
