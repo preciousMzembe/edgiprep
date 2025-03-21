@@ -117,9 +117,7 @@ class NotificationService extends GetxService {
             showWhen: true,
           ),
         ),
-        androidScheduleMode: AndroidScheduleMode.inexact,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         matchDateTimeComponents: DateTimeComponents.time,
       );
       debugPrint("Notification scheduled successfully.");
