@@ -88,4 +88,38 @@ class AuthController extends GetxController {
       user.value = localUser;
     }
   }
+
+  // Profile Settings
+  Future<Map<String, dynamic>> changeName(String name) async {
+    return await authService.changeName(name);
+  }
+
+  Future<Map<String, dynamic>> changeUsername(String username) async {
+    return await authService.changeUsername(username);
+  }
+
+  Future<Map<String, dynamic>> changePassword(String pin) async {
+    return await authService.changePassword(pin);
+  }
+
+  Future<Map<String, dynamic>> changeEmail(String email) async {
+    if (!isValidEmail(email)) {
+      return {
+        "status": "error",
+        "error": "Please enter a valid email address",
+      };
+    }
+    return await authService.changeEmail(email);
+  }
+
+  Future<Map<String, dynamic>> changePhone(String phone) async {
+    return await authService.changePhone(phone);
+  }
+
+  bool isValidEmail(String email) {
+    final RegExp emailRegex = RegExp(
+      r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+    );
+    return emailRegex.hasMatch(email);
+  }
 }

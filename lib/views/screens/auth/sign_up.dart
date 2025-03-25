@@ -10,6 +10,8 @@ import 'package:edgiprep/views/components/general/normal_button.dart';
 import 'package:edgiprep/views/components/general/normal_image_button.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/views/components/general/snackbar.dart';
+import 'package:edgiprep/views/components/general/pin_input_formatter.dart';
+import 'package:edgiprep/views/components/general/username_input_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -127,6 +129,7 @@ class _SignUpState extends State<SignUp> {
               icon: FontAwesomeIcons.solidUser,
               radius: 16,
               controller: usernameController,
+              formatter: UsernameInputFormatter(),
             ),
           ),
 
@@ -150,6 +153,7 @@ class _SignUpState extends State<SignUp> {
               icon: FontAwesomeIcons.lock,
               radius: 16,
               controller: passwordController,
+              formatter: PinInputFormatter(),
             ),
           ),
 
@@ -173,6 +177,7 @@ class _SignUpState extends State<SignUp> {
               icon: FontAwesomeIcons.lock,
               radius: 16,
               controller: confirmPasswordController,
+              formatter: PinInputFormatter(),
             ),
           ),
 
@@ -248,7 +253,7 @@ class _SignUpState extends State<SignUp> {
 
                             if (registerData['status'] == 'error') {
                               if (registerData['error'] ==
-                                  "Username is already taken") {
+                                  "Username is already taken.") {
                                 usernameError = true;
                                 showSnackbar(context, "Something Went Wrong",
                                     registerData['error'], true);
@@ -269,7 +274,7 @@ class _SignUpState extends State<SignUp> {
                         // passwords error
                         verifyPasswordError = true;
                         showSnackbar(context, "Something Went Wrong",
-                            "Pins do not match.", true);
+                            "Pin does not match.", true);
                       }
                     } else {
                       // empty fields

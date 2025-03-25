@@ -1,6 +1,9 @@
 import 'package:edgiprep/controllers/auth/auth_controller.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/views/components/general/normal_button.dart';
+import 'package:edgiprep/views/components/general/profile_button_loading.dart';
+import 'package:edgiprep/views/components/general/snackbar.dart';
+import 'package:edgiprep/views/components/general/username_input_formatter.dart';
 import 'package:edgiprep/views/components/profile/profile_detail_edit_icon.dart';
 import 'package:edgiprep/views/components/profile/profile_detail_icon.dart';
 import 'package:edgiprep/views/components/profile/profile_detail_subtitle.dart';
@@ -13,6 +16,8 @@ import 'package:edgiprep/views/components/settings/settings_button.dart';
 import 'package:edgiprep/views/components/settings/settings_cancel_text.dart';
 import 'package:edgiprep/views/components/settings/settings_error_text.dart';
 import 'package:edgiprep/views/components/settings/settings_input.dart';
+import 'package:edgiprep/views/components/general/phone_number_formatter.dart';
+import 'package:edgiprep/views/components/general/pin_input_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -39,9 +44,35 @@ class _ProfileState extends State<Profile> {
   bool editEmail = false;
   bool editPhone = false;
 
+  bool nameLoading = false;
+  bool usernameLoading = false;
+  bool passwordLoading = false;
+  bool emailLoading = false;
+  bool phoneLoading = false;
+
+  String nameErorr = "";
+  String usernameErorr = "";
+  String passwordErorr = "";
+  String emailErorr = "";
+  String phoneErorr = "";
+
   void toggleName() {
     setState(() {
       editName = !editName;
+    });
+
+    changeNameError("");
+  }
+
+  void toggleNameLoading() {
+    setState(() {
+      nameLoading = !nameLoading;
+    });
+  }
+
+  void changeNameError(error) {
+    setState(() {
+      nameErorr = error;
     });
   }
 
@@ -49,11 +80,39 @@ class _ProfileState extends State<Profile> {
     setState(() {
       editUsername = !editUsername;
     });
+
+    changeUsernameError("");
+  }
+
+  void toggleUsernameLoading() {
+    setState(() {
+      usernameLoading = !usernameLoading;
+    });
+  }
+
+  void changeUsernameError(error) {
+    setState(() {
+      usernameErorr = error;
+    });
   }
 
   void togglePassword() {
     setState(() {
       editPassword = !editPassword;
+    });
+
+    changePasswordError("");
+  }
+
+  void togglePasswordLoading() {
+    setState(() {
+      passwordLoading = !passwordLoading;
+    });
+  }
+
+  void changePasswordError(error) {
+    setState(() {
+      passwordErorr = error;
     });
   }
 
@@ -61,11 +120,39 @@ class _ProfileState extends State<Profile> {
     setState(() {
       editEmail = !editEmail;
     });
+
+    changeEmailError("");
+  }
+
+  void toggleEmailLoading() {
+    setState(() {
+      emailLoading = !emailLoading;
+    });
+  }
+
+  void changeEmailError(error) {
+    setState(() {
+      emailErorr = error;
+    });
   }
 
   void togglePhone() {
     setState(() {
       editPhone = !editPhone;
+    });
+
+    changePhoneError("");
+  }
+
+  void togglePhoneLoading() {
+    setState(() {
+      phoneLoading = !phoneLoading;
+    });
+  }
+
+  void changePhoneError(error) {
+    setState(() {
+      phoneErorr = error;
     });
   }
 
@@ -201,28 +288,73 @@ class _ProfileState extends State<Profile> {
                                     ),
 
                                     // error
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: [
-                                        SizedBox(
-                                          height: 20.h,
-                                        ),
-                                        settingsErrorText(
-                                            "The name should have at least 2 characters and not contain special characters."),
-                                      ],
-                                    ),
+                                    if (nameErorr.isNotEmpty)
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: [
+                                          SizedBox(
+                                            height: 20.h,
+                                          ),
+                                          settingsErrorText(nameErorr),
+                                        ],
+                                      ),
 
                                     SizedBox(
                                       height: 20.h,
                                     ),
                                     Row(
                                       children: [
-                                        settingsButton(
-                                          const Color.fromRGBO(35, 131, 226, 1),
-                                          Colors.white,
-                                          "Update",
-                                          16,
+                                        Stack(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () async {
+                                                // change name
+                                                String name =
+                                                    nameController.text.trim();
+
+                                                if (name.isNotEmpty) {
+                                                  changeNameError("");
+
+                                                  toggleNameLoading();
+
+                                                  var data =
+                                                      await authController
+                                                          .changeName(name);
+
+                                                  if (data['status'] ==
+                                                      "error") {
+                                                    changeNameError(
+                                                        data['error']);
+                                                  } else {
+                                                    nameController.text = "";
+
+                                                    showSnackbar(
+                                                        context,
+                                                        "Update Successful",
+                                                        "Your data was updated successfuly.",
+                                                        false);
+                                                  }
+
+                                                  toggleNameLoading();
+                                                }
+                                              },
+                                              child: settingsButton(
+                                                const Color.fromRGBO(
+                                                    35, 131, 226, 1),
+                                                Colors.white,
+                                                "Update",
+                                                16,
+                                              ),
+                                            ),
+                                            if (nameLoading)
+                                              Positioned(
+                                                left: 0,
+                                                right: 0,
+                                                child: profileButtonLoading(
+                                                    unselectedButtonColor, 16),
+                                              ),
+                                          ],
                                         ),
                                       ],
                                     ),
@@ -313,31 +445,84 @@ class _ProfileState extends State<Profile> {
                                       type: TextInputType.text,
                                       isPassword: false,
                                       radius: 20,
+                                      formatter: UsernameInputFormatter(),
                                     ),
 
                                     // error
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: [
-                                        SizedBox(
-                                          height: 20.h,
-                                        ),
-                                        settingsErrorText(
-                                            "The username should have at least 2 characters and not contain special characters."),
-                                      ],
-                                    ),
+                                    if (usernameErorr.isNotEmpty)
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: [
+                                          SizedBox(
+                                            height: 20.h,
+                                          ),
+                                          settingsErrorText(usernameErorr),
+                                        ],
+                                      ),
 
                                     SizedBox(
                                       height: 20.h,
                                     ),
                                     Row(
                                       children: [
-                                        settingsButton(
-                                          const Color.fromRGBO(35, 131, 226, 1),
-                                          Colors.white,
-                                          "Update",
-                                          16,
+                                        Stack(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () async {
+                                                // change username
+                                                String username =
+                                                    usernameController.text
+                                                        .trim();
+
+                                                if (username.isNotEmpty &&
+                                                    username.length >= 5) {
+                                                  changeUsernameError("");
+
+                                                  toggleUsernameLoading();
+
+                                                  var data =
+                                                      await authController
+                                                          .changeUsername(
+                                                              username);
+
+                                                  if (data['status'] ==
+                                                      "error") {
+                                                    changeUsernameError(
+                                                        data['error']);
+                                                  } else {
+                                                    usernameController.text =
+                                                        "";
+
+                                                    showSnackbar(
+                                                        context,
+                                                        "Update Successful",
+                                                        "Your data was updated successfuly.",
+                                                        false);
+                                                  }
+
+                                                  toggleUsernameLoading();
+                                                } else {
+                                                  changeUsernameError(
+                                                      "Username must be at least 5 characters.");
+                                                }
+                                              },
+                                              child: settingsButton(
+                                                const Color.fromRGBO(
+                                                    35, 131, 226, 1),
+                                                Colors.white,
+                                                "Update",
+                                                16,
+                                              ),
+                                            ),
+                                            if (usernameLoading)
+                                              Positioned(
+                                                left: 0,
+                                                right: 0,
+                                                child: profileButtonLoading(
+                                                    unselectedButtonColor, 16),
+                                              ),
+                                          ],
                                         ),
                                       ],
                                     ),
@@ -386,8 +571,8 @@ class _ProfileState extends State<Profile> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.stretch,
                                       children: [
-                                        profileDetailTitle("Password"),
-                                        profileDetaillSubtitle("********"),
+                                        profileDetailTitle("Pin"),
+                                        profileDetaillSubtitle("*****"),
                                       ],
                                     ),
                                   ),
@@ -427,6 +612,7 @@ class _ProfileState extends State<Profile> {
                                       type: TextInputType.number,
                                       isPassword: true,
                                       radius: 20,
+                                      formatter: PinInputFormatter(),
                                     ),
                                     SizedBox(
                                       height: 20.h,
@@ -437,31 +623,100 @@ class _ProfileState extends State<Profile> {
                                       type: TextInputType.number,
                                       isPassword: true,
                                       radius: 20,
+                                      formatter: PinInputFormatter(),
                                     ),
 
                                     // error
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: [
-                                        SizedBox(
-                                          height: 20.h,
-                                        ),
-                                        settingsErrorText(
-                                            "The pin should not be less than 4 digits."),
-                                      ],
-                                    ),
+                                    if (passwordErorr.isNotEmpty)
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: [
+                                          SizedBox(
+                                            height: 20.h,
+                                          ),
+                                          settingsErrorText(passwordErorr),
+                                        ],
+                                      ),
 
                                     SizedBox(
                                       height: 20.h,
                                     ),
                                     Row(
                                       children: [
-                                        settingsButton(
-                                          const Color.fromRGBO(35, 131, 226, 1),
-                                          Colors.white,
-                                          "Update",
-                                          16,
+                                        Stack(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () async {
+                                                // change password
+                                                String password =
+                                                    passwordController.text
+                                                        .trim();
+
+                                                String confirmPassword =
+                                                    confirmPasswordController
+                                                        .text
+                                                        .trim();
+
+                                                if (password.isNotEmpty &&
+                                                    confirmPassword
+                                                        .isNotEmpty) {
+                                                  if (password.length >= 4 &&
+                                                      password ==
+                                                          confirmPassword) {
+                                                    changePasswordError("");
+
+                                                    togglePasswordLoading();
+
+                                                    var data =
+                                                        await authController
+                                                            .changePassword(
+                                                                password);
+
+                                                    if (data['status'] ==
+                                                        "error") {
+                                                      changePasswordError(
+                                                          data['error']);
+                                                    } else {
+                                                      passwordController.text =
+                                                          "";
+
+                                                      showSnackbar(
+                                                          context,
+                                                          "Update Successful",
+                                                          "Your data was updated successfuly.",
+                                                          false);
+                                                    }
+
+                                                    togglePasswordLoading();
+                                                  } else {
+                                                    if (password.length < 4) {
+                                                      changePasswordError(
+                                                          "Pin must be at least 4 characters.");
+                                                    } else if (password !=
+                                                        confirmPassword) {
+                                                      changePasswordError(
+                                                          "Pin does not match.");
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              child: settingsButton(
+                                                const Color.fromRGBO(
+                                                    35, 131, 226, 1),
+                                                Colors.white,
+                                                "Update",
+                                                16,
+                                              ),
+                                            ),
+                                            if (passwordLoading)
+                                              Positioned(
+                                                left: 0,
+                                                right: 0,
+                                                child: profileButtonLoading(
+                                                    unselectedButtonColor, 16),
+                                              ),
+                                          ],
                                         ),
                                       ],
                                     ),
@@ -555,28 +810,73 @@ class _ProfileState extends State<Profile> {
                                     ),
 
                                     // error
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: [
-                                        SizedBox(
-                                          height: 20.h,
-                                        ),
-                                        settingsErrorText(
-                                            "The email address is already used for another account."),
-                                      ],
-                                    ),
+                                    if (emailErorr.isNotEmpty)
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: [
+                                          SizedBox(
+                                            height: 20.h,
+                                          ),
+                                          settingsErrorText(emailErorr),
+                                        ],
+                                      ),
 
                                     SizedBox(
                                       height: 20.h,
                                     ),
                                     Row(
                                       children: [
-                                        settingsButton(
-                                          const Color.fromRGBO(35, 131, 226, 1),
-                                          Colors.white,
-                                          "Update",
-                                          16,
+                                        Stack(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () async {
+                                                // change email
+                                                String email =
+                                                    emailController.text.trim();
+
+                                                if (email.isNotEmpty) {
+                                                  changeEmailError("");
+
+                                                  toggleEmailLoading();
+
+                                                  var data =
+                                                      await authController
+                                                          .changeEmail(email);
+
+                                                  if (data['status'] ==
+                                                      "error") {
+                                                    changeEmailError(
+                                                        data['error']);
+                                                  } else {
+                                                    emailController.text = "";
+
+                                                    showSnackbar(
+                                                        context,
+                                                        "Update Successful",
+                                                        "Your data was updated successfuly.",
+                                                        false);
+                                                  }
+
+                                                  toggleEmailLoading();
+                                                }
+                                              },
+                                              child: settingsButton(
+                                                const Color.fromRGBO(
+                                                    35, 131, 226, 1),
+                                                Colors.white,
+                                                "Update",
+                                                16,
+                                              ),
+                                            ),
+                                            if (emailLoading)
+                                              Positioned(
+                                                left: 0,
+                                                right: 0,
+                                                child: profileButtonLoading(
+                                                    unselectedButtonColor, 16),
+                                              ),
+                                          ],
                                         ),
                                       ],
                                     ),
@@ -667,31 +967,83 @@ class _ProfileState extends State<Profile> {
                                       type: TextInputType.number,
                                       isPassword: false,
                                       radius: 20,
+                                      formatter: PhoneNumberFormatter(),
                                     ),
 
                                     // error
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: [
-                                        SizedBox(
-                                          height: 20.h,
-                                        ),
-                                        settingsErrorText(
-                                            "The phone number is already used for another account."),
-                                      ],
-                                    ),
+                                    if (phoneErorr.isNotEmpty)
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: [
+                                          SizedBox(
+                                            height: 20.h,
+                                          ),
+                                          settingsErrorText(phoneErorr),
+                                        ],
+                                      ),
 
                                     SizedBox(
                                       height: 20.h,
                                     ),
                                     Row(
                                       children: [
-                                        settingsButton(
-                                          const Color.fromRGBO(35, 131, 226, 1),
-                                          Colors.white,
-                                          "Update",
-                                          16,
+                                        Stack(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () async {
+                                                // change email
+                                                String phone =
+                                                    phoneController.text.trim();
+
+                                                if (phone.isNotEmpty &&
+                                                    phone.length == 15) {
+                                                  changePhoneError("");
+
+                                                  togglePhoneLoading();
+
+                                                  var data =
+                                                      await authController
+                                                          .changePhone(phone);
+
+                                                  if (data['status'] ==
+                                                      "error") {
+                                                    changePhoneError(
+                                                        data['error']);
+                                                  } else {
+                                                    phoneController.text = "";
+
+                                                    showSnackbar(
+                                                        context,
+                                                        "Update Successful",
+                                                        "Your data was updated successfuly.",
+                                                        false);
+                                                  }
+
+                                                  togglePhoneLoading();
+                                                } else {
+                                                  if (phone.length < 15) {
+                                                    changePhoneError(
+                                                        "Please enter a valid phone number.");
+                                                  }
+                                                }
+                                              },
+                                              child: settingsButton(
+                                                const Color.fromRGBO(
+                                                    35, 131, 226, 1),
+                                                Colors.white,
+                                                "Update",
+                                                16,
+                                              ),
+                                            ),
+                                            if (phoneLoading)
+                                              Positioned(
+                                                left: 0,
+                                                right: 0,
+                                                child: profileButtonLoading(
+                                                    unselectedButtonColor, 16),
+                                              ),
+                                          ],
                                         ),
                                       ],
                                     ),

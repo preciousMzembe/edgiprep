@@ -62,7 +62,7 @@ class AuthService extends GetxService {
           await userBox.add(user);
         }
       } on DioException catch (e) {
-        debugPrint("Error fetching learner data ------------ auth service");
+        debugPrint("Problem fetching learner data ------------ auth service");
 
         if (e.response != null) {
           if (e.response?.statusCode == 401) {
@@ -93,12 +93,12 @@ class AuthService extends GetxService {
         };
       }
     } on DioException catch (e) {
-      debugPrint("Error loggin in ------------ auth service");
+      debugPrint("Problem loggin in ------------ auth service");
       if (e.response != null) {
         if (e.response?.statusCode == 404) {
           return {
             'status': "error",
-            'error': "Incorrect Username or Pin",
+            'error': "Incorrect Username or Pin.",
           };
         }
       }
@@ -106,7 +106,7 @@ class AuthService extends GetxService {
 
     return {
       'status': "error",
-      'error': "Error logging in",
+      'error': "There was a problem logging in.",
     };
   }
 
@@ -127,7 +127,7 @@ class AuthService extends GetxService {
         };
       }
     } on DioException catch (e) {
-      debugPrint("Error registering ------------ auth service");
+      debugPrint("Problem registering ------------ auth service");
 
       if (e.response != null) {
         if (e.response?.statusCode == 404) {
@@ -141,7 +141,7 @@ class AuthService extends GetxService {
 
     return {
       'status': "error",
-      'error': "Error logging in",
+      'error': "There was a problem creating account.",
     };
   }
 
@@ -153,17 +153,17 @@ class AuthService extends GetxService {
       if (response.statusCode == 200) {
         return {
           'status': "success",
-          'data': 'Username is available',
+          'data': 'Username is available.',
         };
       }
     } on DioException catch (e) {
-      debugPrint("Error checking username ------------ auth service");
+      debugPrint("Problem checking username ------------ auth service");
 
       if (e.response != null) {
         if (e.response?.statusCode == 409) {
           return {
             'status': "error",
-            'error': 'Username is already taken',
+            'error': 'Username is already taken.',
           };
         }
       }
@@ -171,7 +171,7 @@ class AuthService extends GetxService {
 
     return {
       'status': "error",
-      'error': "Error checking username",
+      'error': "Problem checking username.",
     };
   }
 
@@ -180,6 +180,171 @@ class AuthService extends GetxService {
     await userExamBox.clear();
 
     doneLogout.value = !doneLogout.value;
+  }
+
+  // Profile Settings
+  Future<Map<String, dynamic>> changeName(String name) async {
+    try {
+      String? token = await getToken();
+
+      final response = await _dio.put(
+        '${config?.apiUrl}/Account/Mobile/Name',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+        data: {
+          'name': name,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return {
+          'status': "success",
+          'data': 'Name changed successfully',
+        };
+      }
+    } on DioException {
+      debugPrint("Problem changing name ------------ auth service");
+    }
+
+    return {
+      'status': "error",
+      'error': "There was a problem changing your name.",
+    };
+  }
+
+  Future<Map<String, dynamic>> changeUsername(String username) async {
+    try {
+      String? token = await getToken();
+
+      var checkData = await checkUsername(username);
+
+      if (checkData['status'] == 'error') return checkData;
+
+      final response = await _dio.put(
+        '${config?.apiUrl}/Account/Mobile/Username',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+        data: {
+          'username': username,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return {
+          'status': "success",
+          'data': 'Username changed successfully',
+        };
+      }
+    } on DioException {
+      debugPrint("Problem changing username ------------ auth service");
+    }
+
+    return {
+      'status': "error",
+      'error': "there was a problem changing your username.",
+    };
+  }
+
+  Future<Map<String, dynamic>> changePassword(String password) async {
+    try {
+      String? token = await getToken();
+
+      final response = await _dio.put(
+        '${config?.apiUrl}/Account/Mobile/Password',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+        data: {
+          'password': password,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return {
+          'status': "success",
+          'data': 'Pin changed successfully',
+        };
+      }
+    } on DioException {
+      debugPrint("Problem changing pin ------------ auth service");
+    }
+
+    return {
+      'status': "error",
+      'error': "There was a problem changing your pin.",
+    };
+  }
+
+  Future<Map<String, dynamic>> changeEmail(String email) async {
+    try {
+      String? token = await getToken();
+
+      final response = await _dio.put(
+        '${config?.apiUrl}/Account/Mobile/Email',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+        data: {
+          'email': email,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return {
+          'status': "success",
+          'data': 'Email changed successfully',
+        };
+      }
+    } on DioException {
+      debugPrint("Problem changing email ------------ auth service");
+    }
+
+    return {
+      'status': "error",
+      'error': "There was a problem changing your email.",
+    };
+  }
+
+  Future<Map<String, dynamic>> changePhone(String phone) async {
+    try {
+      String? token = await getToken();
+
+      final response = await _dio.put(
+        '${config?.apiUrl}/Account/Mobile/Phone',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+        data: {
+          'phone': phone,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return {
+          'status': "success",
+          'data': 'Email changed successfully',
+        };
+      }
+    } on DioException {
+      debugPrint("Problem changing phone ------------ auth service");
+    }
+
+    return {
+      'status': "error",
+      'error': "There was a problem changing your phone number.",
+    };
   }
 
   // Token handling

@@ -9,6 +9,8 @@ import 'package:edgiprep/views/components/general/normal_button.dart';
 import 'package:edgiprep/views/components/general/normal_image_button.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/views/components/general/snackbar.dart';
+import 'package:edgiprep/views/components/general/pin_input_formatter.dart';
+import 'package:edgiprep/views/components/general/username_input_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -101,6 +103,7 @@ class _SignInState extends State<SignIn> {
               icon: FontAwesomeIcons.solidUser,
               radius: 16,
               controller: usernameController,
+              formatter: UsernameInputFormatter(),
             ),
           ),
 
@@ -124,6 +127,7 @@ class _SignInState extends State<SignIn> {
               icon: FontAwesomeIcons.lock,
               radius: 16,
               controller: passwordController,
+              formatter: PinInputFormatter(),
             ),
           ),
 

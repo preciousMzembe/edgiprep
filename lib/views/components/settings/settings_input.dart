@@ -1,5 +1,6 @@
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -9,6 +10,7 @@ class SettingsInput extends StatefulWidget {
   final TextInputType type;
   final bool isPassword;
   final double radius;
+  final TextInputFormatter? formatter;
   const SettingsInput({
     super.key,
     required this.controller,
@@ -16,6 +18,7 @@ class SettingsInput extends StatefulWidget {
     required this.type,
     required this.isPassword,
     required this.radius,
+    this.formatter,
   });
 
   @override
@@ -69,6 +72,9 @@ class _SettingsInputState extends State<SettingsInput> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(widget.radius.r),
             child: TextFormField(
+              inputFormatters: [
+                widget.formatter ?? FilteringTextInputFormatter.deny('')
+              ],
               obscureText: _show,
               controller: widget.controller,
               keyboardType: widget.type,

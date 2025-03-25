@@ -1,5 +1,6 @@
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -10,6 +11,7 @@ class AuthInput extends StatefulWidget {
   final bool isPassword;
   final IconData icon;
   final double radius;
+  final TextInputFormatter? formatter;
   const AuthInput({
     super.key,
     required this.label,
@@ -18,6 +20,7 @@ class AuthInput extends StatefulWidget {
     required this.icon,
     required this.radius,
     required this.controller,
+    this.formatter,
   });
 
   @override
@@ -65,6 +68,9 @@ class _AuthInputState extends State<AuthInput> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(widget.radius.r),
             child: TextFormField(
+              inputFormatters: [
+                widget.formatter ?? FilteringTextInputFormatter.deny('')
+              ],
               obscureText: _show,
               controller: widget.controller,
               style: GoogleFonts.inter(
