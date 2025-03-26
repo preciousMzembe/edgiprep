@@ -121,7 +121,7 @@ class UserEnrollmentService extends GetxService {
         await userExamBox.clear();
         doneFetchingUserExams.value = !doneFetchingUserExams.value;
       }
-    } on DioException catch (e) {
+    } on DioException {
       debugPrint(
           "Error fetching user exams ------------------------- user enrollment service");
     }
@@ -177,7 +177,7 @@ class UserEnrollmentService extends GetxService {
           getUserServerPapers();
         }
       }
-    } on DioException catch (e) {
+    } on DioException {
       debugPrint(
           "Error fetching exam subjects ------------------------- user enrollment service");
     }
@@ -217,10 +217,7 @@ class UserEnrollmentService extends GetxService {
         List<Unit> units = [];
         List<Topic> topics = [];
 
-        String unitId = "";
-
         for (var unit in response.data) {
-          unitId = unit['id'];
 
           units.add(
             Unit(
@@ -253,7 +250,7 @@ class UserEnrollmentService extends GetxService {
         await topicBox.clear();
         await topicBox.addAll(topics);
       }
-    } on DioException catch (e) {
+    } on DioException {
       debugPrint(
           "Error fetching subject units and topics ------------------------- user enrollment service");
     }
@@ -309,7 +306,7 @@ class UserEnrollmentService extends GetxService {
 
         await lessonBox.clear();
         await lessonBox.addAll(userLessons);
-      } on DioException catch (e) {
+      } on DioException {
         debugPrint(
             "Error fetching topic lessons ------------------------- user enrollment service");
       }

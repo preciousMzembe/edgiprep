@@ -50,7 +50,7 @@ class QuizService extends GetxService {
             'quizData': quizData,
           };
         }
-      } on DioException catch (e) {
+      } on DioException {
         error = true;
         debugPrint(
             "Error fetching quiz ------------------------- quiz service");
@@ -83,7 +83,7 @@ class QuizService extends GetxService {
             "answerId": answerId,
           },
         );
-      } on DioException catch (e) {
+      } on DioException {
         debugPrint(
             "Error saving question score ------------------------- quiz service");
       }
@@ -110,7 +110,7 @@ class QuizService extends GetxService {
             "score": score,
           },
         );
-      } on DioException catch (e) {
+      } on DioException {
         debugPrint(
             "Error saving quiz score ------------------------- quiz service");
       }

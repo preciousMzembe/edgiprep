@@ -81,7 +81,7 @@ class EnrollmentService extends GetxService {
         await examBox.clear();
         await examBox.addAll(serverExams);
       }
-    } on DioException catch (e) {
+    } on DioException {
       debugPrint(
           "Error fetching exams ------------------------- enrollment service");
     }
@@ -109,7 +109,7 @@ class EnrollmentService extends GetxService {
         await subjectBox.clear();
         await subjectBox.addAll(serverSubjects);
       }
-    } on DioException catch (e) {
+    } on DioException {
       debugPrint(
           "Error fetching subjects --------------------------- enrollment service ");
     }
@@ -143,7 +143,7 @@ class EnrollmentService extends GetxService {
           );
         }
       }
-    } on DioException catch (e) {
+    } on DioException {
       debugPrint(
           "Error fetching exam subjects ------------------------- enrollment service");
     }
@@ -174,7 +174,7 @@ class EnrollmentService extends GetxService {
         done = true;
         doneEnrollment.value = !doneEnrollment.value;
       }
-    } on DioException catch (e) {
+    } on DioException {
       debugPrint(
           "Error enrolling ------------------------- enrollment service");
     }

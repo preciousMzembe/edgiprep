@@ -52,7 +52,7 @@ class LessonService extends GetxService {
             'lessonData': lessonData,
           };
         }
-      } on DioException catch (e) {
+      } on DioException {
         error = true;
         debugPrint(
             "Error fetching lesson ------------------------- lesson service");
@@ -89,7 +89,7 @@ class LessonService extends GetxService {
         if (response.statusCode == 200) {
           return false;
         }
-      } on DioException catch (e) {
+      } on DioException {
         debugPrint(
             "Error saving slide progress ------------------------- lesson service");
       }
