@@ -65,7 +65,7 @@ Widget navigationBar(Function(int) navigate) {
                     navigate(1);
                   },
                   child: navOption(
-                    "Subjects",
+                    "Learn",
                     "layers.svg",
                     navController.pageIndex.value == 1,
                   ),
@@ -77,7 +77,7 @@ Widget navigationBar(Function(int) navigate) {
                     navigate(2);
                   },
                   child: navOption(
-                    "Tests",
+                    "Test",
                     "chart.svg",
                     navController.pageIndex.value == 2,
                   ),

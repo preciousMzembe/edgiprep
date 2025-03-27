@@ -152,8 +152,8 @@ class Settings extends StatelessWidget {
                         onTap: () {
                           Get.to(() => Premium());
                         },
-                        child: settingsOptionBox(
-                            "wallet.svg", "Payments", "Add payment methods"),
+                        child: settingsOptionBox("wallet.svg", "Subscription",
+                            "Unlock learning experience with premium"),
                       ),
                       SizedBox(
                         height: 30.h,
@@ -163,7 +163,7 @@ class Settings extends StatelessWidget {
                           Get.to(() => const EnrollmentSettings());
                         },
                         child: settingsOptionBox("writing.svg", "Enrollment",
-                            "Add / remove exams and subjects"),
+                            "Add / remove subjects"),
                       ),
                       SizedBox(
                         height: 30.h,

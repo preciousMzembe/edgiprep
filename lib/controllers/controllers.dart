@@ -10,7 +10,7 @@ import 'package:edgiprep/controllers/past%20paper/paper_controller.dart';
 import 'package:edgiprep/controllers/quiz/quiz_controller.dart';
 import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.dart';
 import 'package:edgiprep/services/auth/auth_service.dart';
-import 'package:edgiprep/services/config/config_Service.dart';
+import 'package:edgiprep/services/configuration/configuration_service.dart';
 import 'package:edgiprep/services/enrollment/enrollment_service.dart';
 import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
 import 'package:edgiprep/services/lesson/lesson_service.dart';

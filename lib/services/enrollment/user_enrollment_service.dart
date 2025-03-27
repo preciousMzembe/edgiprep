@@ -8,7 +8,7 @@ import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/db/topic/topic.dart';
 import 'package:edgiprep/db/unit/unit.dart';
 import 'package:edgiprep/services/auth/auth_service.dart';
-import 'package:edgiprep/services/config/config_Service.dart';
+import 'package:edgiprep/services/configuration/configuration_service.dart';
 import 'package:edgiprep/services/enrollment/enrollment_service.dart';
 import 'package:edgiprep/utils/dio_client.dart';
 import 'package:flutter/material.dart';

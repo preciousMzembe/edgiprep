@@ -3,7 +3,7 @@ import 'package:edgiprep/controllers/notification/notification_controller.dart';
 import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.dart';
 import 'package:edgiprep/db/config/config.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
-import 'package:edgiprep/services/config/config_Service.dart';
+import 'package:edgiprep/services/configuration/configuration_service.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/general/normal_input.dart';
@@ -268,8 +268,8 @@ class _HomeState extends State<Home> {
                                 children: [
                                   Expanded(
                                     child: homeXpStreak(
-                                      "flame.svg",
-                                      "Total Xps",
+                                      "star.svg",
+                                      "Total XPs",
                                       "${authController.user.value?.xp ?? "--"}",
                                       homeLightBackgroundColor,
                                       primaryColor,
@@ -283,7 +283,7 @@ class _HomeState extends State<Home> {
                                   ),
                                   Expanded(
                                     child: homeXpStreak(
-                                      "star.svg",
+                                      "flame.svg",
                                       "Total Streak",
                                       "${authController.user.value?.streak ?? "--"}",
                                       Colors.white,

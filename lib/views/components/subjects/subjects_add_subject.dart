@@ -47,7 +47,7 @@ Widget subjectsAddSubject() {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      "Enrol New Subjet",
+                      "Enroll New Subjet",
                       style: GoogleFonts.inter(
                         fontSize: titleFontSize,
                         fontWeight: FontWeight.w700,
@@ -58,7 +58,7 @@ Widget subjectsAddSubject() {
                       height: 6.h,
                     ),
                     Text(
-                      "Add / Enrol new subject with few clicks",
+                      "Add / Enroll new subject with few clicks",
                       style: GoogleFonts.inter(
                         fontSize: subtitleFontSize,
                         fontWeight: FontWeight.w500,

@@ -110,7 +110,7 @@ class Subjects extends StatelessWidget {
                   ),
 
                   // title
-                  subjectsTitle("Subjects"),
+                  subjectsTitle("Learn"),
 
                   // search
                   SizedBox(

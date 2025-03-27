@@ -7,7 +7,7 @@ import 'package:edgiprep/db/config/config.dart';
 import 'package:edgiprep/db/lesson/lesson.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/db/topic/topic.dart';
-import 'package:edgiprep/services/config/config_Service.dart';
+import 'package:edgiprep/services/configuration/configuration_service.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/subjects/subjects_back.dart';
@@ -96,16 +96,6 @@ class _LoadSlidesState extends State<LoadSlides> {
         // start quiz
         Get.back();
         Get.to(() => const Quiz());
-      } else {
-        // show error
-        Get.snackbar(
-          "Something went wrong",
-          "There was a problem getting the quiz, please try again",
-          backgroundColor: const Color.fromRGBO(254, 101, 93, 1),
-          colorText: Colors.white,
-          duration: const Duration(seconds: 2),
-          snackPosition: SnackPosition.BOTTOM,
-        );
       }
     } else if (widget.type == "paper") {
       // Paper ---------------------------------------------------------------

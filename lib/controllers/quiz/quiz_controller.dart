@@ -88,18 +88,26 @@ class QuizController extends GetxController {
     } else {
       Map quizData = data['quizData'];
 
+      if (quizData['questions'] == null || quizData['questions'].isEmpty) {
+        return true;
+      }
+
       quizId.value = quizData['quizId'];
 
       List<SlideModel> tempSlides = [];
 
       for (var question in quizData['questions']) {
+        String explanation = question['explaination'] != null
+            ? question['explaination'].replaceAll(RegExp(r'<[^>]*>'), '').trim()
+            : "";
+
         SlideModel tempSlide = SlideModel(
           question: LessonSlideQuestionModel(
             id: question['id'],
             questionText: question['name'],
             questionImage: question['imageUrL'],
             options: [],
-            explanation: question['explaination'],
+            explanation: explanation,
             explanationImage: question['explainationImage'],
           ),
         );
@@ -107,14 +115,20 @@ class QuizController extends GetxController {
         List<QuestionAnswerModel> tempOptions = [];
 
         for (var option in question['answers']) {
-          tempOptions.add(
-            QuestionAnswerModel(
-              id: option['id'],
-              text: option['text'],
-              qusetionId: option['questionId'],
-              isCorrect: option['isCorrect'],
-            ),
-          );
+          // Remove HTML tags using a regular expression
+          String cleanContent =
+              option['text'].replaceAll(RegExp(r'<[^>]*>'), '').trim();
+
+          if (cleanContent.isNotEmpty) {
+            tempOptions.add(
+              QuestionAnswerModel(
+                id: option['id'],
+                text: option['text'],
+                qusetionId: option['questionId'],
+                isCorrect: option['isCorrect'],
+              ),
+            );
+          }
 
           if (option['isCorrect']) {
             tempSlide.question!.setCorrectUserAnswer(option['id']);

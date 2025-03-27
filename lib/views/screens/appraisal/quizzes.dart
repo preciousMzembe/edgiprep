@@ -1,6 +1,6 @@
 import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.dart';
 import 'package:edgiprep/db/config/config.dart';
-import 'package:edgiprep/services/config/config_Service.dart';
+import 'package:edgiprep/services/configuration/configuration_service.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/views/components/appraisal/appraisal_back_button.dart';
 import 'package:edgiprep/views/components/appraisal/appraisal_heading.dart';

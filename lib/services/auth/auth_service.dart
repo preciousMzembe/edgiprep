@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:edgiprep/db/boxes.dart';
 import 'package:edgiprep/db/config/config.dart';
 import 'package:edgiprep/db/user/user.dart';
-import 'package:edgiprep/services/config/config_Service.dart';
+import 'package:edgiprep/services/configuration/configuration_service.dart';
 import 'package:edgiprep/utils/dio_client.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

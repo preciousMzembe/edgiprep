@@ -7,8 +7,10 @@ import 'package:edgiprep/models/lesson/question_answer_model.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/general/normal_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -259,14 +261,35 @@ Widget lessonIncorrect(String type) {
                                         SizedBox(
                                           height: 8.h,
                                         ),
-                                        Text(
+                                        HtmlWidget(
                                           correctAnswer?.text ?? "",
-                                          style: GoogleFonts.inter(
+                                          textStyle: GoogleFonts.inter(
                                             fontSize: answerSize,
                                             fontWeight: FontWeight.w700,
                                             color: const Color.fromRGBO(
                                                 92, 101, 120, 1),
                                           ),
+                                          customWidgetBuilder: (element) {
+                                            if (element.localName == "span" &&
+                                                element.classes
+                                                    .contains("ql-formula")) {
+                                              String? latexExpression = element
+                                                  .attributes["data-value"];
+
+                                              if (latexExpression != null) {
+                                                return Math.tex(
+                                                  latexExpression,
+                                                  textStyle: GoogleFonts.inter(
+                                                    fontSize: answerSize,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: const Color.fromRGBO(
+                                                        92, 101, 120, 1),
+                                                  ),
+                                                );
+                                              }
+                                            }
+                                            return null;
+                                          },
                                         ),
                                       ],
                                     ),
@@ -295,30 +318,59 @@ Widget lessonIncorrect(String type) {
                                 ],
                               ),
 
-                              SizedBox(
-                                height: 30.h,
-                              ),
-
                               // explanation
-                              Text(
-                                "Explanation",
-                                style: GoogleFonts.inter(
-                                  fontSize: answerTitleSize,
-                                  fontWeight: FontWeight.w700,
-                                  color: const Color.fromRGBO(232, 144, 145, 1),
+                              if (explanation.isNotEmpty)
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    SizedBox(
+                                      height: 30.h,
+                                    ),
+                                    Text(
+                                      "Explanation",
+                                      style: GoogleFonts.inter(
+                                        fontSize: answerTitleSize,
+                                        fontWeight: FontWeight.w700,
+                                        color: const Color.fromRGBO(
+                                            232, 144, 145, 1),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 8.h,
+                                    ),
+                                    HtmlWidget(
+                                      explanation,
+                                      textStyle: GoogleFonts.inter(
+                                        fontSize: explanationSize,
+                                        fontWeight: FontWeight.w500,
+                                        color:
+                                            const Color.fromRGBO(17, 25, 37, 1),
+                                      ),
+                                      customWidgetBuilder: (element) {
+                                        if (element.localName == "span" &&
+                                            element.classes
+                                                .contains("ql-formula")) {
+                                          String? latexExpression =
+                                              element.attributes["data-value"];
+
+                                          if (latexExpression != null) {
+                                            return Math.tex(
+                                              latexExpression,
+                                              textStyle: GoogleFonts.inter(
+                                                fontSize: explanationSize,
+                                                fontWeight: FontWeight.w500,
+                                                color: const Color.fromRGBO(
+                                                    17, 25, 37, 1),
+                                              ),
+                                            );
+                                          }
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              SizedBox(
-                                height: 8.h,
-                              ),
-                              Text(
-                                explanation,
-                                style: GoogleFonts.inter(
-                                  fontSize: explanationSize,
-                                  fontWeight: FontWeight.w500,
-                                  color: const Color.fromRGBO(17, 25, 37, 1),
-                                ),
-                              ),
                             ],
                           ),
                         ),

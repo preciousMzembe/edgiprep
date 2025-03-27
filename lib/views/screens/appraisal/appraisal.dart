@@ -85,7 +85,7 @@ class Appraisal extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        subjectsTitle("Tests"),
+                        subjectsTitle("Test"),
                         SizedBox(
                           height: 15.h,
                         ),

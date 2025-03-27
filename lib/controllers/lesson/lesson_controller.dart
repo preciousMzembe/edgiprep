@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:edgiprep/db/lesson/lesson.dart';
 import 'package:edgiprep/db/topic/topic.dart';
+import 'package:edgiprep/models/lesson/question_answer_model.dart';
 import 'package:edgiprep/models/lesson/slide_content_model.dart';
 import 'package:edgiprep/models/lesson/slide_media_model.dart';
 import 'package:edgiprep/models/lesson/slide_model.dart';
@@ -82,7 +85,82 @@ class LessonController extends GetxController {
     if (data['error']) {
       error = true;
     } else {
-      print(data['lessonData'].length);
+      if (data['lessonData'] == null || data['lessonData'].isEmpty) {
+        return true;
+      }
+
+      List<SlideModel> tempSlides = [];
+
+      for (var slide in data['lessonData']) {
+        bool hasMedia = false;
+        SlideMediaModel tempSlideMedia = SlideMediaModel(MediaType.image, "");
+        if (slide['media'] != null && slide['media'].isNotEmpty) {
+          tempSlideMedia = SlideMediaModel(MediaType.image, slide['media']);
+          hasMedia = true;
+        }
+
+        SlideContentModel tempSlideContent = SlideContentModel(
+          title: slide['title'] ?? "",
+          text: slide['description'] ?? "",
+          slideMedia: hasMedia ? tempSlideMedia : null,
+        );
+
+        String explanation = slide['question'] != null
+            ? slide['question']['explaination']
+                .replaceAll(RegExp(r'<[^>]*>'), '')
+                .trim()
+            : "";
+
+        // Slide
+        SlideModel tempSlide = SlideModel(
+          id: slide['id'],
+          content: tempSlideContent,
+          question: slide['question'] == null
+              ? null
+              : LessonSlideQuestionModel(
+                  id: slide['question']['id'] ?? "",
+                  questionText: slide['question']['name'],
+                  questionImage: slide['question']['imageUrL'],
+                  options: [],
+                  explanation: explanation,
+                  explanationImage: slide['question']['explainationImage'],
+                ),
+        );
+
+        // Question options
+        if (slide['question'] != null) {
+          List<QuestionAnswerModel> tempOptions = [];
+
+          for (var option in slide['question']['answers']) {
+            // Remove HTML tags using a regular expression
+            String cleanContent =
+                option['text'].replaceAll(RegExp(r'<[^>]*>'), '').trim();
+
+            if (cleanContent.isNotEmpty) {
+              tempOptions.add(
+                QuestionAnswerModel(
+                  id: option['id'],
+                  text: option['text'],
+                  qusetionId: option['questionId'],
+                  isCorrect: option['isCorrect'],
+                ),
+              );
+            }
+
+            if (option['isCorrect']) {
+              tempSlide.question!.setCorrectUserAnswer(option['id']);
+            }
+          }
+
+          // shuffle options before adding
+          tempOptions.shuffle(Random());
+
+          tempSlide.question!.setOptions(tempOptions);
+        }
+        tempSlides.add(tempSlide);
+      }
+
+      slides.value = tempSlides;
     }
 
     return error;

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:edgiprep/db/boxes.dart';
 import 'package:edgiprep/db/config/config.dart';
 import 'package:edgiprep/db/exam/exam.dart';
@@ -24,23 +26,32 @@ class HiveInitializer {
   // Generate & Store Secure Key
   Future<void> generateAndStoreKey() async {
     final encryptionKey = Hive.generateSecureKey();
+    String encodedKey = base64Encode(encryptionKey);
 
     await _secureStorage.write(
       key: _encryptionKey,
-      value: encryptionKey.join(','),
+      value: encodedKey,
     );
   }
 
   // Retrieve Encryption Key from Secure Storage or Generate If Not There
   Future<List<int>> getEncryptionKey() async {
-    String? keyString = await _secureStorage.read(key: _encryptionKey);
+    try {
+      String? keyString = await _secureStorage.read(key: _encryptionKey);
 
-    if (keyString == null) {
+      if (keyString == null || keyString.isEmpty) {
+        await generateAndStoreKey();
+        keyString = await _secureStorage.read(key: _encryptionKey);
+      }
+
+      return base64Decode(keyString!);
+    } catch (e) {
+      // Delete corrupted key and generate a new one
+      await _secureStorage.delete(key: _encryptionKey);
       await generateAndStoreKey();
-      keyString = await _secureStorage.read(key: _encryptionKey);
+      String? keyString = await _secureStorage.read(key: _encryptionKey);
+      return base64Decode(keyString!);
     }
-
-    return keyString!.split(',').map(int.parse).toList();
   }
 
   // Open Hive Box with Encryption
@@ -57,6 +68,9 @@ class HiveInitializer {
 
   Future<void> init() async {
     await Hive.initFlutter();
+
+    // Check first install (prevent secure storage errors)
+    await checkForReinstall();
 
     // Call rebuildHiveOnFirstOpen to clear Hive data if needed
     await rebuildHiveOnFirstOpen();
@@ -97,7 +111,7 @@ class HiveInitializer {
 
   Future<void> rebuildHiveOnFirstOpen() async {
     final prefs = await SharedPreferences.getInstance();
-    const currentVersion = 4; // Update this for each new version
+    const currentVersion = 1; // Update this for each new version
     final lastVersion = prefs.getInt('last_version') ?? 0;
 
     if (lastVersion < currentVersion) {
@@ -125,6 +139,17 @@ class HiveInitializer {
 
       // Ensure future calls don't repeat this operation
       await prefs.setInt('last_version', currentVersion);
+    }
+  }
+
+  Future<void> checkForReinstall() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool isFirstLaunch = prefs.getBool('first_launch') ?? true;
+
+    if (isFirstLaunch) {
+      debugPrint("🛑 App reinstall detected! Clearing Secure Storage...");
+      await _secureStorage.deleteAll();
+      await prefs.setBool('first_launch', false); 
     }
   }
 }

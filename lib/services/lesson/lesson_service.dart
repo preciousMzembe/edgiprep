@@ -3,7 +3,7 @@ import 'package:edgiprep/db/config/config.dart';
 import 'package:edgiprep/db/lesson/lesson.dart';
 import 'package:edgiprep/db/topic/topic.dart';
 import 'package:edgiprep/services/auth/auth_service.dart';
-import 'package:edgiprep/services/config/config_Service.dart';
+import 'package:edgiprep/services/configuration/configuration_service.dart';
 import 'package:edgiprep/utils/dio_client.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

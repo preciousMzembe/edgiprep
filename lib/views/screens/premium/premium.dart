@@ -1,5 +1,5 @@
 import 'package:edgiprep/db/config/config.dart';
-import 'package:edgiprep/services/config/config_Service.dart';
+import 'package:edgiprep/services/configuration/configuration_service.dart';
 import 'package:edgiprep/views/components/general/normal_svg_button.dart';
 import 'package:edgiprep/views/components/premium/premium_close.dart';
 import 'package:edgiprep/views/components/premium/premium_detail.dart';
