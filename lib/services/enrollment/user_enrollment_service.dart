@@ -188,9 +188,22 @@ class UserEnrollmentService extends GetxService {
     if (userSubjectBox.isNotEmpty) {
       var userSubjects = userSubjectBox.values;
 
+      List<Unit> units = [];
+      List<Topic> topics = [];
+
       for (UserSubject subject in userSubjects) {
-        await fetchSubjectUnitsAndTopics(subject.enrollmentId);
+        Map<String, List> unitTopicMap =
+            await fetchSubjectUnitsAndTopics(subject.enrollmentId);
+
+        units.addAll(unitTopicMap['units']! as Iterable<Unit>);
+        topics.addAll(unitTopicMap['topics']! as Iterable<Topic>);
       }
+
+      await unitBox.clear();
+      await unitBox.addAll(units);
+
+      await topicBox.clear();
+      await topicBox.addAll(topics);
 
       // get lessons
       getUserServerLessons();
@@ -200,9 +213,13 @@ class UserEnrollmentService extends GetxService {
     }
   }
 
-  Future<void> fetchSubjectUnitsAndTopics(String subjectEnrollmentId) async {
+  Future<Map<String, List>> fetchSubjectUnitsAndTopics(
+      String subjectEnrollmentId) async {
     try {
       String? token = await authService.getToken();
+
+      List<Unit> units = [];
+      List<Topic> topics = [];
 
       final response = await _dio.get(
         '${config?.apiUrl}/Unit/Mobile/Units?SubjectEnrollmentId=$subjectEnrollmentId',
@@ -214,11 +231,7 @@ class UserEnrollmentService extends GetxService {
       );
 
       if (response.statusCode == 200) {
-        List<Unit> units = [];
-        List<Topic> topics = [];
-
         for (var unit in response.data) {
-
           units.add(
             Unit(
               id: unit['id'],
@@ -244,16 +257,20 @@ class UserEnrollmentService extends GetxService {
           }
         }
 
-        await unitBox.clear();
-        await unitBox.addAll(units);
-
-        await topicBox.clear();
-        await topicBox.addAll(topics);
+        return {
+          "units": units,
+          "topics": topics,
+        };
       }
     } on DioException {
       debugPrint(
           "Error fetching subject units and topics ------------------------- user enrollment service");
     }
+
+    return {
+      "units": [],
+      "topics": [],
+    };
   }
 
   // server user lessons

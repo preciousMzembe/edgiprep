@@ -2,6 +2,7 @@ import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.
 import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/db/topic/topic.dart';
 import 'package:edgiprep/db/unit/unit.dart';
+import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/views/components/subject/subject_nav_option.dart';
 import 'package:edgiprep/views/components/subject/subject_subject_description.dart';
@@ -30,6 +31,9 @@ class _SubjectState extends State<Subject> {
   UserEnrollmentController userEnrollmentController =
       Get.find<UserEnrollmentController>();
 
+  UserEnrollmentService userEnrollmentService =
+      Get.find<UserEnrollmentService>();
+
   Map<Unit, List<Topic>> unitTopicMap = {};
 
   bool topicActive = true;
@@ -51,9 +55,14 @@ class _SubjectState extends State<Subject> {
   }
 
   Future<void> _fetchUnitsAndTopics() async {
-    unitTopicMap = await userEnrollmentController
+    var data = await userEnrollmentController
         .fetchUnitsAndTopics(widget.subject.enrollmentId);
-    setState(() {});
+
+    if (mounted) {
+      setState(() {
+        unitTopicMap = data;
+      });
+    }
   }
 
   @override
@@ -191,12 +200,14 @@ class _SubjectState extends State<Subject> {
                                           CrossAxisAlignment.stretch,
                                       children: [
                                         GestureDetector(
-                                          onTap: () {
+                                          onTap: () async {
                                             if (topic.active &&
                                                 !topic.needSubscrion) {
-                                              Get.to(() => SubjectTopic(
+                                              await Get.to(() => SubjectTopic(
                                                     topic: topic,
                                                   ));
+
+                                              _fetchUnitsAndTopics();
                                             }
                                           },
                                           child: subjectTopicBox(

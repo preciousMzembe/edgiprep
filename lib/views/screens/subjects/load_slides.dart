@@ -78,23 +78,28 @@ class _LoadSlidesState extends State<LoadSlides> {
 
     if (widget.type == "lesson") {
       // Lesson -------------------------------------------------------------
-      setState(() {
-        error = true;
-      });
-
       bool dataError =
           await lessonController.restartLesson(widget.topic!, widget.lesson!);
-      // Get.to(() => const LessonPlayer());
+
+      setState(() {
+        error = dataError;
+      });
+
+      if (!dataError) {
+        // start lesson
+        Get.to(() => const LessonPlayer());
+      }
     } else if (widget.type == "quiz") {
       // Quiz ----------------------------------------------------------------
       bool dataError = await quizController.restartLesson(
           widget.subject!.enrollmentId, config!.quizQuestions);
+
       setState(() {
         error = dataError;
       });
+
       if (!dataError) {
         // start quiz
-        Get.back();
         Get.to(() => const Quiz());
       }
     } else if (widget.type == "paper") {

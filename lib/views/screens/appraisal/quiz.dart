@@ -146,6 +146,9 @@ class _QuizState extends State<Quiz> {
                   padding: EdgeInsets.symmetric(horizontal: 30.w),
                   child: GestureDetector(
                     onTap: () async {
+                      // check if is last slide
+                      bool isLast = quizController.isLastSlide();
+
                       if (quizController
                               .visibleSlides[
                                   quizController.currentSlideIndex.value]
@@ -170,12 +173,6 @@ class _QuizState extends State<Quiz> {
                                 ?.userAnswerId
                                 .trim() !=
                             "") {
-                          // mark
-                          quizController.markSlideDone();
-
-                          // check if is last slide
-                          bool isLast = quizController.isLastSlide();
-
                           if (quizController
                                   .visibleSlides[
                                       quizController.currentSlideIndex.value]
@@ -203,13 +200,6 @@ class _QuizState extends State<Quiz> {
                               ),
                             );
                             quizController.goToNextSlide();
-
-                            // finish
-                            if (isLast) {
-                              Get.to(() => const AppraisalFinish(
-                                    type: "quiz",
-                                  ));
-                            }
                           } else {
                             // wrong
                             await showModalBottomSheet(
@@ -228,15 +218,14 @@ class _QuizState extends State<Quiz> {
                               ),
                             );
                             quizController.goToNextSlide();
-
-                            // finish
-                            if (isLast) {
-                              Get.to(() => const AppraisalFinish(
-                                    type: "quiz",
-                                  ));
-                            }
                           }
                         }
+                      }
+                      // finish
+                      if (isLast) {
+                        Get.to(() => const AppraisalFinish(
+                              type: "quiz",
+                            ));
                       }
                     },
                     child: Obx(() {

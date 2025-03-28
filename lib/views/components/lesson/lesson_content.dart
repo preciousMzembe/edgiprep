@@ -2,7 +2,9 @@ import 'package:edgiprep/models/lesson/slide_content_model.dart';
 import 'package:edgiprep/models/lesson/slide_media_model.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 Widget lessonContent(SlideContentModel? slideContent) {
@@ -42,17 +44,34 @@ Widget lessonContent(SlideContentModel? slideContent) {
             ),
           ),
 
-          // question
           SizedBox(
             height: 15.h,
           ),
-          Text(
+          HtmlWidget(
             slideContent!.title,
-            style: GoogleFonts.inter(
+            textStyle: GoogleFonts.inter(
               fontSize: headingFont,
               fontWeight: FontWeight.w700,
               color: const Color.fromRGBO(52, 74, 106, 1),
             ),
+            customWidgetBuilder: (element) {
+              if (element.localName == "span" &&
+                  element.classes.contains("ql-formula")) {
+                String? latexExpression = element.attributes["data-value"];
+
+                if (latexExpression != null) {
+                  return Math.tex(
+                    latexExpression,
+                    textStyle: GoogleFonts.inter(
+                      fontSize: headingFont,
+                      fontWeight: FontWeight.w700,
+                      color: const Color.fromRGBO(52, 74, 106, 1),
+                    ),
+                  );
+                }
+              }
+              return null;
+            },
           ),
 
           // content
@@ -63,13 +82,32 @@ Widget lessonContent(SlideContentModel? slideContent) {
                 SizedBox(
                   height: 30.h,
                 ),
-                Text(
+                HtmlWidget(
                   slideContent.text ?? "",
-                  style: GoogleFonts.inter(
+                  textStyle: GoogleFonts.inter(
                     fontSize: contentFont,
                     fontWeight: FontWeight.w400,
                     color: const Color.fromRGBO(17, 25, 37, 1),
                   ),
+                  customWidgetBuilder: (element) {
+                    if (element.localName == "span" &&
+                        element.classes.contains("ql-formula")) {
+                      String? latexExpression =
+                          element.attributes["data-value"];
+
+                      if (latexExpression != null) {
+                        return Math.tex(
+                          latexExpression,
+                          textStyle: GoogleFonts.inter(
+                            fontSize: contentFont,
+                            fontWeight: FontWeight.w400,
+                            color: const Color.fromRGBO(17, 25, 37, 1),
+                          ),
+                        );
+                      }
+                    }
+                    return null;
+                  },
                 ),
               ],
             ),
@@ -85,10 +123,14 @@ Widget lessonContent(SlideContentModel? slideContent) {
                 ),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20.r),
-                  child: Image.asset(
-                    "images/biology_lesson.jpg",
+                  child: Image.network(
+                    slideContent.slideMedia!.mediaLink,
                     fit: BoxFit.contain,
                   ),
+                  // child: Image.asset(
+                  //   "images/biology_lesson.jpg",
+                  //   fit: BoxFit.contain,
+                  // ),
                 ),
               ],
             ),

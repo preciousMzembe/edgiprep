@@ -147,12 +147,21 @@ class _LessonPlayerState extends State<LessonPlayer> {
                   padding: EdgeInsets.symmetric(horizontal: 30.w),
                   child: GestureDetector(
                     onTap: () async {
+                      // check if is last slide
+                      bool isLast = lessonController.isLastSlide();
+
                       if (lessonController
-                              .visibleSlides[
-                                  lessonController.currentSlideIndex.value]
-                              .question ==
-                          null) {
-                        // not a question
+                                  .visibleSlides[
+                                      lessonController.currentSlideIndex.value]
+                                  .question ==
+                              null ||
+                          lessonController
+                                  .visibleSlides[
+                                      lessonController.currentSlideIndex.value]
+                                  .question!
+                                  .userAnswerId !=
+                              "") {
+                        // not a question or already done
                         lessonController.goToNextSlide();
                       } else {
                         // has question
@@ -173,9 +182,6 @@ class _LessonPlayerState extends State<LessonPlayer> {
                             "") {
                           // mark
                           lessonController.markSlideDone();
-
-                          // check if is last slide
-                          bool isLast = lessonController.isLastSlide();
 
                           if (lessonController
                                   .visibleSlides[
@@ -204,11 +210,6 @@ class _LessonPlayerState extends State<LessonPlayer> {
                               ),
                             );
                             lessonController.goToNextSlide();
-
-                            // finish
-                            if (isLast) {
-                              Get.to(() => const LessonFinish());
-                            }
                           } else {
                             // wrong
                             await showModalBottomSheet(
@@ -227,13 +228,12 @@ class _LessonPlayerState extends State<LessonPlayer> {
                               ),
                             );
                             lessonController.goToNextSlide();
-
-                            // finish
-                            if (isLast) {
-                              Get.to(() => const LessonFinish());
-                            }
                           }
                         }
+                      }
+                      // finish
+                      if (isLast) {
+                        Get.to(() => const LessonFinish());
                       }
                     },
                     child: Obx(() {

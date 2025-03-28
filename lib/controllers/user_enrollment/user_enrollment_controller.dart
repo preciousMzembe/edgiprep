@@ -26,7 +26,7 @@ class UserEnrollmentController extends GetxController {
     ever(userEnrollmentService.doneFetchingUserExams, (_) async {
       fetchExams();
     });
-    
+
     ever(userEnrollmentService.doneFetchingUserSubjects, (_) async {
       fetchSubjects();
     });

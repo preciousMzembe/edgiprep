@@ -4,6 +4,7 @@ import 'package:edgiprep/db/lesson/lesson.dart';
 import 'package:edgiprep/db/topic/topic.dart';
 import 'package:edgiprep/services/auth/auth_service.dart';
 import 'package:edgiprep/services/configuration/configuration_service.dart';
+import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
 import 'package:edgiprep/utils/dio_client.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,6 +12,8 @@ import 'package:get/get.dart';
 class LessonService extends GetxService {
   ConfigService configService = Get.find<ConfigService>();
   AuthService authService = Get.find<AuthService>();
+  UserEnrollmentService userEnrollmentService =
+      Get.find<UserEnrollmentService>();
 
   Config? config;
   final Dio _dio = createDio();
@@ -72,7 +75,7 @@ class LessonService extends GetxService {
 
     if (token != null && token.isNotEmpty) {
       try {
-        var response = await _dio.put(
+        var response = await _dio.post(
           '${config?.apiUrl}/Slide/Mobile/SlideProgress',
           options: Options(
             headers: {
@@ -82,11 +85,12 @@ class LessonService extends GetxService {
           data: {
             "subjectEnrollmentId": subjectEnrollmentId,
             "slideId": slideId,
-            "answerId": answerId,
+            "answerId": answerId.isNotEmpty ? answerId : null,
           },
         );
 
         if (response.statusCode == 200) {
+          userEnrollmentService.getUserServerSubjects();
           return false;
         }
       } on DioException {

@@ -1,6 +1,7 @@
 import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.dart';
 import 'package:edgiprep/db/lesson/lesson.dart';
 import 'package:edgiprep/db/topic/topic.dart';
+import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/subjects/subjects_back.dart';
@@ -28,12 +29,22 @@ class SubjectTopic extends StatefulWidget {
 class _SubjectTopicState extends State<SubjectTopic> {
   UserEnrollmentController userEnrollmentController =
       Get.find<UserEnrollmentController>();
+
+  UserEnrollmentService userEnrollmentService =
+      Get.find<UserEnrollmentService>();
+
   List<Lesson> lessons = [];
   double topicPercent = 0;
 
   Future<void> _fetchTopicLessons() async {
-    lessons = await userEnrollmentController.fetchTopicLessons(widget.topic.id);
-    setState(() {});
+    var data =
+        await userEnrollmentController.fetchTopicLessons(widget.topic.id);
+
+    if (mounted) {
+      setState(() {
+        lessons = data;
+      });
+    }
   }
 
   @override
@@ -132,9 +143,9 @@ class _SubjectTopicState extends State<SubjectTopic> {
                         }
 
                         return GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             if (lesson.active) {
-                              Get.to(() => LoadSlides(
+                              await Get.to(() => LoadSlides(
                                     title: "Preparing Your Lesson...",
                                     message:
                                         "Get ready to dive in! Your lesson is loading, and we're setting everything up for you.",
@@ -142,6 +153,8 @@ class _SubjectTopicState extends State<SubjectTopic> {
                                     topic: widget.topic,
                                     lesson: lesson,
                                   ));
+
+                              _fetchTopicLessons();
                             }
                           },
                           child: topicLessonBox(

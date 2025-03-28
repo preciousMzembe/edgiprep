@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:edgiprep/db/config/config.dart';
 import 'package:edgiprep/db/lesson/lesson.dart';
 import 'package:edgiprep/db/topic/topic.dart';
 import 'package:edgiprep/models/lesson/question_answer_model.dart';
@@ -7,12 +8,16 @@ import 'package:edgiprep/models/lesson/slide_content_model.dart';
 import 'package:edgiprep/models/lesson/slide_media_model.dart';
 import 'package:edgiprep/models/lesson/slide_model.dart';
 import 'package:edgiprep/models/lesson/lesson_slide_question_model.dart';
+import 'package:edgiprep/services/configuration/configuration_service.dart';
 import 'package:edgiprep/services/lesson/lesson_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LessonController extends GetxController {
+  ConfigService configService = Get.find<ConfigService>();
   LessonService lessonService = LessonService();
+
+  late Config? config;
 
   RxString subjectEnrollmentID = "".obs;
 
@@ -22,6 +27,13 @@ class LessonController extends GetxController {
   RxInt currentSlideIndex = 0.obs;
   RxList<SlideModel> visibleSlides = <SlideModel>[].obs;
   PageController pageController = PageController();
+
+  @override
+  Future<void> onInit() async {
+    super.onInit();
+    config = await configService.getConfig();
+    config ??= await configService.getConfig();
+  }
 
   // Load the first slide initially
   void loadInitialSlide() {
@@ -35,6 +47,14 @@ class LessonController extends GetxController {
     if (!visibleSlides[currentSlideIndex.value].slideDone) {
       // if not, mark done and add next slide
       visibleSlides[currentSlideIndex.value].slideDone = true;
+
+      // save slide progress
+      saveSlideProgress(
+          subjectEnrollmentID.value,
+          visibleSlides[currentSlideIndex.value].id ?? "",
+          visibleSlides[currentSlideIndex.value].question != null
+              ? visibleSlides[currentSlideIndex.value].question!.userAnswerId
+              : "");
 
       // add slide
       if (currentSlideIndex.value < slides.length - 1) {
@@ -50,6 +70,15 @@ class LessonController extends GetxController {
       // check if current slide is done
       if (!visibleSlides[currentSlideIndex.value].slideDone) {
         // if not, mark done and add next slide
+        // save question progress
+        saveSlideProgress(
+          subjectEnrollmentID.value,
+          visibleSlides[currentSlideIndex.value].id ?? "",
+          visibleSlides[currentSlideIndex.value].question != null
+              ? visibleSlides[currentSlideIndex.value].question!.userAnswerId
+              : "",
+        );
+
         visibleSlides[currentSlideIndex.value].slideDone = true;
         visibleSlides.add(slides[currentSlideIndex.value + 1]);
       }
@@ -95,7 +124,8 @@ class LessonController extends GetxController {
         bool hasMedia = false;
         SlideMediaModel tempSlideMedia = SlideMediaModel(MediaType.image, "");
         if (slide['media'] != null && slide['media'].isNotEmpty) {
-          tempSlideMedia = SlideMediaModel(MediaType.image, slide['media']);
+          tempSlideMedia = SlideMediaModel(
+              MediaType.image, "${config?.imagesUrl}/${slide['media']}");
           hasMedia = true;
         }
 
@@ -157,6 +187,16 @@ class LessonController extends GetxController {
 
           tempSlide.question!.setOptions(tempOptions);
         }
+
+        // check if slide is done
+        if (slide['isDone'] != null && slide['isDone']) {
+          // tempSlide.slideDone = true;
+
+          if (slide['answer'] != null && slide['question'] != null) {
+            tempSlide.question!.userAnswerId = slide['answer']['id'];
+          }
+        }
+
         tempSlides.add(tempSlide);
       }
 
@@ -168,12 +208,13 @@ class LessonController extends GetxController {
 
   // Reset lesson progress (optional)
   Future<bool> restartLesson(Topic topic, Lesson lesson) async {
+    visibleSlides.clear();
+
     subjectEnrollmentID.value = topic.subjectEnrollmentId;
     bool error = await getData(topic, lesson);
 
     currentSlideIndex.value = 0;
-    visibleSlides.clear();
-    resetSlides();
+    // resetSlides();
     loadInitialSlide();
     resetPageController();
 
@@ -244,7 +285,9 @@ class LessonController extends GetxController {
       String sEnrollId, String sId, String aId) async {
     bool error = await lessonService.saveSlideProgress(sEnrollId, sId, aId);
 
-    // save local progress on error
-    if (error) {}
+    // TODO save local progress on error
+    if (error) {
+      print("error saving slide progress -------------------------");
+    }
   }
 }

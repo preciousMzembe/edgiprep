@@ -52,6 +52,7 @@ class LessonFinish extends StatelessWidget {
             }
             Get.back();
             Get.back();
+            Get.back();
           },
           child: Scaffold(
             backgroundColor: primaryColor,
@@ -84,6 +85,7 @@ class LessonFinish extends StatelessWidget {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
+                                      Get.back();
                                       Get.back();
                                       Get.back();
                                     },
@@ -227,6 +229,7 @@ class LessonFinish extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () {
+                            Get.back();
                             Get.back();
                             Get.back();
                           },

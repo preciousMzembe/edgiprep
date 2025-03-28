@@ -118,6 +118,7 @@ class AppraisalFinish extends StatelessWidget {
             }
             Get.back();
             Get.back();
+            Get.back();
           },
           child: Scaffold(
             backgroundColor: primaryColor,
@@ -150,6 +151,7 @@ class AppraisalFinish extends StatelessWidget {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
+                                      Get.back();
                                       Get.back();
                                       Get.back();
                                     },
@@ -274,6 +276,7 @@ class AppraisalFinish extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () {
+                            Get.back();
                             Get.back();
                             Get.back();
                           },

@@ -142,6 +142,7 @@ void showCloseLesson(
                           onTap: () {
                             Navigator.pop(context);
                             Get.back();
+                            Get.back();
                           },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20.r),
