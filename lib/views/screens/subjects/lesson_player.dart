@@ -151,17 +151,11 @@ class _LessonPlayerState extends State<LessonPlayer> {
                       bool isLast = lessonController.isLastSlide();
 
                       if (lessonController
-                                  .visibleSlides[
-                                      lessonController.currentSlideIndex.value]
-                                  .question ==
-                              null ||
-                          lessonController
-                                  .visibleSlides[
-                                      lessonController.currentSlideIndex.value]
-                                  .question!
-                                  .userAnswerId !=
-                              "") {
-                        // not a question or already done
+                              .visibleSlides[
+                                  lessonController.currentSlideIndex.value]
+                              .question ==
+                          null) {
+                        // not a question
                         lessonController.goToNextSlide();
                       } else {
                         // has question

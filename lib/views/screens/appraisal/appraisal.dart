@@ -71,15 +71,15 @@ class Appraisal extends StatelessWidget {
                     height: 30.h,
                   ),
                   // title and options
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30.w),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        subjectsOptionsButton(),
-                      ],
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(horizontal: 30.w),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.end,
+                  //     children: [
+                  //       subjectsOptionsButton(),
+                  //     ],
+                  //   ),
+                  // ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 30.w),
                     child: Column(

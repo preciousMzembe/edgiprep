@@ -40,10 +40,10 @@ class _SubjectState extends State<Subject> {
 
   List<String> navOptions = [
     "Learn",
-    "Quiz",
-    "Challenge",
-    "Past Paper",
-    "info",
+    // "Quiz",
+    // "Challenge",
+    // "Past Paper",
+    "Info",
   ];
 
   String selectedTitle = "Learn";

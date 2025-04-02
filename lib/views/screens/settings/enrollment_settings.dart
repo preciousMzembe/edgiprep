@@ -1,9 +1,11 @@
 import 'package:edgiprep/controllers/enrollment/enrollment_settings_controller.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/views/components/enrollment/enrollment_exam_option.dart';
+import 'package:edgiprep/views/components/enrollment/enrollment_settings_subject_option.dart';
 import 'package:edgiprep/views/components/enrollment/enrollment_settings_subjects_title.dart';
-import 'package:edgiprep/views/components/enrollment/enrollment_subject_option.dart';
+import 'package:edgiprep/views/components/general/button_loading.dart';
 import 'package:edgiprep/views/components/general/normal_button.dart';
+import 'package:edgiprep/views/components/general/snackbar.dart';
 import 'package:edgiprep/views/components/profile/profile_subtitle.dart';
 import 'package:edgiprep/views/components/profile/profile_title.dart';
 import 'package:edgiprep/views/components/settings/settings_back_button.dart';
@@ -23,6 +25,14 @@ class EnrollmentSettings extends StatefulWidget {
 class _EnrollmentSettingsState extends State<EnrollmentSettings> {
   EnrollmentSettingsController enrollmentSettingsController =
       Get.find<EnrollmentSettingsController>();
+
+  bool loading = false;
+
+  void toggleLoading() {
+    setState(() {
+      loading = !loading;
+    });
+  }
 
   @override
   void initState() {
@@ -69,7 +79,7 @@ class _EnrollmentSettingsState extends State<EnrollmentSettings> {
                       height: 30.h,
                     ),
                     profileTitle("Enrollment"),
-                    profileSubtitle("Make changes to your exams and subjects"),
+                    profileSubtitle("Make changes to your subjects"),
 
                     // Exams
                     SizedBox(
@@ -91,24 +101,25 @@ class _EnrollmentSettingsState extends State<EnrollmentSettings> {
                             onTap: () {
                               enrollmentSettingsController.selectExam(
                                   enrollmentSettingsController
-                                      .exams[index].name);
+                                      .exams[index].title);
                             },
                             child: enrollmentExamOption(
                               context,
                               enrollmentSettingsController
                                   .exams[index].selected,
-                              enrollmentSettingsController.exams[index].name,
+                              enrollmentSettingsController.exams[index].title,
                             ),
                           );
                         },
                       );
                     }),
 
-                    // subjects
+                    // enrolled subjects
                     SizedBox(
                       height: 40.h,
                     ),
-                    enrollmentSettingsSubjectsTitle("JCE Subjects"),
+                    enrollmentSettingsSubjectsTitle("Your Subjects"),
+                    profileSubtitle("Select subjects to unenroll"),
                     SizedBox(
                       height: 30.h,
                     ),
@@ -116,19 +127,21 @@ class _EnrollmentSettingsState extends State<EnrollmentSettings> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          ...enrollmentSettingsController.subjects
+                          ...enrollmentSettingsController.enrolledSubjects
                               .map((subject) {
                             return Padding(
                               padding: EdgeInsets.only(bottom: 30.h),
                               child: GestureDetector(
                                 onTap: () {
                                   enrollmentSettingsController
-                                      .toggleSubjectSelection(subject.name);
+                                      .toggleErolledSubjectSelection(
+                                          subject.name);
                                 },
-                                child: enrollmentSubjectOption(
+                                child: enrollmentSettingsSubjectOption(
                                   subject.selected,
                                   subject.name,
                                   subject.icon,
+                                  true,
                                 ),
                               ),
                             );
@@ -136,6 +149,52 @@ class _EnrollmentSettingsState extends State<EnrollmentSettings> {
                         ],
                       );
                     }),
+
+                    // unenrolled subjects
+                    if (enrollmentSettingsController
+                        .unenrolledSubjects.isNotEmpty)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          enrollmentSettingsSubjectsTitle("Other Subjects"),
+                          profileSubtitle("Select subjects to enroll"),
+                          SizedBox(
+                            height: 30.h,
+                          ),
+                        ],
+                      ),
+                    Obx(() {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          ...enrollmentSettingsController.unenrolledSubjects
+                              .map((subject) {
+                            return Padding(
+                              padding: EdgeInsets.only(bottom: 30.h),
+                              child: GestureDetector(
+                                onTap: () {
+                                  enrollmentSettingsController
+                                      .toggleUnerolledSubjectSelection(
+                                          subject.name);
+                                },
+                                child: enrollmentSettingsSubjectOption(
+                                  subject.selected,
+                                  subject.name,
+                                  subject.icon,
+                                  false,
+                                ),
+                              ),
+                            );
+                          }),
+                        ],
+                      );
+                    }),
+
+                    profileSubtitle(
+                        "You must be enrolled in at least one subject to continue. Zero enrolled subjects is not allowed."),
 
                     SizedBox(
                       height: 100.h,
@@ -145,16 +204,54 @@ class _EnrollmentSettingsState extends State<EnrollmentSettings> {
               ),
 
               // button
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 30.h),
-                child: normalButton(
-                  // primaryColor,
-                  unselectedButtonColor,
-                  const Color.fromRGBO(52, 74, 106, 1),
-                  "Update",
-                  20,
-                ),
-              ),
+              Obx(() {
+                return Stack(
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        if (enrollmentSettingsController
+                            .subjectsSelected.value) {
+                          toggleLoading();
+
+                          bool done = await enrollmentSettingsController
+                              .updateSubjects();
+
+                          if (!done) {
+                            showSnackbar(
+                                context,
+                                "Something Went Wrong",
+                                "There was a problem updating your subjects.",
+                                true);
+                          }
+
+                          toggleLoading();
+                        }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 30.h),
+                        child: normalButton(
+                          // primaryColor,
+                          enrollmentSettingsController.subjectsSelected.value
+                              ? primaryColor
+                              : unselectedButtonColor,
+                          enrollmentSettingsController.subjectsSelected.value
+                              ? Colors.white
+                              : const Color.fromRGBO(52, 74, 106, 1),
+                          "Update",
+                          20,
+                        ),
+                      ),
+                    ),
+
+                    // loading
+                    if (loading)
+                      Container(
+                        padding: EdgeInsets.symmetric(vertical: 30.h),
+                        child: buttonLoading(unselectedButtonColor, 16),
+                      ),
+                  ],
+                );
+              }),
             ],
           ),
         ),

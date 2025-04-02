@@ -6,12 +6,14 @@ class SlideModel {
   final SlideContentModel? content;
   final LessonSlideQuestionModel? question;
   bool slideDone;
+  final int? order;
 
   SlideModel({
     this.id,
     this.content,
     this.question,
     this.slideDone = false,
+    this.order,
   });
 
   toJson() => {
@@ -19,5 +21,6 @@ class SlideModel {
         'content': content?.toJson(),
         'question': question?.toJson(),
         'slideDone': slideDone,
+        'order': order,
       };
 }

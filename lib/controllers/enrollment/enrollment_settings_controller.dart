@@ -1,14 +1,22 @@
-import 'package:edgiprep/models/exams/enrollment_exam_model.dart';
+import 'package:edgiprep/db/exam/user_exam.dart';
 import 'package:edgiprep/models/subjects/enrollment_subject_model.dart';
 import 'package:edgiprep/services/enrollment/enrollment_service.dart';
+import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
 import 'package:get/get.dart';
 
 class EnrollmentSettingsController extends GetxController {
   final EnrollmentService enrollmentService = Get.find<EnrollmentService>();
+  final UserEnrollmentService userEnrollmentService =
+      Get.find<UserEnrollmentService>();
 
   RxBool examSelected = false.obs;
-  RxList<EnrollmentExamModel> exams = <EnrollmentExamModel>[].obs;
+  RxList<UserExam> exams = <UserExam>[].obs;
   RxList<EnrollmentSubjectModel> subjects = <EnrollmentSubjectModel>[].obs;
+  RxList<EnrollmentSubjectModel> enrolledSubjects =
+      <EnrollmentSubjectModel>[].obs;
+  RxList<EnrollmentSubjectModel> unenrolledSubjects =
+      <EnrollmentSubjectModel>[].obs;
+
   RxBool subjectsSelected = false.obs;
 
   @override
@@ -16,23 +24,49 @@ class EnrollmentSettingsController extends GetxController {
     super.onInit();
 
     // listen to change in exams fetch
-    ever(enrollmentService.doneFetchingExams, (_) {
+    ever(userEnrollmentService.doneFetchingUserSubjects, (_) {
       fetchExams();
     });
   }
 
   // Fetch exams
   Future<void> fetchExams() async {
-    exams.value = await enrollmentService.getExams();
+    exams.value = await userEnrollmentService.getExams();
+
     if (exams.isNotEmpty) {
-      selectExam(exams.first.name);
+      selectExam(exams.first.title);
     }
+
+    subjectsSelected.value = false;
+  }
+
+  // Update subjects
+  Future<bool> updateSubjects() async {
+    String enrollmentId =
+        exams.firstWhere((exam) => exam.selected).enrollmentId;
+
+    // Enroll
+    List<String> enrollSubjectIds = unenrolledSubjects
+        .where((subject) => subject.selected)
+        .map((subject) => subject.id)
+        .toList();
+
+    // Unenroll
+    List<String> unenrollSubjectIds = enrolledSubjects
+        .where((subject) => subject.selected)
+        .map((subject) => subject.id)
+        .toList();
+
+    bool done = await userEnrollmentService.enrollandUnenrollSubjects(
+        enrollmentId, enrollSubjectIds, unenrollSubjectIds);
+
+    return done;
   }
 
   // Select exam
   void selectExam(String examName) {
     for (var exam in exams) {
-      exam.selected = exam.name == examName;
+      exam.selected = exam.title == examName;
     }
     exams.refresh();
     examSelected.value = true;
@@ -45,13 +79,104 @@ class EnrollmentSettingsController extends GetxController {
   // Fetch subjects by exam ID
   Future<void> fetchSubjects(String examId) async {
     subjects.value = await enrollmentService.getSubjectsByExamId(examId);
+
+    // Enrolled Subjects
+    List<EnrollmentSubjectModel> eSubjects0 = [];
+    var eSubjects = await userEnrollmentService.getSubjects();
+
+    for (var subject in eSubjects) {
+      eSubjects0.add(EnrollmentSubjectModel(
+        id: subject.id,
+        name: subject.title,
+        icon: subject.icon,
+      ));
+    }
+
+    enrolledSubjects.value = eSubjects0;
+
+    // Unenrolled Subjects
+    Iterable<EnrollmentSubjectModel> uSubjects = subjects.where(
+        (subject) => !eSubjects.any((eSubject) => eSubject.id == subject.id));
+
+    unenrolledSubjects.value = uSubjects.toList();
   }
 
-  // Toggle subject selection
-  void toggleSubjectSelection(String subjectName) {
-    var subject = subjects.firstWhere((subject) => subject.name == subjectName);
+  // Toggle enrolled subject selection
+  void toggleErolledSubjectSelection(String subjectName) {
+    int unselected = 0;
+    int newSubjects = 0;
+
+    for (var element in enrolledSubjects) {
+      if (!element.selected) {
+        unselected++;
+      }
+    }
+
+    for (var element in unenrolledSubjects) {
+      if (element.selected) {
+        newSubjects++;
+      }
+    }
+
+    var subject =
+        enrolledSubjects.firstWhere((subject) => subject.name == subjectName);
+
+    if (unselected > 1 || newSubjects > 0) {
+      subject.toggleSelection();
+
+      unselected--;
+    } else {
+      if (subject.selected) {
+        subject.toggleSelection();
+
+        unselected++;
+      }
+    }
+
+    enrolledSubjects.refresh();
+
+    if (newSubjects > 0 ||
+        (unselected > 0 && unselected < enrolledSubjects.length)) {
+      subjectsSelected.value = true;
+    } else {
+      subjectsSelected.value = false;
+    }
+  }
+
+  // Toggle unenrolled subject selection
+  void toggleUnerolledSubjectSelection(String subjectName) {
+    var subject =
+        unenrolledSubjects.firstWhere((subject) => subject.name == subjectName);
     subject.toggleSelection();
-    subjectsSelected.value = subjects.any((subject) => subject.selected);
-    subjects.refresh();
+    unenrolledSubjects.refresh();
+
+    int unselected = 0;
+    int newSubjects = 0;
+
+    for (var element in enrolledSubjects) {
+      if (!element.selected) {
+        unselected++;
+      }
+    }
+
+    for (var element in unenrolledSubjects) {
+      if (element.selected) {
+        newSubjects++;
+      }
+    }
+
+    if (newSubjects == 0 && unselected < 1) {
+      for (var element in enrolledSubjects) {
+        element.toggleSelection();
+      }
+      enrolledSubjects.refresh();
+    }
+
+    if (newSubjects > 0 ||
+        (unselected > 0 && unselected < enrolledSubjects.length)) {
+      subjectsSelected.value = true;
+    } else {
+      subjectsSelected.value = false;
+    }
   }
 }

@@ -37,77 +37,13 @@ class Subjects extends StatelessWidget {
                     height: 30.h,
                   ),
                   // options
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      GestureDetector(
-                        key: optionsButtonKey,
-                        onTap: () async {
-                          final RenderBox button = optionsButtonKey
-                              .currentContext!
-                              .findRenderObject() as RenderBox;
-                          final Offset buttonPosition =
-                              button.localToGlobal(Offset.zero);
-
-                          final result = await showMenu<String>(
-                            context: context,
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.r),
-                            ),
-                            position: RelativeRect.fromLTRB(
-                              buttonPosition.dx,
-                              buttonPosition.dy + button.size.height + 10.h,
-                              30.w,
-                              0,
-                            ),
-                            items: [
-                              PopupMenuItem(
-                                value: 'Option 1',
-                                height: 60.h,
-                                child: Text(
-                                  'Option 1',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                              PopupMenuItem(
-                                value: 'Option 2',
-                                height: 60.h,
-                                child: Text(
-                                  'Option 2',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                              PopupMenuItem(
-                                value: 'Option 3',
-                                height: 60.h,
-                                child: Text(
-                                  'Option 3',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                            ],
-                            elevation: 8.0,
-                          );
-
-                          if (result != null) {
-                            print('Selected: $result');
-                          }
-                        },
-                        child: subjectsOptionsButton(),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                  //   mainAxisAlignment: MainAxisAlignment.end,
+                  //   children: [
+                  //     subjectsOptionsButton(),
+                  //   ],
+                  // ),
 
                   // title
                   subjectsTitle("Learn"),

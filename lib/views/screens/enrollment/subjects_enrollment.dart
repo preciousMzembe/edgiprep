@@ -3,8 +3,10 @@ import 'package:edgiprep/views/components/enrollment/enrollment_rich_text.dart';
 import 'package:edgiprep/views/components/enrollment/enrollment_subject_option.dart';
 import 'package:edgiprep/views/components/enrollment/enrollment_subtitle.dart';
 import 'package:edgiprep/views/components/enrollment/enrollment_title.dart';
+import 'package:edgiprep/views/components/general/button_loading.dart';
 import 'package:edgiprep/views/components/general/normal_button.dart';
 import 'package:edgiprep/controllers/enrollment/enrollment_controller.dart';
+import 'package:edgiprep/views/components/general/snackbar.dart';
 import 'package:edgiprep/views/screens/premium/premium.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +14,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SubjectsEnrollment extends StatelessWidget {
+class SubjectsEnrollment extends StatefulWidget {
   const SubjectsEnrollment({super.key});
+
+  @override
+  State<SubjectsEnrollment> createState() => _SubjectsEnrollmentState();
+}
+
+class _SubjectsEnrollmentState extends State<SubjectsEnrollment> {
+  bool loading = false;
+
+  void toggleLoading() {
+    setState(() {
+      loading = !loading;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,41 +136,49 @@ class SubjectsEnrollment extends StatelessWidget {
                       SizedBox(
                         height: 35.h,
                       ),
-                      Obx(() {
-                        return GestureDetector(
-                          onTap: () async {
-                            if (enrollmentController.subjectsSelected.value) {
-                              // Get.to(() => const Premium());
-                              bool done = await enrollmentController.enroll();
+                      Stack(
+                        children: [
+                          Obx(() {
+                            return GestureDetector(
+                              onTap: () async {
+                                if (enrollmentController
+                                    .subjectsSelected.value) {
+                                  toggleLoading();
 
-                              if (done) {
-                                Get.back();
-                                Get.to(() => Premium());
-                              } else {
-                                Get.snackbar(
-                                  "Enrollmet Error",
-                                  "There was a problem finishing your enrollment",
-                                  backgroundColor:
-                                      const Color.fromRGBO(254, 101, 93, 1),
-                                  colorText: Colors.white,
-                                  duration: const Duration(seconds: 2),
-                                  snackPosition: SnackPosition.BOTTOM,
-                                );
-                              }
-                            }
-                          },
-                          child: normalButton(
-                            enrollmentController.subjectsSelected.value
-                                ? primaryColor
-                                : unselectedButtonColor,
-                            enrollmentController.subjectsSelected.value
-                                ? Colors.white
-                                : const Color.fromRGBO(52, 74, 106, 1),
-                            "Continue",
-                            16,
-                          ),
-                        );
-                      }),
+                                  bool done =
+                                      await enrollmentController.enroll();
+
+                                  if (done) {
+                                    Get.back();
+                                    Get.to(() => Premium());
+                                  } else {
+                                    showSnackbar(
+                                        context,
+                                        "Something Went Wrong",
+                                        "There was a problem finishing your enrollment",
+                                        true);
+                                  }
+
+                                  toggleLoading();
+                                }
+                              },
+                              child: normalButton(
+                                enrollmentController.subjectsSelected.value
+                                    ? primaryColor
+                                    : unselectedButtonColor,
+                                enrollmentController.subjectsSelected.value
+                                    ? Colors.white
+                                    : const Color.fromRGBO(52, 74, 106, 1),
+                                "Continue",
+                                16,
+                              ),
+                            );
+                          }),
+
+                          // loading
+                          if (loading) buttonLoading(unselectedButtonColor, 16),
+                        ],
+                      ),
 
                       SizedBox(
                         height: 50.h,

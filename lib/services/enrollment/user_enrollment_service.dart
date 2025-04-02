@@ -389,6 +389,62 @@ class UserEnrollmentService extends GetxService {
     await pastPaperBox.addAll(papers);
   }
 
+  // Enroll subjects
+  Future<bool> enrollandUnenrollSubjects(String enrollmentId,
+      List<String> enrollSubjectIds, List<String> unenrollSubjectIds) async {
+    try {
+      String? token = await authService.getToken();
+
+      bool done = true;
+
+      if (enrollSubjectIds.isNotEmpty) {
+        final response =
+            await _dio.put('${config?.apiUrl}/Enrollment/Mobile/EnrollSubject',
+                options: Options(
+                  headers: {
+                    'Authorization': 'Bearer $token',
+                  },
+                ),
+                data: {
+              "enrollmentId": enrollmentId,
+              "subjects": enrollSubjectIds,
+            });
+
+        if (response.statusCode != 200) {
+          done = false;
+        }
+      }
+
+      // print(unenrollSubjectIds);
+
+      for (var subjectId in unenrollSubjectIds) {
+        String subjectEnrollmentId = await getSubjectEnrollmentId(subjectId);
+
+        final unenrollResponse = await _dio.delete(
+          '${config?.apiUrl}/Enrollment/Mobile/UnenrollSubject/$subjectEnrollmentId',
+          options: Options(
+            headers: {
+              'Authorization': 'Bearer $token',
+            },
+          ),
+        );
+
+        if (unenrollResponse.statusCode != 204) {
+          done = false;
+        }
+      }
+
+      await getUserServerSubjects();
+
+      return done;
+    } on DioException {
+      debugPrint(
+          "Error enrolling ------------------------- user enrollment service");
+    }
+
+    return false;
+  }
+
   // Public getter for user exams
   Future<List<UserExam>> getExams() async {
     List<UserExam> exams = [];
@@ -420,6 +476,14 @@ class UserEnrollmentService extends GetxService {
     }
 
     return subjects;
+  }
+
+  Future<String> getSubjectEnrollmentId(String subjectId) async {
+    UserSubject userSubject = userSubjectBox.values.firstWhere(
+      (subject) => subject.id == subjectId,
+    );
+
+    return userSubject.enrollmentId;
   }
 
   // Public getter for all units and topics of a subject

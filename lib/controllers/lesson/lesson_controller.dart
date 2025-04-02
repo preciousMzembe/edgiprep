@@ -80,8 +80,11 @@ class LessonController extends GetxController {
         );
 
         visibleSlides[currentSlideIndex.value].slideDone = true;
-        visibleSlides.add(slides[currentSlideIndex.value + 1]);
       }
+
+      visibleSlides.add(slides[currentSlideIndex.value + 1]);
+
+      visibleSlides.refresh();
 
       // jump to next
       currentSlideIndex.value++;
@@ -102,6 +105,8 @@ class LessonController extends GetxController {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
+
+      visibleSlides.removeLast();
     }
   }
 
@@ -143,6 +148,7 @@ class LessonController extends GetxController {
 
         // Slide
         SlideModel tempSlide = SlideModel(
+          order: slide['order'],
           id: slide['id'],
           content: tempSlideContent,
           question: slide['question'] == null
@@ -155,6 +161,7 @@ class LessonController extends GetxController {
                   explanation: explanation,
                   explanationImage: slide['question']['explainationImage'],
                 ),
+          slideDone: slide['isDone'] ?? false,
         );
 
         // Question options
@@ -199,6 +206,8 @@ class LessonController extends GetxController {
 
         tempSlides.add(tempSlide);
       }
+
+      tempSlides.sort((a, b) => a.order!.compareTo(b.order as num));
 
       slides.value = tempSlides;
     }

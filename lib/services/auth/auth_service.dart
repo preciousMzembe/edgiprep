@@ -65,7 +65,7 @@ class AuthService extends GetxService {
         debugPrint("Problem fetching learner data ------------ auth service");
 
         if (e.response != null) {
-          if (e.response?.statusCode == 401) {
+          if (e.response?.statusCode == 404) {
             await logout();
           }
         }

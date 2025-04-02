@@ -180,22 +180,22 @@ class LessonFinish extends StatelessWidget {
                                       lessonCompletedDetail(
                                         "Xps Earned",
                                         "${lessonController.getCorrectAnswers()} XPs",
-                                        true,
+                                        false,
                                       ),
 
                                       SizedBox(
                                         height: 20.h,
                                       ),
-                                      Text(
-                                        "Review the Lesson",
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.inter(
-                                          fontSize: previewSize,
-                                          fontWeight: FontWeight.w700,
-                                          color: const Color.fromRGBO(
-                                              73, 161, 249, 1),
-                                        ),
-                                      ),
+                                      // Text(
+                                      //   "Review the Lesson",
+                                      //   textAlign: TextAlign.center,
+                                      //   style: GoogleFonts.inter(
+                                      //     fontSize: previewSize,
+                                      //     fontWeight: FontWeight.w700,
+                                      //     color: const Color.fromRGBO(
+                                      //         73, 161, 249, 1),
+                                      //   ),
+                                      // ),
                                     ],
                                   ),
                                 ),
