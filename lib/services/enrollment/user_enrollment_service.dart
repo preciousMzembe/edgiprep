@@ -127,6 +127,19 @@ class UserEnrollmentService extends GetxService {
     }
   }
 
+  Future<void> switchExam(String examId) async {
+    // mark an exam selected from exambox
+    for (UserExam exam in userExamBox.values) {
+      if (exam.id == examId) {
+        exam.selected = true;
+      } else {
+        exam.selected = false;
+      }
+    }
+
+    await getUserServerExams();
+  }
+
   // server user subjects
   Future<void> getUserServerSubjects() async {
     try {
@@ -134,7 +147,8 @@ class UserEnrollmentService extends GetxService {
       String? token = await authService.getToken();
 
       if (userExamBox.isNotEmpty) {
-        var userExam = userExamBox.values.first;
+        var userExam =
+            userExamBox.values.firstWhere((exam) => exam.selected == true);
 
         final response = await _dio.get(
           '${config?.apiUrl}/Subject/Mobile/EnrolledSubjects?EnrollementId=${userExam.enrollmentId}',
@@ -389,9 +403,9 @@ class UserEnrollmentService extends GetxService {
     await pastPaperBox.addAll(papers);
   }
 
-  // Enroll subjects
-  Future<bool> enrollandUnenrollSubjects(String enrollmentId,
-      List<String> enrollSubjectIds, List<String> unenrollSubjectIds) async {
+  // Enroll new subjects
+  Future<bool> enrollSubjects(
+      String enrollmentId, List<String> enrollSubjectIds) async {
     try {
       String? token = await authService.getToken();
 
@@ -415,23 +429,35 @@ class UserEnrollmentService extends GetxService {
         }
       }
 
-      // print(unenrollSubjectIds);
+      await getUserServerSubjects();
 
-      for (var subjectId in unenrollSubjectIds) {
-        String subjectEnrollmentId = await getSubjectEnrollmentId(subjectId);
+      return done;
+    } on DioException {
+      debugPrint(
+          "Error enrolling new subjects ------------------------- user enrollment service");
+    }
 
-        final unenrollResponse = await _dio.delete(
-          '${config?.apiUrl}/Enrollment/Mobile/UnenrollSubject/$subjectEnrollmentId',
-          options: Options(
-            headers: {
-              'Authorization': 'Bearer $token',
-            },
-          ),
-        );
+    return false;
+  }
 
-        if (unenrollResponse.statusCode != 204) {
-          done = false;
-        }
+  // Unnroll subject
+  Future<bool> unenrollSubject(String subjectEnrollmentId) async {
+    try {
+      String? token = await authService.getToken();
+
+      bool done = true;
+
+      final unenrollResponse = await _dio.delete(
+        '${config?.apiUrl}/Enrollment/Mobile/UnenrollSubject/$subjectEnrollmentId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (unenrollResponse.statusCode != 204) {
+        done = false;
       }
 
       await getUserServerSubjects();
@@ -439,7 +465,7 @@ class UserEnrollmentService extends GetxService {
       return done;
     } on DioException {
       debugPrint(
-          "Error enrolling ------------------------- user enrollment service");
+          "Error unenrolling a subject ------------------------- user enrollment service");
     }
 
     return false;
@@ -454,6 +480,14 @@ class UserEnrollmentService extends GetxService {
     }
 
     return exams;
+  }
+
+  Future<UserExam> getActiveExam() async {
+    return await userExamBox.values.firstWhere(
+      (exam) => exam.selected == true,
+      orElse: () =>
+          UserExam(id: "", title: "", selected: false, enrollmentId: ""),
+    );
   }
 
   // Public getter for subjects for selected exam

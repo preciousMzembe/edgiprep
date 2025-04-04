@@ -4,6 +4,7 @@ import 'package:edgiprep/db/topic/topic.dart';
 import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
+import 'package:edgiprep/views/components/general/no_data_content.dart';
 import 'package:edgiprep/views/components/subjects/subjects_back.dart';
 import 'package:edgiprep/views/components/topic/topic_lesson_box.dart';
 import 'package:edgiprep/views/components/topic/topic_lessons_number.dart';
@@ -134,6 +135,10 @@ class _SubjectTopicState extends State<SubjectTopic> {
                       ),
 
                       // actual lessons
+                      if (lessons.isEmpty)
+                        noDataContent("No Lessons Found",
+                            "There were no lessons found for this topic. Please check back later."),
+
                       ...lessons.map((lesson) {
                         double percent = 0;
 

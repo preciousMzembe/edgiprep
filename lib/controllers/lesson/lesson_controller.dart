@@ -66,22 +66,22 @@ class LessonController extends GetxController {
   }
 
   void goToNextSlide() {
+    // check if current slide is done
+    if (!visibleSlides[currentSlideIndex.value].slideDone) {
+      // if not, mark done and add next slide
+      // save question progress
+      saveSlideProgress(
+        subjectEnrollmentID.value,
+        visibleSlides[currentSlideIndex.value].id ?? "",
+        visibleSlides[currentSlideIndex.value].question != null
+            ? visibleSlides[currentSlideIndex.value].question!.userAnswerId
+            : "",
+      );
+
+      visibleSlides[currentSlideIndex.value].slideDone = true;
+    }
+
     if (currentSlideIndex.value < slides.length - 1) {
-      // check if current slide is done
-      if (!visibleSlides[currentSlideIndex.value].slideDone) {
-        // if not, mark done and add next slide
-        // save question progress
-        saveSlideProgress(
-          subjectEnrollmentID.value,
-          visibleSlides[currentSlideIndex.value].id ?? "",
-          visibleSlides[currentSlideIndex.value].question != null
-              ? visibleSlides[currentSlideIndex.value].question!.userAnswerId
-              : "",
-        );
-
-        visibleSlides[currentSlideIndex.value].slideDone = true;
-      }
-
       visibleSlides.add(slides[currentSlideIndex.value + 1]);
 
       visibleSlides.refresh();

@@ -16,10 +16,10 @@ Widget homeNotificationIcon() {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double iconSize = isTablet
-          ? 34.sp
+          ? 22.h
           : isSmallTablet
-              ? 36.sp
-              : 40.sp;
+              ? 24.h
+              : 26.h;
 
       double height = isTablet
           ? 46.sp
@@ -38,21 +38,25 @@ Widget homeNotificationIcon() {
           return Stack(
             children: [
               Container(
-                width: height,
-                height: height,
-                color: Colors.transparent,
-                child: Icon(
-                  FontAwesomeIcons.bell,
-                  size: iconSize,
-                  color: notificationController.newNotifications.value
-                      ? primaryColor
-                      : const Color.fromRGBO(92, 101, 120, 1),
+                padding: EdgeInsets.all(10.w),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12.r),
+                  child: Container(
+                    width: height,
+                    height: height,
+                    color: const Color.fromRGBO(82, 100, 128, 1),
+                    child: Icon(
+                      FontAwesomeIcons.bell,
+                      size: iconSize,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
               if (notificationController.newNotifications.value)
                 Positioned(
-                  top: 4.h,
-                  right: 4.sp,
+                  top: 0.h,
+                  right: 0.sp,
                   child: ClipOval(
                     child: Container(
                       padding: EdgeInsets.all(3.sp),

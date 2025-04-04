@@ -8,6 +8,7 @@ import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/general/normal_input.dart';
 import 'package:edgiprep/views/components/home/daily_challenge_box.dart';
+import 'package:edgiprep/views/components/home/exam_switch_content.dart';
 import 'package:edgiprep/views/components/home/home_fade_text.dart';
 import 'package:edgiprep/views/components/home/home_notification_icon.dart';
 import 'package:edgiprep/views/components/home/home_quiz_box.dart';
@@ -25,6 +26,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:popover/popover.dart';
 
 class Home extends StatefulWidget {
   final Function toSubjects;
@@ -39,7 +42,7 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   ConfigService configService = Get.find<ConfigService>();
   AuthController authController = Get.find<AuthController>();
 
@@ -210,16 +213,28 @@ class _HomeState extends State<Home> {
                                     "Hey, ${authController.user.value?.name.split(" ")[0] ?? "User"}"),
 
                                 // welcome
-                                homeFadeText("Keep up the good work")
+                                homeFadeText("Keep up the good work"),
                               ],
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              Get.to(() => const Notifications());
-                              notificationController.openNotifications();
-                            },
-                            child: homeNotificationIcon(),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              // current exam
+                              ExamSwitchContent(),
+
+                              SizedBox(
+                                width: 10.w,
+                              ),
+
+                              GestureDetector(
+                                onTap: () {
+                                  Get.to(() => const Notifications());
+                                  notificationController.openNotifications();
+                                },
+                                child: homeNotificationIcon(),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -372,7 +387,7 @@ class _HomeState extends State<Home> {
                                       percent,
                                       studyProgressHeight,
                                       subject.title,
-                                      subject.currentTopic,
+                                      subject.description,
                                       "${subject.numberOfTopicsDone} of ${subject.numberOfTopics} Topics",
                                     ),
                                   ),

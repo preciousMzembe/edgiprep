@@ -10,7 +10,6 @@ Widget enrollmentSettingsSubjectOption(
   bool selected,
   String name,
   String icon,
-  bool enrolled,
 ) {
   return LayoutBuilder(
     builder: (context, constraints) {
@@ -38,12 +37,14 @@ Widget enrollmentSettingsSubjectOption(
       return Container(
         padding: EdgeInsets.all(padding),
         decoration: BoxDecoration(
-          color: selected && enrolled
-              ? const Color.fromRGBO(254, 101, 93, 1)
-              : selected && !enrolled
-                  ? selectedExamColor
-                  : Colors.white,
+          color:
+              selected ? Colors.white : const Color.fromRGBO(244, 245, 249, 1),
           borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(
+              width: 2.r,
+              color: selected
+                  ? const Color.fromRGBO(73, 161, 249, 1)
+                  : Colors.transparent),
         ),
         child: Padding(
           padding: EdgeInsets.all(10.r),
@@ -60,7 +61,7 @@ Widget enrollmentSettingsSubjectOption(
                     width: iconSize,
                     colorFilter: ColorFilter.mode(
                         selected
-                            ? Colors.white
+                            ? const Color.fromRGBO(73, 161, 249, 1)
                             : const Color.fromRGBO(191, 198, 216, 1),
                         BlendMode.srcIn),
                   ),
@@ -72,14 +73,20 @@ Widget enrollmentSettingsSubjectOption(
                     style: GoogleFonts.inter(
                       fontSize: fontSize,
                       fontWeight: FontWeight.w700,
-                      color: selected ? Colors.white : unselectedExamColor,
+                      color: selected
+                          ? const Color.fromRGBO(73, 161, 249, 1)
+                          : unselectedExamColor,
                     ),
                   ),
                 ],
               ),
 
               // mark
-              enrollmentOptionSelectedMark(Colors.white),
+              enrollmentOptionSelectedMark(
+                selected
+                    ? const Color.fromRGBO(73, 161, 249, 1)
+                    : Colors.transparent,
+              ),
             ],
           ),
         ),

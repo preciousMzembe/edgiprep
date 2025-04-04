@@ -31,7 +31,9 @@ class EnrollmentSettingsController extends GetxController {
 
   // Fetch exams
   Future<void> fetchExams() async {
-    exams.value = await userEnrollmentService.getExams();
+    UserExam exam = await userEnrollmentService.getActiveExam();
+
+    exams.value = [exam];
 
     if (exams.isNotEmpty) {
       selectExam(exams.first.title);
@@ -40,8 +42,8 @@ class EnrollmentSettingsController extends GetxController {
     subjectsSelected.value = false;
   }
 
-  // Update subjects
-  Future<bool> updateSubjects() async {
+  // Enroll new subjects
+  Future<bool> enrollSubjects() async {
     String enrollmentId =
         exams.firstWhere((exam) => exam.selected).enrollmentId;
 
@@ -51,14 +53,16 @@ class EnrollmentSettingsController extends GetxController {
         .map((subject) => subject.id)
         .toList();
 
-    // Unenroll
-    List<String> unenrollSubjectIds = enrolledSubjects
-        .where((subject) => subject.selected)
-        .map((subject) => subject.id)
-        .toList();
+    bool done = await userEnrollmentService.enrollSubjects(
+        enrollmentId, enrollSubjectIds);
 
-    bool done = await userEnrollmentService.enrollandUnenrollSubjects(
-        enrollmentId, enrollSubjectIds, unenrollSubjectIds);
+    return done;
+  }
+
+  // Update subjects
+  Future<bool> unenrollSubject(String subjectEnrollmentId) async {
+    bool done =
+        await userEnrollmentService.unenrollSubject(subjectEnrollmentId);
 
     return done;
   }

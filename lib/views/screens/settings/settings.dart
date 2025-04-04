@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:edgiprep/controllers/auth/auth_controller.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/views/components/general/normal_svg_button.dart';
@@ -14,7 +12,6 @@ import 'package:edgiprep/views/components/settings/settings_username.dart';
 import 'package:edgiprep/views/components/subjects/subjects_options_title.dart';
 import 'package:edgiprep/views/screens/premium/premium.dart';
 import 'package:edgiprep/views/screens/settings/about.dart';
-import 'package:edgiprep/views/screens/settings/enrollment_settings.dart';
 import 'package:edgiprep/views/screens/settings/notifications_settings.dart';
 import 'package:edgiprep/views/screens/settings/profile.dart';
 import 'package:flutter/material.dart';
@@ -150,20 +147,20 @@ class Settings extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Get.to(() => Premium());
+                          // Get.to(() => const EnrollmentSettings());
                         },
-                        child: settingsOptionBox("wallet.svg", "Subscription",
-                            "Unlock learning experience with premium"),
+                        child: settingsOptionBox(
+                            "writing.svg", "Enrollment", "Add / remove exams"),
                       ),
                       SizedBox(
                         height: 30.h,
                       ),
                       GestureDetector(
                         onTap: () {
-                          Get.to(() => const EnrollmentSettings());
+                          Get.to(() => Premium());
                         },
-                        child: settingsOptionBox("writing.svg", "Enrollment",
-                            "Add / remove subjects"),
+                        child: settingsOptionBox("wallet.svg", "Subscription",
+                            "Unlock learning experience with premium"),
                       ),
                       SizedBox(
                         height: 30.h,

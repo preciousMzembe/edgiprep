@@ -14,6 +14,8 @@ class UserEnrollmentController extends GetxController {
       Get.find<UserEnrollmentService>();
 
   RxList<UserExam> exams = <UserExam>[].obs;
+  Rx<UserExam> activeExam =
+      UserExam(id: "", title: "", selected: false, enrollmentId: "").obs;
   RxList<UserSubject> subjects = <UserSubject>[].obs;
 
   @override
@@ -25,6 +27,7 @@ class UserEnrollmentController extends GetxController {
     // listen to change in user data
     ever(userEnrollmentService.doneFetchingUserExams, (_) async {
       fetchExams();
+      getActiveExam();
     });
 
     ever(userEnrollmentService.doneFetchingUserSubjects, (_) async {
@@ -39,12 +42,21 @@ class UserEnrollmentController extends GetxController {
 
   void getData() {
     fetchExams();
+    getActiveExam();
     fetchSubjects();
   }
 
   // Fetch exams
   Future<void> fetchExams() async {
     exams.value = await userEnrollmentService.getExams();
+  }
+
+  Future<void> getActiveExam() async {
+    activeExam.value = await userEnrollmentService.getActiveExam();
+  }
+
+  Future<void> switchExam(String examId) async {
+    await userEnrollmentService.switchExam(examId);
   }
 
   // Fetch subjects

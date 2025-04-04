@@ -1,27 +1,28 @@
+import 'dart:ui';
+
+import 'package:edgiprep/controllers/enrollment/enrollment_settings_controller.dart';
 import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/views/components/general/normal_input.dart';
+import 'package:edgiprep/views/components/subjects/enroll_subjects_content.dart';
 import 'package:edgiprep/views/components/subjects/subjects_add_subject.dart';
-import 'package:edgiprep/views/components/subjects/subjects_option_button.dart';
 import 'package:edgiprep/views/components/subjects/subjects_subject_box.dart';
-import 'package:edgiprep/views/components/subjects/subjects_title.dart';
-import 'package:edgiprep/views/screens/settings/enrollment_settings.dart';
 import 'package:edgiprep/views/screens/subjects/subject.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class Subjects extends StatelessWidget {
   const Subjects({super.key});
 
   @override
   Widget build(BuildContext context) {
+    EnrollmentSettingsController enrollmentSettingsController =
+        Get.find<EnrollmentSettingsController>();
+
     UserEnrollmentController userEnrollmentController =
         Get.find<UserEnrollmentController>();
-
-    final GlobalKey optionsButtonKey = GlobalKey();
 
     return Scaffold(
       backgroundColor: appbarColor,
@@ -33,22 +34,6 @@ class Subjects extends StatelessWidget {
             child: Obx(() {
               return ListView(
                 children: [
-                  SizedBox(
-                    height: 30.h,
-                  ),
-                  // options
-                  // Row(
-                  //   crossAxisAlignment: CrossAxisAlignment.center,
-                  //   mainAxisAlignment: MainAxisAlignment.end,
-                  //   children: [
-                  //     subjectsOptionsButton(),
-                  //   ],
-                  // ),
-
-                  // title
-                  subjectsTitle("Learn"),
-
-                  // search
                   SizedBox(
                     height: 30.h,
                   ),
@@ -84,7 +69,7 @@ class Subjects extends StatelessWidget {
                             getFadeColorFromString(subject.color),
                             subject.image,
                             subject.title,
-                            subject.currentTopic,
+                            subject.description,
                             "${subject.numberOfTopicsDone} of ${subject.numberOfTopics} Topics",
                             percent,
                           ),
@@ -97,16 +82,32 @@ class Subjects extends StatelessWidget {
                   }),
 
                   // add subject
-                  if (userEnrollmentController.subjects.isNotEmpty)
+                  if (enrollmentSettingsController
+                      .unenrolledSubjects.isNotEmpty)
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         SizedBox(
-                          height: 40.h,
+                          height: 20.h,
                         ),
                         GestureDetector(
-                          onTap: () {
-                            Get.to(() => const EnrollmentSettings());
+                          onTap: () async {
+                            // Get.to(() => const EnrollmentSettings());
+                            await showModalBottomSheet(
+                              backgroundColor: Colors.transparent,
+                              context: context,
+                              isScrollControlled: true,
+                              isDismissible: true,
+                              builder: (BuildContext context) => BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                                child: EnrollSubjectsContent(),
+                              ),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(0),
+                                ),
+                              ),
+                            );
                           },
                           child: subjectsAddSubject(),
                         ),
