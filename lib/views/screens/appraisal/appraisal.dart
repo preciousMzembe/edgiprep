@@ -2,7 +2,6 @@ import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/appraisal/appraisal_fade_text.dart';
 import 'package:edgiprep/views/components/appraisal/appraisal_test_option.dart';
-import 'package:edgiprep/views/components/subjects/subjects_option_button.dart';
 import 'package:edgiprep/views/components/subjects/subjects_title.dart';
 import 'package:edgiprep/views/screens/appraisal/challenges.dart';
 import 'package:edgiprep/views/screens/appraisal/mock_exams.dart';

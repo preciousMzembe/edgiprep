@@ -11,6 +11,8 @@ class EnrollmentController extends GetxController {
   RxList<EnrollmentSubjectModel> subjects = <EnrollmentSubjectModel>[].obs;
   RxBool subjectsSelected = false.obs;
 
+  RxString EnrolledExamId = "".obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -45,6 +47,8 @@ class EnrollmentController extends GetxController {
   // Fetch subjects by exam ID
   Future<void> fetchSubjects(String examId) async {
     subjects.value = await enrollmentService.getSubjectsByExamId(examId);
+
+    subjects.refresh();
   }
 
   // Toggle subject selection
@@ -69,6 +73,12 @@ class EnrollmentController extends GetxController {
 
     bool done =
         await enrollmentService.enroll(selectedExam.id, selectedSubjects);
+
+    if (done) {
+      EnrolledExamId.value = selectedExam.id;
+    } else {
+      EnrolledExamId.value = "";
+    }
 
     return done;
   }

@@ -91,7 +91,20 @@ class _LoadSlidesState extends State<LoadSlides> {
       }
     } else if (widget.type == "quiz") {
       // Quiz ----------------------------------------------------------------
-      bool dataError = await quizController.restartLesson(
+      bool dataError = await quizController.restartQuiz(
+          widget.subject!.enrollmentId, config!.quizQuestions);
+
+      setState(() {
+        error = dataError;
+      });
+
+      if (!dataError) {
+        // start quiz
+        Get.to(() => const Quiz());
+      }
+    } else if (widget.type == "topic quiz") {
+      // Topic Quiz ----------------------------------------------------------------
+      bool dataError = await quizController.restartQuiz(
           widget.subject!.enrollmentId, config!.quizQuestions);
 
       setState(() {
@@ -120,6 +133,10 @@ class _LoadSlidesState extends State<LoadSlides> {
         error = true;
       });
       // Get.to(() => const Challenge());
+    } else {
+      setState(() {
+        error = true;
+      });
     }
   }
 

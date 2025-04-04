@@ -61,8 +61,8 @@ class QuizService extends GetxService {
     return {'error': error};
   }
 
-  Future<void> saveQuestionScore(
-      String subjectEnrollmentId, String quizId, String answerId) async {
+  Future<void> saveQuestionScores(
+      String subjectEnrollmentId, String quizId, List<String> answerIds) async {
     config ??= await configService.getConfig();
 
     // Check if token is not empty first
@@ -80,12 +80,13 @@ class QuizService extends GetxService {
           data: {
             "subjectEnrollmentId": subjectEnrollmentId,
             "quizId": quizId,
-            "answerId": answerId,
+            "answerIds": answerIds,
+            "stype": 0,
           },
         );
       } on DioException {
         debugPrint(
-            "Error saving question score ------------------------- quiz service");
+            "Error saving questions score ------------------------- quiz service");
       }
     }
   }
@@ -110,6 +111,11 @@ class QuizService extends GetxService {
             "score": score,
           },
         );
+
+        print({
+          "quizId": quizId,
+          "score": score,
+        });
       } on DioException {
         debugPrint(
             "Error saving quiz score ------------------------- quiz service");

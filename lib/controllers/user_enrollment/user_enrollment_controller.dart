@@ -1,10 +1,14 @@
+import 'dart:math';
+
 import 'package:edgiprep/db/exam/user_exam.dart';
 import 'package:edgiprep/db/lesson/lesson.dart';
 import 'package:edgiprep/db/past%20paper/past_paper.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/db/topic/topic.dart';
 import 'package:edgiprep/db/unit/unit.dart';
+import 'package:edgiprep/models/exams/settings_exam_model.dart';
 import 'package:edgiprep/services/auth/auth_service.dart';
+import 'package:edgiprep/services/enrollment/enrollment_service.dart';
 import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
 import 'package:get/get.dart';
 
@@ -12,8 +16,10 @@ class UserEnrollmentController extends GetxController {
   final AuthService authService = Get.find<AuthService>();
   final UserEnrollmentService userEnrollmentService =
       Get.find<UserEnrollmentService>();
+  final EnrollmentService enrollmentService = Get.find<EnrollmentService>();
 
   RxList<UserExam> exams = <UserExam>[].obs;
+  RxList<SettingsExamModel> allExams = <SettingsExamModel>[].obs;
   Rx<UserExam> activeExam =
       UserExam(id: "", title: "", selected: false, enrollmentId: "").obs;
   RxList<UserSubject> subjects = <UserSubject>[].obs;
@@ -49,6 +55,50 @@ class UserEnrollmentController extends GetxController {
   // Fetch exams
   Future<void> fetchExams() async {
     exams.value = await userEnrollmentService.getExams();
+    List serverExams = await enrollmentService.getExams();
+
+    String selectedId = "";
+
+    List<SettingsExamModel> tempExams = [];
+    for (var exam in serverExams) {
+      var enrolled = exams.firstWhere(
+        (e) => e.id == exam.id,
+        orElse: () =>
+            UserExam(id: "", title: "", selected: false, enrollmentId: ""),
+      );
+
+      if (enrolled.id != "") {
+        if (enrolled.selected) {
+          selectedId = enrolled.id;
+        }
+
+        tempExams.add(
+          SettingsExamModel(
+            id: exam.id,
+            enrollmentId: enrolled.enrollmentId,
+            name: exam.name,
+            selected: enrolled.selected,
+          ),
+        );
+      } else {
+        tempExams.add(
+          SettingsExamModel(
+            id: exam.id,
+            enrollmentId: "",
+            name: exam.name,
+            selected: false,
+          ),
+        );
+      }
+    }
+
+    tempExams.sort((a, b) {
+      if (a.id == selectedId) return -1;
+      if (b.id == selectedId) return 1;
+      return 0;
+    });
+
+    allExams.value = tempExams;
   }
 
   Future<void> getActiveExam() async {
@@ -62,6 +112,9 @@ class UserEnrollmentController extends GetxController {
   // Fetch subjects
   Future<void> fetchSubjects() async {
     subjects.value = await userEnrollmentService.getSubjects();
+    subjects.shuffle(Random());
+
+    subjects.refresh();
   }
 
   // Fetch units and topics

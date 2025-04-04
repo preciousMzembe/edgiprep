@@ -1,6 +1,8 @@
+import 'package:edgiprep/controllers/enrollment/enrollment_controller.dart';
 import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.dart';
-import 'package:edgiprep/utils/constants.dart';
+import 'package:edgiprep/models/exams/settings_exam_model.dart';
 import 'package:edgiprep/utils/device_utils.dart';
+import 'package:edgiprep/views/screens/enrollment/subjects_enrollment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -19,9 +21,28 @@ class _ExamSwitchContentState extends State<ExamSwitchContent> {
   final UserEnrollmentController userEnrollmentController =
       Get.find<UserEnrollmentController>();
 
-  void selectExam(String examId) async {
+  final EnrollmentController enrollmentController =
+      Get.find<EnrollmentController>();
+
+  void selectExam(SettingsExamModel exam) async {
     Navigator.pop(context);
-    await userEnrollmentController.switchExam(examId);
+
+    if (exam.enrollmentId.isNotEmpty) {
+      await userEnrollmentController.switchExam(exam.id);
+    } else {
+      // enroll
+      enrollmentController.selectExam(exam.name);
+      Get.to(() => SubjectsEnrollment(
+            settings: true,
+          ));
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    userEnrollmentController.fetchExams();
   }
 
   @override
@@ -106,9 +127,7 @@ class _ExamSwitchContentState extends State<ExamSwitchContent> {
                   ),
                 ),
               ),
-              onSelected: (value) {
-                selectExam(value);
-              },
+              onSelected: (value) {},
               itemBuilder: (context) => [
                 // Top
                 PopupMenuItem(
@@ -132,7 +151,7 @@ class _ExamSwitchContentState extends State<ExamSwitchContent> {
                       Icon(
                         FontAwesomeIcons.gear,
                         size: iconSize,
-                        color: const Color.fromRGBO(161, 168, 183, 1),
+                        color: const Color.fromRGBO(109, 124, 147, 1),
                       ),
                     ],
                   ),
@@ -140,7 +159,7 @@ class _ExamSwitchContentState extends State<ExamSwitchContent> {
                 PopupMenuDivider(),
 
                 // Options
-                ...userEnrollmentController.exams.map((exam) {
+                ...userEnrollmentController.allExams.map((exam) {
                   return PopupMenuItem(
                     value: exam.id,
                     height: buttonHeight,
@@ -154,7 +173,7 @@ class _ExamSwitchContentState extends State<ExamSwitchContent> {
                         borderRadius: BorderRadius.circular(12.r),
                         child: GestureDetector(
                           onTap: () {
-                            selectExam(exam.id);
+                            selectExam(exam);
                           },
                           child: Container(
                             color: exam.selected
@@ -183,14 +202,18 @@ class _ExamSwitchContentState extends State<ExamSwitchContent> {
                                     ),
                                   ),
                                   child: Center(
-                                    child: Icon(
-                                      FontAwesomeIcons.check,
-                                      size: fontSize,
-                                      color: exam.selected
-                                          ? const Color.fromRGBO(
-                                              35, 131, 226, 1)
-                                          : Colors.transparent,
-                                    ),
+                                    child: IconTheme(
+                                        data: IconThemeData(
+                                          opacity: 1.0,
+                                        ),
+                                        child: Icon(
+                                          FontAwesomeIcons.check,
+                                          size: fontSize,
+                                          color: exam.selected
+                                              ? const Color.fromRGBO(
+                                                  35, 131, 226, 1)
+                                              : Colors.transparent,
+                                        )),
                                   ),
                                 ),
                                 SizedBox(
@@ -199,7 +222,7 @@ class _ExamSwitchContentState extends State<ExamSwitchContent> {
 
                                 // Exam
                                 Text(
-                                  exam.title,
+                                  exam.name,
                                   style: GoogleFonts.inter(
                                     color: exam.selected
                                         ? const Color.fromRGBO(35, 131, 226, 1)

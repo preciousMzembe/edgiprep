@@ -10,8 +10,9 @@ import 'package:get/get.dart';
 class QuizController extends GetxController {
   QuizService quizService = QuizService();
 
-  RxString quizId = "".obs;
   RxString subjectEnrollmentID = "".obs;
+  RxString quizId = "".obs;
+  RxList<String> answerIds = <String>[].obs;
 
   final RxList<SlideModel> slides = <SlideModel>[].obs;
 
@@ -34,8 +35,10 @@ class QuizController extends GetxController {
       visibleSlides[currentSlideIndex.value].slideDone = true;
 
       // save question progress
-      saveQuestionScore(subjectEnrollmentID.value, quizId.string,
-          visibleSlides[currentSlideIndex.value].question!.userAnswerId);
+      if (visibleSlides[currentSlideIndex.value].question != null) {
+        answerIds
+            .add(visibleSlides[currentSlideIndex.value].question!.userAnswerId);
+      }
 
       // add slide
       if (currentSlideIndex.value < slides.length - 1) {
@@ -150,7 +153,7 @@ class QuizController extends GetxController {
   }
 
   // Reset lesson progress
-  Future<bool> restartLesson(String subjectEnrollmentId, int limit) async {
+  Future<bool> restartQuiz(String subjectEnrollmentId, int limit) async {
     subjectEnrollmentID.value = subjectEnrollmentId;
     bool error = await getData(subjectEnrollmentId, limit);
 
@@ -159,6 +162,7 @@ class QuizController extends GetxController {
     resetSlides();
     loadInitialSlide();
     resetPageController();
+    answerIds.value = [];
 
     return error;
   }
@@ -223,9 +227,9 @@ class QuizController extends GetxController {
   }
 
   // save question score
-  Future<void> saveQuestionScore(
-      String sEnrollId, String qId, String aId) async {
-    quizService.saveQuestionScore(sEnrollId, qId, aId);
+  Future<void> saveQuestionScores() async {
+    quizService.saveQuestionScores(
+        subjectEnrollmentID.value, quizId.value, answerIds);
   }
 
   // Save quiz score

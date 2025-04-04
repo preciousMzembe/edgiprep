@@ -1,3 +1,4 @@
+import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.dart';
 import 'package:edgiprep/views/components/auth/auth_back.dart';
 import 'package:edgiprep/views/components/enrollment/enrollment_rich_text.dart';
 import 'package:edgiprep/views/components/enrollment/enrollment_subject_option.dart';
@@ -15,7 +16,11 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SubjectsEnrollment extends StatefulWidget {
-  const SubjectsEnrollment({super.key});
+  final bool settings;
+  const SubjectsEnrollment({
+    super.key,
+    this.settings = false,
+  });
 
   @override
   State<SubjectsEnrollment> createState() => _SubjectsEnrollmentState();
@@ -34,6 +39,10 @@ class _SubjectsEnrollmentState extends State<SubjectsEnrollment> {
   Widget build(BuildContext context) {
     EnrollmentController enrollmentController =
         Get.find<EnrollmentController>();
+
+    final UserEnrollmentController userEnrollmentController =
+        Get.find<UserEnrollmentController>();
+
     return Scaffold(
       backgroundColor: appbarColor,
       body: SafeArea(
@@ -150,7 +159,19 @@ class _SubjectsEnrollmentState extends State<SubjectsEnrollment> {
 
                                   if (done) {
                                     Get.back();
-                                    Get.to(() => Premium());
+
+                                    if (!widget.settings) {
+                                      Get.to(() => Premium());
+                                    } else {
+                                      // Switch
+                                      if (enrollmentController
+                                              .EnrolledExamId.value !=
+                                          "") {
+                                        await userEnrollmentController
+                                            .switchExam(enrollmentController
+                                                .EnrolledExamId.value);
+                                      }
+                                    }
                                   } else {
                                     showSnackbar(
                                         context,
@@ -158,8 +179,6 @@ class _SubjectsEnrollmentState extends State<SubjectsEnrollment> {
                                         "There was a problem finishing your enrollment",
                                         true);
                                   }
-
-                                  toggleLoading();
                                 }
                               },
                               child: normalButton(

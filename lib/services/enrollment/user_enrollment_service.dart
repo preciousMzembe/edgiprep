@@ -74,44 +74,48 @@ class UserEnrollmentService extends GetxService {
       );
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> enrollment = response.data;
+        List enrollments = response.data;
 
-        UserExam serverExam = UserExam(
-          id: enrollment['examId'],
-          title: enrollment['exam']['name'],
-          selected: true,
-          enrollmentId: enrollment['id'],
+        List<UserExam> serverExams = [];
+
+        for (var exam in enrollments) {
+          serverExams.add(UserExam(
+            id: exam['examId'],
+            title: exam['exam']['name'],
+            selected: false,
+            enrollmentId: exam['id'],
+          ));
+        }
+
+        UserExam selectedExam = await userExamBox.values.firstWhere(
+          (exam) => exam.selected == true,
+          orElse: () =>
+              UserExam(id: "", title: "", selected: false, enrollmentId: ""),
         );
 
-        // UserExam selectedExam = await userExamBox.values.firstWhere(
-        //   (exam) => exam.selected == true,
-        //   orElse: () =>
-        //       UserExam(id: "", title: "", selected: false, enrollmentId: ""),
-        // );
+        // mark selected exam
+        if (selectedExam.id != "") {
+          for (UserExam exam in serverExams) {
+            if (exam.id == selectedExam.id) {
+              exam.selected = true;
+            }
+          }
+        }
 
-        // // mark selected exam
-        // if (selectedExam.id != "") {
-        //   for (UserExam exam in serverExams) {
-        //     if (exam.id == selectedExam.id) {
-        //       exam.selected = true;
-        //     }
-        //   }
-        // }
+        // check if one is selected
+        selectedExam = serverExams.firstWhere(
+          (exam) => exam.selected == true,
+          orElse: () =>
+              UserExam(id: "", title: "", selected: false, enrollmentId: ""),
+        );
 
-        // // check if one is selected
-        // selectedExam = serverExams.firstWhere(
-        //   (exam) => exam.selected == true,
-        //   orElse: () =>
-        //       UserExam(id: "", title: "", selected: false, enrollmentId: ""),
-        // );
-
-        // if (selectedExam.id == "") {
-        //   // mark first as selected
-        //   serverExams[0].selected = true;
-        // }
+        if (selectedExam.id == "") {
+          // mark first as selected
+          serverExams[0].selected = true;
+        }
 
         await userExamBox.clear();
-        await userExamBox.add(serverExam);
+        await userExamBox.addAll(serverExams);
 
         doneFetchingUserExams.value = !doneFetchingUserExams.value;
 
@@ -200,7 +204,7 @@ class UserEnrollmentService extends GetxService {
   // server user units
   Future<void> getUserServerUnitsAndTopics() async {
     if (userSubjectBox.isNotEmpty) {
-      var userSubjects = userSubjectBox.values;
+      var userSubjects = userSubjectBox.values.toList();
 
       List<Unit> units = [];
       List<Topic> topics = [];
@@ -293,18 +297,9 @@ class UserEnrollmentService extends GetxService {
       try {
         String? token = await authService.getToken();
 
-        var userTopics = topicBox.values;
+        var userTopics = topicBox.values.toList();
 
-        List<Lesson> userLessons = [
-          // Lesson(
-          //   id: "1",
-          //   name: "Overview of Cell Theory",
-          //   order: 1,
-          //   topicId: "1",
-          //   numberOfSlides: 4,
-          //   numberOfSlidesDone: 4,
-          // ),
-        ];
+        List<Lesson> userLessons = [];
 
         // get lessons
 
@@ -334,6 +329,8 @@ class UserEnrollmentService extends GetxService {
             }
           }
         }
+        // print("here -------------------------------- 10");
+        // print(userLessons);
 
         await lessonBox.clear();
         await lessonBox.addAll(userLessons);
@@ -475,7 +472,7 @@ class UserEnrollmentService extends GetxService {
   Future<List<UserExam>> getExams() async {
     List<UserExam> exams = [];
 
-    for (UserExam exam in userExamBox.values) {
+    for (UserExam exam in userExamBox.values.toList()) {
       exams.add(exam);
     }
 
@@ -502,7 +499,7 @@ class UserEnrollmentService extends GetxService {
 
     if (userExam.id != "") {
       // get exam subjects
-      for (UserSubject subject in userSubjectBox.values) {
+      for (UserSubject subject in userSubjectBox.values.toList()) {
         if (subject.examId == userExam.id) {
           subjects.add(subject);
         }

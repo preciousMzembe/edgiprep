@@ -21,6 +21,8 @@ class ConfigService extends GetxService {
       String imagesUrl = remoteConfig.getString('IMAGES_URL');
       String privacyPolicyUrl = remoteConfig.getString('PRIVACY_POLICY_URL');
       String quizQuestions = remoteConfig.getString('QUIZ_QUESTIONS');
+      String topicQuizQuestions =
+          remoteConfig.getString('TOPIC_QUIZ_QUESTIONS');
       String premiumPrice = remoteConfig.getString('PREMIUM_PRICE');
 
       Config config = Config(
@@ -29,6 +31,7 @@ class ConfigService extends GetxService {
         privacyPolicyUrl: privacyPolicyUrl,
         appUrl: appUrl,
         quizQuestions: int.parse(quizQuestions),
+        topicQuizQuestions: int.parse(topicQuizQuestions),
         premiumPrice: premiumPrice,
       );
 

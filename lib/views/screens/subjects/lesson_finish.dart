@@ -32,11 +32,11 @@ class LessonFinish extends StatelessWidget {
                 ? 20.sp
                 : 22.sp;
 
-        double previewSize = isTablet
-            ? 22.sp
-            : isSmallTablet
-                ? 24.sp
-                : 26.sp;
+        // double previewSize = isTablet
+        //     ? 22.sp
+        //     : isSmallTablet
+        //         ? 24.sp
+        //         : 26.sp;
 
         double afterTextSize = isTablet
             ? 16.sp

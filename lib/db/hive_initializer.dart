@@ -111,7 +111,7 @@ class HiveInitializer {
 
   Future<void> rebuildHiveOnFirstOpen() async {
     final prefs = await SharedPreferences.getInstance();
-    const currentVersion = 1; // Update this for each new version
+    const currentVersion = 2; // Update this for each new version
     final lastVersion = prefs.getInt('last_version') ?? 0;
 
     if (lastVersion < currentVersion) {
@@ -149,7 +149,7 @@ class HiveInitializer {
     if (isFirstLaunch) {
       debugPrint("🛑 App reinstall detected! Clearing Secure Storage...");
       await _secureStorage.deleteAll();
-      await prefs.setBool('first_launch', false); 
+      await prefs.setBool('first_launch', false);
     }
   }
 }

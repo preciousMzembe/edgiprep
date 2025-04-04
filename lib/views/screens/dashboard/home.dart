@@ -26,8 +26,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:popover/popover.dart';
 
 class Home extends StatefulWidget {
   final Function toSubjects;
@@ -363,7 +361,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             ),
 
                             // subjects
-                            ...userEnrollmentController.subjects.map((subject) {
+                            ...userEnrollmentController.subjects
+                                .take(3)
+                                .map((subject) {
                               double percent = 0;
 
                               if (subject.numberOfTopics > 0) {
@@ -435,7 +435,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             ),
 
                             // subjects
-                            ...userEnrollmentController.subjects.map((subject) {
+                            ...userEnrollmentController.subjects
+                                .take(3)
+                                .map((subject) {
                               return Row(
                                 children: [
                                   GestureDetector(

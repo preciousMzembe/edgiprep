@@ -38,6 +38,9 @@ class _QuizState extends State<Quiz> {
           "Quiz",
           "You're about to leave the quiz. Your progress will not be saved, but XPs earned will not be lost.",
         );
+
+        quizController.saveQuestionScores();
+        quizController.saveQuizScore(quizController.getCorrectAnswers());
       },
       child: Scaffold(
         backgroundColor: appbarColor,
@@ -64,6 +67,10 @@ class _QuizState extends State<Quiz> {
                             "Quiz",
                             "You're about to leave the quiz. Your progress will not be saved, but XPs earned will not be lost.",
                           );
+
+                          quizController.saveQuestionScores();
+                          quizController.saveQuizScore(
+                              quizController.getCorrectAnswers());
                         },
                         child: lessonCloseButton(),
                       ),
@@ -173,6 +180,9 @@ class _QuizState extends State<Quiz> {
                                 ?.userAnswerId
                                 .trim() !=
                             "") {
+                          // mark
+                          quizController.markSlideDone();
+
                           if (quizController
                                   .visibleSlides[
                                       quizController.currentSlideIndex.value]
@@ -223,6 +233,8 @@ class _QuizState extends State<Quiz> {
                       }
                       // finish
                       if (isLast) {
+                        // save progress first
+                        quizController.saveQuestionScores();
                         Get.to(() => const AppraisalFinish(
                               type: "quiz",
                             ));

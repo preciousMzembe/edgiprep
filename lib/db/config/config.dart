@@ -21,6 +21,9 @@ class Config {
   final int quizQuestions;
 
   @HiveField(5)
+  final int topicQuizQuestions;
+
+  @HiveField(6)
   final String premiumPrice;
 
   Config({
@@ -29,6 +32,7 @@ class Config {
     required this.privacyPolicyUrl,
     required this.appUrl,
     required this.quizQuestions,
+    required this.topicQuizQuestions,
     required this.premiumPrice,
   });
 
@@ -39,6 +43,7 @@ class Config {
       'privacyPolicyUrl': privacyPolicyUrl,
       'appUrl': appUrl,
       'quizQuestions': quizQuestions,
+      'topicQuizQuestions': topicQuizQuestions,
       'premiumPrice': premiumPrice,
     };
   }

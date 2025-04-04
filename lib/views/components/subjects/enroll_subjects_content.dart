@@ -1,5 +1,4 @@
 import 'package:edgiprep/controllers/enrollment/enrollment_settings_controller.dart';
-import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/enrollment/enrollment_settings_subject_option.dart';
