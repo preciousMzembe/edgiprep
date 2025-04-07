@@ -104,10 +104,16 @@ class AppraisalFinish extends StatelessWidget {
           title = "Exam";
         } else if (type == "challenge") {
           questions = challengeController.getNumberOfQuestions();
-          scores = "80";
-          status = "Good";
           xps = challengeController.getCorrectAnswers();
           title = "Challenge";
+
+          Map grades = getStudentGrade(xps, questions);
+
+          scores = grades['percentage'];
+          status = grades['grade'];
+
+          // save quiz score
+          challengeController.saveQuizScore(xps);
         }
 
         return PopScope(

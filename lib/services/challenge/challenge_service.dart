@@ -6,11 +6,11 @@ import 'package:edgiprep/utils/dio_client.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class QuizService extends GetxService {
+class ChallengeService extends GetxService {
   ConfigService configService = Get.find<ConfigService>();
   AuthService authService = Get.find<AuthService>();
 
-  RxInt quizType = 0.obs;
+  RxBool isEnd = false.obs;
 
   Config? config;
   final Dio _dio = createDio();
@@ -22,8 +22,8 @@ class QuizService extends GetxService {
     config = await configService.getConfig();
   }
 
-  Future<Map> fetchData(String subjectEnrollmentId, int limit) async {
-    quizType.value = 0;
+  Future<Map> fetchData(String subjectEnrollmentId) async {
+    isEnd.value = false;
 
     bool error = false;
     config ??= await configService.getConfig();
@@ -34,7 +34,7 @@ class QuizService extends GetxService {
     if (token != null && token.isNotEmpty) {
       try {
         final response = await _dio.post(
-          '${config?.apiUrl}/Quiz/Mobile/Quiz',
+          '${config?.apiUrl}/Quiz/Mobile/ChallengeQuiz',
           options: Options(
             headers: {
               'Authorization': 'Bearer $token',
@@ -42,12 +42,15 @@ class QuizService extends GetxService {
           ),
           data: {
             "subjectEnrollmentId": subjectEnrollmentId,
-            "limit": limit,
           },
         );
 
         if (response.statusCode == 200) {
           Map quizData = response.data;
+
+          if (quizData['isEnd']) {
+            isEnd.value = true;
+          }
 
           return {
             'error': error,
@@ -57,7 +60,7 @@ class QuizService extends GetxService {
       } on DioException {
         error = true;
         debugPrint(
-            "Error fetching quiz ------------------------- quiz service");
+            "Error fetching challenge ------------------------- challenge service");
       }
     }
 
@@ -65,45 +68,49 @@ class QuizService extends GetxService {
     return {'error': error};
   }
 
-  Future<Map> fetchTopicData(
-      String subjectEnrollmentId, topicId, int limit) async {
-    quizType.value = 1;
-
+  Future<Map> fetchNewData(String subjectEnrollmentId, String quizId) async {
     bool error = false;
     config ??= await configService.getConfig();
 
     // Check if token is not empty first
     String? token = await authService.getToken();
 
-    if (token != null && token.isNotEmpty) {
-      try {
-        final response = await _dio.post(
-          '${config?.apiUrl}/Quiz/Mobile/TopicQuiz',
-          options: Options(
-            headers: {
-              'Authorization': 'Bearer $token',
+    if (!isEnd.value) {
+      if (token != null && token.isNotEmpty) {
+        try {
+          final response = await _dio.post(
+            '${config?.apiUrl}/Quiz/Mobile/ChallengeQuiz',
+            options: Options(
+              headers: {
+                'Authorization': 'Bearer $token',
+              },
+            ),
+            data: {
+              "subjectEnrollmentId": subjectEnrollmentId,
+              "quizId": quizId,
             },
-          ),
-          data: {
-            "subjectEnrollmentId": subjectEnrollmentId,
-            "topicId": topicId,
-            "limit": limit,
-          },
-        );
+          );
 
-        if (response.statusCode == 200) {
-          Map quizData = response.data;
+          if (response.statusCode == 200) {
+            Map quizData = response.data;
 
-          return {
-            'error': false,
-            'quizData': quizData,
-          };
+            if (quizData['isEnd']) {
+              isEnd.value = true;
+            }
+
+            return {
+              'error': false,
+              'quizData': quizData,
+            };
+          }
+        } on DioException {
+          error = true;
+          debugPrint(
+              "Error fetching new challenge questions ------------------------- challenge service");
         }
-      } on DioException {
-        error = true;
-        debugPrint(
-            "Error fetching topic quiz ------------------------- quiz service");
       }
+    } else {
+      error = true;
     }
 
     // Return error true in case of failure
@@ -130,12 +137,12 @@ class QuizService extends GetxService {
             "subjectEnrollmentId": subjectEnrollmentId,
             "quizId": quizId,
             "answerIds": answerIds,
-            "type": quizType.value,
+            "type": 2,
           },
         );
       } on DioException {
         debugPrint(
-            "Error saving questions score ------------------------- quiz service");
+            "Error saving challenge score ------------------------- challenge service");
       }
     }
   }
@@ -162,7 +169,7 @@ class QuizService extends GetxService {
         );
       } on DioException {
         debugPrint(
-            "Error saving quiz score ------------------------- quiz service");
+            "Error saving challenge score ------------------------- challenge service");
       }
     }
   }

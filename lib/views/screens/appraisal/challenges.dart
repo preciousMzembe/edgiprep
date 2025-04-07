@@ -108,11 +108,12 @@ class Challenges extends StatelessWidget {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  Get.to(() => const LoadSlides(
-                                        title: "Preparing Your Challenge...",
+                                  Get.to(() => LoadSlides(
+                                        title: "Preparing Your Challenge",
                                         message:
                                             "Get ready to dive in! Your challenge is loading, and we're setting everything up for you.",
                                         type: "challenge",
+                                        subject: subject,
                                       ));
                                 },
                                 child: challengeSubject(

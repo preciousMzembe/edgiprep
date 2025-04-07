@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:edgiprep/utils/device_utils.dart';
+import 'package:edgiprep/views/screens/appraisal/appraisal_finish.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -141,8 +142,15 @@ void showCloseLesson(
                         GestureDetector(
                           onTap: () {
                             Navigator.pop(context);
-                            Get.back();
-                            Get.back();
+
+                            if (title == "Challenge") {
+                              Get.to(() => const AppraisalFinish(
+                                    type: "challenge",
+                                  ));
+                            } else {
+                              Get.back();
+                              Get.back();
+                            }
                           },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20.r),

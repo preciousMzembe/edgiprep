@@ -36,7 +36,7 @@ class _QuizState extends State<Quiz> {
         showCloseLesson(
           context,
           "Quiz",
-          "You're about to leave the quiz. Your progress will not be saved, but XPs earned will not be lost.",
+          "You're about to leave the quiz. Your progress will be saved, and XPs earned will not be lost.",
         );
 
         quizController.saveQuestionScores();

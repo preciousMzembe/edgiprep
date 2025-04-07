@@ -60,17 +60,6 @@ class _LoadSlidesState extends State<LoadSlides> {
     super.initState();
 
     getData();
-
-    // Future.delayed(const Duration(seconds: 3), () {
-    //   lessonController.restartLesson();
-    //   quizController.restartLesson();
-    //   paperController.restartLesson();
-    //   mockController.restartLesson();
-    //   challengeController.restartLesson();
-
-    //   Get.back();
-
-    // });
   }
 
   Future<void> getData() async {
@@ -131,10 +120,18 @@ class _LoadSlidesState extends State<LoadSlides> {
       // Get.to(() => const Mock());
     } else if (widget.type == "challenge") {
       // Challenge -----------------------------------------------------------
+      bool dataError = await challengeController.restartQuiz(
+        widget.subject!.enrollmentId,
+      );
+
       setState(() {
-        error = true;
+        error = dataError;
       });
-      // Get.to(() => const Challenge());
+
+      if (!dataError) {
+        // start challenge
+        Get.to(() => const Challenge());
+      }
     } else {
       setState(() {
         error = true;

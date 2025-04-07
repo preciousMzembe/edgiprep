@@ -36,8 +36,12 @@ class _ChallengeState extends State<Challenge> {
         showCloseLesson(
           context,
           "Challenge",
-          "You're about to leave the challenge. Your progress will not be saved, but XPs earned will not be lost.",
+          "You're about to leave the challenge. Your progress will be saved, and XPs earned will not be lost.",
         );
+
+        challengeController.saveQuestionScores();
+        challengeController
+            .saveQuizScore(challengeController.getCorrectAnswers());
       },
       child: Scaffold(
         backgroundColor: appbarColor,
@@ -62,8 +66,12 @@ class _ChallengeState extends State<Challenge> {
                           showCloseLesson(
                             context,
                             "Challenge",
-                            "You're about to leave the challenge. Your progress will not be saved, but XPs earned will not be lost.",
+                            "You're about to leave the challenge. Your progress will be saved, and XPs earned will not be lost.",
                           );
+
+                          challengeController.saveQuestionScores();
+                          challengeController.saveQuizScore(
+                              challengeController.getCorrectAnswers());
                         },
                         child: lessonCloseButton(),
                       ),
@@ -147,6 +155,9 @@ class _ChallengeState extends State<Challenge> {
                   padding: EdgeInsets.symmetric(horizontal: 30.w),
                   child: GestureDetector(
                     onTap: () async {
+                      // check if is last slide
+                      bool isLast = challengeController.isLastSlide();
+
                       if (challengeController
                               .visibleSlides[
                                   challengeController.currentSlideIndex.value]
@@ -173,9 +184,6 @@ class _ChallengeState extends State<Challenge> {
                             "") {
                           // mark
                           challengeController.markSlideDone();
-
-                          // check if is last slide
-                          bool isLast = challengeController.isLastSlide();
 
                           if (challengeController
                                   .visibleSlides[challengeController
@@ -204,13 +212,6 @@ class _ChallengeState extends State<Challenge> {
                               ),
                             );
                             challengeController.goToNextSlide();
-
-                            // finish
-                            if (isLast) {
-                              Get.to(() => const AppraisalFinish(
-                                    type: "challenge",
-                                  ));
-                            }
                           } else {
                             // wrong
                             await showModalBottomSheet(
@@ -229,15 +230,16 @@ class _ChallengeState extends State<Challenge> {
                               ),
                             );
                             challengeController.goToNextSlide();
-
-                            // finish
-                            if (isLast) {
-                              Get.to(() => const AppraisalFinish(
-                                    type: "challenge",
-                                  ));
-                            }
                           }
                         }
+                      }
+                      // finish
+                      if (isLast) {
+                        // save progress first
+                        challengeController.saveQuestionScores();
+                        Get.to(() => const AppraisalFinish(
+                              type: "challenge",
+                            ));
                       }
                     },
                     child: Obx(() {
