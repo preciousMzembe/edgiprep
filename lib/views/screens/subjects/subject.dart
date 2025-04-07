@@ -201,6 +201,7 @@ class _SubjectState extends State<Subject> {
                                             if (topic.active &&
                                                 !topic.needSubscrion) {
                                               await Get.to(() => SubjectTopic(
+                                                    subject: widget.subject,
                                                     topic: topic,
                                                   ));
 

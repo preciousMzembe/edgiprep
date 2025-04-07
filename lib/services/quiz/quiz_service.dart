@@ -61,6 +61,49 @@ class QuizService extends GetxService {
     return {'error': error};
   }
 
+  Future<Map> fetchTopicData(
+      String subjectEnrollmentId, topicId, int limit) async {
+    bool error = false;
+    config ??= await configService.getConfig();
+
+    // Check if token is not empty first
+    String? token = await authService.getToken();
+
+    if (token != null && token.isNotEmpty) {
+      try {
+        final response = await _dio.post(
+          '${config?.apiUrl}/Quiz/Mobile/TopicQuiz',
+          options: Options(
+            headers: {
+              'Authorization': 'Bearer $token',
+            },
+          ),
+          data: {
+            "subjectEnrollmentId": subjectEnrollmentId,
+            "topicId": topicId,
+            "limit": limit,
+          },
+        );
+
+        if (response.statusCode == 200) {
+          Map quizData = response.data;
+
+          return {
+            'error': false,
+            'quizData': quizData,
+          };
+        }
+      } on DioException {
+        error = true;
+        debugPrint(
+            "Error fetching topic quiz ------------------------- quiz service");
+      }
+    }
+
+    // Return error true in case of failure
+    return {'error': error};
+  }
+
   Future<void> saveQuestionScores(
       String subjectEnrollmentId, String quizId, List<String> answerIds) async {
     config ??= await configService.getConfig();

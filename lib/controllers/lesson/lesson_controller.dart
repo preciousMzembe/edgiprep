@@ -25,6 +25,7 @@ class LessonController extends GetxController {
 
   // Tracks the list of slides and the currently visible slide index
   RxInt currentSlideIndex = 0.obs;
+  RxBool firstJump = true.obs;
   RxList<SlideModel> visibleSlides = <SlideModel>[].obs;
   PageController pageController = PageController();
 
@@ -36,9 +37,17 @@ class LessonController extends GetxController {
   }
 
   // Load the first slide initially
-  void loadInitialSlide() {
+  Future<void> loadInitialSlide() async {
+    firstJump.value = true;
+
     if (slides.isNotEmpty) {
-      visibleSlides.add(slides.first);
+      if (currentSlideIndex.value == 0) {
+        visibleSlides.add(slides.first);
+      } else {
+        for (var i = 0; i < currentSlideIndex.value + 1; i++) {
+          visibleSlides.add(slides[i]);
+        }
+      }
     }
   }
 
@@ -126,6 +135,8 @@ class LessonController extends GetxController {
       List<SlideModel> tempSlides = [];
 
       for (var slide in data['lessonData']) {
+        // prepare slide
+
         bool hasMedia = false;
         SlideMediaModel tempSlideMedia = SlideMediaModel(MediaType.image, "");
         if (slide['media'] != null && slide['media'].isNotEmpty) {
@@ -197,8 +208,6 @@ class LessonController extends GetxController {
 
         // check if slide is done
         if (slide['isDone'] != null && slide['isDone']) {
-          // tempSlide.slideDone = true;
-
           if (slide['answer'] != null && slide['question'] != null) {
             tempSlide.question!.userAnswerId = slide['answer']['id'];
           }
@@ -209,6 +218,28 @@ class LessonController extends GetxController {
 
       tempSlides.sort((a, b) => a.order!.compareTo(b.order as num));
 
+      // check starting point
+      int startIndex = 0;
+      bool newSlide = false;
+      for (var slide in tempSlides) {
+        if (slide.slideDone && !newSlide) {
+          startIndex++;
+        }
+
+        if (!slide.slideDone) {
+          newSlide = true;
+        }
+      }
+
+      if (startIndex == tempSlides.length) {
+        currentSlideIndex.value = 0;
+      } else {
+        currentSlideIndex.value = startIndex;
+      }
+
+      // currentSlideIndex.refresh();
+
+      // assign data
       slides.value = tempSlides;
     }
 
@@ -222,9 +253,9 @@ class LessonController extends GetxController {
     subjectEnrollmentID.value = topic.subjectEnrollmentId;
     bool error = await getData(topic, lesson);
 
-    currentSlideIndex.value = 0;
+    // currentSlideIndex.value = 0;
     // resetSlides();
-    loadInitialSlide();
+    await loadInitialSlide();
     resetPageController();
 
     return error;

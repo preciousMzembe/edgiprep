@@ -443,7 +443,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                   GestureDetector(
                                     onTap: () {
                                       Get.to(() => LoadSlides(
-                                            title: "Preparing Your Quiz...",
+                                            title: "Preparing Your Quiz",
                                             message:
                                                 "Get ready to dive in! Your quiz is loading, and we're setting everything up for you.",
                                             type: "quiz",

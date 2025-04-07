@@ -104,8 +104,10 @@ class _LoadSlidesState extends State<LoadSlides> {
       }
     } else if (widget.type == "topic quiz") {
       // Topic Quiz ----------------------------------------------------------------
-      bool dataError = await quizController.restartQuiz(
-          widget.subject!.enrollmentId, config!.quizQuestions);
+      bool dataError = await quizController.restartTopicQuiz(
+          widget.subject!.enrollmentId,
+          widget.topic!.id,
+          config!.topicQuizQuestions);
 
       setState(() {
         error = dataError;

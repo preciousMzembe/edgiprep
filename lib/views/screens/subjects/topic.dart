@@ -1,5 +1,6 @@
 import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.dart';
 import 'package:edgiprep/db/lesson/lesson.dart';
+import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/db/topic/topic.dart';
 import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
 import 'package:edgiprep/utils/constants.dart';
@@ -17,9 +18,11 @@ import 'package:get/get.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class SubjectTopic extends StatefulWidget {
+  final UserSubject subject;
   final Topic topic;
   const SubjectTopic({
     super.key,
+    required this.subject,
     required this.topic,
   });
 
@@ -151,7 +154,7 @@ class _SubjectTopicState extends State<SubjectTopic> {
                           onTap: () async {
                             if (lesson.active) {
                               await Get.to(() => LoadSlides(
-                                    title: "Preparing Your Lesson...",
+                                    title: "Preparing Your Lesson",
                                     message:
                                         "Get ready to dive in! Your lesson is loading, and we're setting everything up for you.",
                                     type: "lesson",
@@ -273,7 +276,19 @@ class _SubjectTopicState extends State<SubjectTopic> {
                         Positioned(
                           bottom: 0.h,
                           right: 30.w,
-                          child: topicQuizButton(),
+                          child: GestureDetector(
+                            onTap: () {
+                              Get.to(() => LoadSlides(
+                                    title: "Preparing Your Quiz",
+                                    message:
+                                        "Get ready to dive in! Your quiz is loading, and we're setting everything up for you.",
+                                    type: "topic quiz",
+                                    subject: widget.subject,
+                                    topic: widget.topic,
+                                  ));
+                            },
+                            child: topicQuizButton(),
+                          ),
                         ),
                       ],
                     ),

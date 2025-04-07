@@ -152,10 +152,98 @@ class QuizController extends GetxController {
     return error;
   }
 
-  // Reset lesson progress
+  Future<bool> getTopicData(
+      String subjectEnrollmentId, topicId, int limit) async {
+    bool error = false;
+
+    Map data =
+        await quizService.fetchTopicData(subjectEnrollmentId, topicId, limit);
+
+    if (data['error']) {
+      error = true;
+    } else {
+      Map quizData = data['quizData'];
+
+      if (quizData['questions'] == null || quizData['questions'].isEmpty) {
+        return true;
+      }
+
+      quizId.value = quizData['quizId'];
+
+      List<SlideModel> tempSlides = [];
+
+      for (var question in quizData['questions']) {
+        String explanation = question['explaination'] != null
+            ? question['explaination'].replaceAll(RegExp(r'<[^>]*>'), '').trim()
+            : "";
+
+        SlideModel tempSlide = SlideModel(
+          question: LessonSlideQuestionModel(
+            id: question['id'],
+            questionText: question['name'],
+            questionImage: question['imageUrL'],
+            options: [],
+            explanation: explanation,
+            explanationImage: question['explainationImage'],
+          ),
+        );
+
+        List<QuestionAnswerModel> tempOptions = [];
+
+        for (var option in question['answers']) {
+          // Remove HTML tags using a regular expression
+          String cleanContent =
+              option['text'].replaceAll(RegExp(r'<[^>]*>'), '').trim();
+
+          if (cleanContent.isNotEmpty) {
+            tempOptions.add(
+              QuestionAnswerModel(
+                id: option['id'],
+                text: option['text'],
+                qusetionId: option['questionId'],
+                isCorrect: option['isCorrect'],
+              ),
+            );
+          }
+
+          if (option['isCorrect']) {
+            tempSlide.question!.setCorrectUserAnswer(option['id']);
+          }
+        }
+
+        // shuffle options before adding
+        tempOptions.shuffle(Random());
+
+        tempSlide.question!.setOptions(tempOptions);
+
+        tempSlides.add(tempSlide);
+      }
+
+      slides.value = tempSlides;
+    }
+
+    return error;
+  }
+
+  // Reset quiz
   Future<bool> restartQuiz(String subjectEnrollmentId, int limit) async {
     subjectEnrollmentID.value = subjectEnrollmentId;
     bool error = await getData(subjectEnrollmentId, limit);
+
+    currentSlideIndex.value = 0;
+    visibleSlides.clear();
+    resetSlides();
+    loadInitialSlide();
+    resetPageController();
+    answerIds.value = [];
+
+    return error;
+  }
+
+  Future<bool> restartTopicQuiz(
+      String subjectEnrollmentId, String topicid, int limit) async {
+    subjectEnrollmentID.value = subjectEnrollmentId;
+    bool error = await getTopicData(subjectEnrollmentId, topicid, limit);
 
     currentSlideIndex.value = 0;
     visibleSlides.clear();

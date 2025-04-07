@@ -26,6 +26,27 @@ class _LessonPlayerState extends State<LessonPlayer> {
   LessonController lessonController = Get.find<LessonController>();
 
   @override
+  void initState() {
+    super.initState();
+
+    // Schedule it to run after the first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        int index = lessonController.currentSlideIndex.value;
+        lessonController.pageController
+            .animateToPage(
+          index,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        )
+            .then((_) {
+          lessonController.firstJump.value = false;
+        });
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
@@ -118,7 +139,9 @@ class _LessonPlayerState extends State<LessonPlayer> {
                       controller: lessonController.pageController,
                       onPageChanged: (index) {
                         if (index < lessonController.currentSlideIndex.value) {
-                          lessonController.goToPreviousSlide();
+                          if (!lessonController.firstJump.value) {
+                            lessonController.goToPreviousSlide();
+                          }
                         } else {
                           lessonController.currentSlideIndex.value = index;
                         }
