@@ -292,9 +292,13 @@ class UserEnrollmentService extends GetxService {
   }
 
   // server user lessons
+  RxInt switchIndex = 0.obs;
   Future<void> getUserServerLessons() async {
     if (topicBox.isNotEmpty) {
       try {
+        switchIndex.value++;
+        int currentSwitchIndex = switchIndex.value;
+
         String? token = await authService.getToken();
 
         var userTopics = topicBox.values.toList();
@@ -329,11 +333,11 @@ class UserEnrollmentService extends GetxService {
             }
           }
         }
-        // print("here -------------------------------- 10");
-        // print(userLessons);
 
-        await lessonBox.clear();
-        await lessonBox.addAll(userLessons);
+        if (currentSwitchIndex == switchIndex.value) {
+          await lessonBox.clear();
+          await lessonBox.addAll(userLessons);
+        }
       } on DioException {
         debugPrint(
             "Error fetching topic lessons ------------------------- user enrollment service");

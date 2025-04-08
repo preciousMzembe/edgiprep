@@ -4,6 +4,7 @@ import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.
 import 'package:edgiprep/db/config/config.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/services/configuration/configuration_service.dart';
+import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/general/normal_input.dart';
@@ -26,6 +27,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class Home extends StatefulWidget {
   final Function toSubjects;
@@ -44,6 +46,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   ConfigService configService = Get.find<ConfigService>();
   AuthController authController = Get.find<AuthController>();
 
+  UserEnrollmentService userEnrollmentService =
+      Get.find<UserEnrollmentService>();
   UserEnrollmentController userEnrollmentController =
       Get.find<UserEnrollmentController>();
 
@@ -191,291 +195,301 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             return SafeArea(
               child: Container(
                 color: backgroundColor,
-                child: ListView(
-                  children: [
-                    SizedBox(
-                      height: 30.h,
-                    ),
-                    // name and notification
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30.w),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                // name
-                                homeUserName(
-                                    "Hey, ${authController.user.value?.name.split(" ")[0] ?? "User"}"),
-
-                                // welcome
-                                homeFadeText("Keep up the good work"),
-                              ],
-                            ),
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              // current exam
-                              ExamSwitchContent(),
-
-                              SizedBox(
-                                width: 10.w,
-                              ),
-
-                              GestureDetector(
-                                onTap: () {
-                                  Get.to(() => const Notifications());
-                                  notificationController.openNotifications();
-                                },
-                                child: homeNotificationIcon(),
-                              ),
-                            ],
-                          ),
-                        ],
+                child: LiquidPullToRefresh(
+                  onRefresh: () async {
+                    await userEnrollmentService.getUserServerExams();
+                  },
+                  color: primaryColor,
+                  backgroundColor: Colors.white,
+                  animSpeedFactor: 2,
+                  showChildOpacityTransition: false,
+                  child: ListView(
+                    children: [
+                      SizedBox(
+                        height: 30.h,
                       ),
-                    ),
-
-                    // search
-                    SizedBox(
-                      height: 30.h,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30.w),
-                      child: const NormalInput(
-                        label: "Search Everything",
-                        type: TextInputType.text,
-                        isPassword: false,
-                        icon: FontAwesomeIcons.magnifyingGlass,
-                        radius: 16,
-                      ),
-                    ),
-
-                    // analytics
-                    SizedBox(
-                      height: 40.h,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30.w),
-                      child: IntrinsicHeight(
+                      // name and notification
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 30.w),
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            // weekly
-                            Expanded(
-                              child: homeWeeklyBox(
-                                weeklyTitleSize,
-                                weeklyProgressRadius,
-                                weeklyBarWidth,
-                                weeklyProgressSize,
-                              ),
-                            ),
-                            // xp and streaks
-                            SizedBox(
-                              width: 30.w,
-                            ),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  Expanded(
-                                    child: homeXpStreak(
-                                      "star.svg",
-                                      "Total XPs",
-                                      "${authController.user.value?.xp ?? "--"}",
-                                      homeLightBackgroundColor,
-                                      primaryColor,
-                                      xpTitleSize,
-                                      xpValueSize,
-                                      xpImageSize,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 30.w,
-                                  ),
-                                  Expanded(
-                                    child: homeXpStreak(
-                                      "flame.svg",
-                                      "Total Streak",
-                                      "${authController.user.value?.streak ?? "--"}",
-                                      Colors.white,
-                                      homeLightBackgroundColor,
-                                      xpTitleSize,
-                                      xpValueSize,
-                                      xpImageSize,
-                                    ),
-                                  ),
+                                  // name
+                                  homeUserName(
+                                      "Hey, ${authController.user.value?.name.split(" ")[0] ?? "User"}"),
+
+                                  // welcome
+                                  homeFadeText("Keep up the good work"),
                                 ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                // current exam
+                                ExamSwitchContent(),
 
-                    // challenge
-                    SizedBox(
-                      height: 40.h,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30.w),
-                      child: GestureDetector(
-                        onTap: () {
-                          Get.to(() => const Challenges());
-                        },
-                        child: dailyChallengeBox(),
-                      ),
-                    ),
+                                SizedBox(
+                                  width: 10.w,
+                                ),
 
-                    // study
-                    SizedBox(
-                      height: 40.h,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 42.w),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          homeSectionTitle("Studying"),
-                          GestureDetector(
-                            onTap: () {
-                              widget.toSubjects();
-                            },
-                            child: homeSectionSeeAll("See all"),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    IntrinsicHeight(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            // start space
-                            SizedBox(
-                              width: 30.w,
+                                GestureDetector(
+                                  onTap: () {
+                                    Get.to(() => const Notifications());
+                                    notificationController.openNotifications();
+                                  },
+                                  child: homeNotificationIcon(),
+                                ),
+                              ],
                             ),
-
-                            // subjects
-                            ...userEnrollmentController.subjects
-                                .take(3)
-                                .map((subject) {
-                              double percent = 0;
-
-                              if (subject.numberOfTopics > 0) {
-                                percent = subject.numberOfTopicsDone /
-                                    subject.numberOfTopics;
-                              }
-                              return Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      widget.toSubject(subject);
-                                    },
-                                    child: homeStudyBox(
-                                      studyBoxWidth,
-                                      getFadeColorFromString(subject.color),
-                                      subject.image,
-                                      studyImageHeight,
-                                      studySubjectFontSize,
-                                      studyTopicFontSize,
-                                      studyTopicsFontSize,
-                                      percent,
-                                      studyProgressHeight,
-                                      subject.title,
-                                      subject.description,
-                                      "${subject.numberOfTopicsDone} of ${subject.numberOfTopics} Topics",
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 30.w,
-                                  ),
-                                ],
-                              );
-                            }),
                           ],
                         ),
                       ),
-                    ),
 
-                    // quick quizes
-                    SizedBox(
-                      height: 40.h,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 42.w),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          homeSectionTitle("Quick Quizzes"),
-                          GestureDetector(
-                            onTap: () {
-                              Get.to(() => const Quizzes());
-                            },
-                            child: homeSectionSeeAll("See all"),
+                      // search
+                      SizedBox(
+                        height: 30.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 30.w),
+                        child: const NormalInput(
+                          label: "Search Everything",
+                          type: TextInputType.text,
+                          isPassword: false,
+                          icon: FontAwesomeIcons.magnifyingGlass,
+                          radius: 16,
+                        ),
+                      ),
+
+                      // analytics
+                      SizedBox(
+                        height: 40.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 30.w),
+                        child: IntrinsicHeight(
+                          child: Row(
+                            children: [
+                              // weekly
+                              Expanded(
+                                child: homeWeeklyBox(
+                                  weeklyTitleSize,
+                                  weeklyProgressRadius,
+                                  weeklyBarWidth,
+                                  weeklyProgressSize,
+                                ),
+                              ),
+                              // xp and streaks
+                              SizedBox(
+                                width: 30.w,
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    Expanded(
+                                      child: homeXpStreak(
+                                        "star.svg",
+                                        "Total XPs",
+                                        "${authController.user.value?.xp ?? "--"}",
+                                        homeLightBackgroundColor,
+                                        primaryColor,
+                                        xpTitleSize,
+                                        xpValueSize,
+                                        xpImageSize,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 30.w,
+                                    ),
+                                    Expanded(
+                                      child: homeXpStreak(
+                                        "flame.svg",
+                                        "Total Streak",
+                                        "${authController.user.value?.streak ?? "--"}",
+                                        Colors.white,
+                                        homeLightBackgroundColor,
+                                        xpTitleSize,
+                                        xpValueSize,
+                                        xpImageSize,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    IntrinsicHeight(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            // start space
-                            SizedBox(
-                              width: 30.w,
-                            ),
 
-                            // subjects
-                            ...userEnrollmentController.subjects
-                                .take(3)
-                                .map((subject) {
-                              return Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      Get.to(() => LoadSlides(
-                                            title: "Preparing Your Quiz",
-                                            message:
-                                                "Get ready to dive in! Your quiz is loading, and we're setting everything up for you.",
-                                            type: "quiz",
-                                            subject: subject,
-                                          ));
-                                    },
-                                    child: homeQuizBox(
-                                      quizBoxWidth,
-                                      subject.icon,
-                                      quizImageContainerHeight,
-                                      quizImageHeight,
-                                      quizSubjectFontSize,
-                                      quizQuestionsFontSize,
-                                      subject.title,
-                                      "$quizQuestions questions | 5 minutes",
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 30.w,
-                                  ),
-                                ],
-                              );
-                            }),
+                      // challenge
+                      SizedBox(
+                        height: 40.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 30.w),
+                        child: GestureDetector(
+                          onTap: () {
+                            Get.to(() => const Challenges());
+                          },
+                          child: dailyChallengeBox(),
+                        ),
+                      ),
+
+                      // learn
+                      SizedBox(
+                        height: 40.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 42.w),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            homeSectionTitle("Learn"),
+                            GestureDetector(
+                              onTap: () {
+                                widget.toSubjects();
+                              },
+                              child: homeSectionSeeAll("See all"),
+                            ),
                           ],
                         ),
                       ),
-                    ),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      IntrinsicHeight(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              // start space
+                              SizedBox(
+                                width: 30.w,
+                              ),
 
-                    SizedBox(
-                      height: 100.h,
-                    ),
-                  ],
+                              // subjects
+                              ...userEnrollmentController.subjects
+                                  .take(3)
+                                  .map((subject) {
+                                double percent = 0;
+
+                                if (subject.numberOfTopics > 0) {
+                                  percent = subject.numberOfTopicsDone /
+                                      subject.numberOfTopics;
+                                }
+                                return Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        widget.toSubject(subject);
+                                      },
+                                      child: homeStudyBox(
+                                        studyBoxWidth,
+                                        getFadeColorFromString(subject.color),
+                                        subject.image,
+                                        studyImageHeight,
+                                        studySubjectFontSize,
+                                        studyTopicFontSize,
+                                        studyTopicsFontSize,
+                                        percent,
+                                        studyProgressHeight,
+                                        subject.title,
+                                        subject.description,
+                                        "${subject.numberOfTopicsDone} of ${subject.numberOfTopics} Topics",
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 30.w,
+                                    ),
+                                  ],
+                                );
+                              }),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      // quick quizes
+                      SizedBox(
+                        height: 40.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 42.w),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            homeSectionTitle("Quick Quizzes"),
+                            GestureDetector(
+                              onTap: () {
+                                Get.to(() => const Quizzes());
+                              },
+                              child: homeSectionSeeAll("See all"),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      IntrinsicHeight(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              // start space
+                              SizedBox(
+                                width: 30.w,
+                              ),
+
+                              // subjects
+                              ...userEnrollmentController.subjects
+                                  .take(3)
+                                  .map((subject) {
+                                return Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        Get.to(() => LoadSlides(
+                                              title: "Preparing Your Quiz",
+                                              message:
+                                                  "Get ready to dive in! Your quiz is loading, and we're setting everything up for you.",
+                                              type: "quiz",
+                                              subject: subject,
+                                            ));
+                                      },
+                                      child: homeQuizBox(
+                                        quizBoxWidth,
+                                        subject.icon,
+                                        quizImageContainerHeight,
+                                        quizImageHeight,
+                                        quizSubjectFontSize,
+                                        quizQuestionsFontSize,
+                                        subject.title,
+                                        "$quizQuestions questions | 5 minutes",
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 30.w,
+                                    ),
+                                  ],
+                                );
+                              }),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(
+                        height: 100.h,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
