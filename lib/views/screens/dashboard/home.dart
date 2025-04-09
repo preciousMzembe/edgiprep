@@ -4,6 +4,7 @@ import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.
 import 'package:edgiprep/db/config/config.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/services/configuration/configuration_service.dart';
+import 'package:edgiprep/services/enrollment/enrollment_service.dart';
 import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
@@ -46,8 +47,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   ConfigService configService = Get.find<ConfigService>();
   AuthController authController = Get.find<AuthController>();
 
+  EnrollmentService enrollmentService = Get.find<EnrollmentService>();
+
   UserEnrollmentService userEnrollmentService =
       Get.find<UserEnrollmentService>();
+
   UserEnrollmentController userEnrollmentController =
       Get.find<UserEnrollmentController>();
 
@@ -198,6 +202,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 child: LiquidPullToRefresh(
                   onRefresh: () async {
                     await userEnrollmentService.getUserServerExams();
+                    enrollmentService.restartFetch();
                   },
                   color: primaryColor,
                   backgroundColor: Colors.white,

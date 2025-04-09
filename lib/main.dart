@@ -1,10 +1,8 @@
-import 'package:edgiprep/controllers/auth/auth_controller.dart';
 import 'package:edgiprep/db/hive_initializer.dart';
 import 'package:edgiprep/firebase_options.dart';
-import 'package:edgiprep/views/screens/auth/welcome.dart';
+import 'package:edgiprep/splash_screen.dart';
 import 'package:edgiprep/controllers/controllers.dart';
 import 'package:edgiprep/utils/constants.dart';
-import 'package:edgiprep/views/screens/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -68,14 +66,7 @@ class MyApp extends StatelessWidget {
               child: widget!,
             );
           },
-          home: Obx(
-            () {
-              final authController = Get.find<AuthController>();
-              return authController.authToken.value.isNotEmpty
-                  ? const Wrapper()
-                  : const Welcome();
-            },
-          ),
+          home: SplashScreen(),
         );
       },
     );

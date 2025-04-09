@@ -53,24 +53,6 @@ class NotificationService extends GetxService {
 
     // set default time
     setDefaultTime();
-
-    // checkBatteryOptimization();
-  }
-
-  static const platform = MethodChannel('battery_optimization');
-
-  Future<void> checkBatteryOptimization() async {
-    try {
-      final isIgnoring =
-          await platform.invokeMethod('isIgnoringBatteryOptimizations');
-      if (!isIgnoring) {
-        await platform.invokeMethod('requestIgnoreBatteryOptimizations');
-      } else {
-        debugPrint('Battery optimization is already exempted.');
-      }
-    } catch (e) {
-      debugPrint('Error requesting battery optimization exemption: $e');
-    }
   }
 
   Future<void> requestNotificationPermission() async {
