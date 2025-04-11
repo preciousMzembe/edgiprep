@@ -54,33 +54,35 @@ class _EnrollmentState extends State<Enrollment> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    SizedBox(
+                      height: 40.h,
+                    ),
+                    // title
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
+                      child: enrollmentTitle(
+                          "Choose Your Exam Category to Get Started"),
+                    ),
+
+                    // subtitle
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
+                      child: enrollmentSubtitle(
+                        "Please select the exam category you're preparing for to access tailored lessons and quizzes.",
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
                     Expanded(
                       child: ListView(
                         children: [
-                          SizedBox(
-                            height: 40.h,
-                          ),
-                          // title
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30.w),
-                            child: enrollmentTitle(
-                                "Choose Your Exam Category to Get Started"),
-                          ),
-
-                          // subtitle
-                          SizedBox(
-                            height: 20.h,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30.w),
-                            child: enrollmentSubtitle(
-                              "Please select the exam category you're preparing for to access tailored lessons and quizzes.",
-                            ),
-                          ),
-
                           // exams options
                           SizedBox(
-                            height: 40.h,
+                            height: 20.h,
                           ),
                           Padding(
                             padding: EdgeInsets.symmetric(
@@ -116,55 +118,58 @@ class _EnrollmentState extends State<Enrollment> {
                             }),
                           ),
 
-                          // not sure text
-                          SizedBox(
-                            height: 80.h,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 50.w),
-                            child: enrollmentRichText(
-                              "Not sure which one to choose? ",
-                              [
-                                TextSpan(
-                                  text: "Learn more ",
-                                  style: GoogleFonts.inter(
-                                    color: primaryColor,
-                                  ),
-                                ),
-                                const TextSpan(text: "about each category. "),
-                              ],
-                            ),
-                          ),
-
-                          // continue
-                          SizedBox(
-                            height: 35.h,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              if (enrollmentController.examSelected.value) {
-                                Get.to(() => const SubjectsEnrollment());
-                              }
-                            },
-                            child: Obx(() {
-                              return normalButton(
-                                enrollmentController.examSelected.value
-                                    ? primaryColor
-                                    : unselectedButtonColor,
-                                enrollmentController.examSelected.value
-                                    ? Colors.white
-                                    : Colors.black,
-                                "Continue",
-                                16,
-                              );
-                            }),
-                          ),
-
                           SizedBox(
                             height: 50.h,
                           ),
                         ],
                       ),
+                    ),
+
+                    // not sure text
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 50.w),
+                      child: enrollmentRichText(
+                        "Not sure which one to choose? ",
+                        [
+                          TextSpan(
+                            text: "Learn more ",
+                            style: GoogleFonts.inter(
+                              color: primaryColor,
+                            ),
+                          ),
+                          const TextSpan(text: "about each category. "),
+                        ],
+                      ),
+                    ),
+
+                    // continue
+                    SizedBox(
+                      height: 35.h,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        if (enrollmentController.examSelected.value) {
+                          Get.to(() => const SubjectsEnrollment());
+                        }
+                      },
+                      child: Obx(() {
+                        return normalButton(
+                          enrollmentController.examSelected.value
+                              ? primaryColor
+                              : unselectedButtonColor,
+                          enrollmentController.examSelected.value
+                              ? Colors.white
+                              : Colors.black,
+                          "Continue",
+                          16,
+                        );
+                      }),
+                    ),
+                    SizedBox(
+                      height: 50.h,
                     ),
                   ],
                 ),

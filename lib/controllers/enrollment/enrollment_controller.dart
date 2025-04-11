@@ -11,7 +11,7 @@ class EnrollmentController extends GetxController {
   RxList<EnrollmentSubjectModel> subjects = <EnrollmentSubjectModel>[].obs;
   RxBool subjectsSelected = false.obs;
 
-  RxString EnrolledExamId = "".obs;
+  RxString enrolledExamId = "".obs;
 
   @override
   void onInit() {
@@ -75,9 +75,10 @@ class EnrollmentController extends GetxController {
         await enrollmentService.enroll(selectedExam.id, selectedSubjects);
 
     if (done) {
-      EnrolledExamId.value = selectedExam.id;
+      enrolledExamId.value = selectedExam.id;
+      enrolledExamId.refresh();
     } else {
-      EnrolledExamId.value = "";
+      enrolledExamId.value = "";
     }
 
     return done;

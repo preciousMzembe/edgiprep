@@ -73,30 +73,33 @@ class _SubjectsEnrollmentState extends State<SubjectsEnrollment> {
                   height: 30.h,
                 ),
 
+                // title
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 30.w),
+                  child:
+                      enrollmentTitle("Pick the Subjects You Want to Focus On"),
+                ),
+
+                // subtitle
+                SizedBox(
+                  height: 20.h,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 30.w),
+                  child: enrollmentSubtitle(
+                    "Choose the subjects you're preparing for now. You can always add more later!",
+                  ),
+                ),
+                SizedBox(
+                  height: 20.h,
+                ),
+
                 Expanded(
                   child: ListView(
                     children: [
-                      // title
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 30.w),
-                        child: enrollmentTitle(
-                            "Pick the Subjects You Want to Focus On"),
-                      ),
-
-                      // subtitle
-                      SizedBox(
-                        height: 20.h,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 30.w),
-                        child: enrollmentSubtitle(
-                          "Choose the subjects you're preparing for now. You can always add more later!",
-                        ),
-                      ),
-
                       // subjects options
                       SizedBox(
-                        height: 40.h,
+                        height: 20.h,
                       ),
                       Obx(() {
                         return Column(
@@ -121,89 +124,89 @@ class _SubjectsEnrollmentState extends State<SubjectsEnrollment> {
                         );
                       }),
 
-                      // not sure text
-                      SizedBox(
-                        height: 50.h,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 50.w),
-                        child: enrollmentRichText(
-                          "Not sure which one to select? ",
-                          [
-                            TextSpan(
-                              text: "Learn more ",
-                              style: GoogleFonts.inter(
-                                color: primaryColor,
-                              ),
-                            ),
-                            const TextSpan(text: "about each subject. "),
-                          ],
-                        ),
-                      ),
-
-                      // continue
-                      SizedBox(
-                        height: 35.h,
-                      ),
-                      Stack(
-                        children: [
-                          Obx(() {
-                            return GestureDetector(
-                              onTap: () async {
-                                if (enrollmentController
-                                    .subjectsSelected.value) {
-                                  toggleLoading();
-
-                                  bool done =
-                                      await enrollmentController.enroll();
-
-                                  if (done) {
-                                    Get.back();
-
-                                    if (!widget.settings) {
-                                      Get.to(() => Premium());
-                                    } else {
-                                      // Switch
-                                      if (enrollmentController
-                                              .EnrolledExamId.value !=
-                                          "") {
-                                        await userEnrollmentController
-                                            .switchExam(enrollmentController
-                                                .EnrolledExamId.value);
-                                      }
-                                    }
-                                  } else {
-                                    showSnackbar(
-                                        context,
-                                        "Something Went Wrong",
-                                        "There was a problem finishing your enrollment",
-                                        true);
-                                  }
-                                }
-                              },
-                              child: normalButton(
-                                enrollmentController.subjectsSelected.value
-                                    ? primaryColor
-                                    : unselectedButtonColor,
-                                enrollmentController.subjectsSelected.value
-                                    ? Colors.white
-                                    : const Color.fromRGBO(52, 74, 106, 1),
-                                "Continue",
-                                16,
-                              ),
-                            );
-                          }),
-
-                          // loading
-                          if (loading) buttonLoading(unselectedButtonColor, 16),
-                        ],
-                      ),
-
                       SizedBox(
                         height: 50.h,
                       ),
                     ],
                   ),
+                ),
+
+                // not sure text
+                SizedBox(
+                  height: 20.h,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 50.w),
+                  child: enrollmentRichText(
+                    "Not sure which one to select? ",
+                    [
+                      TextSpan(
+                        text: "Learn more ",
+                        style: GoogleFonts.inter(
+                          color: primaryColor,
+                        ),
+                      ),
+                      const TextSpan(text: "about each subject. "),
+                    ],
+                  ),
+                ),
+
+                // continue
+                SizedBox(
+                  height: 35.h,
+                ),
+                Stack(
+                  children: [
+                    Obx(() {
+                      return GestureDetector(
+                        onTap: () async {
+                          if (enrollmentController.subjectsSelected.value) {
+                            toggleLoading();
+
+                            bool done = await enrollmentController.enroll();
+
+                            if (done) {
+                              Get.back();
+
+                              if (!widget.settings) {
+                                Get.to(() => Premium());
+                              } else {
+                                // Switch
+                                if (enrollmentController.enrolledExamId.value !=
+                                    "") {
+                                  await userEnrollmentController.switchExam(
+                                      enrollmentController
+                                          .enrolledExamId.value);
+                                }
+                              }
+                            } else {
+                              showSnackbar(
+                                  context,
+                                  "Something Went Wrong",
+                                  "There was a problem finishing your enrollment",
+                                  true);
+                            }
+                          }
+                        },
+                        child: normalButton(
+                          enrollmentController.subjectsSelected.value
+                              ? primaryColor
+                              : unselectedButtonColor,
+                          enrollmentController.subjectsSelected.value
+                              ? Colors.white
+                              : const Color.fromRGBO(52, 74, 106, 1),
+                          "Continue",
+                          16,
+                        ),
+                      );
+                    }),
+
+                    // loading
+                    if (loading) buttonLoading(unselectedButtonColor, 16),
+                  ],
+                ),
+                SizedBox(
+                  height: 50.h,
                 ),
               ],
             ),

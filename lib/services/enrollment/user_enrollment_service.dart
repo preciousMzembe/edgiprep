@@ -76,51 +76,53 @@ class UserEnrollmentService extends GetxService {
       if (response.statusCode == 200) {
         List enrollments = response.data;
 
-        List<UserExam> serverExams = [];
+        if (enrollments.isNotEmpty) {
+          List<UserExam> serverExams = [];
 
-        for (var exam in enrollments) {
-          serverExams.add(UserExam(
-            id: exam['examId'],
-            title: exam['exam']['name'],
-            selected: false,
-            enrollmentId: exam['id'],
-          ));
-        }
+          for (var exam in enrollments) {
+            serverExams.add(UserExam(
+              id: exam['examId'],
+              title: exam['exam']['name'],
+              selected: false,
+              enrollmentId: exam['id'],
+            ));
+          }
 
-        UserExam selectedExam = await userExamBox.values.firstWhere(
-          (exam) => exam.selected == true,
-          orElse: () =>
-              UserExam(id: "", title: "", selected: false, enrollmentId: ""),
-        );
+          UserExam selectedExam = await userExamBox.values.firstWhere(
+            (exam) => exam.selected == true,
+            orElse: () =>
+                UserExam(id: "", title: "", selected: false, enrollmentId: ""),
+          );
 
-        // mark selected exam
-        if (selectedExam.id != "") {
-          for (UserExam exam in serverExams) {
-            if (exam.id == selectedExam.id) {
-              exam.selected = true;
+          // mark selected exam
+          if (selectedExam.id != "") {
+            for (UserExam exam in serverExams) {
+              if (exam.id == selectedExam.id) {
+                exam.selected = true;
+              }
             }
           }
+
+          // check if one is selected
+          selectedExam = serverExams.firstWhere(
+            (exam) => exam.selected == true,
+            orElse: () =>
+                UserExam(id: "", title: "", selected: false, enrollmentId: ""),
+          );
+
+          if (selectedExam.id == "") {
+            // mark first as selected
+            serverExams[0].selected = true;
+          }
+
+          await userExamBox.clear();
+          await userExamBox.addAll(serverExams);
+
+          doneFetchingUserExams.value = !doneFetchingUserExams.value;
+
+          // get subjects
+          getUserServerSubjects();
         }
-
-        // check if one is selected
-        selectedExam = serverExams.firstWhere(
-          (exam) => exam.selected == true,
-          orElse: () =>
-              UserExam(id: "", title: "", selected: false, enrollmentId: ""),
-        );
-
-        if (selectedExam.id == "") {
-          // mark first as selected
-          serverExams[0].selected = true;
-        }
-
-        await userExamBox.clear();
-        await userExamBox.addAll(serverExams);
-
-        doneFetchingUserExams.value = !doneFetchingUserExams.value;
-
-        // get subjects
-        getUserServerSubjects();
       } else if (response.statusCode == 204) {
         await userExamBox.clear();
         doneFetchingUserExams.value = !doneFetchingUserExams.value;
