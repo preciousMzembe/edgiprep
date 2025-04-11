@@ -470,6 +470,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                       },
                                       child: homeQuizBox(
                                         quizBoxWidth,
+                                        getFadeColorFromString(subject.color),
+                                        getColorFromString(subject.color),
                                         subject.icon,
                                         quizImageContainerHeight,
                                         quizImageHeight,

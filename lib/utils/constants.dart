@@ -25,48 +25,87 @@ Color homeFadeColor = const Color.fromRGBO(147, 152, 159, 1);
 Color homeLightBackgroundColor = const Color.fromRGBO(193, 224, 255, 1);
 
 Color getColorFromString(String colorString) {
-  final regex = RegExp(r'rgb\((\d+),\s*(\d+),\s*(\d+)\)');
-  final match = regex.firstMatch(colorString);
+  // Match rgb
+  final rgbRegex = RegExp(r'rgb\((\d+),\s*(\d+),\s*(\d+)\)');
+  final rgbMatch = rgbRegex.firstMatch(colorString);
 
-  if (match != null) {
-    int red = int.parse(match.group(1)!);
-    int green = int.parse(match.group(2)!);
-    int blue = int.parse(match.group(3)!);
+  if (rgbMatch != null) {
+    int red = int.parse(rgbMatch.group(1)!);
+    int green = int.parse(rgbMatch.group(2)!);
+    int blue = int.parse(rgbMatch.group(3)!);
+    return Color.fromRGBO(red, green, blue, 1);
+  }
+
+  // Match hex
+  final hexRegex = RegExp(r'^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$');
+  if (hexRegex.hasMatch(colorString)) {
+    String hex = colorString.replaceFirst('#', '');
+
+    final red = int.parse(hex.substring(0, 2), radix: 16);
+    final green = int.parse(hex.substring(2, 4), radix: 16);
+    final blue = int.parse(hex.substring(4, 6), radix: 16);
 
     return Color.fromRGBO(red, green, blue, 1);
-  } else {
-    return primaryColor;
   }
+
+  // Fallback
+  return primaryColor;
 }
 
 Color getFadeColorFromString(String colorString) {
-  final regex = RegExp(r'rgb\((\d+),\s*(\d+),\s*(\d+)\)');
-  final match = regex.firstMatch(colorString);
+  // Match rgb
+  final rgbRegex = RegExp(r'rgb\((\d+),\s*(\d+),\s*(\d+)\)');
+  final rgbMatch = rgbRegex.firstMatch(colorString);
 
-  if (match != null) {
-    int red = int.parse(match.group(1)!);
-    int green = int.parse(match.group(2)!);
-    int blue = int.parse(match.group(3)!);
-
-    return Color.fromRGBO(red, green, blue, .5);
-  } else {
-    return primaryColor;
+  if (rgbMatch != null) {
+    int red = int.parse(rgbMatch.group(1)!);
+    int green = int.parse(rgbMatch.group(2)!);
+    int blue = int.parse(rgbMatch.group(3)!);
+    return Color.fromRGBO(red, green, blue, 0.5);
   }
+
+  // Match hex
+  final hexRegex = RegExp(r'^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$');
+  if (hexRegex.hasMatch(colorString)) {
+    String hex = colorString.replaceFirst('#', '');
+
+    final red = int.parse(hex.substring(0, 2), radix: 16);
+    final green = int.parse(hex.substring(2, 4), radix: 16);
+    final blue = int.parse(hex.substring(4, 6), radix: 16);
+
+    return Color.fromRGBO(red, green, blue, 0.5);
+  }
+
+  // Fallback
+  return primaryColor;
 }
 
 Color getBackgroundColorFromString(String colorString) {
-  final regex = RegExp(r'rgb\((\d+),\s*(\d+),\s*(\d+)\)');
-  final match = regex.firstMatch(colorString);
+  // Match rgb
+  final rgbRegex = RegExp(r'rgb\((\d+),\s*(\d+),\s*(\d+)\)');
+  final rgbMatch = rgbRegex.firstMatch(colorString);
 
-  if (match != null) {
-    int red = int.parse(match.group(1)!);
-    int green = int.parse(match.group(2)!);
-    int blue = int.parse(match.group(3)!);
-
-    return Color.fromRGBO(red, green, blue, .8);
-  } else {
-    return primaryColor;
+  if (rgbMatch != null) {
+    int red = int.parse(rgbMatch.group(1)!);
+    int green = int.parse(rgbMatch.group(2)!);
+    int blue = int.parse(rgbMatch.group(3)!);
+    return Color.fromRGBO(red, green, blue, 0.8);
   }
+
+  // Match hex
+  final hexRegex = RegExp(r'^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$');
+  if (hexRegex.hasMatch(colorString)) {
+    String hex = colorString.replaceFirst('#', '');
+
+    final red = int.parse(hex.substring(0, 2), radix: 16);
+    final green = int.parse(hex.substring(2, 4), radix: 16);
+    final blue = int.parse(hex.substring(4, 6), radix: 16);
+
+    return Color.fromRGBO(red, green, blue, 0.8);
+  }
+
+  // Fallback
+  return primaryColor;
 }
 
 String capitalizeWords(String text) {

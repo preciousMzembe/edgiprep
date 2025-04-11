@@ -174,9 +174,18 @@ class UserEnrollmentService extends GetxService {
                 id: enrollment['subject']['id'],
                 title: enrollment['subject']['name'],
                 description: enrollment['subject']['description'],
-                color: "rgb(81, 157, 232)",
-                icon: "biology.svg",
-                image: "biology.png",
+                color: enrollment['subject']['theme'] != null &&
+                        enrollment['subject']['theme'].isNotEmpty
+                    ? enrollment['subject']['theme']
+                    : "#2383E2",
+                icon: enrollment['subject']['icon'] != null &&
+                        enrollment['subject']['icon'].isNotEmpty
+                    ? enrollment['subject']['icon']
+                    : "biology.svg",
+                image: enrollment['subject']['image'] != null &&
+                        enrollment['subject']['image'].isNotEmpty
+                    ? enrollment['subject']['image']
+                    : "biology.png",
                 examId: enrollment['subject']['examId'],
                 numberOfTopics: enrollment['totalTopics'],
                 numberOfTopicsDone: enrollment['doneTopics'],

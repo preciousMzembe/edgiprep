@@ -1,4 +1,3 @@
-import 'package:edgiprep/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -7,6 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 Widget homeQuizBox(
   double boxWidth,
+  Color backroundColor,
+  Color iconColor,
   String image,
   double imageContainerHeight,
   double imageHeight,
@@ -34,14 +35,13 @@ Widget homeQuizBox(
                 child: Container(
                   width: imageContainerHeight,
                   height: imageContainerHeight,
-                  color: homeLightBackgroundColor,
+                  color: backroundColor,
                   child: Center(
                     child: SvgPicture.asset(
                       'icons/$image',
                       height: imageHeight,
                       width: imageHeight,
-                      colorFilter:
-                          ColorFilter.mode(primaryColor, BlendMode.srcIn),
+                      colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
                     ),
                   ),
                 ),
