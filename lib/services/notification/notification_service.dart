@@ -2,7 +2,6 @@ import 'package:edgiprep/db/boxes.dart';
 import 'package:edgiprep/db/notification/notification.dart';
 import 'package:edgiprep/db/reminder/reminder.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';

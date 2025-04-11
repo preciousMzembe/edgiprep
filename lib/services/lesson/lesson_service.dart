@@ -26,7 +26,7 @@ class LessonService extends GetxService {
   }
 
   Future<Map> fetchData(Topic topic, Lesson lesson) async {
-    bool error = false;
+    bool error = true;
     config ??= await configService.getConfig();
 
     // Check if token is not empty first
@@ -51,7 +51,7 @@ class LessonService extends GetxService {
           var lessonData = response.data;
 
           return {
-            'error': error,
+            'error': false,
             'lessonData': lessonData,
           };
         }

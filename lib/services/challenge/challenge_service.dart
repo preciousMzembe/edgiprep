@@ -25,7 +25,7 @@ class ChallengeService extends GetxService {
   Future<Map> fetchData(String subjectEnrollmentId) async {
     isEnd.value = false;
 
-    bool error = false;
+    bool error = true;
     config ??= await configService.getConfig();
 
     // Check if token is not empty first
@@ -53,7 +53,7 @@ class ChallengeService extends GetxService {
           }
 
           return {
-            'error': error,
+            'error': false,
             'quizData': quizData,
           };
         }
