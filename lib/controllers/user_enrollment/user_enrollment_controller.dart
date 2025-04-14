@@ -127,8 +127,8 @@ class UserEnrollmentController extends GetxController {
   }
 
   // Fetch Topic Lessons
-  Future<List<Lesson>> fetchTopicLessons(String topicId) async {
-    return await userEnrollmentService.getTopicLessons(topicId);
+  Future<List<Lesson>> fetchTopicLessons(Topic topic) async {
+    return await userEnrollmentService.getTopicLessons(topic);
   }
 
   // Fetch Subject Papers

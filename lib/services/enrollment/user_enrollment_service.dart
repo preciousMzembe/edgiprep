@@ -234,8 +234,11 @@ class UserEnrollmentService extends GetxService {
       await topicBox.clear();
       await topicBox.addAll(topics);
 
+      // delete old lessons
+      await lessonBox.clear();
+
       // get lessons
-      getUserServerLessons();
+      // getUserServerLessons();
 
       // TODO:  get subjects papers
       // getUserServerPapers();
@@ -302,53 +305,51 @@ class UserEnrollmentService extends GetxService {
     };
   }
 
-  // server user lessons
-  RxInt switchIndex = 0.obs;
-  Future<void> getUserServerLessons() async {
+  // server topic lessons
+  Future<void> getServerTopicLessons(Topic topic) async {
     if (topicBox.isNotEmpty) {
       try {
-        switchIndex.value++;
-        int currentSwitchIndex = switchIndex.value;
-
         String? token = await authService.getToken();
 
-        var userTopics = topicBox.values.toList();
-
-        List<Lesson> userLessons = [];
+        List<Lesson> topicLessons = [];
 
         // get lessons
 
-        for (Topic topic in userTopics) {
-          final response = await _dio.get(
-            '${config?.apiUrl}/Lesson/Mobile/Lessons?SubjectEnrollmentId=${topic.subjectEnrollmentId}&TopicId=${topic.id}',
-            options: Options(
-              headers: {
-                'Authorization': 'Bearer $token',
-              },
-            ),
-          );
+        final response = await _dio.get(
+          '${config?.apiUrl}/Lesson/Mobile/Lessons?SubjectEnrollmentId=${topic.subjectEnrollmentId}&TopicId=${topic.id}',
+          options: Options(
+            headers: {
+              'Authorization': 'Bearer $token',
+            },
+          ),
+        );
 
-          if (response.statusCode == 200) {
-            for (var lesson in response.data) {
-              userLessons.add(
-                Lesson(
-                  id: lesson['lesson']['id'],
-                  name: lesson['lesson']['name'],
-                  order: lesson['lesson']['order'],
-                  topicId: lesson['lesson']['topicId'],
-                  numberOfSlides: lesson['totalSlides'],
-                  numberOfSlidesDone: lesson['doneSlides'],
-                  subjectEnrollmentId: topic.subjectEnrollmentId,
-                ),
-              );
-            }
+        if (response.statusCode == 200) {
+          for (var lesson in response.data) {
+            topicLessons.add(
+              Lesson(
+                id: lesson['lesson']['id'],
+                name: lesson['lesson']['name'],
+                order: lesson['lesson']['order'],
+                topicId: lesson['lesson']['topicId'],
+                numberOfSlides: lesson['totalSlides'],
+                numberOfSlidesDone: lesson['doneSlides'],
+                subjectEnrollmentId: topic.subjectEnrollmentId,
+              ),
+            );
           }
         }
 
-        if (currentSwitchIndex == switchIndex.value) {
-          await lessonBox.clear();
-          await lessonBox.addAll(userLessons);
-        }
+        // delete old topic lessons
+        final keysToDelete = lessonBox.keys.where((key) {
+          final lesson = lessonBox.get(key);
+          return lesson?.topicId == topic.id;
+        }).toList();
+
+        await lessonBox.deleteAll(keysToDelete);
+
+        // add new topic lessons
+        await lessonBox.addAll(topicLessons);
       } on DioException {
         debugPrint(
             "Error fetching topic lessons ------------------------- user enrollment service");
@@ -575,11 +576,21 @@ class UserEnrollmentService extends GetxService {
   }
 
   // Public getter for all lessons of a topic
-  Future<List<Lesson>> getTopicLessons(String topicId) async {
+  Future<List<Lesson>> getTopicLessons(Topic topic) async {
     List<Lesson> lessons = lessonBox.values
-        .where((lesson) => lesson.topicId == topicId)
+        .where((lesson) => lesson.topicId == topic.id)
         .cast<Lesson>()
         .toList();
+
+    if (lessons.isEmpty) {
+      await getServerTopicLessons(topic);
+      lessons = lessonBox.values
+          .where((lesson) => lesson.topicId == topic.id)
+          .cast<Lesson>()
+          .toList();
+    } else {
+      getServerTopicLessons(topic);
+    }
 
     lessons.sort((a, b) => a.order.compareTo(b.order));
 

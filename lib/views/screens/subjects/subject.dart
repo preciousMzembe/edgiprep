@@ -4,6 +4,7 @@ import 'package:edgiprep/db/topic/topic.dart';
 import 'package:edgiprep/db/unit/unit.dart';
 import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
 import 'package:edgiprep/utils/constants.dart';
+import 'package:edgiprep/views/components/general/no_data_content.dart';
 import 'package:edgiprep/views/components/subject/subject_nav_option.dart';
 import 'package:edgiprep/views/components/subject/subject_subject_description.dart';
 import 'package:edgiprep/views/components/subject/subject_subject_image.dart';
@@ -167,6 +168,9 @@ class _SubjectState extends State<Subject> {
                       ),
 
                       // data
+                      if (unitTopicMap.isEmpty)
+                        noDataContent("No Topics Found",
+                            "There were no topics found for this subject. Please check back later."),
                       ...unitTopicMap.entries.map((entry) {
                         return entry.value.isNotEmpty
                             ? Column(

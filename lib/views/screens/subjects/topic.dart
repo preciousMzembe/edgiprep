@@ -5,6 +5,7 @@ import 'package:edgiprep/db/topic/topic.dart';
 import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
+import 'package:edgiprep/views/components/general/loading_content.dart';
 import 'package:edgiprep/views/components/general/no_data_content.dart';
 import 'package:edgiprep/views/components/subjects/subjects_back.dart';
 import 'package:edgiprep/views/components/topic/topic_lesson_box.dart';
@@ -37,16 +38,17 @@ class _SubjectTopicState extends State<SubjectTopic> {
   UserEnrollmentService userEnrollmentService =
       Get.find<UserEnrollmentService>();
 
+  bool loading = true;
   List<Lesson> lessons = [];
   double topicPercent = 0;
 
   Future<void> _fetchTopicLessons() async {
-    var data =
-        await userEnrollmentController.fetchTopicLessons(widget.topic.id);
+    var data = await userEnrollmentController.fetchTopicLessons(widget.topic);
 
     if (mounted) {
       setState(() {
         lessons = data;
+        loading = false;
       });
     }
   }
@@ -137,8 +139,13 @@ class _SubjectTopicState extends State<SubjectTopic> {
                         height: 30.h,
                       ),
 
+                      // Loading
+                      if (loading)
+                        loadingContent("Getting Your Lessons",
+                            "Be patient while we get your lessons ready for you."),
+
                       // actual lessons
-                      if (lessons.isEmpty)
+                      if (!loading && lessons.isEmpty)
                         noDataContent("No Lessons Found",
                             "There were no lessons found for this topic. Please check back later."),
 
