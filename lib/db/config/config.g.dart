@@ -24,13 +24,14 @@ class ConfigAdapter extends TypeAdapter<Config> {
       quizQuestions: fields[4] as int,
       topicQuizQuestions: fields[5] as int,
       premiumPrice: fields[6] as String,
+      subjectsImageUrl: fields[7] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, Config obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.apiUrl)
       ..writeByte(1)
@@ -44,7 +45,9 @@ class ConfigAdapter extends TypeAdapter<Config> {
       ..writeByte(5)
       ..write(obj.topicQuizQuestions)
       ..writeByte(6)
-      ..write(obj.premiumPrice);
+      ..write(obj.premiumPrice)
+      ..writeByte(7)
+      ..write(obj.subjectsImageUrl);
   }
 
   @override

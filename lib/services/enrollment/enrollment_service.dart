@@ -138,8 +138,8 @@ class EnrollmentService extends GetxService {
               id: subject['id'],
               title: subject['name'],
               icon: subject['icon'] != null && subject['icon'].isNotEmpty
-                  ? subject['icon']
-                  : "biology.svg",
+                  ? "${config?.subjectsImageUrl}/${subject['icon']}"
+                  : "${config?.subjectsImageUrl}/subject.svg",
               examId: subject['examId'],
             ),
           );

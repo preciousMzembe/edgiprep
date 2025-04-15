@@ -60,8 +60,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   int quizQuestions = 5;
 
+  Config? config;
   Future<void> getConfigValues() async {
-    Config? config = await configService.getConfig();
+    config = await configService.getConfig();
 
     setState(() {
       quizQuestions = config!.quizQuestions;
@@ -70,6 +71,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
+    configService.getConfig();
+
     getConfigValues();
 
     super.initState();

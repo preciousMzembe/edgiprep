@@ -26,6 +26,9 @@ class Config {
   @HiveField(6)
   final String premiumPrice;
 
+  @HiveField(7)
+  final String subjectsImageUrl;
+
   Config({
     required this.apiUrl,
     required this.imagesUrl,
@@ -34,6 +37,7 @@ class Config {
     required this.quizQuestions,
     required this.topicQuizQuestions,
     required this.premiumPrice,
+    required this.subjectsImageUrl,
   });
 
   toJson() {
@@ -45,6 +49,7 @@ class Config {
       'quizQuestions': quizQuestions,
       'topicQuizQuestions': topicQuizQuestions,
       'premiumPrice': premiumPrice,
+      'subjectImageUrl': subjectsImageUrl,
     };
   }
 }

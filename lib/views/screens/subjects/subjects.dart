@@ -92,7 +92,6 @@ class Subjects extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () async {
-                            // Get.to(() => const EnrollmentSettings());
                             await showModalBottomSheet(
                               backgroundColor: Colors.transparent,
                               context: context,

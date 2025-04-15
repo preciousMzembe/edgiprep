@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-Widget subjectSubjectImage(String image, Color color) {
+Widget subjectSubjectImage(String icon, Color color) {
   return LayoutBuilder(
     builder: (context, constraints) {
       bool isTablet = DeviceUtils.isTablet(context);
@@ -15,8 +15,8 @@ Widget subjectSubjectImage(String image, Color color) {
               ? 300.r
               : 300.r;
 
-      return SvgPicture.asset(
-        'icons/$image',
+      return SvgPicture.network(
+        icon,
         height: imageSize,
         width: imageSize,
         colorFilter: ColorFilter.mode(color, BlendMode.srcIn),

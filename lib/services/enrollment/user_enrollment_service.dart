@@ -180,12 +180,12 @@ class UserEnrollmentService extends GetxService {
                     : "#2383E2",
                 icon: enrollment['subject']['icon'] != null &&
                         enrollment['subject']['icon'].isNotEmpty
-                    ? enrollment['subject']['icon']
-                    : "biology.svg",
+                    ? "${config?.subjectsImageUrl}/${enrollment['subject']['icon']}"
+                    : "${config?.subjectsImageUrl}/subject.svg",
                 image: enrollment['subject']['image'] != null &&
                         enrollment['subject']['image'].isNotEmpty
-                    ? enrollment['subject']['image']
-                    : "biology.png",
+                    ? "${config?.subjectsImageUrl}/${enrollment['subject']['image']}"
+                    : "${config?.subjectsImageUrl}/subject.png",
                 examId: enrollment['subject']['examId'],
                 numberOfTopics: enrollment['totalTopics'],
                 numberOfTopicsDone: enrollment['doneTopics'],
@@ -236,9 +236,6 @@ class UserEnrollmentService extends GetxService {
 
       // delete old lessons
       await lessonBox.clear();
-
-      // get lessons
-      // getUserServerLessons();
 
       // TODO:  get subjects papers
       // getUserServerPapers();

@@ -32,8 +32,8 @@ Widget homeStudyBox(
             padding: EdgeInsets.all(40.w),
             color: background,
             child: Center(
-              child: Image.asset(
-                "images/$image",
+              child: Image.network(
+                image,
                 height: imageHeight,
               ),
             ),

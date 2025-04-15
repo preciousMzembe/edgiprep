@@ -73,8 +73,8 @@ Widget subjectsSubjectBox(
                   width: imageContainerWidth,
                   color: background,
                   child: Center(
-                    child: Image.asset(
-                      "images/$image",
+                    child: Image.network(
+                      image,
                       height: imageHeight,
                     ),
                   ),

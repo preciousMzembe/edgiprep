@@ -8,7 +8,7 @@ Widget homeQuizBox(
   double boxWidth,
   Color backroundColor,
   Color iconColor,
-  String image,
+  String icon,
   double imageContainerHeight,
   double imageHeight,
   double subjectFontSize,
@@ -37,8 +37,8 @@ Widget homeQuizBox(
                   height: imageContainerHeight,
                   color: backroundColor,
                   child: Center(
-                    child: SvgPicture.asset(
-                      'icons/$image',
+                    child: SvgPicture.network(
+                      icon,
                       height: imageHeight,
                       width: imageHeight,
                       colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),

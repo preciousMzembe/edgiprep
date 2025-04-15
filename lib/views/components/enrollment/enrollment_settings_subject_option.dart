@@ -55,8 +55,8 @@ Widget enrollmentSettingsSubjectOption(
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.asset(
-                    'icons/$icon',
+                  SvgPicture.network(
+                    icon,
                     height: iconSize,
                     width: iconSize,
                     colorFilter: ColorFilter.mode(

@@ -6,7 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 Widget papersSubject(
-    Color background, String image, String name, String papers) {
+    Color background, String icon, String name, String papers) {
   return LayoutBuilder(
     builder: (context, constraints) {
       bool isTablet = DeviceUtils.isTablet(context);
@@ -58,8 +58,8 @@ Widget papersSubject(
                         child: Container(
                           padding: EdgeInsets.all(60.r),
                           color: background,
-                          child: SvgPicture.asset(
-                            'icons/$image',
+                          child: SvgPicture.network(
+                            icon,
                             height: 60.h,
                             width: 60.h,
                             colorFilter: const ColorFilter.mode(

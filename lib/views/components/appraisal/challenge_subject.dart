@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-Widget challengeSubject(Color background, String image, String name) {
+Widget challengeSubject(Color background, String icon, String name) {
   return LayoutBuilder(
     builder: (context, constraints) {
       bool isTablet = DeviceUtils.isTablet(context);
@@ -57,8 +57,8 @@ Widget challengeSubject(Color background, String image, String name) {
                         child: Container(
                           padding: EdgeInsets.all(60.r),
                           color: background,
-                          child: SvgPicture.asset(
-                            'icons/$image',
+                          child: SvgPicture.network(
+                            icon,
                             height: 60.h,
                             width: 60.h,
                             colorFilter: const ColorFilter.mode(
