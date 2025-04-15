@@ -1,3 +1,4 @@
+import 'package:cached_network_svg_image/cached_network_svg_image.dart';
 import 'package:edgiprep/views/components/enrollment/enrollment_option_selected_mark.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
@@ -55,7 +56,7 @@ Widget enrollmentSettingsSubjectOption(
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.network(
+                  CachedNetworkSVGImage(
                     icon,
                     height: iconSize,
                     width: iconSize,
@@ -64,6 +65,16 @@ Widget enrollmentSettingsSubjectOption(
                             ? const Color.fromRGBO(73, 161, 249, 1)
                             : const Color.fromRGBO(191, 198, 216, 1),
                         BlendMode.srcIn),
+                    errorWidget: SvgPicture.asset(
+                      "icons/subject.svg",
+                      height: iconSize,
+                      width: iconSize,
+                      colorFilter: ColorFilter.mode(
+                          selected
+                              ? const Color.fromRGBO(73, 161, 249, 1)
+                              : const Color.fromRGBO(191, 198, 216, 1),
+                          BlendMode.srcIn),
+                    ),
                   ),
                   SizedBox(
                     width: 30.w,
