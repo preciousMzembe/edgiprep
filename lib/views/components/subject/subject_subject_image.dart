@@ -1,3 +1,4 @@
+import 'package:cached_network_svg_image/cached_network_svg_image.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,11 +16,17 @@ Widget subjectSubjectImage(String icon, Color color) {
               ? 300.r
               : 300.r;
 
-      return SvgPicture.network(
+      return CachedNetworkSVGImage(
         icon,
         height: imageSize,
         width: imageSize,
         colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+        errorWidget: SvgPicture.asset(
+          "icons/subject.svg",
+          height: imageSize,
+          width: imageSize,
+          colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+        ),
       );
     },
   );

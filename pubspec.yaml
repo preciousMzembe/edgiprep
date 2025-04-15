@@ -57,6 +57,8 @@ dependencies:
   flutter_widget_from_html: ^0.16.0
   flutter_math_fork: ^0.7.3
   liquid_pull_to_refresh: ^3.0.1
+  cached_network_image: ^3.4.1
+  cached_network_svg_image: ^1.2.0
 
 dev_dependencies:
   flutter_test:

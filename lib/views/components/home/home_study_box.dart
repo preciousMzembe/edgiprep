@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edgiprep/views/components/home/home_study_subject.dart';
 import 'package:edgiprep/views/components/home/home_study_topic.dart';
 import 'package:edgiprep/views/components/home/home_study_topics_number.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lottie/lottie.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 Widget homeStudyBox(
@@ -32,9 +34,20 @@ Widget homeStudyBox(
             padding: EdgeInsets.all(40.w),
             color: background,
             child: Center(
-              child: Image.network(
-                image,
+              child: CachedNetworkImage(
+                imageUrl: image,
                 height: imageHeight,
+                placeholder: (context, url) => Center(
+                  child: Lottie.asset(
+                    'icons/white_loading.json',
+                    height: imageHeight,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+                errorWidget: (context, url, error) => Image.asset(
+                  "images/subject.png",
+                  height: imageHeight,
+                ),
               ),
             ),
           ),

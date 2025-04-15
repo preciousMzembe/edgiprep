@@ -1,3 +1,4 @@
+import 'package:cached_network_svg_image/cached_network_svg_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -37,11 +38,18 @@ Widget homeQuizBox(
                   height: imageContainerHeight,
                   color: backroundColor,
                   child: Center(
-                    child: SvgPicture.network(
+                    child: CachedNetworkSVGImage(
                       icon,
                       height: imageHeight,
                       width: imageHeight,
                       colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                      errorWidget: SvgPicture.asset(
+                        "icons/subject.svg",
+                        height: imageHeight,
+                        width: imageHeight,
+                        colorFilter:
+                            ColorFilter.mode(iconColor, BlendMode.srcIn),
+                      ),
                     ),
                   ),
                 ),

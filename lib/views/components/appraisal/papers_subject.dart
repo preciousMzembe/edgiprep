@@ -1,3 +1,4 @@
+import 'package:cached_network_svg_image/cached_network_svg_image.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -58,12 +59,19 @@ Widget papersSubject(
                         child: Container(
                           padding: EdgeInsets.all(60.r),
                           color: background,
-                          child: SvgPicture.network(
+                          child: CachedNetworkSVGImage(
                             icon,
                             height: 60.h,
                             width: 60.h,
-                            colorFilter: const ColorFilter.mode(
-                                Colors.white, BlendMode.srcIn),
+                            colorFilter:
+                                ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                            errorWidget: SvgPicture.asset(
+                              "icons/subject.svg",
+                              height: 60.h,
+                              width: 60.h,
+                              colorFilter: ColorFilter.mode(
+                                  Colors.white, BlendMode.srcIn),
+                            ),
                           ),
                         ),
                       ),

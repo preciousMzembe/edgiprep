@@ -179,10 +179,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 : 75.r;
 
         double quizImageHeight = isTablet
-            ? 35.r
+            ? 30.h
             : isSmallTablet
-                ? 35.r
-                : 35.r;
+                ? 30.h
+                : 30.h;
 
         double quizSubjectFontSize = isTablet
             ? 24.sp
