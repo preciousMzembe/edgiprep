@@ -419,7 +419,7 @@ class UserEnrollmentService extends GetxService {
     try {
       String? token = await authService.getToken();
 
-      bool done = true;
+      bool done = false;
 
       if (enrollSubjectIds.isNotEmpty) {
         final response =
@@ -434,8 +434,8 @@ class UserEnrollmentService extends GetxService {
               "subjects": enrollSubjectIds,
             });
 
-        if (response.statusCode != 200) {
-          done = false;
+        if (response.statusCode == 200) {
+          done = true;
         }
       }
 
@@ -455,7 +455,7 @@ class UserEnrollmentService extends GetxService {
     try {
       String? token = await authService.getToken();
 
-      bool done = true;
+      bool done = false;
 
       final unenrollResponse = await _dio.delete(
         '${config?.apiUrl}/Enrollment/Mobile/UnenrollSubject/$subjectEnrollmentId',
@@ -466,8 +466,8 @@ class UserEnrollmentService extends GetxService {
         ),
       );
 
-      if (unenrollResponse.statusCode != 204) {
-        done = false;
+      if (unenrollResponse.statusCode == 204) {
+        done = true;
       }
 
       await getUserServerSubjects();
@@ -522,12 +522,8 @@ class UserEnrollmentService extends GetxService {
     return subjects;
   }
 
-  Future<String> getSubjectEnrollmentId(String subjectId) async {
-    UserSubject userSubject = userSubjectBox.values.firstWhere(
-      (subject) => subject.id == subjectId,
-    );
-
-    return userSubject.enrollmentId;
+  Future<bool> checkSubjectEnrollment(String subjectId) async {
+    return userSubjectBox.values.any((subject) => subject.id == subjectId);
   }
 
   // Public getter for all units and topics of a subject

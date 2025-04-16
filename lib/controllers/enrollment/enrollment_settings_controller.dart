@@ -59,12 +59,16 @@ class EnrollmentSettingsController extends GetxController {
     return done;
   }
 
-  // Update subjects
+  // Unenroll subjects
   Future<bool> unenrollSubject(String subjectEnrollmentId) async {
     bool done =
         await userEnrollmentService.unenrollSubject(subjectEnrollmentId);
 
     return done;
+  }
+
+  Future<bool> checkSubjectEnrollment(String subjectId) async {
+    return userEnrollmentService.checkSubjectEnrollment(subjectId);
   }
 
   // Select exam

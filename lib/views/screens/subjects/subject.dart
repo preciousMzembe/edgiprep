@@ -12,7 +12,9 @@ import 'package:edgiprep/views/components/subject/subject_subject_name.dart';
 import 'package:edgiprep/views/components/subject/subject_topic_box.dart';
 import 'package:edgiprep/views/components/subject/subject_unit_name.dart';
 import 'package:edgiprep/views/components/subjects/subjects_back.dart';
+import 'package:edgiprep/views/screens/subjects/subject_settings.dart';
 import 'package:edgiprep/views/screens/subjects/topic.dart';
+import 'package:edgiprep/views/screens/subjects/topics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -36,8 +38,6 @@ class _SubjectState extends State<Subject> {
       Get.find<UserEnrollmentService>();
 
   Map<Unit, List<Topic>> unitTopicMap = {};
-
-  bool topicActive = true;
 
   List<String> navOptions = [
     "Learn",
@@ -155,89 +155,17 @@ class _SubjectState extends State<Subject> {
               ],
             ),
 
-            // topics
+            // topics and settings
             Expanded(
-              child: Container(
-                color: backgroundColor,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30.w),
-                  child: ListView(
-                    children: [
-                      SizedBox(
-                        height: 30.h,
-                      ),
-
-                      // data
-                      if (unitTopicMap.isEmpty)
-                        noDataContent("No Topics Found",
-                            "There were no topics found for this subject. Please check back later."),
-                      ...unitTopicMap.entries.map((entry) {
-                        return entry.value.isNotEmpty
-                            ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  SizedBox(
-                                    height: 10.h,
-                                  ),
-                                  // unit
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 10.w),
-                                    child: subjectUnitName(entry.key.name),
-                                  ),
-                                  SizedBox(
-                                    height: 25.h,
-                                  ),
-                                  ...entry.value.map((topic) {
-                                    double percent = 0;
-
-                                    if (topic.numberOfLessons > 0) {
-                                      // calculate percent
-                                      percent = topic.numberOfLessonsDone /
-                                          topic.numberOfLessons;
-                                    }
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () async {
-                                            if (topic.active &&
-                                                !topic.needSubscrion) {
-                                              await Get.to(() => SubjectTopic(
-                                                    subject: widget.subject,
-                                                    topic: topic,
-                                                  ));
-
-                                              _fetchUnitsAndTopics();
-                                            }
-                                          },
-                                          child: subjectTopicBox(
-                                            topic.needSubscrion,
-                                            topic.active,
-                                            topic.name,
-                                            "${topic.numberOfLessonsDone} of ${topic.numberOfLessons} Lessons",
-                                            percent,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 30.h,
-                                        ),
-                                      ],
-                                    );
-                                  }),
-                                ],
-                              )
-                            : SizedBox();
-                      }),
-
-                      SizedBox(
-                        height: 100.h,
-                      )
-                    ],
-                  ),
-                ),
-              ),
+              child: selectedTitle == "Learn"
+                  ? SubjectTopics(
+                      subject: widget.subject,
+                      unitTopicMap: unitTopicMap,
+                      fetchUnitsAndTopics: _fetchUnitsAndTopics,
+                    )
+                  : SubjectSettings(
+                      subject: widget.subject,
+                    ),
             ),
           ],
         ),
