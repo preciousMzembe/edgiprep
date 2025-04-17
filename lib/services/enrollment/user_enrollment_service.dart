@@ -413,6 +413,37 @@ class UserEnrollmentService extends GetxService {
     await pastPaperBox.addAll(papers);
   }
 
+  // Unenroll exam
+  Future<bool> unenrollExam(String examEnrollmentId) async {
+    try {
+      String? token = await authService.getToken();
+
+      bool done = false;
+
+      final unenrollResponse = await _dio.delete(
+        '${config?.apiUrl}/Enrollment/Mobile/Unenroll/$examEnrollmentId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (unenrollResponse.statusCode == 204) {
+        done = true;
+      }
+
+      await getUserServerExams();
+
+      return done;
+    } on DioException {
+      debugPrint(
+          "Error unenrolling an exam ------------------------- user enrollment service");
+    }
+
+    return false;
+  }
+
   // Enroll new subjects
   Future<bool> enrollSubjects(
       String enrollmentId, List<String> enrollSubjectIds) async {
@@ -526,6 +557,10 @@ class UserEnrollmentService extends GetxService {
     return userSubjectBox.values.any((subject) => subject.id == subjectId);
   }
 
+  Future<bool> checkExamEnrollment(String examId) async {
+    return userExamBox.values.any((exam) => exam.id == examId);
+  }
+
   // Public getter for all units and topics of a subject
   Future<Map<Unit, List<Topic>>> getUnitsAndTopics(
       String subjectEnrollmentId) async {
@@ -618,5 +653,59 @@ class UserEnrollmentService extends GetxService {
         .toList();
 
     return pastPapers;
+  }
+
+  Future<List<UserSubject>> getSubjectsByExamId(String examEnrollmetId) async {
+    try {
+      // get all subjects of exam
+      String? token = await authService.getToken();
+
+      final response = await _dio.get(
+        '${config?.apiUrl}/Subject/Mobile/EnrolledSubjects?EnrollementId=$examEnrollmetId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        List<UserSubject> subjects = [];
+
+        for (var enrollment in response.data) {
+          subjects.add(
+            UserSubject(
+              id: enrollment['subject']['id'],
+              title: enrollment['subject']['name'],
+              description: enrollment['subject']['description'],
+              color: enrollment['subject']['theme'] != null &&
+                      enrollment['subject']['theme'].isNotEmpty
+                  ? enrollment['subject']['theme']
+                  : "#2383E2",
+              icon: enrollment['subject']['icon'] != null &&
+                      enrollment['subject']['icon'].isNotEmpty
+                  ? "${config?.subjectsImageUrl}/${enrollment['subject']['icon']}"
+                  : "${config?.subjectsImageUrl}/subject.svg",
+              image: enrollment['subject']['image'] != null &&
+                      enrollment['subject']['image'].isNotEmpty
+                  ? "${config?.subjectsImageUrl}/${enrollment['subject']['image']}"
+                  : "${config?.subjectsImageUrl}/subject.png",
+              examId: enrollment['subject']['examId'],
+              numberOfTopics: enrollment['totalTopics'],
+              numberOfTopicsDone: enrollment['doneTopics'],
+              currentTopic: "Introduction To Human Biology",
+              enrollmentId: enrollment['id'],
+            ),
+          );
+        }
+
+        return subjects;
+      }
+    } on DioException {
+      debugPrint(
+          "Error fetching exam subjects ------------------------- user enrollment service");
+    }
+
+    return [];
   }
 }

@@ -205,6 +205,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 child: LiquidPullToRefresh(
                   onRefresh: () async {
                     await userEnrollmentService.getUserServerExams();
+
                     enrollmentService.restartFetch();
                   },
                   color: homeLightBackgroundColor,

@@ -12,6 +12,7 @@ import 'package:edgiprep/views/components/settings/settings_username.dart';
 import 'package:edgiprep/views/components/subjects/subjects_options_title.dart';
 import 'package:edgiprep/views/screens/premium/premium.dart';
 import 'package:edgiprep/views/screens/settings/about.dart';
+import 'package:edgiprep/views/screens/settings/enrollment_settings.dart';
 import 'package:edgiprep/views/screens/settings/notifications_settings.dart';
 import 'package:edgiprep/views/screens/settings/profile.dart';
 import 'package:flutter/material.dart';
@@ -147,7 +148,7 @@ class Settings extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          // Get.to(() => const EnrollmentSettings());
+                          Get.to(() => const EnrollmentSettings());
                         },
                         child: settingsOptionBox(
                             "writing.svg", "Enrollment", "Add / remove exams"),

@@ -76,7 +76,7 @@ class About extends StatelessWidget {
                       height: 20.h,
                     ),
                     Center(
-                      child: settingsUsername("EdgiPrep"),
+                      child: settingsUsername(appName),
                     ),
 
                     // info

@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:edgiprep/controllers/enrollment/enrollment_settings_controller.dart';
-import 'package:edgiprep/db/subject/user_subject.dart';
+import 'package:edgiprep/db/exam/user_exam.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,15 +11,15 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
-class UnenrollSubjectContent extends StatefulWidget {
-  final UserSubject subject;
-  const UnenrollSubjectContent({super.key, required this.subject});
+class UnenrollExamContent extends StatefulWidget {
+  final UserExam exam;
+  const UnenrollExamContent({super.key, required this.exam});
 
   @override
-  State<UnenrollSubjectContent> createState() => _UnenrollSubjectContentState();
+  State<UnenrollExamContent> createState() => _UnenrollExamContentState();
 }
 
-class _UnenrollSubjectContentState extends State<UnenrollSubjectContent> {
+class _UnenrollExamContentState extends State<UnenrollExamContent> {
   EnrollmentSettingsController enrollmentSettingsController =
       Get.find<EnrollmentSettingsController>();
 
@@ -110,7 +110,7 @@ class _UnenrollSubjectContentState extends State<UnenrollSubjectContent> {
                         height: 25.h,
                       ),
                       Text(
-                        "You Want to Uneroll \n ${widget.subject.title}?",
+                        "You Want to Uneroll \n ${widget.exam.title}?",
                         textAlign: TextAlign.center,
                         style: GoogleFonts.inter(
                           fontSize: titleFontSize,
@@ -124,7 +124,7 @@ class _UnenrollSubjectContentState extends State<UnenrollSubjectContent> {
                         height: 15.h,
                       ),
                       Text(
-                        "Unenrolling the subject will remove all subject progress. You will start over if you enroll the subject again.",
+                        "Unenrolling the exam will remove all exam progress. You will start over if you enroll the exam again.",
                         textAlign: TextAlign.center,
                         style: GoogleFonts.inter(
                           fontSize: subtitleFontSize,
@@ -170,7 +170,7 @@ class _UnenrollSubjectContentState extends State<UnenrollSubjectContent> {
                               toggleLoading();
 
                               await enrollmentSettingsController
-                                  .unenrollSubject(widget.subject.enrollmentId);
+                                  .unenrollExam(widget.exam.enrollmentId);
 
                               if (mounted) {
                                 Navigator.pop(context);

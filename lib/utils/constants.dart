@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const appName = "Open Events";
+const appName = "EdgiPrep";
 
 Color primaryColor = const Color.fromRGBO(35, 131, 226, 1);
 Color backgroundColor = const Color.fromRGBO(236, 239, 245, 1);
