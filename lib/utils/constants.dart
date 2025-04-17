@@ -53,15 +53,22 @@ Color getColorFromString(String colorString) {
 }
 
 Color getFadeColorFromString(String colorString) {
+  double brightnessFactor = 0.5; // increase brightness by 20%
+
+  // Helper to brighten a single color channel
+  int brighten(int value) {
+    return (value + ((255 - value) * brightnessFactor)).round().clamp(0, 255);
+  }
+
   // Match rgb
   final rgbRegex = RegExp(r'rgb\((\d+),\s*(\d+),\s*(\d+)\)');
   final rgbMatch = rgbRegex.firstMatch(colorString);
 
   if (rgbMatch != null) {
-    int red = int.parse(rgbMatch.group(1)!);
-    int green = int.parse(rgbMatch.group(2)!);
-    int blue = int.parse(rgbMatch.group(3)!);
-    return Color.fromRGBO(red, green, blue, 0.5);
+    int red = brighten(int.parse(rgbMatch.group(1)!));
+    int green = brighten(int.parse(rgbMatch.group(2)!));
+    int blue = brighten(int.parse(rgbMatch.group(3)!));
+    return Color.fromRGBO(red, green, blue, 1);
   }
 
   // Match hex
@@ -69,11 +76,46 @@ Color getFadeColorFromString(String colorString) {
   if (hexRegex.hasMatch(colorString)) {
     String hex = colorString.replaceFirst('#', '');
 
-    final red = int.parse(hex.substring(0, 2), radix: 16);
-    final green = int.parse(hex.substring(2, 4), radix: 16);
-    final blue = int.parse(hex.substring(4, 6), radix: 16);
+    final red = brighten(int.parse(hex.substring(0, 2), radix: 16));
+    final green = brighten(int.parse(hex.substring(2, 4), radix: 16));
+    final blue = brighten(int.parse(hex.substring(4, 6), radix: 16));
 
-    return Color.fromRGBO(red, green, blue, 0.5);
+    return Color.fromRGBO(red, green, blue, 1);
+  }
+
+  // Fallback
+  return primaryColor;
+}
+
+Color getMoreFadeColorFromString(String colorString) {
+  double brightnessFactor = 0.6; // increase brightness by 20%
+
+  // Helper to brighten a single color channel
+  int brighten(int value) {
+    return (value + ((255 - value) * brightnessFactor)).round().clamp(0, 255);
+  }
+
+  // Match rgb
+  final rgbRegex = RegExp(r'rgb\((\d+),\s*(\d+),\s*(\d+)\)');
+  final rgbMatch = rgbRegex.firstMatch(colorString);
+
+  if (rgbMatch != null) {
+    int red = brighten(int.parse(rgbMatch.group(1)!));
+    int green = brighten(int.parse(rgbMatch.group(2)!));
+    int blue = brighten(int.parse(rgbMatch.group(3)!));
+    return Color.fromRGBO(red, green, blue, 1);
+  }
+
+  // Match hex
+  final hexRegex = RegExp(r'^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$');
+  if (hexRegex.hasMatch(colorString)) {
+    String hex = colorString.replaceFirst('#', '');
+
+    final red = brighten(int.parse(hex.substring(0, 2), radix: 16));
+    final green = brighten(int.parse(hex.substring(2, 4), radix: 16));
+    final blue = brighten(int.parse(hex.substring(4, 6), radix: 16));
+
+    return Color.fromRGBO(red, green, blue, 1);
   }
 
   // Fallback
@@ -81,15 +123,17 @@ Color getFadeColorFromString(String colorString) {
 }
 
 Color getBackgroundColorFromString(String colorString) {
+  double brightnessFactor = 0.8; // 80% of original brightness
+
   // Match rgb
   final rgbRegex = RegExp(r'rgb\((\d+),\s*(\d+),\s*(\d+)\)');
   final rgbMatch = rgbRegex.firstMatch(colorString);
 
   if (rgbMatch != null) {
-    int red = int.parse(rgbMatch.group(1)!);
-    int green = int.parse(rgbMatch.group(2)!);
-    int blue = int.parse(rgbMatch.group(3)!);
-    return Color.fromRGBO(red, green, blue, 0.8);
+    int red = (int.parse(rgbMatch.group(1)!) * brightnessFactor).round();
+    int green = (int.parse(rgbMatch.group(2)!) * brightnessFactor).round();
+    int blue = (int.parse(rgbMatch.group(3)!) * brightnessFactor).round();
+    return Color.fromRGBO(red, green, blue, 1);
   }
 
   // Match hex
@@ -97,11 +141,14 @@ Color getBackgroundColorFromString(String colorString) {
   if (hexRegex.hasMatch(colorString)) {
     String hex = colorString.replaceFirst('#', '');
 
-    final red = int.parse(hex.substring(0, 2), radix: 16);
-    final green = int.parse(hex.substring(2, 4), radix: 16);
-    final blue = int.parse(hex.substring(4, 6), radix: 16);
+    final red =
+        (int.parse(hex.substring(0, 2), radix: 16) * brightnessFactor).round();
+    final green =
+        (int.parse(hex.substring(2, 4), radix: 16) * brightnessFactor).round();
+    final blue =
+        (int.parse(hex.substring(4, 6), radix: 16) * brightnessFactor).round();
 
-    return Color.fromRGBO(red, green, blue, 0.8);
+    return Color.fromRGBO(red, green, blue, 1);
   }
 
   // Fallback

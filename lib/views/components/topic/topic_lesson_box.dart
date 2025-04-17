@@ -1,3 +1,4 @@
+import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/topic/topic_complete_text.dart';
 import 'package:edgiprep/views/components/topic/topic_lesson_name.dart';
@@ -19,6 +20,7 @@ Widget topicLessonBox(
   String name,
   String slides,
   double percent,
+  String subjectColor,
 ) {
   return LayoutBuilder(
     builder: (context, constraints) {
@@ -89,7 +91,7 @@ Widget topicLessonBox(
                         border: RDottedLineBorder(
                             left: BorderSide(
                           color: active
-                              ? const Color.fromRGBO(112, 180, 248, 1)
+                              ? getColorFromString(subjectColor)
                               : const Color.fromRGBO(161, 168, 183, 1),
                         )),
                       ),
@@ -103,12 +105,12 @@ Widget topicLessonBox(
                       color: done
                           ? Colors.transparent
                           : active
-                              ? const Color.fromRGBO(112, 180, 248, 1)
+                              ? getColorFromString(subjectColor)
                               : const Color.fromRGBO(161, 168, 183, 1),
                       border: Border.all(
                         width: 1.0,
                         color: active
-                            ? const Color.fromRGBO(112, 180, 248, 1)
+                            ? getColorFromString(subjectColor)
                             : const Color.fromRGBO(161, 168, 183, 1),
                       ),
                       borderRadius: BorderRadius.circular(60.r),
@@ -117,7 +119,7 @@ Widget topicLessonBox(
                       child: done
                           ? Icon(
                               FontAwesomeIcons.check,
-                              color: const Color.fromRGBO(112, 180, 248, 1),
+                              color: getColorFromString(subjectColor),
                               size: 25.r,
                             )
                           : active
@@ -146,7 +148,7 @@ Widget topicLessonBox(
                           border: RDottedLineBorder(
                               left: BorderSide(
                             color: active
-                                ? const Color.fromRGBO(112, 180, 248, 1)
+                                ? getColorFromString(subjectColor)
                                 : const Color.fromRGBO(161, 168, 183, 1),
                           )),
                         ),
@@ -170,9 +172,12 @@ Widget topicLessonBox(
                           vertical: 30.h,
                           horizontal: 35.w,
                         ),
-                        color: done
-                            ? const Color.fromRGBO(215, 235, 255, 1)
-                            : Colors.white,
+                        color:
+                            // done
+                            // ? const Color.fromRGBO(215, 235, 255, 1)
+                            // ? const Color.fromRGBO(215, 235, 255, 1)
+                            // :
+                            Colors.white,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
@@ -191,8 +196,8 @@ Widget topicLessonBox(
                               ),
 
                             // lesson number
-                            topicLessonNumber(
-                                "Lesson $lessonNumber", lessonNumberFontSize),
+                            topicLessonNumber("Lesson $lessonNumber",
+                                lessonNumberFontSize, subjectColor),
 
                             // title
                             SizedBox(
@@ -248,8 +253,8 @@ Widget topicLessonBox(
                                           barRadius: Radius.circular(20.r),
                                           backgroundColor: const Color.fromRGBO(
                                               234, 237, 244, 1),
-                                          progressColor: const Color.fromRGBO(
-                                              73, 161, 249, 1),
+                                          progressColor:
+                                              getColorFromString(subjectColor),
                                         ),
                                       ),
                                     ],

@@ -80,6 +80,7 @@ class SubjectTopics extends StatelessWidget {
                                   topic.name,
                                   "${topic.numberOfLessonsDone} of ${topic.numberOfLessons} Lessons",
                                   percent,
+                                  subject.color,
                                 ),
                               ),
                               SizedBox(

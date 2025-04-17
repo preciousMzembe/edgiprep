@@ -100,7 +100,7 @@ class _QuizzesState extends State<Quizzes> {
                       SizedBox(
                         width: 50.w,
                       ),
-                      appraisalImage("mock.png"),
+                      appraisalImage("quiz.png"),
                     ],
                   ),
                 ),

@@ -146,6 +146,12 @@ class _LoadSlidesState extends State<LoadSlides> {
         bool isTablet = DeviceUtils.isTablet(context);
         bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
+        double imageHeight = isTablet
+            ? 180.h
+            : isSmallTablet
+                ? 190.h
+                : 200.h;
+
         double titleSize = isTablet
             ? 34.sp
             : isSmallTablet
@@ -244,10 +250,14 @@ class _LoadSlidesState extends State<LoadSlides> {
                                       CrossAxisAlignment.stretch,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    SvgPicture.asset(
-                                      'icons/sad_close.svg',
-                                      height: 155.r,
-                                      width: 155.r,
+                                    // SvgPicture.asset(
+                                    //   'icons/sad_close.svg',
+                                    //   height: 155.r,
+                                    //   width: 155.r,
+                                    // ),
+                                    Image.asset(
+                                      "images/sad.png",
+                                      height: imageHeight,
                                     ),
                                     SizedBox(
                                       height: 30.h,

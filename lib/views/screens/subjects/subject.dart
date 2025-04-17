@@ -4,16 +4,12 @@ import 'package:edgiprep/db/topic/topic.dart';
 import 'package:edgiprep/db/unit/unit.dart';
 import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
 import 'package:edgiprep/utils/constants.dart';
-import 'package:edgiprep/views/components/general/no_data_content.dart';
 import 'package:edgiprep/views/components/subject/subject_nav_option.dart';
 import 'package:edgiprep/views/components/subject/subject_subject_description.dart';
 import 'package:edgiprep/views/components/subject/subject_subject_image.dart';
 import 'package:edgiprep/views/components/subject/subject_subject_name.dart';
-import 'package:edgiprep/views/components/subject/subject_topic_box.dart';
-import 'package:edgiprep/views/components/subject/subject_unit_name.dart';
 import 'package:edgiprep/views/components/subjects/subjects_back.dart';
 import 'package:edgiprep/views/screens/subjects/subject_settings.dart';
-import 'package:edgiprep/views/screens/subjects/topic.dart';
 import 'package:edgiprep/views/screens/subjects/topics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -82,17 +78,9 @@ class _SubjectState extends State<Subject> {
             // top
             Stack(
               children: [
-                Positioned(
-                  top: -90.r,
-                  right: -90.r,
-                  child: subjectSubjectImage(
-                    widget.subject.icon,
-                    getColorFromString(widget.subject.color),
-                  ),
-                ),
                 Container(
                   padding: EdgeInsets.all(30.w),
-                  color: Colors.transparent,
+                  color: getBackgroundColorFromString(widget.subject.color),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -150,6 +138,14 @@ class _SubjectState extends State<Subject> {
                         ),
                       ),
                     ],
+                  ),
+                ),
+                Positioned(
+                  top: -90.r,
+                  right: -90.r,
+                  child: subjectSubjectImage(
+                    widget.subject.icon,
+                    getColorFromString(widget.subject.color),
                   ),
                 ),
               ],

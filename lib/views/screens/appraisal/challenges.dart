@@ -75,7 +75,7 @@ class Challenges extends StatelessWidget {
                       SizedBox(
                         width: 50.w,
                       ),
-                      appraisalImage("paper.png"),
+                      appraisalImage("challenge2.png"),
                     ],
                   ),
                 ),

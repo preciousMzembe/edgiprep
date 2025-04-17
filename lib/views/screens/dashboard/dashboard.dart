@@ -54,7 +54,6 @@ class _DashboardState extends State<Dashboard> {
         }
       },
       child: Scaffold(
-        backgroundColor: primaryColor,
         // body
         body: PageView(
           controller: pageController,

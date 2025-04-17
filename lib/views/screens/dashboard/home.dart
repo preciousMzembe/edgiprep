@@ -92,11 +92,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 ? 24.sp
                 : 26.sp;
 
-        double weeklyProgressRadius = isTablet
-            ? 60.sp
+        double pieHeight = isTablet
+            ? 160.r
             : isSmallTablet
-                ? 70.sp
-                : 80.sp;
+                ? 170.r
+                : 180.r;
 
         double weeklyBarWidth = isTablet
             ? 21.r
@@ -207,7 +207,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     await userEnrollmentService.getUserServerExams();
                     enrollmentService.restartFetch();
                   },
-                  color: primaryColor,
+                  color: homeLightBackgroundColor,
                   backgroundColor: Colors.white,
                   animSpeedFactor: 2,
                   showChildOpacityTransition: false,
@@ -286,7 +286,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                               Expanded(
                                 child: homeWeeklyBox(
                                   weeklyTitleSize,
-                                  weeklyProgressRadius,
+                                  pieHeight,
                                   weeklyBarWidth,
                                   weeklyProgressSize,
                                 ),

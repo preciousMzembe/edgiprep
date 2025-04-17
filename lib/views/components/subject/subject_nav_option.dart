@@ -24,7 +24,7 @@ Widget subjectNavOption(String text, Color background) {
       return Container(
         height: height,
         padding: EdgeInsets.symmetric(
-          horizontal: 25.w,
+          horizontal: 30.w,
         ),
         color: background,
         child: Center(

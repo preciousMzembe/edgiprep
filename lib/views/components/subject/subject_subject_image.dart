@@ -11,10 +11,10 @@ Widget subjectSubjectImage(String icon, Color color) {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double imageSize = isTablet
-          ? 300.r
+          ? 280.r
           : isSmallTablet
-              ? 300.r
-              : 300.r;
+              ? 280.r
+              : 280.r;
 
       return CachedNetworkSVGImage(
         icon,

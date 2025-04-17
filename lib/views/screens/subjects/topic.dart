@@ -82,7 +82,7 @@ class _SubjectTopicState extends State<SubjectTopic> {
                 : 14.h;
 
         return Scaffold(
-          backgroundColor: const Color.fromRGBO(104, 180, 255, 1),
+          backgroundColor: getBackgroundColorFromString(widget.subject.color),
           body: SafeArea(
             child: Container(
               color: backgroundColor,
@@ -99,7 +99,8 @@ class _SubjectTopicState extends State<SubjectTopic> {
                           children: [
                             Container(
                               padding: EdgeInsets.all(30.w),
-                              color: const Color.fromRGBO(104, 180, 255, 1),
+                              color: getBackgroundColorFromString(
+                                  widget.subject.color),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
@@ -173,17 +174,17 @@ class _SubjectTopicState extends State<SubjectTopic> {
                             }
                           },
                           child: topicLessonBox(
-                            lesson.lessonNumber,
-                            lesson.active,
-                            lesson.numberOfSlides > 0 &&
-                                lesson.numberOfSlides ==
-                                    lesson.numberOfSlidesDone,
-                            lesson.isFirst,
-                            lesson.isLast,
-                            lesson.name,
-                            "${lesson.numberOfSlidesDone} of ${lesson.numberOfSlides} Slides",
-                            percent,
-                          ),
+                              lesson.lessonNumber,
+                              lesson.active,
+                              lesson.numberOfSlides > 0 &&
+                                  lesson.numberOfSlides ==
+                                      lesson.numberOfSlidesDone,
+                              lesson.isFirst,
+                              lesson.isLast,
+                              lesson.name,
+                              "${lesson.numberOfSlidesDone} of ${lesson.numberOfSlides} Slides",
+                              percent,
+                              widget.subject.color),
                         );
                       }),
 
@@ -208,7 +209,8 @@ class _SubjectTopicState extends State<SubjectTopic> {
                             children: [
                               Container(
                                 padding: EdgeInsets.all(30.w),
-                                color: const Color.fromRGBO(104, 180, 255, 1),
+                                color: getBackgroundColorFromString(
+                                    widget.subject.color),
                                 child: Column(
                                   crossAxisAlignment:
                                       CrossAxisAlignment.stretch,
@@ -248,8 +250,8 @@ class _SubjectTopicState extends State<SubjectTopic> {
                                             backgroundColor:
                                                 const Color.fromRGBO(
                                                     234, 237, 244, 1),
-                                            progressColor: const Color.fromRGBO(
-                                                73, 161, 249, 1),
+                                            progressColor: getColorFromString(
+                                                widget.subject.color),
                                           ),
                                         )
                                       ],

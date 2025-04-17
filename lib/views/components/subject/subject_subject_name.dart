@@ -15,14 +15,29 @@ Widget subjectSubjectName(String name) {
               ? 38.sp
               : 40.sp;
 
-      return Text(
-        name,
-        style: GoogleFonts.inter(
-          fontSize: fontSize,
-          fontWeight: FontWeight.w900,
-          height: 1,
-          color: Colors.white,
-        ),
+      double rightSpace = isTablet
+          ? 200.w
+          : isSmallTablet
+              ? 200.w
+              : 200.w;
+
+      return Row(
+        children: [
+          Expanded(
+            child: Text(
+              name,
+              style: GoogleFonts.inter(
+                fontSize: fontSize,
+                fontWeight: FontWeight.w900,
+                height: 1,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          SizedBox(
+            width: rightSpace,
+          ),
+        ],
       );
     },
   );

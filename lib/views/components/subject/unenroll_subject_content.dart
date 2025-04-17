@@ -145,7 +145,7 @@ class _UnenrollSubjectContentState extends State<UnenrollSubjectContent> {
                           borderRadius: BorderRadius.circular(20.r),
                           child: Container(
                             height: height,
-                            color: const Color.fromRGBO(35, 131, 226, 1),
+                            color: const Color.fromRGBO(236, 239, 245, 1),
                             padding: EdgeInsets.symmetric(horizontal: 50.w),
                             child: Center(
                               child: Text(
@@ -153,7 +153,7 @@ class _UnenrollSubjectContentState extends State<UnenrollSubjectContent> {
                                 style: GoogleFonts.inter(
                                   fontSize: fontSize,
                                   fontWeight: FontWeight.w700,
-                                  color: Colors.white,
+                                  color: const Color.fromRGBO(52, 74, 106, 1),
                                 ),
                               ),
                             ),
@@ -180,7 +180,7 @@ class _UnenrollSubjectContentState extends State<UnenrollSubjectContent> {
                               borderRadius: BorderRadius.circular(20.r),
                               child: Container(
                                 height: height,
-                                color: const Color.fromRGBO(236, 239, 245, 1),
+                                color: const Color.fromRGBO(255, 99, 135, 1),
                                 padding: EdgeInsets.symmetric(horizontal: 50.w),
                                 child: Center(
                                   child: Text(
@@ -188,8 +188,7 @@ class _UnenrollSubjectContentState extends State<UnenrollSubjectContent> {
                                     style: GoogleFonts.inter(
                                       fontSize: fontSize,
                                       fontWeight: FontWeight.w700,
-                                      color:
-                                          const Color.fromRGBO(52, 74, 106, 1),
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ),

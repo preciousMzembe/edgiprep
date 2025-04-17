@@ -16,10 +16,10 @@ Widget subjectSubjectDescription(String text) {
               : 20.sp;
 
       double rightSpace = isTablet
-          ? 180.w
+          ? 200.w
           : isSmallTablet
-              ? 170.w
-              : 160.w;
+              ? 200.w
+              : 200.w;
 
       return Row(
         children: [

@@ -14,6 +14,7 @@ Widget subjectTopicBox(
   String topic,
   String lessons,
   double percent,
+  String subjectColor,
 ) {
   return LayoutBuilder(
     builder: (context, constraints) {
@@ -103,7 +104,7 @@ Widget subjectTopicBox(
                           color: premium
                               ? const Color.fromRGBO(249, 175, 73, 1)
                               : active
-                                  ? homeLightBackgroundColor
+                                  ? getFadeColorFromString(subjectColor)
                                   : const Color.fromRGBO(214, 220, 233, 1),
                           child: Center(
                             child: Icon(
@@ -114,7 +115,7 @@ Widget subjectTopicBox(
                               color: premium
                                   ? Colors.white
                                   : active
-                                      ? const Color.fromRGBO(73, 161, 249, 1)
+                                      ? getColorFromString(subjectColor)
                                       : const Color.fromRGBO(141, 154, 176, 1),
                             ),
                           ),
@@ -213,9 +214,8 @@ Widget subjectTopicBox(
                                               backgroundColor:
                                                   const Color.fromRGBO(
                                                       234, 237, 244, 1),
-                                              progressColor:
-                                                  const Color.fromRGBO(
-                                                      73, 161, 249, 1),
+                                              progressColor: getColorFromString(
+                                                  subjectColor),
                                             ),
                                           )
                                         ],

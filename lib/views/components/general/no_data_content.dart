@@ -2,13 +2,18 @@ import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 Widget noDataContent(String title, String subtitle) {
   return LayoutBuilder(builder: (context, constraints) {
     bool isTablet = DeviceUtils.isTablet(context);
     bool isSmallTablet = DeviceUtils.isSmallTablet(context);
+
+    double imageHeight = isTablet
+        ? 180.h
+        : isSmallTablet
+            ? 190.h
+            : 200.h;
 
     double titleSize = isTablet
         ? 34.sp
@@ -29,10 +34,9 @@ Widget noDataContent(String title, String subtitle) {
         SizedBox(
           height: 50.h,
         ),
-        SvgPicture.asset(
-          'icons/sad_close.svg',
-          height: 155.r,
-          width: 155.r,
+        Image.asset(
+          "images/sad.png",
+          height: imageHeight,
         ),
         SizedBox(
           height: 30.h,

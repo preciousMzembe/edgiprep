@@ -1482,6 +1482,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  wave_loading_indicator:
+    dependency: "direct main"
+    description:
+      name: wave_loading_indicator
+      sha256: ac698921196ab3995e9c457fee3b6cf8d2ee881e301ea3e82d25a8b87ea603cb
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.7"
   web:
     dependency: transitive
     description:

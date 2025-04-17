@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:wave_loading_indicator/wave_progress.dart';
 
 class SubjectSettings extends StatelessWidget {
   final UserSubject subject;
@@ -110,13 +111,62 @@ class SubjectSettings extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               // chart
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(pieHeight),
-                                child: Container(
-                                  height: pieHeight,
-                                  width: pieHeight,
-                                  color: const Color.fromRGBO(248, 248, 250, 1),
-                                ),
+                              Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius:
+                                        BorderRadius.circular(pieHeight),
+                                    child: Container(
+                                      height: pieHeight,
+                                      width: pieHeight,
+                                      color: const Color.fromRGBO(
+                                          248, 248, 250, 1),
+                                    ),
+                                  ),
+                                  // pie
+                                  WaveProgress(
+                                    borderSize: 0,
+                                    size: pieHeight,
+                                    borderColor: Colors.transparent,
+                                    foregroundWaveColor:
+                                        getColorFromString(subject.color),
+                                    backgroundWaveColor:
+                                        getFadeColorFromString(subject.color),
+                                    progress: 20,
+                                    innerPadding: 0,
+                                  ),
+
+                                  // info
+                                  SizedBox(
+                                    height: pieHeight,
+                                    width: pieHeight,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "20%",
+                                          style: GoogleFonts.inter(
+                                            fontSize: statTitleFontSize,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                        Text(
+                                          "Subject Progress",
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.inter(
+                                            fontSize: statSubtitleFontSize,
+                                            fontWeight: FontWeight.w400,
+                                            color: const Color.fromRGBO(
+                                                117, 117, 133, 1),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
 
                               // calculations
