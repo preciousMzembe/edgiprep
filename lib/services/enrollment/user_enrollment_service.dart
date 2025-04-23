@@ -4,6 +4,7 @@ import 'package:edgiprep/db/config/config.dart';
 import 'package:edgiprep/db/exam/user_exam.dart';
 import 'package:edgiprep/db/lesson/lesson.dart';
 import 'package:edgiprep/db/past%20paper/past_paper.dart';
+import 'package:edgiprep/db/subject/subject_progress.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/db/topic/topic.dart';
 import 'package:edgiprep/db/unit/unit.dart';
@@ -200,6 +201,9 @@ class UserEnrollmentService extends GetxService {
 
           doneFetchingUserSubjects.value = !doneFetchingUserSubjects.value;
 
+          // delete all subject progresses
+          await subjectProgressBox.clear();
+
           // get units
           getUserServerUnitsAndTopics();
           // get subjects papers
@@ -209,6 +213,61 @@ class UserEnrollmentService extends GetxService {
     } on DioException {
       debugPrint(
           "Error fetching exam subjects ------------------------- user enrollment service");
+    }
+  }
+
+  Future<void> getUserServerSubjectProgress(String subjectEnrollmentId) async {
+    try {
+      String? token = await authService.getToken();
+
+      // get progress
+
+      final response = await _dio.get(
+        '${config?.apiUrl}/Subject/Mobile/SubjectStatistic?EnrollementId=$subjectEnrollmentId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      SubjectProgress subjectProgress = SubjectProgress(
+        subjectEnrollmentId: subjectEnrollmentId,
+        completedLessons: 0,
+        totalLessons: 0,
+        totalTopics: 0,
+        coveredTopics: 0,
+        completedQuizzes: 0,
+        completedMocks: 0,
+        completedPPs: 0,
+      );
+
+      if (response.statusCode == 200) {
+        subjectProgress = SubjectProgress(
+          subjectEnrollmentId: subjectEnrollmentId,
+          completedLessons: response.data['completedLessons'],
+          totalLessons: response.data['totalLessons'],
+          totalTopics: response.data['totalTopics'],
+          coveredTopics: response.data['coveredTopics'],
+          completedQuizzes: response.data['completedQuizzes'],
+          completedMocks: response.data['completedMocks'],
+          completedPPs: response.data['completedPPs'],
+        );
+      }
+
+      // delete old progress
+      final keysToDelete = subjectProgressBox.keys.where((key) {
+        final subjectProgressData = subjectProgressBox.get(key);
+        return subjectProgressData?.subjectEnrollmentId == subjectEnrollmentId;
+      }).toList();
+
+      await subjectProgressBox.deleteAll(keysToDelete);
+
+      // add new progress
+      await subjectProgressBox.add(subjectProgress);
+    } on DioException {
+      debugPrint(
+          "Error fetching topic lessons ------------------------- user enrollment service");
     }
   }
 
@@ -551,6 +610,44 @@ class UserEnrollmentService extends GetxService {
     }
 
     return subjects;
+  }
+
+  Future<SubjectProgress> getSubjetProgress(String subjectEnrollmentId) async {
+    SubjectProgress progress = subjectProgressBox.values.firstWhere(
+        (subjectProgress) =>
+            subjectProgress.subjectEnrollmentId == subjectEnrollmentId,
+        orElse: () => SubjectProgress(
+              subjectEnrollmentId: "",
+              completedLessons: 0,
+              totalLessons: 0,
+              totalTopics: 0,
+              coveredTopics: 0,
+              completedQuizzes: 0,
+              completedMocks: 0,
+              completedPPs: 0,
+            ));
+
+    if (progress.subjectEnrollmentId == "") {
+      await getUserServerSubjectProgress(subjectEnrollmentId);
+
+      progress = subjectProgressBox.values.firstWhere(
+          (subjectProgress) =>
+              subjectProgress.subjectEnrollmentId == subjectEnrollmentId,
+          orElse: () => SubjectProgress(
+                subjectEnrollmentId: "",
+                completedLessons: 0,
+                totalLessons: 0,
+                totalTopics: 0,
+                coveredTopics: 0,
+                completedQuizzes: 0,
+                completedMocks: 0,
+                completedPPs: 0,
+              ));
+    } else {
+      getUserServerSubjectProgress(subjectEnrollmentId);
+    }
+
+    return progress;
   }
 
   Future<bool> checkSubjectEnrollment(String subjectId) async {

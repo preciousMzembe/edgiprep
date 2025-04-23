@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:edgiprep/db/exam/user_exam.dart';
 import 'package:edgiprep/db/lesson/lesson.dart';
 import 'package:edgiprep/db/past%20paper/past_paper.dart';
+import 'package:edgiprep/db/subject/subject_progress.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/db/topic/topic.dart';
 import 'package:edgiprep/db/unit/unit.dart';
@@ -115,6 +116,10 @@ class UserEnrollmentController extends GetxController {
     subjects.shuffle(Random());
 
     subjects.refresh();
+  }
+
+  Future<SubjectProgress> getSubjectProgress(String subjectEnrollmentId) async {
+    return await userEnrollmentService.getSubjetProgress(subjectEnrollmentId);
   }
 
   // Fetch units and topics

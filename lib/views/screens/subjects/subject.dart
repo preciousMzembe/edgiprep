@@ -37,7 +37,7 @@ class _SubjectState extends State<Subject> {
 
   List<String> navOptions = [
     "Learn",
-    "Settings",
+    "My Progress",
   ];
 
   String selectedTitle = "Learn";
@@ -65,6 +65,9 @@ class _SubjectState extends State<Subject> {
 
     // Fetch units and topics
     _fetchUnitsAndTopics();
+
+    // get subject progress
+    userEnrollmentController.getSubjectProgress(widget.subject.enrollmentId);
   }
 
   @override

@@ -12,3 +12,4 @@ late Box pastPaperBox;
 late Box configBox;
 late Box reminderBox;
 late Box notificationBox;
+late Box subjectProgressBox;

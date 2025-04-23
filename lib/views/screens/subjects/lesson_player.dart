@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:edgiprep/controllers/lesson/lesson_controller.dart';
@@ -246,6 +247,8 @@ class _LessonPlayerState extends State<LessonPlayer> {
                             );
                             lessonController.goToNextSlide();
                           }
+                        } else {
+                          return;
                         }
                       }
                       // finish

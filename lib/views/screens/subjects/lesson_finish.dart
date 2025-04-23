@@ -15,6 +15,39 @@ class LessonFinish extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LessonController lessonController = Get.find<LessonController>();
+
+    String title = "";
+    int questions = 0;
+    String scores = "0.0";
+    String status = "No Questions";
+    int xps = 0;
+
+    Map<String, dynamic> getStudentGrade(
+        int correctAnswers, int totalQuestions) {
+      if (totalQuestions == 0) {
+        return {"percentage": 0.0, "grade": "No Questions"};
+      }
+
+      double percentage = (correctAnswers / totalQuestions) * 100;
+      String grade;
+
+      if (percentage >= 90) {
+        grade = "Excellent";
+      } else if (percentage >= 75) {
+        grade = "Very Good";
+      } else if (percentage >= 60) {
+        grade = "Good";
+      } else if (percentage >= 40) {
+        grade = "Average";
+      } else if (percentage >= 20) {
+        grade = "Poor";
+      } else {
+        grade = "Very Poor";
+      }
+
+      return {"percentage": percentage.toStringAsFixed(1), "grade": grade};
+    }
+
     return LayoutBuilder(
       builder: (context, constraints) {
         bool isTablet = DeviceUtils.isTablet(context);
@@ -43,6 +76,14 @@ class LessonFinish extends StatelessWidget {
             : isSmallTablet
                 ? 18.sp
                 : 20.sp;
+
+        questions = lessonController.getNumberOfQuestions();
+        xps = lessonController.getCorrectAnswers();
+
+        Map grades = getStudentGrade(xps, questions);
+
+        scores = grades['percentage'];
+        status = grades['grade'];
 
         return PopScope(
           canPop: false,
@@ -155,7 +196,7 @@ class LessonFinish extends StatelessWidget {
                                       ),
                                       lessonCompletedDetail(
                                         "Total Questions",
-                                        "${lessonController.getNumberOfQuestions()} Questions",
+                                        "$questions Questions",
                                         true,
                                       ),
                                       SizedBox(
@@ -163,7 +204,7 @@ class LessonFinish extends StatelessWidget {
                                       ),
                                       lessonCompletedDetail(
                                         "Scores",
-                                        "80%",
+                                        "$scores %",
                                         true,
                                       ),
                                       SizedBox(
@@ -171,7 +212,7 @@ class LessonFinish extends StatelessWidget {
                                       ),
                                       lessonCompletedDetail(
                                         "Achievent Status",
-                                        "Excellent",
+                                        status,
                                         true,
                                       ),
                                       SizedBox(
@@ -179,7 +220,7 @@ class LessonFinish extends StatelessWidget {
                                       ),
                                       lessonCompletedDetail(
                                         "Xps Earned",
-                                        "${lessonController.getCorrectAnswers()} XPs",
+                                        "$xps XPs",
                                         false,
                                       ),
 
