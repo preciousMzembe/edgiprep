@@ -409,7 +409,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                         percent,
                                         studyProgressHeight,
                                         subject.title,
-                                        subject.description,
+                                        subject.currentTopic,
                                         "${subject.numberOfTopicsDone} of ${subject.numberOfTopics} Topics",
                                       ),
                                     ),

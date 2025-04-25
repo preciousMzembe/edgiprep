@@ -32,7 +32,7 @@ class AppraisalFinish extends StatelessWidget {
     Map<String, dynamic> getStudentGrade(
         int correctAnswers, int totalQuestions) {
       if (totalQuestions == 0) {
-        return {"percentage": 0.0, "grade": "No Questions"};
+        return {"percentage": "0.0", "grade": "No Questions"};
       }
 
       double percentage = (correctAnswers / totalQuestions) * 100;

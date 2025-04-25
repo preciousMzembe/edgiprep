@@ -16,7 +16,6 @@ class LessonFinish extends StatelessWidget {
   Widget build(BuildContext context) {
     LessonController lessonController = Get.find<LessonController>();
 
-    String title = "";
     int questions = 0;
     String scores = "0.0";
     String status = "No Questions";
@@ -25,7 +24,7 @@ class LessonFinish extends StatelessWidget {
     Map<String, dynamic> getStudentGrade(
         int correctAnswers, int totalQuestions) {
       if (totalQuestions == 0) {
-        return {"percentage": 0.0, "grade": "No Questions"};
+        return {"percentage": "0.0", "grade": "No Questions"};
       }
 
       double percentage = (correctAnswers / totalQuestions) * 100;

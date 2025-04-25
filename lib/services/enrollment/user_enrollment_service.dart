@@ -190,7 +190,7 @@ class UserEnrollmentService extends GetxService {
                 examId: enrollment['subject']['examId'],
                 numberOfTopics: enrollment['totalTopics'],
                 numberOfTopicsDone: enrollment['doneTopics'],
-                currentTopic: "Introduction To Human Biology",
+                currentTopic: enrollment['currentTopic'],
                 enrollmentId: enrollment['id'],
               ),
             );

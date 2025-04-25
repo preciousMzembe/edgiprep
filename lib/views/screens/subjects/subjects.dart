@@ -69,7 +69,7 @@ class Subjects extends StatelessWidget {
                             getFadeColorFromString(subject.color),
                             subject.image,
                             subject.title,
-                            subject.description,
+                            subject.currentTopic,
                             "${subject.numberOfTopicsDone} of ${subject.numberOfTopics} Topics",
                             percent,
                           ),
