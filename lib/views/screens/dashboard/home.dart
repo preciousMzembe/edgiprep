@@ -31,10 +31,12 @@ import 'package:get/get.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class Home extends StatefulWidget {
+  final Function refreshData;
   final Function toSubjects;
   final Function(UserSubject) toSubject;
   const Home({
     super.key,
+    required this.refreshData,
     required this.toSubjects,
     required this.toSubject,
   });
@@ -46,11 +48,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   ConfigService configService = Get.find<ConfigService>();
   AuthController authController = Get.find<AuthController>();
-
-  EnrollmentService enrollmentService = Get.find<EnrollmentService>();
-
-  UserEnrollmentService userEnrollmentService =
-      Get.find<UserEnrollmentService>();
 
   UserEnrollmentController userEnrollmentController =
       Get.find<UserEnrollmentController>();
@@ -204,9 +201,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 color: backgroundColor,
                 child: LiquidPullToRefresh(
                   onRefresh: () async {
-                    await userEnrollmentService.getUserServerExams();
-
-                    enrollmentService.restartFetch();
+                    await widget.refreshData();
                   },
                   color: homeLightBackgroundColor,
                   backgroundColor: Colors.white,

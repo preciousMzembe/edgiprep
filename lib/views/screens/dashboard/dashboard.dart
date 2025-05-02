@@ -1,5 +1,7 @@
 import 'package:edgiprep/controllers/navigation/navController.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
+import 'package:edgiprep/services/enrollment/enrollment_service.dart';
+import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/views/components/dashboard/navigation_bar.dart';
 import 'package:edgiprep/views/screens/appraisal/appraisal.dart';
@@ -22,26 +24,37 @@ class _DashboardState extends State<Dashboard> {
   NavController navController = Get.find<NavController>();
   final PageController pageController = PageController(initialPage: 0);
 
+  EnrollmentService enrollmentService = Get.find<EnrollmentService>();
+
+  UserEnrollmentService userEnrollmentService =
+      Get.find<UserEnrollmentService>();
+
+  void changeNavIndex(int index) {
+    navController.changePageIndex(index);
+    pageController.jumpToPage(index);
+  }
+
+  void goToSubjects() {
+    navController.changePageIndex(1);
+    pageController.jumpToPage(1);
+  }
+
+  void openSubject(UserSubject subject) {
+    Get.to(
+      () => Subject(
+        subject: subject,
+      ),
+    );
+  }
+
+  void refreshData() async {
+    await userEnrollmentService.getUserServerExams();
+
+    enrollmentService.restartFetch();
+  }
+
   @override
   Widget build(BuildContext context) {
-    void changeNavIndex(int index) {
-      navController.changePageIndex(index);
-      pageController.jumpToPage(index);
-    }
-
-    void goToSubjects() {
-      navController.changePageIndex(1);
-      pageController.jumpToPage(1);
-    }
-
-    void openSubject(UserSubject subject) {
-      Get.to(
-        () => Subject(
-          subject: subject,
-        ),
-      );
-    }
-
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, others) {
@@ -62,11 +75,16 @@ class _DashboardState extends State<Dashboard> {
           },
           children: [
             Home(
+              refreshData: refreshData,
               toSubjects: goToSubjects,
               toSubject: openSubject,
             ),
-            const Subjects(),
-            const Appraisal(),
+            Subjects(
+              refreshData: refreshData,
+            ),
+            Appraisal(
+              refreshData: refreshData,
+            ),
             const Settings(),
           ],
         ),

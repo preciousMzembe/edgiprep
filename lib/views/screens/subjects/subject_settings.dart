@@ -54,6 +54,9 @@ class _SubjectSettingsState extends State<SubjectSettings> {
     EnrollmentSettingsController enrollmentSettingsController =
         Get.find<EnrollmentSettingsController>();
 
+    UserEnrollmentController userEnrollmentController =
+        Get.find<UserEnrollmentController>();
+
     return LayoutBuilder(
       builder: (context, constraints) {
         bool isTablet = DeviceUtils.isTablet(context);
@@ -320,50 +323,57 @@ class _SubjectSettingsState extends State<SubjectSettings> {
                           ],
                         ),
                       ),
+                      if (userEnrollmentController.subjects.length > 1)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            SizedBox(
+                              height: 60.h,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 40.w),
+                              child: Text(
+                                "Unenrolling the subject will remove all subject progress. You will start over if you enroll the subject again.",
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.inter(
+                                  fontSize: titleFontSize,
+                                  fontWeight: FontWeight.w400,
+                                  color: const Color.fromRGBO(92, 101, 120, 1),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 30.h,
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                await showDialog(
+                                  context: context,
+                                  barrierDismissible: true,
+                                  builder: (BuildContext context) {
+                                    return UnenrollSubjectContent(
+                                        subject: widget.subject);
+                                  },
+                                );
 
-                      SizedBox(
-                        height: 60.h,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 40.w),
-                        child: Text(
-                          "Unenrolling the subject will remove all subject progress. You will start over if you enroll the subject again.",
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.inter(
-                            fontSize: titleFontSize,
-                            fontWeight: FontWeight.w400,
-                            color: const Color.fromRGBO(92, 101, 120, 1),
-                          ),
+                                bool enrolled =
+                                    await enrollmentSettingsController
+                                        .checkSubjectEnrollment(
+                                            widget.subject.id);
+
+                                if (!enrolled) {
+                                  Navigator.pop(context);
+                                }
+                              },
+                              child: normalButton(
+                                const Color.fromRGBO(255, 99, 135, 1),
+                                Colors.white,
+                                "Unenroll",
+                                20,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      SizedBox(
-                        height: 30.h,
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          await showDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (BuildContext context) {
-                              return UnenrollSubjectContent(
-                                  subject: widget.subject);
-                            },
-                          );
-
-                          bool enrolled = await enrollmentSettingsController
-                              .checkSubjectEnrollment(widget.subject.id);
-
-                          if (!enrolled) {
-                            Navigator.pop(context);
-                          }
-                        },
-                        child: normalButton(
-                          const Color.fromRGBO(255, 99, 135, 1),
-                          Colors.white,
-                          "Unenroll",
-                          20,
-                        ),
-                      ),
                     ],
                   ),
 

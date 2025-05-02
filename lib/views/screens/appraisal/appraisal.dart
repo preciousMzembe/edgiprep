@@ -10,9 +10,11 @@ import 'package:edgiprep/views/screens/appraisal/quizzes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class Appraisal extends StatelessWidget {
-  const Appraisal({super.key});
+  final Function refreshData;
+  const Appraisal({super.key, required this.refreshData});
 
   @override
   Widget build(BuildContext context) {
@@ -64,84 +66,94 @@ class Appraisal extends StatelessWidget {
           body: SafeArea(
             child: Container(
               color: backgroundColor,
-              child: ListView(
-                children: [
-                  SizedBox(
-                    height: 30.h,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        subjectsTitle("Test"),
-                        SizedBox(
-                          height: 15.h,
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: appraisalFadeText(
-                                "Unlock Your Knowledge Potential! Achieve Your Best Results",
-                              ),
-                            ),
-                            SizedBox(
-                              width: 200.w,
-                            ),
-                          ],
-                        )
-                      ],
+              child: LiquidPullToRefresh(
+                onRefresh: () async {
+                  await refreshData();
+                },
+                color: homeLightBackgroundColor,
+                backgroundColor: Colors.white,
+                animSpeedFactor: 2,
+                showChildOpacityTransition: false,
+                child: ListView(
+                  children: [
+                    SizedBox(
+                      height: 30.h,
                     ),
-                  ),
-
-                  // test option
-                  SizedBox(
-                    height: 50.h,
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: horizontalPadding),
-                    child: GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 30.r,
-                        mainAxisSpacing: 30.r,
-                        childAspectRatio: 2 / 2.5,
-                      ),
-                      itemCount: appraisalTypes.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            if (appraisalTypes[index]['name'] == "Mock Exams") {
-                              Get.to(() => const MockExams());
-                            } else if (appraisalTypes[index]['name'] ==
-                                "Past Papers") {
-                              Get.to(() => const PastPapers());
-                            } else if (appraisalTypes[index]['name'] ==
-                                "Quizzes") {
-                              Get.to(() => const Quizzes());
-                            } else {
-                              Get.to(() => const Challenges());
-                            }
-                          },
-                          child: appraisalTestOption(
-                            context,
-                            appraisalTypes[index]['icon'],
-                            appraisalTypes[index]['name'],
-                            appraisalTypes[index]['description'],
-                            appraisalTypes[index]['backgroundColor'],
-                            appraisalTypes[index]['iconBackgroundColor'],
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          subjectsTitle("Test"),
+                          SizedBox(
+                            height: 15.h,
                           ),
-                        );
-                      },
+                          Row(
+                            children: [
+                              Expanded(
+                                child: appraisalFadeText(
+                                  "Unlock Your Knowledge Potential! Achieve Your Best Results",
+                                ),
+                              ),
+                              SizedBox(
+                                width: 200.w,
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 100.h,
-                  ),
-                ],
+
+                    // test option
+                    SizedBox(
+                      height: 50.h,
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: horizontalPadding),
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 30.r,
+                          mainAxisSpacing: 30.r,
+                          childAspectRatio: 2 / 2.5,
+                        ),
+                        itemCount: appraisalTypes.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              if (appraisalTypes[index]['name'] ==
+                                  "Mock Exams") {
+                                Get.to(() => const MockExams());
+                              } else if (appraisalTypes[index]['name'] ==
+                                  "Past Papers") {
+                                Get.to(() => const PastPapers());
+                              } else if (appraisalTypes[index]['name'] ==
+                                  "Quizzes") {
+                                Get.to(() => const Quizzes());
+                              } else {
+                                Get.to(() => const Challenges());
+                              }
+                            },
+                            child: appraisalTestOption(
+                              context,
+                              appraisalTypes[index]['icon'],
+                              appraisalTypes[index]['name'],
+                              appraisalTypes[index]['description'],
+                              appraisalTypes[index]['backgroundColor'],
+                              appraisalTypes[index]['iconBackgroundColor'],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 100.h,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

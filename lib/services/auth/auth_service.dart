@@ -63,6 +63,7 @@ class AuthService extends GetxService {
         }
       } on DioException catch (e) {
         debugPrint("Problem fetching learner data ------------ auth service");
+        // print(e.response?.statusCode);
 
         if (e.response != null) {
           if (e.response?.statusCode == 404) {
