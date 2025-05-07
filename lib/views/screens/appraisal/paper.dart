@@ -36,7 +36,7 @@ class _PaperState extends State<Paper> {
         showCloseLesson(
           context,
           "Paper",
-          "You're about to leave the paper. Your progress will not be saved, but XPs earned will not be lost.",
+          "You're about to leave the Paper. Your progress will be saved, and XPs earned will not be lost.",
         );
       },
       child: Scaffold(
@@ -62,7 +62,7 @@ class _PaperState extends State<Paper> {
                           showCloseLesson(
                             context,
                             "Paper",
-                            "You're about to leave the paper. Your progress will not be saved, but XPs earned will not be lost.",
+                            "You're about to leave the Paper. Your progress will be saved, and XPs earned will not be lost.",
                           );
                         },
                         child: lessonCloseButton(),
@@ -112,6 +112,7 @@ class _PaperState extends State<Paper> {
                 Expanded(
                   child: Obx(
                     () => PageView.builder(
+                      // scrollDirection: Axis.vertical,
                       physics: const NeverScrollableScrollPhysics(),
                       controller: paperController.pageController,
                       onPageChanged: (index) {
@@ -145,6 +146,9 @@ class _PaperState extends State<Paper> {
                   padding: EdgeInsets.symmetric(horizontal: 30.w),
                   child: GestureDetector(
                     onTap: () async {
+                      // check if is last slide
+                      bool isLast = paperController.isLastSlide();
+
                       if (paperController
                               .visibleSlides[
                                   paperController.currentSlideIndex.value]
@@ -171,9 +175,6 @@ class _PaperState extends State<Paper> {
                             "") {
                           // mark
                           paperController.markSlideDone();
-
-                          // check if is last slide
-                          bool isLast = paperController.isLastSlide();
 
                           if (paperController
                                   .visibleSlides[
@@ -202,13 +203,6 @@ class _PaperState extends State<Paper> {
                               ),
                             );
                             paperController.goToNextSlide();
-
-                            // finish
-                            if (isLast) {
-                              Get.to(() => const AppraisalFinish(
-                                    type: "paper",
-                                  ));
-                            }
                           } else {
                             // wrong
                             await showModalBottomSheet(
@@ -227,15 +221,14 @@ class _PaperState extends State<Paper> {
                               ),
                             );
                             paperController.goToNextSlide();
-
-                            // finish
-                            if (isLast) {
-                              Get.to(() => const AppraisalFinish(
-                                    type: "paper",
-                                  ));
-                            }
                           }
                         }
+                      }
+                      // finish
+                      if (isLast) {
+                        Get.to(() => const AppraisalFinish(
+                              type: "paper",
+                            ));
                       }
                     },
                     child: Obx(() {

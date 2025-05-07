@@ -122,8 +122,9 @@ class _SubjectTopicState extends State<SubjectTopic> {
                                     height: 8.h,
                                   ),
                                   topicLessonsNumber(
-                                      "${widget.topic.numberOfLessonsDone} of ${widget.topic.numberOfLessons}  lessons",
-                                      const Color.fromRGBO(236, 239, 245, 1)),
+                                    "${widget.topic.numberOfLessonsDone} of ${widget.topic.numberOfLessons}  lessons",
+                                    const Color.fromRGBO(236, 239, 245, 1),
+                                  ),
                                   SizedBox(
                                     height: 20.h,
                                   ),

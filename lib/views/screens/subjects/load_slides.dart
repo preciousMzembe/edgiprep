@@ -12,13 +12,11 @@ import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/subjects/subjects_back.dart';
 import 'package:edgiprep/views/screens/appraisal/challenge.dart';
-import 'package:edgiprep/views/screens/appraisal/mock.dart';
 import 'package:edgiprep/views/screens/appraisal/paper.dart';
 import 'package:edgiprep/views/screens/appraisal/quiz.dart';
 import 'package:edgiprep/views/screens/subjects/lesson_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
@@ -31,6 +29,7 @@ class LoadSlides extends StatefulWidget {
   final UserSubject? subject;
   final Topic? topic;
   final Lesson? lesson;
+  final String? testId;
   const LoadSlides({
     super.key,
     required this.title,
@@ -39,6 +38,7 @@ class LoadSlides extends StatefulWidget {
     this.subject,
     this.topic,
     this.lesson,
+    this.testId,
   });
 
   @override
@@ -108,10 +108,18 @@ class _LoadSlidesState extends State<LoadSlides> {
       }
     } else if (widget.type == "paper") {
       // Paper ---------------------------------------------------------------
+      bool dataError = await paperController.restartQuiz(
+        widget.testId!,
+      );
+
       setState(() {
-        error = true;
+        error = dataError;
       });
-      // Get.to(() => const Paper());
+
+      if (!dataError) {
+        // start paper
+        Get.to(() => const Paper());
+      }
     } else if (widget.type == "mock") {
       // Mock ---------------------------------------------------------------
       setState(() {

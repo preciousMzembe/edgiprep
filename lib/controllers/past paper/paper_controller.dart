@@ -1,16 +1,24 @@
+import 'dart:math';
+
+import 'package:edgiprep/models/lesson/question_answer_model.dart';
 import 'package:edgiprep/models/lesson/slide_model.dart';
+import 'package:edgiprep/models/lesson/lesson_slide_question_model.dart';
+import 'package:edgiprep/services/mock/paper_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PaperController extends GetxController {
+  PaperService paperService = PaperService();
+
+  RxString testDoneID = "".obs;
+  RxList<String> answerIds = <String>[].obs;
+
   final RxList<SlideModel> slides = <SlideModel>[].obs;
 
   // Tracks the list of slides and the currently visible slide index
   RxInt currentSlideIndex = 0.obs;
   RxList<SlideModel> visibleSlides = <SlideModel>[].obs;
   PageController pageController = PageController();
-
-  void getData() {}
 
   // Load the first slide initially
   void loadInitialSlide() {
@@ -24,6 +32,12 @@ class PaperController extends GetxController {
     if (!visibleSlides[currentSlideIndex.value].slideDone) {
       // if not, mark done and add next slide
       visibleSlides[currentSlideIndex.value].slideDone = true;
+
+      // save question progress
+      if (visibleSlides[currentSlideIndex.value].question != null) {
+        answerIds
+            .add(visibleSlides[currentSlideIndex.value].question!.userAnswerId);
+      }
 
       // add slide
       if (currentSlideIndex.value < slides.length - 1) {
@@ -65,13 +79,97 @@ class PaperController extends GetxController {
     }
   }
 
-  // Reset lesson progress (optional)
-  void restartLesson() {
+  // Get quiz data
+  Future<bool> getData(String testId) async {
+    bool error = false;
+
+    Map data = await paperService.fetchData(testId);
+
+    if (data['error']) {
+      error = true;
+    } else {
+      Map paperData = data['paperData'];
+
+      testDoneID.value = paperData['id'];
+
+      if (paperData['testInstances'] == null ||
+          paperData['testInstances'].isEmpty) {
+        return true;
+      }
+
+      List<SlideModel> tempSlides = [];
+
+      for (var instances in paperData['testInstances']) {
+        String explanation = instances['question']['explaination'] != null
+            ? instances['question']['explaination']
+                .replaceAll(RegExp(r'<[^>]*>'), '')
+                .trim()
+            : "";
+
+        SlideModel tempSlide = SlideModel(
+          question: LessonSlideQuestionModel(
+            id: instances['question']['id'],
+            questionText: instances['question']['name'],
+            questionImage: instances['question']['imageUrL'],
+            options: [],
+            explanation: explanation,
+            explanationImage: instances['explainationImage'],
+          ),
+          order: instances['order'],
+        );
+
+        List<QuestionAnswerModel> tempOptions = [];
+
+        for (var option in instances['question']['answers']) {
+          // Remove HTML tags using a regular expression
+          String cleanContent =
+              option['text'].replaceAll(RegExp(r'<[^>]*>'), '').trim();
+
+          if (cleanContent.isNotEmpty) {
+            tempOptions.add(
+              QuestionAnswerModel(
+                id: option['id'],
+                text: option['text'],
+                qusetionId: option['questionId'],
+                isCorrect: option['isCorrect'],
+              ),
+            );
+          }
+
+          if (option['isCorrect']) {
+            tempSlide.question!.setCorrectUserAnswer(option['id']);
+          }
+        }
+
+        // shuffle options before adding
+        tempOptions.shuffle(Random());
+
+        tempSlide.question!.setOptions(tempOptions);
+
+        tempSlides.add(tempSlide);
+      }
+
+      // Sort slides by order
+      tempSlides.sort((a, b) => a.order!.compareTo(b.order!));
+
+      slides.value = tempSlides;
+    }
+
+    return error;
+  }
+
+  // Reset quiz
+  Future<bool> restartQuiz(String testId) async {
+    bool error = await getData(testId);
+
     currentSlideIndex.value = 0;
     visibleSlides.clear();
     resetSlides();
     loadInitialSlide();
     resetPageController();
+    answerIds.value = [];
+
+    return error;
   }
 
   void resetSlides() {
@@ -131,5 +229,10 @@ class PaperController extends GetxController {
       }
     }
     return number;
+  }
+
+  // Save test score
+  Future<void> saveTestScore(double score) async {
+    paperService.saveTestScore(testDoneID.value, score, answerIds);
   }
 }

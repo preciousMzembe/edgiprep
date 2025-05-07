@@ -3,7 +3,8 @@ import 'package:edgiprep/db/boxes.dart';
 import 'package:edgiprep/db/config/config.dart';
 import 'package:edgiprep/db/exam/user_exam.dart';
 import 'package:edgiprep/db/lesson/lesson.dart';
-import 'package:edgiprep/db/past%20paper/past_paper.dart';
+import 'package:edgiprep/db/mock_exam/mock_exam.dart';
+import 'package:edgiprep/db/past_paper/past_paper.dart';
 import 'package:edgiprep/db/subject/subject_progress.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/db/topic/topic.dart';
@@ -157,57 +158,63 @@ class UserEnrollmentService extends GetxService {
         var userExam =
             userExamBox.values.firstWhere((exam) => exam.selected == true);
 
-        final response = await _dio.get(
-          '${config?.apiUrl}/Subject/Mobile/EnrolledSubjects?EnrollementId=${userExam.enrollmentId}',
-          options: Options(
-            headers: {
-              'Authorization': 'Bearer $token',
-            },
-          ),
-        );
+        if (userExam.enrollmentId.isNotEmpty) {
+          final response = await _dio.get(
+            '${config?.apiUrl}/Subject/Mobile/EnrolledSubjects?EnrollementId=${userExam.enrollmentId}',
+            options: Options(
+              headers: {
+                'Authorization': 'Bearer $token',
+              },
+            ),
+          );
 
-        if (response.statusCode == 200) {
-          List<UserSubject> subjects = [];
+          if (response.statusCode == 200) {
+            List<UserSubject> subjects = [];
 
-          for (var enrollment in response.data) {
-            subjects.add(
-              UserSubject(
-                id: enrollment['subject']['id'],
-                title: enrollment['subject']['name'],
-                description: enrollment['subject']['description'],
-                color: enrollment['subject']['theme'] != null &&
-                        enrollment['subject']['theme'].isNotEmpty
-                    ? enrollment['subject']['theme']
-                    : "#2383E2",
-                icon: enrollment['subject']['icon'] != null &&
-                        enrollment['subject']['icon'].isNotEmpty
-                    ? "${config?.subjectsImageUrl}/${enrollment['subject']['icon']}"
-                    : "${config?.subjectsImageUrl}/subject.svg",
-                image: enrollment['subject']['image'] != null &&
-                        enrollment['subject']['image'].isNotEmpty
-                    ? "${config?.subjectsImageUrl}/${enrollment['subject']['image']}"
-                    : "${config?.subjectsImageUrl}/subject.png",
-                examId: enrollment['subject']['examId'],
-                numberOfTopics: enrollment['totalTopics'],
-                numberOfTopicsDone: enrollment['doneTopics'],
-                currentTopic: enrollment['currentTopic'],
-                enrollmentId: enrollment['id'],
-              ),
-            );
+            for (var enrollment in response.data) {
+              subjects.add(
+                UserSubject(
+                  id: enrollment['subject']['id'],
+                  title: enrollment['subject']['name'],
+                  description: enrollment['subject']['description'],
+                  color: enrollment['subject']['theme'] != null &&
+                          enrollment['subject']['theme'].isNotEmpty
+                      ? enrollment['subject']['theme']
+                      : "#2383E2",
+                  icon: enrollment['subject']['icon'] != null &&
+                          enrollment['subject']['icon'].isNotEmpty
+                      ? "${config?.subjectsImageUrl}/${enrollment['subject']['icon']}"
+                      : "${config?.subjectsImageUrl}/subject.svg",
+                  image: enrollment['subject']['image'] != null &&
+                          enrollment['subject']['image'].isNotEmpty
+                      ? "${config?.subjectsImageUrl}/${enrollment['subject']['image']}"
+                      : "${config?.subjectsImageUrl}/subject.png",
+                  examId: enrollment['subject']['examId'],
+                  numberOfTopics: enrollment['totalTopics'],
+                  numberOfTopicsDone: enrollment['doneTopics'],
+                  currentTopic: enrollment['currentTopic'],
+                  enrollmentId: enrollment['id'],
+                ),
+              );
+
+              getSubjectServerPapers(enrollment['subject']['id']);
+              getSubjectServerMocks(enrollment['subject']['id']);
+            }
+
+            await userSubjectBox.clear();
+            await userSubjectBox.addAll(subjects);
+
+            doneFetchingUserSubjects.value = !doneFetchingUserSubjects.value;
+
+            // delete all subject progresses
+            await subjectProgressBox.clear();
+
+            // get units
+            getUserServerUnitsAndTopics();
           }
-
+        } else {
           await userSubjectBox.clear();
-          await userSubjectBox.addAll(subjects);
-
           doneFetchingUserSubjects.value = !doneFetchingUserSubjects.value;
-
-          // delete all subject progresses
-          await subjectProgressBox.clear();
-
-          // get units
-          getUserServerUnitsAndTopics();
-          // get subjects papers
-          getUserServerPapers();
         }
       }
     } on DioException {
@@ -414,62 +421,99 @@ class UserEnrollmentService extends GetxService {
   }
 
   // server user papers
-  Future<void> getUserServerPapers() async {
-    // get all papers using user subjects
+  Future<void> getSubjectServerPapers(String subjectId) async {
+    try {
+      String? token = await authService.getToken();
 
-    List<PastPaper> papers = [
-      PastPaper(
-        id: "1",
-        name: "2024 MANEB",
-        duration: "2.30 hrs",
-        questions: 30,
-        subjectId: "1",
-        score: 70,
-      ),
-      PastPaper(
-        id: "2",
-        name: "2022 Mock",
-        duration: "2.20 hrs",
-        questions: 25,
-        subjectId: "1",
-        score: 90,
-      ),
-      PastPaper(
-        id: "3",
-        name: "2023 MANEB",
-        duration: "2.30 hrs",
-        questions: 40,
-        subjectId: "1",
-        score: 40,
-      ),
-      PastPaper(
-        id: "4",
-        name: "2024 Chaminadi Mock",
-        duration: "2.30 hrs",
-        questions: 30,
-        subjectId: "2",
-        score: 60,
-      ),
-      PastPaper(
-        id: "5",
-        name: "2022 MANEB",
-        duration: "2.20 hrs",
-        questions: 25,
-        subjectId: "2",
-        score: 30,
-      ),
-      PastPaper(
-        id: "6",
-        name: "2023 MANEB",
-        duration: "2.30 hrs",
-        questions: 40,
-        subjectId: "2",
-        score: 80,
-      ),
-    ];
+      List<PastPaper> subjectPapers = [];
 
-    await pastPaperBox.clear();
-    await pastPaperBox.addAll(papers);
+      // get lessons
+
+      final response = await _dio.get(
+        '${config?.apiUrl}/Test/Mobile/GetPastPapers?SubjectId=$subjectId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        for (var paper in response.data) {
+          subjectPapers.add(
+            PastPaper(
+              id: paper['id'],
+              name: paper['name'],
+              questions: paper['questions'],
+              subjectId: subjectId,
+              duration: paper['duration'] ?? 60,
+            ),
+          );
+        }
+      }
+
+      // delete old topic lessons
+      final keysToDelete = pastPaperBox.keys.where((key) {
+        final paper = pastPaperBox.get(key);
+        return paper?.subjectId == subjectId;
+      }).toList();
+
+      await pastPaperBox.deleteAll(keysToDelete);
+
+      // add new subject papers
+      await pastPaperBox.addAll(subjectPapers);
+    } on DioException {
+      debugPrint(
+          "Error fetching subject papers ------------------------- user enrollment service");
+    }
+  }
+
+  // server user papers
+  Future<void> getSubjectServerMocks(String subjectId) async {
+    try {
+      String? token = await authService.getToken();
+
+      List<MockExam> subjectMocks = [];
+
+      // get mocks
+
+      final response = await _dio.get(
+        '${config?.apiUrl}/Test/Mobile/GetMocks?SubjectId=$subjectId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        for (var mock in response.data) {
+          subjectMocks.add(
+            MockExam(
+              id: mock['id'],
+              name: mock['name'],
+              questions: mock['questions'],
+              subjectId: subjectId,
+              duration: mock['duration'] ?? 60,
+            ),
+          );
+        }
+      }
+
+      // delete old topic mocks
+      final keysToDelete = mockExamBox.keys.where((key) {
+        final mock = mockExamBox.get(key);
+        return mock?.subjectId == subjectId;
+      }).toList();
+
+      await mockExamBox.deleteAll(keysToDelete);
+
+      // add new subject mocks
+      await mockExamBox.addAll(subjectMocks);
+    } on DioException {
+      debugPrint(
+          "Error fetching subject mocks ------------------------- user enrollment service");
+    }
   }
 
   // Unenroll exam
@@ -749,7 +793,49 @@ class UserEnrollmentService extends GetxService {
         .cast<PastPaper>()
         .toList();
 
+    if (pastPapers.isEmpty) {
+      await getSubjectServerPapers(subjectId);
+      pastPapers = pastPaperBox.values
+          .where((paper) => paper is PastPaper && paper.subjectId == subjectId)
+          .cast<PastPaper>()
+          .toList();
+    } else {
+      getSubjectServerPapers(subjectId);
+    }
+
     return pastPapers;
+  }
+
+  int getSubjectPapersCount(String subjectId) {
+    return pastPaperBox.values
+        .where((paper) => paper is PastPaper && paper.subjectId == subjectId)
+        .length;
+  }
+
+  // Public getter for all mocks of a subject
+  Future<List<MockExam>> getSubjectMocks(String subjectId) async {
+    List<MockExam> mockExams = mockExamBox.values
+        .where((mock) => mock is MockExam && mock.subjectId == subjectId)
+        .cast<MockExam>()
+        .toList();
+
+    if (mockExams.isEmpty) {
+      await getSubjectServerMocks(subjectId);
+      mockExams = mockExamBox.values
+          .where((mock) => mock is MockExam && mock.subjectId == subjectId)
+          .cast<MockExam>()
+          .toList();
+    } else {
+      getSubjectServerMocks(subjectId);
+    }
+
+    return mockExams;
+  }
+
+  int getSubjectMocksCount(String subjectId) {
+    return mockExamBox.values
+        .where((mock) => mock is MockExam && mock.subjectId == subjectId)
+        .length;
   }
 
   Future<List<UserSubject>> getSubjectsByExamId(String examEnrollmetId) async {

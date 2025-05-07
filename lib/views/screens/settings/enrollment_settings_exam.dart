@@ -98,7 +98,10 @@ class _EnrollmentSettingsExamState extends State<EnrollmentSettingsExam> {
                     SizedBox(
                       height: 2.h,
                     ),
-                    appraisalTestSubtitle("Manage exam enrollment"),
+                    appraisalTestSubtitle(
+                      "Manage exam enrollment",
+                      const Color.fromRGBO(92, 101, 120, 1),
+                    ),
                   ],
                 ),
               ),

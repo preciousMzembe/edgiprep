@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-Widget mockSubject(Color background, String icon, String name, int questions) {
+Widget mockSubject(Color background, String icon, String name, int mocks) {
   return LayoutBuilder(
     builder: (context, constraints) {
       bool isTablet = DeviceUtils.isTablet(context);
@@ -121,7 +121,7 @@ Widget mockSubject(Color background, String icon, String name, int questions) {
 
                               // questions
                               Text(
-                                "$questions Questions",
+                                "$mocks Mock${mocks != 1 ? 's' : ''}",
                                 style: GoogleFonts.inter(
                                   fontSize: questionsSize,
                                   fontWeight: FontWeight.w700,

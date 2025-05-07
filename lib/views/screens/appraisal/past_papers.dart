@@ -66,7 +66,9 @@ class PastPapers extends StatelessWidget {
                               const Color.fromRGBO(35, 131, 226, 1),
                             ),
                             appraisalTestSubtitle(
-                                "Review and practice with actual exam papers."),
+                              "Review and practice with actual exam papers.",
+                              const Color.fromRGBO(92, 101, 120, 1),
+                            ),
                           ],
                         ),
                       ),
@@ -81,7 +83,6 @@ class PastPapers extends StatelessWidget {
                 ),
               ),
 
-              // body
               // body
               Expanded(
                 child: Padding(
@@ -103,6 +104,9 @@ class PastPapers extends StatelessWidget {
                       ),
 
                       ...userEnrollmentController.subjects.map((subject) {
+                        int papersCount = userEnrollmentController
+                            .getSubjectPapersCount(subject.id);
+
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
@@ -116,7 +120,7 @@ class PastPapers extends StatelessWidget {
                                 getColorFromString(subject.color),
                                 subject.icon,
                                 subject.title,
-                                "3/3",
+                                papersCount,
                               ),
                             ),
                             SizedBox(

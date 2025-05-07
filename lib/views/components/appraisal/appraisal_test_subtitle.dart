@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-Widget appraisalTestSubtitle(String text) {
+Widget appraisalTestSubtitle(String text, Color color) {
   return LayoutBuilder(
     builder: (context, constraints) {
       bool isTablet = DeviceUtils.isTablet(context);
@@ -20,7 +20,7 @@ Widget appraisalTestSubtitle(String text) {
         style: GoogleFonts.inter(
           fontSize: textSize,
           fontWeight: FontWeight.w400,
-          color: const Color.fromRGBO(92, 101, 120, 1),
+          color: color,
         ),
       );
     },

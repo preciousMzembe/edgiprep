@@ -1,5 +1,5 @@
 import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.dart';
-import 'package:edgiprep/db/past_paper/past_paper.dart';
+import 'package:edgiprep/db/mock_exam/mock_exam.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/views/components/appraisal/appraisal_heading.dart';
@@ -16,28 +16,28 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
-class SubjectPapers extends StatefulWidget {
+class SubjectMocks extends StatefulWidget {
   final UserSubject subject;
-  const SubjectPapers({super.key, required this.subject});
+  const SubjectMocks({super.key, required this.subject});
 
   @override
-  State<SubjectPapers> createState() => _SubjectPapersState();
+  State<SubjectMocks> createState() => _SubjectMocksState();
 }
 
-class _SubjectPapersState extends State<SubjectPapers> {
+class _SubjectMocksState extends State<SubjectMocks> {
   UserEnrollmentController userEnrollmentController =
       Get.find<UserEnrollmentController>();
-  List<PastPaper> papers = [];
+  List<MockExam> mocks = [];
 
   bool loading = true;
 
   Future<void> _fetchSubjectPapers() async {
     var data =
-        await userEnrollmentController.fetchSubjectPapers(widget.subject.id);
+        await userEnrollmentController.fetchSubjectMocks(widget.subject.id);
 
     if (mounted) {
       setState(() {
-        papers = data;
+        mocks = data;
         loading = false;
       });
     }
@@ -91,8 +91,9 @@ class _SubjectPapersState extends State<SubjectPapers> {
                           Colors.white,
                         ),
                         appraisalTestSubtitle(
-                            "Dive into ${widget.subject.title} past papers",
-                            const Color.fromRGBO(236, 239, 245, 1)),
+                          "Dive into ${widget.subject.title} mock exams",
+                          const Color.fromRGBO(236, 239, 245, 1),
+                        ),
                         SizedBox(
                           height: 40.h,
                         )
@@ -111,24 +112,24 @@ class _SubjectPapersState extends State<SubjectPapers> {
                       children: [
                         // Loading
                         if (loading)
-                          loadingContent("Getting Subject Papers",
-                              "Be patient while we get past papers ready for you."),
+                          loadingContent("Getting Mock Exams",
+                              "Be patient while we get mock exams ready for you."),
 
-                        if (!loading && papers.isEmpty)
-                          noDataContent("No Papers Found",
-                              "There were no papers found for this subject. Please check back later."),
-                        if (papers.isNotEmpty)
+                        if (!loading && mocks.isEmpty)
+                          noDataContent("No mocks Found",
+                              "There were no mocks found for this subject. Please check back later."),
+                        if (mocks.isNotEmpty)
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 15.w),
-                                child: appraisalHeading("Past Papers"),
+                                child: appraisalHeading("Mock Exams"),
                               ),
                               SizedBox(
                                 height: 25.h,
                               ),
-                              ...papers.map((paper) {
+                              ...mocks.map((mock) {
                                 return Column(
                                   crossAxisAlignment:
                                       CrossAxisAlignment.stretch,
@@ -137,18 +138,18 @@ class _SubjectPapersState extends State<SubjectPapers> {
                                       onTap: () {
                                         Get.to(
                                           () => LoadSlides(
-                                            title: "Preparing Your Paper",
+                                            title: "Preparing Your Mock Exam",
                                             message:
-                                                "Get ready to dive in! Your paper is loading, and we're setting everything up for you.",
-                                            type: "paper",
-                                            testId: paper.id,
+                                                "Get ready to dive in! Your mock is loading, and we're setting everything up for you.",
+                                            type: "mock",
+                                            testId: mock.id,
                                           ),
                                         );
                                       },
                                       child: subjectPaper(
-                                        paper.name,
-                                        paper.questions,
-                                        paper.duration,
+                                        mock.name,
+                                        mock.questions,
+                                        mock.duration,
                                       ),
                                     ),
                                     SizedBox(
@@ -203,10 +204,12 @@ class _SubjectPapersState extends State<SubjectPapers> {
                             widget.subject.title,
                             Colors.white,
                           ),
-                          appraisalTestSubtitle(
-                            "Dive into ${widget.subject.title} past papers",
-                            const Color.fromRGBO(236, 239, 245, 1),
+                          SizedBox(
+                            height: 8.h,
                           ),
+                          appraisalTestSubtitle(
+                              "Dive into ${widget.subject.title} mock exams",
+                              const Color.fromRGBO(236, 239, 245, 1)),
                           SizedBox(
                             height: 40.h,
                           )
@@ -225,7 +228,7 @@ class _SubjectPapersState extends State<SubjectPapers> {
                           children: [
                             Expanded(
                               child: NormalInput(
-                                label: "Search Pasr Paper",
+                                label: "Search Past Paper",
                                 type: TextInputType.text,
                                 isPassword: false,
                                 icon: FontAwesomeIcons.magnifyingGlass,

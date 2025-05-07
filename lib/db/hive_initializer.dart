@@ -5,8 +5,9 @@ import 'package:edgiprep/db/config/config.dart';
 import 'package:edgiprep/db/exam/exam.dart';
 import 'package:edgiprep/db/exam/user_exam.dart';
 import 'package:edgiprep/db/lesson/lesson.dart';
+import 'package:edgiprep/db/mock_exam/mock_exam.dart';
 import 'package:edgiprep/db/notification/notification.dart';
-import 'package:edgiprep/db/past%20paper/past_paper.dart';
+import 'package:edgiprep/db/past_paper/past_paper.dart';
 import 'package:edgiprep/db/reminder/reminder.dart';
 import 'package:edgiprep/db/subject/subject.dart';
 import 'package:edgiprep/db/subject/subject_progress.dart';
@@ -87,6 +88,7 @@ class HiveInitializer {
     Hive.registerAdapter(TopicAdapter());
     Hive.registerAdapter(LessonAdapter());
     Hive.registerAdapter(PastPaperAdapter());
+    Hive.registerAdapter(MockExamAdapter());
     Hive.registerAdapter(ReminderAdapter());
     Hive.registerAdapter(UserNotificationAdapter());
     Hive.registerAdapter(SubjectProgressAdapter());
@@ -102,6 +104,7 @@ class HiveInitializer {
       topicBox = await openSecureBox<Topic>('topicBox');
       lessonBox = await openSecureBox<Lesson>('lessonBox');
       pastPaperBox = await openSecureBox<PastPaper>('pastPaperBox');
+      mockExamBox = await openSecureBox<MockExam>('mockExamBox');
       configBox = await openSecureBox<Config>('configBox');
       reminderBox = await openSecureBox<Reminder>('reminderBox');
       notificationBox =
@@ -109,13 +112,13 @@ class HiveInitializer {
       subjectProgressBox =
           await openSecureBox<SubjectProgress>('subjectProgressBox');
     } catch (e) {
-      debugPrint("Error openig Hive boxes: $e");
+      debugPrint("Error opening Hive boxes: $e");
     }
   }
 
   Future<void> rebuildHiveOnFirstOpen() async {
     final prefs = await SharedPreferences.getInstance();
-    const currentVersion = 5; // Update this for each new version
+    const currentVersion = 8; // Update this for each new version
     final lastVersion = prefs.getInt('last_version') ?? 0;
 
     if (lastVersion < currentVersion) {
@@ -130,6 +133,7 @@ class HiveInitializer {
         'topicBox',
         'lessonBox',
         'pastPaperBox',
+        'mockExamBox',
         'configBox',
         'reminderBox',
         'notificationBox',

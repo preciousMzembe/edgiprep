@@ -6,7 +6,7 @@ import 'package:edgiprep/views/components/appraisal/appraisal_image.dart';
 import 'package:edgiprep/views/components/appraisal/appraisal_test_subtitle.dart';
 import 'package:edgiprep/views/components/appraisal/appraisal_test_title.dart';
 import 'package:edgiprep/views/components/appraisal/mock_subject.dart';
-import 'package:edgiprep/views/screens/subjects/load_slides.dart';
+import 'package:edgiprep/views/screens/appraisal/subject_mocks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -21,7 +21,6 @@ class MockExams extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(117, 80, 245, 1),
-      // backgroundColor: backgroundColor,
       body: SafeArea(
         child: Container(
           color: backgroundColor,
@@ -66,7 +65,9 @@ class MockExams extends StatelessWidget {
                               const Color.fromRGBO(117, 80, 245, 1),
                             ),
                             appraisalTestSubtitle(
-                                "Simulate real exam conditions to assess your readiness."),
+                              "Simulate real exam conditions to assess your readiness.",
+                              const Color.fromRGBO(92, 101, 120, 1),
+                            ),
                           ],
                         ),
                       ),
@@ -102,23 +103,20 @@ class MockExams extends StatelessWidget {
                           height: 20.h,
                         ),
                         ...userEnrollmentController.subjects.map((subject) {
+                          int mocksCount = userEnrollmentController
+                              .getSubjectMocksCount(subject.id);
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  Get.to(() => const LoadSlides(
-                                        title: "Preparing Your Exam...",
-                                        message:
-                                            "Get ready to dive in! Your exam is loading, and we're setting everything up for you.",
-                                        type: "mock",
-                                      ));
+                                  Get.to(() => SubjectMocks(subject: subject));
                                 },
                                 child: mockSubject(
                                   getColorFromString(subject.color),
                                   subject.icon,
                                   subject.title,
-                                  20,
+                                  mocksCount,
                                 ),
                               ),
                               SizedBox(

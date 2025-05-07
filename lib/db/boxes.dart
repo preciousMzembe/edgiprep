@@ -9,6 +9,7 @@ late Box unitBox;
 late Box topicBox;
 late Box lessonBox;
 late Box pastPaperBox;
+late Box mockExamBox;
 late Box configBox;
 late Box reminderBox;
 late Box notificationBox;

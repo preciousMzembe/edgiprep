@@ -66,7 +66,9 @@ class Challenges extends StatelessWidget {
                               const Color.fromRGBO(85, 194, 103, 1),
                             ),
                             appraisalTestSubtitle(
-                                "Push yourself with unlimited challenges to sharpen your skills."),
+                              "Push yourself with unlimited challenges to sharpen your skills.",
+                              const Color.fromRGBO(92, 101, 120, 1),
+                            ),
                           ],
                         ),
                       ),

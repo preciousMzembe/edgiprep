@@ -147,6 +147,14 @@ void showCloseLesson(
                               Get.to(() => const AppraisalFinish(
                                     type: "challenge",
                                   ));
+                            } else if (title == "Paper") {
+                              Get.to(() => const AppraisalFinish(
+                                    type: "paper",
+                                  ));
+                            } else if (title == "Mock") {
+                              Get.to(() => const AppraisalFinish(
+                                    type: "mock",
+                                  ));
                             } else {
                               Get.back();
                               Get.back();

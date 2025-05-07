@@ -92,10 +92,17 @@ class AppraisalFinish extends StatelessWidget {
           quizController.saveQuizScore(xps);
         } else if (type == "paper") {
           questions = paperController.getNumberOfQuestions();
-          scores = "80";
-          status = "Good";
           xps = paperController.getCorrectAnswers();
           title = "Paper";
+
+          Map grades = getStudentGrade(xps, questions);
+          scores = grades['percentage'];
+          status = grades['grade'];
+
+          // save paper score
+          paperController.saveTestScore(
+              double.parse(scores));
+          // paperController.saveQuestionScores();
         } else if (type == "mock") {
           questions = mockController.getNumberOfQuestions();
           scores = "80";

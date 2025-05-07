@@ -1,47 +1,44 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'past_paper.dart';
+part of 'mock_exam.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class PastPaperAdapter extends TypeAdapter<PastPaper> {
+class MockExamAdapter extends TypeAdapter<MockExam> {
   @override
-  final int typeId = 6;
+  final int typeId = 13;
 
   @override
-  PastPaper read(BinaryReader reader) {
+  MockExam read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return PastPaper(
+    return MockExam(
       id: fields[0] as String,
       name: fields[1] as String,
-      duration: fields[2] as String,
-      questions: fields[3] as int,
-      subjectId: fields[4] as String,
-      score: fields[5] as double,
+      questions: fields[2] as int,
+      subjectId: fields[3] as String,
+      duration: fields[4] as int,
     );
   }
 
   @override
-  void write(BinaryWriter writer, PastPaper obj) {
+  void write(BinaryWriter writer, MockExam obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.duration)
-      ..writeByte(3)
       ..write(obj.questions)
-      ..writeByte(4)
+      ..writeByte(3)
       ..write(obj.subjectId)
-      ..writeByte(5)
-      ..write(obj.score);
+      ..writeByte(4)
+      ..write(obj.duration);
   }
 
   @override
@@ -50,7 +47,7 @@ class PastPaperAdapter extends TypeAdapter<PastPaper> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PastPaperAdapter &&
+      other is MockExamAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

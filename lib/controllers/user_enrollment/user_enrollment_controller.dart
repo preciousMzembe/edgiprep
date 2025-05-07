@@ -2,7 +2,8 @@ import 'dart:math';
 
 import 'package:edgiprep/db/exam/user_exam.dart';
 import 'package:edgiprep/db/lesson/lesson.dart';
-import 'package:edgiprep/db/past%20paper/past_paper.dart';
+import 'package:edgiprep/db/mock_exam/mock_exam.dart';
+import 'package:edgiprep/db/past_paper/past_paper.dart';
 import 'package:edgiprep/db/subject/subject_progress.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/db/topic/topic.dart';
@@ -139,6 +140,19 @@ class UserEnrollmentController extends GetxController {
   // Fetch Subject Papers
   Future<List<PastPaper>> fetchSubjectPapers(String subjectId) async {
     return await userEnrollmentService.getSubjectPapers(subjectId);
+  }
+
+  int getSubjectPapersCount(String subjectId) {
+    return userEnrollmentService.getSubjectPapersCount(subjectId);
+  }
+
+  // Fetch Subject Papers
+  Future<List<MockExam>> fetchSubjectMocks(String subjectId) async {
+    return await userEnrollmentService.getSubjectMocks(subjectId);
+  }
+
+  int getSubjectMocksCount(String subjectId) {
+    return userEnrollmentService.getSubjectMocksCount(subjectId);
   }
 
   // Fetch exam subjects

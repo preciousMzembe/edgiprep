@@ -91,7 +91,9 @@ class _QuizzesState extends State<Quizzes> {
                               const Color.fromRGBO(35, 131, 226, 1),
                             ),
                             appraisalTestSubtitle(
-                                "Test your knowledge on key subject and track your improvement."),
+                              "Test your knowledge on key subject and track your improvement.",
+                              const Color.fromRGBO(92, 101, 120, 1),
+                            ),
                           ],
                         ),
                       ),
@@ -134,7 +136,7 @@ class _QuizzesState extends State<Quizzes> {
                               GestureDetector(
                                 onTap: () {
                                   Get.to(() => LoadSlides(
-                                        title: "Preparing Your Quiz...",
+                                        title: "Preparing Your Quiz",
                                         message:
                                             "Get ready to dive in! Your quiz is loading, and we're setting everything up for you.",
                                         type: "quiz",
