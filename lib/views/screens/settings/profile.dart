@@ -906,7 +906,7 @@ class _ProfileState extends State<Profile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // icon
-                        profileDetailIcon(FontAwesomeIcons.solidEnvelope),
+                        profileDetailIcon(FontAwesomeIcons.phone),
 
                         // details
                         SizedBox(

@@ -4,8 +4,6 @@ import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.
 import 'package:edgiprep/db/config/config.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/services/configuration/configuration_service.dart';
-import 'package:edgiprep/services/enrollment/enrollment_service.dart';
-import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/general/normal_input.dart';

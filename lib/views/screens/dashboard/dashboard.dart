@@ -2,7 +2,6 @@ import 'package:edgiprep/controllers/navigation/navController.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/services/enrollment/enrollment_service.dart';
 import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
-import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/views/components/dashboard/navigation_bar.dart';
 import 'package:edgiprep/views/screens/appraisal/appraisal.dart';
 import 'package:edgiprep/views/screens/dashboard/home.dart';
