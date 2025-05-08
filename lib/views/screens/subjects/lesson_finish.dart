@@ -24,7 +24,7 @@ class LessonFinish extends StatelessWidget {
     Map<String, dynamic> getStudentGrade(
         int correctAnswers, int totalQuestions) {
       if (totalQuestions == 0) {
-        return {"percentage": "0.0", "grade": "No Questions"};
+        return {"percentage": "100.0", "grade": "Excellent"};
       }
 
       double percentage = (correctAnswers / totalQuestions) * 100;
@@ -47,10 +47,25 @@ class LessonFinish extends StatelessWidget {
       return {"percentage": percentage.toStringAsFixed(1), "grade": grade};
     }
 
+    Map images = {
+      "Very Poor": "images/vpoor.png",
+      "Poor": "images/poor.png",
+      "Average": "images/average.png",
+      "Good": "images/good.png",
+      "Very Good": "images/vgood.png",
+      "Excellent": "images/excellent.png",
+    };
+
     return LayoutBuilder(
       builder: (context, constraints) {
         bool isTablet = DeviceUtils.isTablet(context);
         bool isSmallTablet = DeviceUtils.isSmallTablet(context);
+
+        double imageHeight = isTablet
+            ? 36.sp
+            : isSmallTablet
+                ? 38.sp
+                : 230.h;
 
         double titleSize = isTablet
             ? 36.sp
@@ -177,9 +192,32 @@ class LessonFinish extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
                                     children: [
-                                      // image
-                                      Image.asset("images/lesson_completed.png",
-                                          fit: BoxFit.contain),
+                                      // images
+                                      Stack(
+                                        children: [
+                                          Image.asset(
+                                              "images/lesson_completed_background.png",
+                                              fit: BoxFit.contain),
+                                          Positioned(
+                                            top: 0,
+                                            left: 0,
+                                            right: 0,
+                                            bottom: 0,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Image.asset(
+                                                  images[status],
+                                                  height: imageHeight,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
 
                                       // details
                                       SizedBox(

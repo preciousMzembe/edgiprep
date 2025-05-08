@@ -1,7 +1,7 @@
 import 'package:edgiprep/controllers/challenge/challenge_controller.dart';
 import 'package:edgiprep/controllers/lesson/lesson_controller.dart';
 import 'package:edgiprep/controllers/mock/mock_controller.dart';
-import 'package:edgiprep/controllers/past%20paper/paper_controller.dart';
+import 'package:edgiprep/controllers/past_paper/paper_controller.dart';
 import 'package:edgiprep/controllers/quiz/quiz_controller.dart';
 import 'package:edgiprep/db/config/config.dart';
 import 'package:edgiprep/db/lesson/lesson.dart';
@@ -12,6 +12,7 @@ import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/subjects/subjects_back.dart';
 import 'package:edgiprep/views/screens/appraisal/challenge.dart';
+import 'package:edgiprep/views/screens/appraisal/mock.dart';
 import 'package:edgiprep/views/screens/appraisal/paper.dart';
 import 'package:edgiprep/views/screens/appraisal/quiz.dart';
 import 'package:edgiprep/views/screens/subjects/lesson_player.dart';
@@ -30,6 +31,7 @@ class LoadSlides extends StatefulWidget {
   final Topic? topic;
   final Lesson? lesson;
   final String? testId;
+  final int? duration;
   const LoadSlides({
     super.key,
     required this.title,
@@ -39,6 +41,7 @@ class LoadSlides extends StatefulWidget {
     this.topic,
     this.lesson,
     this.testId,
+    this.duration,
   });
 
   @override
@@ -118,14 +121,24 @@ class _LoadSlidesState extends State<LoadSlides> {
 
       if (!dataError) {
         // start paper
+        paperController.duration.value = widget.duration!;
         Get.to(() => const Paper());
       }
     } else if (widget.type == "mock") {
       // Mock ---------------------------------------------------------------
+      bool dataError = await mockController.restartQuiz(
+        widget.testId!,
+      );
+
       setState(() {
-        error = true;
+        error = dataError;
       });
-      // Get.to(() => const Mock());
+
+      if (!dataError) {
+        // start mock
+        mockController.duration.value = widget.duration!;
+        Get.to(() => const Mock());
+      }
     } else if (widget.type == "challenge") {
       // Challenge -----------------------------------------------------------
       bool dataError = await challengeController.restartQuiz(

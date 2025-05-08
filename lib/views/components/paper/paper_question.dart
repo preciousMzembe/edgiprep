@@ -1,4 +1,4 @@
-import 'package:edgiprep/controllers/past%20paper/paper_controller.dart';
+import 'package:edgiprep/controllers/past_paper/paper_controller.dart';
 import 'package:edgiprep/models/lesson/lesson_slide_question_model.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/lesson/lesson_question_response.dart';

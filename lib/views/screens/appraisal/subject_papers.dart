@@ -142,6 +142,7 @@ class _SubjectPapersState extends State<SubjectPapers> {
                                                 "Get ready to dive in! Your paper is loading, and we're setting everything up for you.",
                                             type: "paper",
                                             testId: paper.id,
+                                            duration: paper.duration,
                                           ),
                                         );
                                       },

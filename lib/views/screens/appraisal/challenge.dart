@@ -83,6 +83,7 @@ class _ChallengeState extends State<Challenge> {
                           children: [
                             Obx(() {
                               return LinearPercentIndicator(
+                                padding: EdgeInsets.symmetric(horizontal: 0),
                                 width: 300.w,
                                 animation: true,
                                 animationDuration: 500,
@@ -231,6 +232,8 @@ class _ChallengeState extends State<Challenge> {
                             );
                             challengeController.goToNextSlide();
                           }
+                        } else {
+                          return;
                         }
                       }
                       // finish

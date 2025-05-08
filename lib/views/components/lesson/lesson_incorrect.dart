@@ -1,7 +1,7 @@
 import 'package:edgiprep/controllers/challenge/challenge_controller.dart';
 import 'package:edgiprep/controllers/lesson/lesson_controller.dart';
 import 'package:edgiprep/controllers/mock/mock_controller.dart';
-import 'package:edgiprep/controllers/past%20paper/paper_controller.dart';
+import 'package:edgiprep/controllers/past_paper/paper_controller.dart';
 import 'package:edgiprep/controllers/quiz/quiz_controller.dart';
 import 'package:edgiprep/models/lesson/question_answer_model.dart';
 import 'package:edgiprep/utils/device_utils.dart';

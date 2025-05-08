@@ -1,6 +1,6 @@
 import 'package:edgiprep/controllers/challenge/challenge_controller.dart';
 import 'package:edgiprep/controllers/mock/mock_controller.dart';
-import 'package:edgiprep/controllers/past%20paper/paper_controller.dart';
+import 'package:edgiprep/controllers/past_paper/paper_controller.dart';
 import 'package:edgiprep/controllers/quiz/quiz_controller.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
@@ -55,10 +55,25 @@ class AppraisalFinish extends StatelessWidget {
       return {"percentage": percentage.toStringAsFixed(1), "grade": grade};
     }
 
+    Map images = {
+      "Very Poor": "images/vpoor.png",
+      "Poor": "images/poor.png",
+      "Average": "images/average.png",
+      "Good": "images/good.png",
+      "Very Good": "images/vgood.png",
+      "Excellent": "images/excellent.png",
+    };
+
     return LayoutBuilder(
       builder: (context, constraints) {
         bool isTablet = DeviceUtils.isTablet(context);
         bool isSmallTablet = DeviceUtils.isSmallTablet(context);
+
+        double imageHeight = isTablet
+            ? 36.sp
+            : isSmallTablet
+                ? 38.sp
+                : 230.h;
 
         double titleSize = isTablet
             ? 36.sp
@@ -100,15 +115,18 @@ class AppraisalFinish extends StatelessWidget {
           status = grades['grade'];
 
           // save paper score
-          paperController.saveTestScore(
-              double.parse(scores));
-          // paperController.saveQuestionScores();
+          paperController.saveTestScore(double.parse(scores));
         } else if (type == "mock") {
           questions = mockController.getNumberOfQuestions();
-          scores = "80";
-          status = "Good";
           xps = mockController.getCorrectAnswers();
-          title = "Exam";
+          title = "Mock";
+
+          Map grades = getStudentGrade(xps, questions);
+          scores = grades['percentage'];
+          status = grades['grade'];
+
+          // save mock score
+          mockController.saveTestScore(double.parse(scores));
         } else if (type == "challenge") {
           questions = challengeController.getNumberOfQuestions();
           xps = challengeController.getCorrectAnswers();
@@ -216,16 +234,36 @@ class AppraisalFinish extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
                                     children: [
-                                      // image
-                                      Image.asset("images/lesson_completed.png",
-                                          fit: BoxFit.contain),
+                                      // images
+                                      Stack(
+                                        children: [
+                                          Image.asset(
+                                              "images/lesson_completed_background.png",
+                                              fit: BoxFit.contain),
+                                          Positioned(
+                                            top: 0,
+                                            left: 0,
+                                            right: 0,
+                                            bottom: 0,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Image.asset(
+                                                  images[status],
+                                                  height: imageHeight,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
 
                                       // details
                                       SizedBox(
                                         height: 40.h,
-                                      ),
-                                      SizedBox(
-                                        height: 20.h,
                                       ),
                                       lessonCompletedDetail(
                                         "Total Questions",

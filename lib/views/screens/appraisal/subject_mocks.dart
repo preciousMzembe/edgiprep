@@ -143,6 +143,7 @@ class _SubjectMocksState extends State<SubjectMocks> {
                                                 "Get ready to dive in! Your mock is loading, and we're setting everything up for you.",
                                             type: "mock",
                                             testId: mock.id,
+                                            duration: mock.duration,
                                           ),
                                         );
                                       },

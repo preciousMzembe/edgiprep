@@ -446,13 +446,13 @@ class UserEnrollmentService extends GetxService {
               name: paper['name'],
               questions: paper['questions'],
               subjectId: subjectId,
-              duration: paper['duration'] ?? 60,
+              duration: paper['duration'],
             ),
           );
         }
       }
 
-      // delete old topic lessons
+      // delete old subject papers
       final keysToDelete = pastPaperBox.keys.where((key) {
         final paper = pastPaperBox.get(key);
         return paper?.subjectId == subjectId;
@@ -494,13 +494,13 @@ class UserEnrollmentService extends GetxService {
               name: mock['name'],
               questions: mock['questions'],
               subjectId: subjectId,
-              duration: mock['duration'] ?? 60,
+              duration: mock['duration'],
             ),
           );
         }
       }
 
-      // delete old topic mocks
+      // delete old subject mocks
       final keysToDelete = mockExamBox.keys.where((key) {
         final mock = mockExamBox.get(key);
         return mock?.subjectId == subjectId;

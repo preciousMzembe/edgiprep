@@ -96,6 +96,7 @@ class _LessonPlayerState extends State<LessonPlayer> {
                           children: [
                             Obx(() {
                               return LinearPercentIndicator(
+                                padding: EdgeInsets.symmetric(horizontal: 0),
                                 width: 300.w,
                                 animation: true,
                                 animationDuration: 500,

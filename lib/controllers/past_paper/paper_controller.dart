@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:edgiprep/models/lesson/question_answer_model.dart';
 import 'package:edgiprep/models/lesson/slide_model.dart';
 import 'package:edgiprep/models/lesson/lesson_slide_question_model.dart';
-import 'package:edgiprep/services/mock/paper_service.dart';
+import 'package:edgiprep/services/paper/paper_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,6 +12,7 @@ class PaperController extends GetxController {
 
   RxString testDoneID = "".obs;
   RxList<String> answerIds = <String>[].obs;
+  RxInt duration = 0.obs;
 
   final RxList<SlideModel> slides = <SlideModel>[].obs;
 
@@ -233,6 +234,8 @@ class PaperController extends GetxController {
 
   // Save test score
   Future<void> saveTestScore(double score) async {
-    paperService.saveTestScore(testDoneID.value, score, answerIds);
+    if (answerIds.isNotEmpty) {
+      paperService.saveTestScore(testDoneID.value, score, answerIds);
+    }
   }
 }

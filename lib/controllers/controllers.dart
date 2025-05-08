@@ -6,7 +6,7 @@ import 'package:edgiprep/controllers/lesson/lesson_controller.dart';
 import 'package:edgiprep/controllers/mock/mock_controller.dart';
 import 'package:edgiprep/controllers/navigation/navController.dart';
 import 'package:edgiprep/controllers/notification/notification_controller.dart';
-import 'package:edgiprep/controllers/past%20paper/paper_controller.dart';
+import 'package:edgiprep/controllers/past_paper/paper_controller.dart';
 import 'package:edgiprep/controllers/quiz/quiz_controller.dart';
 import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.dart';
 import 'package:edgiprep/services/auth/auth_service.dart';
@@ -14,7 +14,8 @@ import 'package:edgiprep/services/configuration/configuration_service.dart';
 import 'package:edgiprep/services/enrollment/enrollment_service.dart';
 import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
 import 'package:edgiprep/services/lesson/lesson_service.dart';
-import 'package:edgiprep/services/mock/paper_service.dart';
+import 'package:edgiprep/services/mock/mock_service.dart';
+import 'package:edgiprep/services/paper/paper_service.dart';
 import 'package:edgiprep/services/notification/notification_service.dart';
 import 'package:edgiprep/services/quiz/quiz_service.dart';
 import 'package:get/get.dart';
@@ -31,6 +32,7 @@ class Controllers extends Bindings {
     Get.put<LessonService>(LessonService());
     Get.put<QuizService>(QuizService());
     Get.put<PaperService>(PaperService());
+    Get.put<MockService>(MockService());
 
     // Controllers
     Get.put<NavController>(NavController());
