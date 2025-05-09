@@ -283,33 +283,16 @@ class UserEnrollmentService extends GetxService {
     if (userSubjectBox.isNotEmpty) {
       var userSubjects = userSubjectBox.values.toList();
 
-      List<Unit> units = [];
-      List<Topic> topics = [];
-
       for (UserSubject subject in userSubjects) {
-        Map<String, List> unitTopicMap =
-            await fetchSubjectUnitsAndTopics(subject.enrollmentId);
-
-        units.addAll(unitTopicMap['units']! as Iterable<Unit>);
-        topics.addAll(unitTopicMap['topics']! as Iterable<Topic>);
+        fetchSubjectUnitsAndTopics(subject.enrollmentId);
       }
-
-      await unitBox.clear();
-      await unitBox.addAll(units);
-
-      await topicBox.clear();
-      await topicBox.addAll(topics);
 
       // delete old lessons
       await lessonBox.clear();
-
-      // TODO:  get subjects papers
-      // getUserServerPapers();
     }
   }
 
-  Future<Map<String, List>> fetchSubjectUnitsAndTopics(
-      String subjectEnrollmentId) async {
+  Future<void> fetchSubjectUnitsAndTopics(String subjectEnrollmentId) async {
     try {
       String? token = await authService.getToken();
 
@@ -352,20 +335,28 @@ class UserEnrollmentService extends GetxService {
           }
         }
 
-        return {
-          "units": units,
-          "topics": topics,
-        };
+        // delete old subject units and topics
+        final unitKeysToDelete = unitBox.keys.where((key) {
+          final unit = unitBox.get(key);
+          return unit?.subjectEnrollmentId == subjectEnrollmentId;
+        }).toList();
+
+        final topicKeysToDelete = topicBox.keys.where((key) {
+          final topic = topicBox.get(key);
+          return topic?.subjectEnrollmentId == subjectEnrollmentId;
+        }).toList();
+
+        await unitBox.deleteAll(unitKeysToDelete);
+        await topicBox.deleteAll(topicKeysToDelete);
+
+        // add new subject units and topics
+        await unitBox.addAll(units);
+        await topicBox.addAll(topics);
       }
     } on DioException {
       debugPrint(
           "Error fetching subject units and topics ------------------------- user enrollment service");
     }
-
-    return {
-      "units": [],
-      "topics": [],
-    };
   }
 
   // server topic lessons
