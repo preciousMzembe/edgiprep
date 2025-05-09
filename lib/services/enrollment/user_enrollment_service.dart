@@ -197,6 +197,7 @@ class UserEnrollmentService extends GetxService {
                 ),
               );
 
+              getUserServerSubjectProgress(enrollment['id']);
               getSubjectServerPapers(enrollment['subject']['id']);
               getSubjectServerMocks(enrollment['subject']['id']);
             }
@@ -205,9 +206,6 @@ class UserEnrollmentService extends GetxService {
             await userSubjectBox.addAll(subjects);
 
             doneFetchingUserSubjects.value = !doneFetchingUserSubjects.value;
-
-            // delete all subject progresses
-            await subjectProgressBox.clear();
 
             // get units
             getUserServerUnitsAndTopics();
@@ -274,7 +272,7 @@ class UserEnrollmentService extends GetxService {
       await subjectProgressBox.add(subjectProgress);
     } on DioException {
       debugPrint(
-          "Error fetching topic lessons ------------------------- user enrollment service");
+          "Error fetching subject progress ------------------------- user enrollment service");
     }
   }
 
@@ -286,9 +284,6 @@ class UserEnrollmentService extends GetxService {
       for (UserSubject subject in userSubjects) {
         fetchSubjectUnitsAndTopics(subject.enrollmentId);
       }
-
-      // delete old lessons
-      await lessonBox.clear();
     }
   }
 
