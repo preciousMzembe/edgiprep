@@ -15,7 +15,7 @@ import 'package:get/get.dart';
 
 class LessonController extends GetxController {
   ConfigService configService = Get.find<ConfigService>();
-  LessonService lessonService = LessonService();
+  LessonService lessonService = Get.find<LessonService>();
 
   late Config? config;
 
@@ -167,10 +167,17 @@ class LessonController extends GetxController {
               : LessonSlideQuestionModel(
                   id: slide['question']['id'] ?? "",
                   questionText: slide['question']['name'],
-                  questionImage: slide['question']['imageUrL'],
+                  questionImage: slide['question']['imageUrL'] != null &&
+                          slide['question']['imageUrL'] != ""
+                      ? "${config?.imagesUrl}/${slide['question']['imageUrL']}"
+                      : "",
                   options: [],
                   explanation: explanation,
-                  explanationImage: slide['question']['explainationImage'],
+                  explanationImage: slide['question']['explainationImage'] !=
+                              null &&
+                          slide['question']['explainationImage'] != ""
+                      ? "${config?.imagesUrl}/${slide['question']['explainationImage']}"
+                      : "",
                 ),
           slideDone: slide['isDone'] ?? false,
         );

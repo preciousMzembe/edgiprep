@@ -127,10 +127,6 @@ Widget lessonContent(SlideContentModel? slideContent) {
                     slideContent.slideMedia!.mediaLink,
                     fit: BoxFit.contain,
                   ),
-                  // child: Image.asset(
-                  //   "images/biology_lesson.jpg",
-                  //   fit: BoxFit.contain,
-                  // ),
                 ),
               ],
             ),

@@ -1,14 +1,19 @@
 import 'dart:math';
 
+import 'package:edgiprep/db/config/config.dart';
 import 'package:edgiprep/models/lesson/question_answer_model.dart';
 import 'package:edgiprep/models/lesson/slide_model.dart';
 import 'package:edgiprep/models/lesson/lesson_slide_question_model.dart';
 import 'package:edgiprep/services/challenge/challenge_service.dart';
+import 'package:edgiprep/services/configuration/configuration_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ChallengeController extends GetxController {
-  ChallengeService challengeService = ChallengeService();
+  ChallengeService challengeService = Get.find<ChallengeService>();
+  ConfigService configService = Get.find<ConfigService>();
+
+  late Config? config;
 
   RxString subjectEnrollmentID = "".obs;
   RxString quizId = "".obs;
@@ -20,6 +25,14 @@ class ChallengeController extends GetxController {
   RxInt currentSlideIndex = 0.obs;
   RxList<SlideModel> visibleSlides = <SlideModel>[].obs;
   PageController pageController = PageController();
+
+  @override
+  void onInit() async {
+    super.onInit();
+
+    config = await configService.getConfig();
+    config ??= await configService.getConfig();
+  }
 
   // Load the first slide initially
   void loadInitialSlide() {
@@ -114,10 +127,16 @@ class ChallengeController extends GetxController {
           question: LessonSlideQuestionModel(
             id: question['id'],
             questionText: question['name'],
-            questionImage: question['imageUrL'],
+            questionImage:
+                question['imageUrL'] != null && question['imageUrL'] != ""
+                    ? "${config?.imagesUrl}/${question['imageUrL']}"
+                    : "",
             options: [],
             explanation: explanation,
-            explanationImage: question['explainationImage'],
+            explanationImage: question['explainationImage'] != null &&
+                    question['explainationImage'] != ""
+                ? "${config?.imagesUrl}/${question['explainationImage']}"
+                : "",
           ),
         );
 
@@ -226,10 +245,16 @@ class ChallengeController extends GetxController {
           question: LessonSlideQuestionModel(
             id: question['id'],
             questionText: question['name'],
-            questionImage: question['imageUrL'],
+            questionImage:
+                question['imageUrL'] != null && question['imageUrL'] != ""
+                    ? "${config?.imagesUrl}/${question['imageUrL']}"
+                    : "",
             options: [],
             explanation: explanation,
-            explanationImage: question['explainationImage'],
+            explanationImage: question['explainationImage'] != null &&
+                    question['explainationImage'] != ""
+                ? "${config?.imagesUrl}/${question['explainationImage']}"
+                : "",
           ),
         );
 

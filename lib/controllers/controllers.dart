@@ -10,6 +10,7 @@ import 'package:edgiprep/controllers/past_paper/paper_controller.dart';
 import 'package:edgiprep/controllers/quiz/quiz_controller.dart';
 import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.dart';
 import 'package:edgiprep/services/auth/auth_service.dart';
+import 'package:edgiprep/services/challenge/challenge_service.dart';
 import 'package:edgiprep/services/configuration/configuration_service.dart';
 import 'package:edgiprep/services/enrollment/enrollment_service.dart';
 import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
@@ -31,6 +32,7 @@ class Controllers extends Bindings {
     Get.put<UserEnrollmentService>(UserEnrollmentService());
     Get.put<LessonService>(LessonService());
     Get.put<QuizService>(QuizService());
+    Get.put<ChallengeService>(ChallengeService());
     Get.put<PaperService>(PaperService());
     Get.put<MockService>(MockService());
 

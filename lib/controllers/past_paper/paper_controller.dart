@@ -1,14 +1,19 @@
 import 'dart:math';
 
+import 'package:edgiprep/db/config/config.dart';
 import 'package:edgiprep/models/lesson/question_answer_model.dart';
 import 'package:edgiprep/models/lesson/slide_model.dart';
 import 'package:edgiprep/models/lesson/lesson_slide_question_model.dart';
+import 'package:edgiprep/services/configuration/configuration_service.dart';
 import 'package:edgiprep/services/paper/paper_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PaperController extends GetxController {
-  PaperService paperService = PaperService();
+  PaperService paperService = Get.find<PaperService>();
+  ConfigService configService = Get.find<ConfigService>();
+
+  late Config? config;
 
   RxString testDoneID = "".obs;
   RxList<String> answerIds = <String>[].obs;
@@ -20,6 +25,14 @@ class PaperController extends GetxController {
   RxInt currentSlideIndex = 0.obs;
   RxList<SlideModel> visibleSlides = <SlideModel>[].obs;
   PageController pageController = PageController();
+
+  @override
+  void onInit() async {
+    super.onInit();
+
+    config = await configService.getConfig();
+    config ??= await configService.getConfig();
+  }
 
   // Load the first slide initially
   void loadInitialSlide() {
@@ -111,10 +124,16 @@ class PaperController extends GetxController {
           question: LessonSlideQuestionModel(
             id: instances['question']['id'],
             questionText: instances['question']['name'],
-            questionImage: instances['question']['imageUrL'],
+            questionImage: instances['question']['imageUrL'] != null &&
+                    instances['question']['imageUrL'] != ""
+                ? "${config?.imagesUrl}/${instances['question']['imageUrL']}"
+                : "",
             options: [],
             explanation: explanation,
-            explanationImage: instances['explainationImage'],
+            explanationImage: instances['explainationImage'] != null &&
+                    instances['explainationImage'] != ""
+                ? "${config?.imagesUrl}/${instances['explainationImage']}"
+                : "",
           ),
           order: instances['order'],
         );

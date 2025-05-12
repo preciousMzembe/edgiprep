@@ -72,6 +72,24 @@ Widget quizQuestion(LessonSlideQuestionModel? question, bool sideDone) {
             },
           ),
 
+          // question image
+          if (question?.questionImage != null && question?.questionImage != "")
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(
+                  height: 30.h,
+                ),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20.r),
+                  child: Image.network(
+                    question?.questionImage ?? "",
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ],
+            ),
+
           // answers
           SizedBox(
             height: 40.h,
