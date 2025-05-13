@@ -7,6 +7,8 @@ import 'package:edgiprep/views/components/appraisal/appraisal_test_subtitle.dart
 import 'package:edgiprep/views/components/enrollment/enrollment_settings_exam_subject_option.dart';
 import 'package:edgiprep/views/components/general/loading_content.dart';
 import 'package:edgiprep/views/components/general/normal_button.dart';
+import 'package:edgiprep/views/components/profile/delete_text.dart';
+import 'package:edgiprep/views/components/profile/profile_subtitle.dart';
 import 'package:edgiprep/views/components/profile/profile_title.dart';
 import 'package:edgiprep/views/components/settings/settings_back_button.dart';
 import 'package:edgiprep/views/components/settings/settings_icon.dart';
@@ -140,35 +142,46 @@ class _EnrollmentSettingsExamState extends State<EnrollmentSettingsExam> {
                           );
                         }),
 
-                        SizedBox(
-                          height: 30.h,
-                        ),
                         if (userEnrollmentController.exams.length > 1)
-                          GestureDetector(
-                            onTap: () async {
-                              await showDialog(
-                                context: context,
-                                barrierDismissible: true,
-                                builder: (BuildContext context) {
-                                  return UnenrollExamContent(
-                                    exam: widget.exam,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              SizedBox(
+                                height: 30.h,
+                              ),
+                              SizedBox(height: 16.h),
+                              profileSubtitle(
+                                  "Unenrolling the exam will remove all exam progress. You will start over if you enroll the exam again."),
+                              SizedBox(
+                                height: 20.h,
+                              ),
+                              GestureDetector(
+                                onTap: () async {
+                                  await showDialog(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    builder: (BuildContext context) {
+                                      return UnenrollExamContent(
+                                        exam: widget.exam,
+                                      );
+                                    },
                                   );
+
+                                  bool enrolled =
+                                      await enrollmentSettingsController
+                                          .checkExamEnrollment(widget.exam.id);
+
+                                  if (!enrolled) {
+                                    Navigator.pop(context);
+                                  }
                                 },
-                              );
-
-                              bool enrolled = await enrollmentSettingsController
-                                  .checkExamEnrollment(widget.exam.id);
-
-                              if (!enrolled) {
-                                Navigator.pop(context);
-                              }
-                            },
-                            child: normalButton(
-                              const Color.fromRGBO(255, 99, 135, 1),
-                              Colors.white,
-                              "Unenroll Exam",
-                              20,
-                            ),
+                                child: Row(
+                                  children: [
+                                    deleteText("Unenroll Exam"),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                       ],
                     );

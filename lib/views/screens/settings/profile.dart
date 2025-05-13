@@ -1,9 +1,11 @@
+import 'dart:ui';
+
 import 'package:edgiprep/controllers/auth/auth_controller.dart';
 import 'package:edgiprep/utils/constants.dart';
-import 'package:edgiprep/views/components/general/normal_button.dart';
 import 'package:edgiprep/views/components/general/profile_button_loading.dart';
 import 'package:edgiprep/views/components/general/snackbar.dart';
 import 'package:edgiprep/views/components/general/username_input_formatter.dart';
+import 'package:edgiprep/views/components/profile/delete_text.dart';
 import 'package:edgiprep/views/components/profile/profile_detail_edit_icon.dart';
 import 'package:edgiprep/views/components/profile/profile_detail_icon.dart';
 import 'package:edgiprep/views/components/profile/profile_detail_subtitle.dart';
@@ -11,6 +13,7 @@ import 'package:edgiprep/views/components/profile/profile_detail_title.dart';
 import 'package:edgiprep/views/components/profile/profile_subtitle.dart';
 import 'package:edgiprep/views/components/profile/profile_title.dart';
 import 'package:edgiprep/views/components/profile/profile_user_image.dart';
+import 'package:edgiprep/views/components/settings/delete_account_content.dart';
 import 'package:edgiprep/views/components/settings/settings_back_button.dart';
 import 'package:edgiprep/views/components/settings/settings_button.dart';
 import 'package:edgiprep/views/components/settings/settings_cancel_text.dart';
@@ -34,6 +37,7 @@ class _ProfileState extends State<Profile> {
   TextEditingController nameController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController oldPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
@@ -245,7 +249,7 @@ class _ProfileState extends State<Profile> {
                                       children: [
                                         profileDetailTitle("Name"),
                                         profileDetaillSubtitle(
-                                            "${authController.user.value?.name}"),
+                                            "${authController.user.value?.name.split(' ').map((word) => word[0].toUpperCase() + word.substring(1)).join(' ')}"),
                                       ],
                                     ),
                                   ),
@@ -405,7 +409,7 @@ class _ProfileState extends State<Profile> {
                                       children: [
                                         profileDetailTitle("Username"),
                                         profileDetaillSubtitle(
-                                            "${authController.user.value?.name}"),
+                                            "${authController.user.value?.username}"),
                                       ],
                                     ),
                                   ),
@@ -607,6 +611,17 @@ class _ProfileState extends State<Profile> {
                                       height: 25.h,
                                     ),
                                     SettingsInput(
+                                      controller: oldPasswordController,
+                                      label: "Current Pin",
+                                      type: TextInputType.number,
+                                      isPassword: true,
+                                      radius: 20,
+                                      formatter: PinInputFormatter(),
+                                    ),
+                                    SizedBox(
+                                      height: 20.h,
+                                    ),
+                                    SettingsInput(
                                       controller: passwordController,
                                       label: "New Pin",
                                       type: TextInputType.number,
@@ -649,6 +664,11 @@ class _ProfileState extends State<Profile> {
                                             GestureDetector(
                                               onTap: () async {
                                                 // change password
+
+                                                String oldPassword =
+                                                    oldPasswordController.text
+                                                        .trim();
+
                                                 String password =
                                                     passwordController.text
                                                         .trim();
@@ -658,7 +678,8 @@ class _ProfileState extends State<Profile> {
                                                         .text
                                                         .trim();
 
-                                                if (password.isNotEmpty &&
+                                                if (oldPassword.isNotEmpty &&
+                                                    password.isNotEmpty &&
                                                     confirmPassword
                                                         .isNotEmpty) {
                                                   if (password.length >= 4 &&
@@ -671,6 +692,7 @@ class _ProfileState extends State<Profile> {
                                                     var data =
                                                         await authController
                                                             .changePassword(
+                                                                oldPassword,
                                                                 password);
 
                                                     if (data['status'] ==
@@ -678,8 +700,12 @@ class _ProfileState extends State<Profile> {
                                                       changePasswordError(
                                                           data['error']);
                                                     } else {
+                                                      oldPasswordController
+                                                          .text = "";
                                                       passwordController.text =
                                                           "";
+                                                      confirmPasswordController
+                                                          .text = "";
 
                                                       showSnackbar(
                                                           context,
@@ -767,7 +793,7 @@ class _ProfileState extends State<Profile> {
                                       children: [
                                         profileDetailTitle("Email"),
                                         profileDetaillSubtitle(
-                                            "${authController.user.value?.email}"),
+                                            "${authController.user.value?.email != "" ? authController.user.value?.email : "[ Not set ]"}"),
                                       ],
                                     ),
                                   ),
@@ -839,6 +865,15 @@ class _ProfileState extends State<Profile> {
                                                   changeEmailError("");
 
                                                   toggleEmailLoading();
+
+                                                  // check if email is valid
+                                                  if (!GetUtils.isEmail(
+                                                      email)) {
+                                                    changeEmailError(
+                                                        "Invalid email");
+                                                    toggleEmailLoading();
+                                                    return;
+                                                  }
 
                                                   var data =
                                                       await authController
@@ -1061,18 +1096,44 @@ class _ProfileState extends State<Profile> {
                   height: 30.h,
                 ),
                 profileSubtitle(
-                    "We recommend adding your email or phone number to ensure you can easily recover your account if you ever forget your password."),
+                    "We recommend adding your email to ensure you can easily recover your account if you ever forget your password."),
 
                 // delete account
                 SizedBox(
-                  height: 60.h,
+                  height: 50.h,
                 ),
-                normalButton(
-                  const Color.fromRGBO(254, 101, 93, 1),
-                  Colors.white,
-                  "Delete Account",
-                  25,
+                profileDetailTitle("Delete Account"),
+                SizedBox(height: 16.h),
+                profileSubtitle(
+                    "Deleting your account will remove all your data from our servers. This action cannot be undone."),
+                SizedBox(
+                  height: 20.h,
                 ),
+                GestureDetector(
+                  onTap: () async {
+                    await showModalBottomSheet(
+                      backgroundColor: Colors.transparent,
+                      context: context,
+                      isScrollControlled: true,
+                      isDismissible: true,
+                      builder: (BuildContext context) => BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                        child: DeleteAccountContent(),
+                      ),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(0),
+                        ),
+                      ),
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      deleteText("Delete Account"),
+                    ],
+                  ),
+                ),
+
                 SizedBox(
                   height: 100.h,
                 ),

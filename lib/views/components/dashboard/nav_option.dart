@@ -25,6 +25,7 @@ Widget navOption(String name, String icon, bool active) {
 
       return Container(
         color: Colors.transparent,
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

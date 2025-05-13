@@ -16,10 +16,22 @@ class User {
   @HiveField(3)
   final int streak;
 
+  @HiveField(4)
+  final double weekly;
+
+  @HiveField(5)
+  final int localXp;
+
+  @HiveField(6)
+  final String username;
+
   User({
     required this.name,
     required this.email,
     required this.xp,
     required this.streak,
+    required this.weekly,
+    required this.localXp,
+    required this.username,
   });
 }

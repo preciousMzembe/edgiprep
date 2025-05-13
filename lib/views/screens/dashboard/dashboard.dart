@@ -1,5 +1,6 @@
 import 'package:edgiprep/controllers/navigation/navController.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
+import 'package:edgiprep/services/auth/auth_service.dart';
 import 'package:edgiprep/services/enrollment/enrollment_service.dart';
 import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
 import 'package:edgiprep/views/components/dashboard/navigation_bar.dart';
@@ -23,6 +24,7 @@ class _DashboardState extends State<Dashboard> {
   NavController navController = Get.find<NavController>();
   final PageController pageController = PageController(initialPage: 0);
 
+  AuthService authService = Get.find<AuthService>();
   EnrollmentService enrollmentService = Get.find<EnrollmentService>();
 
   UserEnrollmentService userEnrollmentService =
@@ -47,6 +49,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   void refreshData() async {
+    await authService.getUserServerData();
     await userEnrollmentService.getUserServerExams();
 
     enrollmentService.restartFetch();

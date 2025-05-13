@@ -10,11 +10,13 @@ import 'package:edgiprep/models/lesson/slide_model.dart';
 import 'package:edgiprep/models/lesson/lesson_slide_question_model.dart';
 import 'package:edgiprep/services/configuration/configuration_service.dart';
 import 'package:edgiprep/services/lesson/lesson_service.dart';
+import 'package:edgiprep/services/stats/stats_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LessonController extends GetxController {
   ConfigService configService = Get.find<ConfigService>();
+  StatsService statsService = Get.find<StatsService>();
   LessonService lessonService = Get.find<LessonService>();
 
   late Config? config;
@@ -59,16 +61,16 @@ class LessonController extends GetxController {
 
       // save slide progress
       saveSlideProgress(
-          subjectEnrollmentID.value,
-          visibleSlides[currentSlideIndex.value].id ?? "",
-          visibleSlides[currentSlideIndex.value].question != null
-              ? visibleSlides[currentSlideIndex.value].question!.userAnswerId
-              : "");
-
-      // add slide
-      if (currentSlideIndex.value < slides.length - 1) {
-        visibleSlides.add(slides[currentSlideIndex.value + 1]);
-      }
+        subjectEnrollmentID.value,
+        visibleSlides[currentSlideIndex.value].id ?? "",
+        visibleSlides[currentSlideIndex.value].question != null
+            ? visibleSlides[currentSlideIndex.value].question!.userAnswerId
+            : "",
+        visibleSlides[currentSlideIndex.value].question != null
+            ? visibleSlides[currentSlideIndex.value].question!.userAnswerId ==
+                visibleSlides[currentSlideIndex.value].question!.correctAnswerId
+            : false,
+      );
 
       visibleSlides.refresh();
     }
@@ -85,6 +87,10 @@ class LessonController extends GetxController {
         visibleSlides[currentSlideIndex.value].question != null
             ? visibleSlides[currentSlideIndex.value].question!.userAnswerId
             : "",
+        visibleSlides[currentSlideIndex.value].question != null
+            ? visibleSlides[currentSlideIndex.value].question!.userAnswerId ==
+                visibleSlides[currentSlideIndex.value].question!.correctAnswerId
+            : false,
       );
 
       visibleSlides[currentSlideIndex.value].slideDone = true;
@@ -329,12 +335,15 @@ class LessonController extends GetxController {
 
   // Save slide progress
   Future<void> saveSlideProgress(
-      String sEnrollId, String sId, String aId) async {
+      String sEnrollId, String sId, String aId, bool correct) async {
     bool error = await lessonService.saveSlideProgress(sEnrollId, sId, aId);
 
-    // TODO save local progress on error
-    if (error) {
-      print("error saving slide progress -------------------------");
+    // save xp
+    if (correct && !error) {
+      await statsService.saveXps(1);
     }
+
+    // Update Streak
+    statsService.saveStreak();
   }
 }

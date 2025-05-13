@@ -73,6 +73,30 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     super.initState();
   }
 
+  String getWelcomeText(double progress) {
+    if (progress == 0) {
+      return "Let's get started!";
+    } else if (progress < 13) {
+      return "You've just begun.";
+    } else if (progress < 25) {
+      return "Getting started nicely.";
+    } else if (progress < 38) {
+      return "Progress is picking up.";
+    } else if (progress < 50) {
+      return "You're making steady progress.";
+    } else if (progress < 63) {
+      return "Awesome, you're over halfway!";
+    } else if (progress < 75) {
+      return "Great progress so far.";
+    } else if (progress < 88) {
+      return "You're making impressive progress.";
+    } else if (progress < 100) {
+      return "Your performance is excellent.";
+    } else {
+      return "Outstanding performance!";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -222,12 +246,18 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 children: [
                                   // name
                                   homeUserName(
-                                      "Hey, ${authController.user.value?.name.split(" ")[0] ?? "User"}"),
+                                      "Hey, ${authController.user.value?.name.split(" ")[0].split(' ').map((word) => word[0].toUpperCase() + word.substring(1)).join(' ') ?? "User"}"),
 
                                   // welcome
-                                  homeFadeText("Keep up the good work"),
+                                  homeFadeText(getWelcomeText(authController
+                                          .user.value?.weekly
+                                          .toDouble() ??
+                                      0.0)),
                                 ],
                               ),
+                            ),
+                            SizedBox(
+                              width: 20.w,
                             ),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -298,7 +328,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                       child: homeXpStreak(
                                         "star.svg",
                                         "Total XPs",
-                                        "${authController.user.value?.xp ?? "--"}",
+                                        "${authController.user.value != null ? authController.user.value!.xp + authController.user.value!.localXp : 0}",
                                         homeLightBackgroundColor,
                                         primaryColor,
                                         xpTitleSize,
@@ -315,7 +345,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                         "Total Streak",
                                         "${authController.user.value?.streak ?? "--"}",
                                         Colors.white,
-                                        homeLightBackgroundColor,
+                                        authController.user.value?.streak !=
+                                                    null &&
+                                                authController
+                                                        .user.value!.streak >
+                                                    0
+                                            ? primaryColor
+                                            : homeLightBackgroundColor,
                                         xpTitleSize,
                                         xpValueSize,
                                         xpImageSize,

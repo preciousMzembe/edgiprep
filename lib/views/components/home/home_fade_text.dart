@@ -18,6 +18,7 @@ Widget homeFadeText(String text) {
 
       return Text(
         text,
+        overflow: TextOverflow.ellipsis,
         style: GoogleFonts.inter(
           fontSize: fontSize,
           fontWeight: FontWeight.w600,

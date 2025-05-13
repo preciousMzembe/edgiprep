@@ -24,11 +24,11 @@ class AuthController extends GetxController {
 
   // Check login status
   void checkLoginStatus() async {
-    String? tocket = await authService.getToken();
+    String? token = await authService.getToken();
 
-    if (tocket != null && tocket != "") {
+    if (token != null && token != "") {
       await getUserData();
-      authToken.value = tocket;
+      authToken.value = token;
 
       authToken.refresh();
       user.refresh();
@@ -98,8 +98,8 @@ class AuthController extends GetxController {
     return await authService.changeUsername(username);
   }
 
-  Future<Map<String, dynamic>> changePassword(String pin) async {
-    return await authService.changePassword(pin);
+  Future<Map<String, dynamic>> changePassword(String pin, String newPin) async {
+    return await authService.changePassword(pin, newPin);
   }
 
   Future<Map<String, dynamic>> changeEmail(String email) async {
@@ -114,6 +114,11 @@ class AuthController extends GetxController {
 
   Future<Map<String, dynamic>> changePhone(String phone) async {
     return await authService.changePhone(phone);
+  }
+
+  // Delete Account
+  Future<Map<String, dynamic>> deleteAccount(String password) async {
+    return await authService.deleteAccount(password);
   }
 
   bool isValidEmail(String email) {

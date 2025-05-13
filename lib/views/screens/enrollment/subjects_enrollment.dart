@@ -8,7 +8,6 @@ import 'package:edgiprep/views/components/general/button_loading.dart';
 import 'package:edgiprep/views/components/general/normal_button.dart';
 import 'package:edgiprep/controllers/enrollment/enrollment_controller.dart';
 import 'package:edgiprep/views/components/general/snackbar.dart';
-import 'package:edgiprep/views/screens/premium/premium.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -168,9 +167,7 @@ class _SubjectsEnrollmentState extends State<SubjectsEnrollment> {
                             if (done) {
                               Get.back();
 
-                              if (!widget.settings) {
-                                Get.to(() => Premium());
-                              } else {
+                              if (widget.settings) {
                                 // Switch
                                 if (enrollmentController.enrolledExamId.value !=
                                     "") {

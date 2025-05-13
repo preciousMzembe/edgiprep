@@ -2,6 +2,7 @@ import 'package:edgiprep/controllers/challenge/challenge_controller.dart';
 import 'package:edgiprep/controllers/mock/mock_controller.dart';
 import 'package:edgiprep/controllers/past_paper/paper_controller.dart';
 import 'package:edgiprep/controllers/quiz/quiz_controller.dart';
+import 'package:edgiprep/services/stats/stats_service.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/general/normal_button.dart';
@@ -18,6 +19,7 @@ class AppraisalFinish extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    StatsService statsService = Get.find<StatsService>();
     QuizController quizController = Get.find<QuizController>();
     PaperController paperController = Get.find<PaperController>();
     MockController mockController = Get.find<MockController>();
@@ -140,6 +142,14 @@ class AppraisalFinish extends StatelessWidget {
           // save quiz score
           challengeController.saveQuizScore(xps);
         }
+
+        // save xps
+        if (xps > 0) {
+          statsService.saveXps(xps);
+        }
+
+        // Update Streak
+        statsService.saveStreak();
 
         return PopScope(
           canPop: false,

@@ -51,11 +51,31 @@ class AuthService extends GetxService {
         );
 
         if (response.statusCode == 200) {
+          double weekly = 0;
+          int streak = 0;
+
+          final stats = await _dio.get(
+            '${config?.apiUrl}/Learner/Mobile/MyStats',
+            options: Options(
+              headers: {
+                'Authorization': 'Bearer $token',
+              },
+            ),
+          );
+
+          if (stats.statusCode == 200) {
+            weekly = (stats.data['weekly'] as num?)?.toDouble() ?? 0.0;
+            streak = stats.data['streaks'] ?? 0;
+          }
+
           User user = User(
             name: response.data['name'],
-            email: "eagleeyed@gmail.com",
+            username: response.data['userName'],
+            email: response.data['email'],
             xp: response.data['xp'],
-            streak: response.data['streak'],
+            streak: streak,
+            weekly: weekly,
+            localXp: 0,
           );
 
           await userBox.clear();
@@ -63,7 +83,6 @@ class AuthService extends GetxService {
         }
       } on DioException catch (e) {
         debugPrint("Problem fetching learner data ------------ auth service");
-        // print(e.response?.statusCode);
 
         if (e.response != null) {
           if (e.response?.statusCode == 404) {
@@ -74,6 +93,26 @@ class AuthService extends GetxService {
     }
 
     doneFetchingUserData.value = !doneFetchingUserData.value;
+  }
+
+  Future<void> updateXps(int xps) async {
+    // update local xps
+    User? user = await getUserData();
+    if (user != null) {
+      User updatedUser = User(
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        xp: user.xp,
+        streak: user.streak,
+        weekly: user.weekly,
+        localXp: user.localXp + xps,
+      );
+
+      await userBox.putAt(0, updatedUser);
+
+      getUserServerData();
+    }
   }
 
   Future<Map<String, dynamic>> login(String email, String password) async {
@@ -189,18 +228,19 @@ class AuthService extends GetxService {
       String? token = await getToken();
 
       final response = await _dio.put(
-        '${config?.apiUrl}/Account/Mobile/Name',
+        '${config?.apiUrl}/Learner/Mobile/UpdateName',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
           },
         ),
         data: {
-          'name': name,
+          'value': name,
         },
       );
 
       if (response.statusCode == 200) {
+        await getUserServerData();
         return {
           'status': "success",
           'data': 'Name changed successfully',
@@ -225,18 +265,19 @@ class AuthService extends GetxService {
       if (checkData['status'] == 'error') return checkData;
 
       final response = await _dio.put(
-        '${config?.apiUrl}/Account/Mobile/Username',
+        '${config?.apiUrl}/Learner/Mobile/UpdateUsername',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
           },
         ),
         data: {
-          'username': username,
+          'value': username,
         },
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 204) {
+        await getUserServerData();
         return {
           'status': "success",
           'data': 'Username changed successfully',
@@ -248,27 +289,29 @@ class AuthService extends GetxService {
 
     return {
       'status': "error",
-      'error': "there was a problem changing your username.",
+      'error': "There was a problem changing your username.",
     };
   }
 
-  Future<Map<String, dynamic>> changePassword(String password) async {
+  Future<Map<String, dynamic>> changePassword(
+      String password, String newPassword) async {
     try {
       String? token = await getToken();
 
       final response = await _dio.put(
-        '${config?.apiUrl}/Account/Mobile/Password',
+        '${config?.apiUrl}/Learner/Mobile/UpdatePIN',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
           },
         ),
         data: {
-          'password': password,
+          'pin': password,
+          'newPin': newPassword,
         },
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 204) {
         return {
           'status': "success",
           'data': 'Pin changed successfully',
@@ -280,7 +323,7 @@ class AuthService extends GetxService {
 
     return {
       'status': "error",
-      'error': "There was a problem changing your pin.",
+      'error': "Check your current pin if correct.",
     };
   }
 
@@ -289,18 +332,19 @@ class AuthService extends GetxService {
       String? token = await getToken();
 
       final response = await _dio.put(
-        '${config?.apiUrl}/Account/Mobile/Email',
+        '${config?.apiUrl}/Learner/Mobile/UpdateEmail',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
           },
         ),
         data: {
-          'email': email,
+          'value': email,
         },
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 204) {
+        await getUserServerData();
         return {
           'status': "success",
           'data': 'Email changed successfully',
@@ -345,6 +389,37 @@ class AuthService extends GetxService {
     return {
       'status': "error",
       'error': "There was a problem changing your phone number.",
+    };
+  }
+
+  // Delete Account
+  Future<Map<String, dynamic>> deleteAccount(String password) async {
+    try {
+      String? token = await getToken();
+
+      final response = await _dio.delete(
+        '${config?.apiUrl}/Learner/Mobile/DeleteMyAccount/$password',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.statusCode == 204) {
+        await logout();
+        return {
+          'status': "success",
+          'data': 'Account deleted successfully.',
+        };
+      }
+    } on DioException {
+      debugPrint("Problem deleting account ------------ auth service");
+    }
+
+    return {
+      'status': "error",
+      'error': "There was a problem deleting your account.",
     };
   }
 

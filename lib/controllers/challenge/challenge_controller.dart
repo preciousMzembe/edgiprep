@@ -53,7 +53,7 @@ class ChallengeController extends GetxController {
             .add(visibleSlides[currentSlideIndex.value].question!.userAnswerId);
       }
 
-      // add slide
+      // // add slide
       if (currentSlideIndex.value < slides.length - 1) {
         visibleSlides.add(slides[currentSlideIndex.value + 1]);
       }

@@ -78,10 +78,12 @@ class Settings extends StatelessWidget {
                       ),
 
                       // email
-                      Center(
-                        child: settingsUserEmail(
-                            "${authController.user.value?.email}"),
-                      ),
+                      if (authController.user.value?.email != null &&
+                          authController.user.value?.email != "")
+                        Center(
+                          child: settingsUserEmail(
+                              "${authController.user.value?.email}"),
+                        ),
 
                       // records
                       SizedBox(

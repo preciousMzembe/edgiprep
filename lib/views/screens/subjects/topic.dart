@@ -41,6 +41,8 @@ class _SubjectTopicState extends State<SubjectTopic> {
   bool loading = true;
   List<Lesson> lessons = [];
   double topicPercent = 0;
+  int lessonsNumber = 0;
+  int lessonsDone = 0;
 
   Future<void> _fetchTopicLessons() async {
     var data = await userEnrollmentController.fetchTopicLessons(widget.topic);
@@ -53,14 +55,32 @@ class _SubjectTopicState extends State<SubjectTopic> {
     }
   }
 
+  Future<void> _lessonsAfter() async {
+    await userEnrollmentService.getServerTopicLessons(widget.topic);
+
+    Topic newTopic = await userEnrollmentController.fetchTopic(
+        widget.topic.id, widget.topic.subjectEnrollmentId);
+    if (newTopic.id != "") {
+      setState(() {
+        lessonsDone = newTopic.numberOfLessonsDone;
+        lessonsNumber = newTopic.numberOfLessons;
+        topicPercent = lessonsNumber > 0 ? lessonsDone / lessonsNumber : 0;
+      });
+    }
+
+    _fetchTopicLessons();
+  }
+
   @override
   void initState() {
     super.initState();
 
     // calculate percent
-    if (widget.topic.numberOfLessons > 0) {
-      topicPercent =
-          widget.topic.numberOfLessonsDone / widget.topic.numberOfLessons;
+    lessonsDone = widget.topic.numberOfLessonsDone;
+    lessonsNumber = widget.topic.numberOfLessons;
+
+    if (lessonsNumber > 0) {
+      topicPercent = lessonsDone / lessonsNumber;
     }
 
     // fetch lessons
@@ -122,7 +142,7 @@ class _SubjectTopicState extends State<SubjectTopic> {
                                     height: 8.h,
                                   ),
                                   topicLessonsNumber(
-                                    "${widget.topic.numberOfLessonsDone} of ${widget.topic.numberOfLessons}  lessons",
+                                    "$lessonsDone of $lessonsNumber  lessons",
                                     const Color.fromRGBO(236, 239, 245, 1),
                                   ),
                                   SizedBox(
@@ -171,7 +191,7 @@ class _SubjectTopicState extends State<SubjectTopic> {
                                     lesson: lesson,
                                   ));
 
-                              _fetchTopicLessons();
+                              _lessonsAfter();
                             }
                           },
                           child: topicLessonBox(
@@ -267,7 +287,7 @@ class _SubjectTopicState extends State<SubjectTopic> {
                                       height: 8.h,
                                     ),
                                     topicLessonsNumber(
-                                        "${widget.topic.numberOfLessonsDone} of ${widget.topic.numberOfLessons} Lessons",
+                                        "$lessonsDone of $lessonsNumber Lessons",
                                         const Color.fromRGBO(236, 239, 245, 1)),
                                     SizedBox(
                                       height: 20.h,

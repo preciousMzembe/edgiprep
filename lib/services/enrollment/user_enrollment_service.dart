@@ -315,18 +315,20 @@ class UserEnrollmentService extends GetxService {
           );
 
           for (var topic in unit['topics']) {
-            topics.add(
-              Topic(
-                id: topic['topic']['id'],
-                name: topic['topic']['name'],
-                order: topic['topic']['order'],
-                unitId: topic['topic']['unitId'],
-                numberOfLessons: topic['totalLessons'],
-                numberOfLessonsDone: topic['doneLessons'],
-                needSubscrion: false,
-                subjectEnrollmentId: subjectEnrollmentId,
-              ),
+            Topic newTopic = Topic(
+              id: topic['topic']['id'],
+              name: topic['topic']['name'],
+              order: topic['topic']['order'],
+              unitId: unit['id'],
+              numberOfLessons: topic['totalLessons'],
+              numberOfLessonsDone: topic['doneLessons'],
+              needSubscrion: false,
+              subjectEnrollmentId: subjectEnrollmentId,
             );
+            topics.add(newTopic);
+
+            // fetch topic lessons
+            getServerTopicLessons(newTopic);
           }
         }
 
@@ -587,6 +589,24 @@ class UserEnrollmentService extends GetxService {
       );
 
       if (unenrollResponse.statusCode == 204) {
+        // Delete subject units, topics, lessons
+        final unitKeysToDelete = unitBox.keys.where((key) {
+          final unit = unitBox.get(key);
+          return unit?.subjectEnrollmentId == subjectEnrollmentId;
+        }).toList();
+        final topicKeysToDelete = topicBox.keys.where((key) {
+          final topic = topicBox.get(key);
+          return topic?.subjectEnrollmentId == subjectEnrollmentId;
+        }).toList();
+        final lessonKeysToDelete = lessonBox.keys.where((key) {
+          final lesson = lessonBox.get(key);
+          return lesson?.subjectEnrollmentId == subjectEnrollmentId;
+        }).toList();
+
+        await unitBox.deleteAll(unitKeysToDelete);
+        await topicBox.deleteAll(topicKeysToDelete);
+        await lessonBox.deleteAll(lessonKeysToDelete);
+
         done = true;
       }
 
@@ -705,7 +725,10 @@ class UserEnrollmentService extends GetxService {
     bool active = true;
     for (Unit unit in units) {
       List<Topic> topics = topicBox.values
-          .where((topic) => topic is Topic && topic.unitId == unit.id)
+          .where((topic) =>
+              topic is Topic &&
+              topic.unitId == unit.id &&
+              topic.subjectEnrollmentId == subjectEnrollmentId)
           .cast<Topic>()
           .toList();
 
@@ -730,7 +753,25 @@ class UserEnrollmentService extends GetxService {
     return unitTopicMap;
   }
 
-  // Public getter for all lessons of a topic
+  // Public getter for topic and all lessons of a topic
+  Future<Topic> getTopic(String topicId, String subjectEnrollmentId) async {
+    return await topicBox.values.firstWhere(
+      (topic) =>
+          topic.id == topicId &&
+          topic.subjectEnrollmentId == subjectEnrollmentId,
+      orElse: () => Topic(
+        id: "",
+        name: "",
+        order: 0,
+        unitId: "",
+        numberOfLessons: 0,
+        numberOfLessonsDone: 0,
+        needSubscrion: false,
+        subjectEnrollmentId: "",
+      ),
+    );
+  }
+
   Future<List<Lesson>> getTopicLessons(Topic topic) async {
     List<Lesson> lessons = lessonBox.values
         .where((lesson) => lesson.topicId == topic.id)

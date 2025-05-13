@@ -132,6 +132,11 @@ class UserEnrollmentController extends GetxController {
     return unitTopicMap;
   }
 
+  // Fetch Topic
+  Future<Topic> fetchTopic(String topicId, String subjectEnrollmentId) async {
+    return await userEnrollmentService.getTopic(topicId, subjectEnrollmentId);
+  }
+
   // Fetch Topic Lessons
   Future<List<Lesson>> fetchTopicLessons(Topic topic) async {
     return await userEnrollmentService.getTopicLessons(topic);

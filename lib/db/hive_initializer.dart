@@ -15,6 +15,7 @@ import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/db/topic/topic.dart';
 import 'package:edgiprep/db/unit/unit.dart';
 import 'package:edgiprep/db/user/user.dart';
+import 'package:edgiprep/db/user/user_xps.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -92,10 +93,12 @@ class HiveInitializer {
     Hive.registerAdapter(ReminderAdapter());
     Hive.registerAdapter(UserNotificationAdapter());
     Hive.registerAdapter(SubjectProgressAdapter());
+    Hive.registerAdapter(UserXpsAdapter());
 
     // Open boxes
     try {
       userBox = await openSecureBox<User>('userBox');
+      userXpsBox = await openSecureBox<UserXps>('userXpsBox');
       examBox = await openSecureBox<Exam>('examBox');
       userExamBox = await openSecureBox<UserExam>('userExamBox');
       subjectBox = await openSecureBox<Subject>('subjectBox');
@@ -118,13 +121,14 @@ class HiveInitializer {
 
   Future<void> rebuildHiveOnFirstOpen() async {
     final prefs = await SharedPreferences.getInstance();
-    const currentVersion = 9; // Update this for each new version
+    const currentVersion = 16; // Update this for each new version
     final lastVersion = prefs.getInt('last_version') ?? 0;
 
     if (lastVersion < currentVersion) {
       // List of all box names to be cleared
       final boxNames = [
         'userBox',
+        'userXpsBox',
         'examBox',
         'userExamBox',
         'subjectBox',

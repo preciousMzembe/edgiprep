@@ -7,6 +7,7 @@ import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/general/loading_content.dart';
 import 'package:edgiprep/views/components/general/normal_button.dart';
 import 'package:edgiprep/views/components/home/home_section_title.dart';
+import 'package:edgiprep/views/components/profile/delete_text.dart';
 import 'package:edgiprep/views/components/subject/unenroll_subject_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -328,13 +329,13 @@ class _SubjectSettingsState extends State<SubjectSettings> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             SizedBox(
-                              height: 60.h,
+                              height: 50.h,
                             ),
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 40.w),
+                              padding: EdgeInsets.only(right: 50.w),
                               child: Text(
                                 "Unenrolling the subject will remove all subject progress. You will start over if you enroll the subject again.",
-                                textAlign: TextAlign.center,
+                                // textAlign: TextAlign.center,
                                 style: GoogleFonts.inter(
                                   fontSize: titleFontSize,
                                   fontWeight: FontWeight.w400,
@@ -343,34 +344,33 @@ class _SubjectSettingsState extends State<SubjectSettings> {
                               ),
                             ),
                             SizedBox(
-                              height: 30.h,
+                              height: 20.h,
                             ),
-                            GestureDetector(
-                              onTap: () async {
-                                await showDialog(
-                                  context: context,
-                                  barrierDismissible: true,
-                                  builder: (BuildContext context) {
-                                    return UnenrollSubjectContent(
-                                        subject: widget.subject);
+                            Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () async {
+                                    await showDialog(
+                                      context: context,
+                                      barrierDismissible: true,
+                                      builder: (BuildContext context) {
+                                        return UnenrollSubjectContent(
+                                            subject: widget.subject);
+                                      },
+                                    );
+
+                                    bool enrolled =
+                                        await enrollmentSettingsController
+                                            .checkSubjectEnrollment(
+                                                widget.subject.id);
+
+                                    if (!enrolled) {
+                                      Navigator.pop(context);
+                                    }
                                   },
-                                );
-
-                                bool enrolled =
-                                    await enrollmentSettingsController
-                                        .checkSubjectEnrollment(
-                                            widget.subject.id);
-
-                                if (!enrolled) {
-                                  Navigator.pop(context);
-                                }
-                              },
-                              child: normalButton(
-                                const Color.fromRGBO(255, 99, 135, 1),
-                                Colors.white,
-                                "Unenroll",
-                                20,
-                              ),
+                                  child: deleteText("Unenroll"),
+                                ),
+                              ],
                             ),
                           ],
                         ),

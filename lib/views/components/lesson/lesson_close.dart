@@ -155,6 +155,10 @@ void showCloseLesson(
                               Get.to(() => const AppraisalFinish(
                                     type: "mock",
                                   ));
+                            } else if (title == "Quiz") {
+                              Get.to(() => const AppraisalFinish(
+                                    type: "quiz",
+                                  ));
                             } else {
                               Get.back();
                               Get.back();

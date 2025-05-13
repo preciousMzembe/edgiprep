@@ -30,9 +30,6 @@ class _SubjectState extends State<Subject> {
   UserEnrollmentController userEnrollmentController =
       Get.find<UserEnrollmentController>();
 
-  UserEnrollmentService userEnrollmentService =
-      Get.find<UserEnrollmentService>();
-
   Map<Unit, List<Topic>> unitTopicMap = {};
 
   List<String> navOptions = [

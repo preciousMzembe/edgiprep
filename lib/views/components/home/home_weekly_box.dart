@@ -48,7 +48,7 @@ Widget homeWeeklyBox(
                 borderColor: Colors.transparent,
                 foregroundWaveColor: primaryColor,
                 backgroundWaveColor: homeLightBackgroundColor,
-                progress: authController.user.value != null ? 30 : 0,
+                progress: authController.user.value?.weekly ?? 0.0,
                 innerPadding: 0,
               ),
 
@@ -61,7 +61,7 @@ Widget homeWeeklyBox(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "${authController.user.value != null ? 30 : 0}%",
+                      "${authController.user.value != null ? authController.user.value?.weekly.toStringAsFixed(0) : 0}%",
                       style: GoogleFonts.inter(
                         fontSize: progFontSize,
                         fontWeight: FontWeight.w700,
