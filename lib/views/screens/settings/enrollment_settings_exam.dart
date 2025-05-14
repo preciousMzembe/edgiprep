@@ -6,7 +6,6 @@ import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/views/components/appraisal/appraisal_test_subtitle.dart';
 import 'package:edgiprep/views/components/enrollment/enrollment_settings_exam_subject_option.dart';
 import 'package:edgiprep/views/components/general/loading_content.dart';
-import 'package:edgiprep/views/components/general/normal_button.dart';
 import 'package:edgiprep/views/components/profile/delete_text.dart';
 import 'package:edgiprep/views/components/profile/profile_subtitle.dart';
 import 'package:edgiprep/views/components/profile/profile_title.dart';

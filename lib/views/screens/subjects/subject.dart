@@ -2,7 +2,6 @@ import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.
 import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/db/topic/topic.dart';
 import 'package:edgiprep/db/unit/unit.dart';
-import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/views/components/subject/subject_nav_option.dart';
 import 'package:edgiprep/views/components/subject/subject_subject_description.dart';

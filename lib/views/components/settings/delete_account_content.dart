@@ -1,5 +1,4 @@
 import 'package:edgiprep/controllers/auth/auth_controller.dart';
-import 'package:edgiprep/controllers/enrollment/enrollment_settings_controller.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/general/button_loading.dart';

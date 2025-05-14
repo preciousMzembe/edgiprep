@@ -5,7 +5,6 @@ import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/general/loading_content.dart';
-import 'package:edgiprep/views/components/general/normal_button.dart';
 import 'package:edgiprep/views/components/home/home_section_title.dart';
 import 'package:edgiprep/views/components/profile/delete_text.dart';
 import 'package:edgiprep/views/components/subject/unenroll_subject_content.dart';
