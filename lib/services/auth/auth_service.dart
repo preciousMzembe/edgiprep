@@ -407,13 +407,22 @@ class AuthService extends GetxService {
       );
 
       if (response.statusCode == 204) {
-        await logout();
         return {
           'status': "success",
           'data': 'Account deleted successfully.',
         };
       }
-    } on DioException {
+    } on DioException catch (e) {
+      // print code snippet
+      var data = e.response?.data;
+      if (data != null && data['message'] != null) {
+        if (data['message'] == "Incorrect PIN") {
+          return {
+            'status': "error",
+            'error': "You entered an incorrect PIN.",
+          };
+        }
+      }
       debugPrint("Problem deleting account ------------ auth service");
     }
 

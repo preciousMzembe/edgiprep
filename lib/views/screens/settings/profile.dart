@@ -1111,20 +1111,23 @@ class _ProfileState extends State<Profile> {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    await showModalBottomSheet(
-                      backgroundColor: Colors.transparent,
+                    showModalBottomSheet(
                       context: context,
                       isScrollControlled: true,
-                      isDismissible: true,
-                      builder: (BuildContext context) => BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                        child: DeleteAccountContent(),
-                      ),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(0),
-                        ),
-                      ),
+                      backgroundColor: Colors.transparent,
+                      builder: (context) {
+                        return BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom,
+                            ),
+                            child: SingleChildScrollView(
+                              child: DeleteAccountContent(),
+                            ),
+                          ),
+                        );
+                      },
                     );
                   },
                   child: Row(

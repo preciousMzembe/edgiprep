@@ -33,6 +33,20 @@ class _DeleteAccountContentState extends State<DeleteAccountContent> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    passwordController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       bool isTablet = DeviceUtils.isTablet(context);
@@ -50,150 +64,143 @@ class _DeleteAccountContentState extends State<DeleteAccountContent> {
               ? 20.sp
               : 22.sp;
 
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 30.h),
-        child: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Container(
-            color: Colors.transparent,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(30.r),
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      color: Colors.white,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 50.w,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          SizedBox(
-                            height: 30.h,
-                          ),
-                          // image
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                'icons/sad_close.svg',
-                                height: 155.r,
-                                width: 155.r,
-                              ),
-                            ],
-                          ),
-                          // title
-                          SizedBox(
-                            height: 25.h,
-                          ),
-                          Text(
-                            "Are You Sure You Want to Delete Your Account?",
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.inter(
-                              fontSize: titleFontSize,
-                              fontWeight: FontWeight.w700,
-                              color: const Color.fromRGBO(52, 74, 106, 1),
-                            ),
-                          ),
-
-                          // text
-                          SizedBox(
-                            height: 15.h,
-                          ),
-                          Text(
-                            "Deleting your account will remove all your data from our servers. This action cannot be undone.",
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.inter(
-                              fontSize: subtitleFontSize,
-                              fontWeight: FontWeight.w400,
-                              color: const Color.fromRGBO(89, 89, 89, 1),
-                            ),
-                          ),
-
-                          SizedBox(
-                            height: 20.h,
-                          ),
-                          SettingsInput(
-                            controller: passwordController,
-                            label: "Enter Pin",
-                            type: TextInputType.number,
-                            isPassword: true,
-                            radius: 20,
-                            formatter: PinInputFormatter(),
-                          ),
-
-                          // button
-                          Stack(
-                            children: [
-                              GestureDetector(
-                                onTap: () async {
-                                  if (passwordController.text.isNotEmpty &&
-                                      !loading) {
-                                    toggleLoading();
-
-                                    var data = await authController.changePhone(
-                                        passwordController.text.tr);
-
-                                    if (data['status'] == "error") {
-                                      showSnackbar(
-                                          context,
-                                          "Problems Deleting Account",
-                                          "There was a problem deleting your account.",
-                                          false);
-                                    } else {
-                                      passwordController.text = "";
-
-                                      showSnackbar(
-                                          context,
-                                          "Update Successful",
-                                          "Account deleted successfully.",
-                                          false);
-                                    }
-
-                                    toggleLoading();
-                                  }
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 30.h),
-                                  child: normalButton(
-                                    passwordController.text.isNotEmpty &&
-                                            !loading
-                                        ? const Color.fromRGBO(254, 101, 93, 1)
-                                        : unselectedButtonColor,
-                                    passwordController.text.isNotEmpty &&
-                                            !loading
-                                        ? Colors.white
-                                        : const Color.fromRGBO(52, 74, 106, 1),
-                                    "Delete Account",
-                                    20,
-                                  ),
-                                ),
-                              ),
-
-                              // loading
-                              if (loading)
-                                Container(
-                                  padding: EdgeInsets.symmetric(vertical: 30.h),
-                                  child:
-                                      buttonLoading(unselectedButtonColor, 16),
-                                ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10.h,
-                          ),
-                        ],
+      return GestureDetector(
+        onTap: () {
+          Navigator.pop(context);
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 30.h),
+          color: Colors.transparent,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(30.r),
+            child: GestureDetector(
+              onTap: () {},
+              child: Container(
+                color: Colors.white,
+                padding: EdgeInsets.symmetric(
+                  horizontal: 50.w,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(
+                      height: 30.h,
+                    ),
+                    // image
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          'icons/sad_close.svg',
+                          height: 155.r,
+                          width: 155.r,
+                        ),
+                      ],
+                    ),
+                    // title
+                    SizedBox(
+                      height: 25.h,
+                    ),
+                    Text(
+                      "Are You Sure You Want to Delete Your Account?",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.inter(
+                        fontSize: titleFontSize,
+                        fontWeight: FontWeight.w700,
+                        color: const Color.fromRGBO(52, 74, 106, 1),
                       ),
                     ),
-                  ),
+
+                    // text
+                    SizedBox(
+                      height: 15.h,
+                    ),
+                    Text(
+                      "Deleting your account will remove all your data from our servers. This action cannot be undone.",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.inter(
+                        fontSize: subtitleFontSize,
+                        fontWeight: FontWeight.w400,
+                        color: const Color.fromRGBO(89, 89, 89, 1),
+                      ),
+                    ),
+
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    SettingsInput(
+                      controller: passwordController,
+                      label: "Enter Pin",
+                      type: TextInputType.number,
+                      isPassword: true,
+                      radius: 20,
+                      formatter: PinInputFormatter(),
+                    ),
+
+                    // button
+                    Stack(
+                      children: [
+                        GestureDetector(
+                          onTap: () async {
+                            if (passwordController.text.isNotEmpty &&
+                                !loading) {
+                              toggleLoading();
+
+                              var data = await authController.deleteAccount(
+                                  passwordController.text.trim());
+
+                              if (data['status'] == "error") {
+                                Get.back();
+
+                                showSnackbar(
+                                    context,
+                                    "Problem Deleting Account",
+                                    data['error'],
+                                    true);
+                              } else {
+                                passwordController.text = "";
+
+                                Navigator.pop(context);
+                                await authController.logout();
+                                Get.back();
+                                Get.back();
+
+                                showSnackbar(context, "Update Successful",
+                                    "Account deleted successfully.", false);
+                              }
+
+                              toggleLoading();
+                            }
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 30.h),
+                            child: normalButton(
+                              passwordController.text.isNotEmpty && !loading
+                                  ? const Color.fromRGBO(254, 101, 93, 1)
+                                  : unselectedButtonColor,
+                              passwordController.text.isNotEmpty && !loading
+                                  ? Colors.white
+                                  : const Color.fromRGBO(52, 74, 106, 1),
+                              "Delete Account",
+                              20,
+                            ),
+                          ),
+                        ),
+
+                        // loading
+                        if (loading)
+                          Container(
+                            padding: EdgeInsets.symmetric(vertical: 30.h),
+                            child: buttonLoading(unselectedButtonColor, 16),
+                          ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
