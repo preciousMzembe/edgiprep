@@ -70,7 +70,7 @@ class Appraisal extends StatelessWidget {
                 onRefresh: () async {
                   await refreshData();
                 },
-                color: homeLightBackgroundColor,
+                color: appbarColor,
                 backgroundColor: Colors.white,
                 animSpeedFactor: 2,
                 showChildOpacityTransition: false,

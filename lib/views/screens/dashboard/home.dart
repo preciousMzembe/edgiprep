@@ -225,7 +225,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   onRefresh: () async {
                     await widget.refreshData();
                   },
-                  color: homeLightBackgroundColor,
+                  color: appbarColor,
                   backgroundColor: Colors.white,
                   animSpeedFactor: 2,
                   showChildOpacityTransition: false,

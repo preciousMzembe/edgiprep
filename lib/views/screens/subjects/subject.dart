@@ -8,6 +8,7 @@ import 'package:edgiprep/views/components/subject/subject_subject_description.da
 import 'package:edgiprep/views/components/subject/subject_subject_image.dart';
 import 'package:edgiprep/views/components/subject/subject_subject_name.dart';
 import 'package:edgiprep/views/components/subjects/subjects_back.dart';
+import 'package:edgiprep/views/screens/subjects/subject_progress.dart';
 import 'package:edgiprep/views/screens/subjects/subject_settings.dart';
 import 'package:edgiprep/views/screens/subjects/topics.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,7 @@ class _SubjectState extends State<Subject> {
   List<String> navOptions = [
     "Learn",
     "My Progress",
+    "Settings",
   ];
 
   String selectedTitle = "Learn";
@@ -158,9 +160,11 @@ class _SubjectState extends State<Subject> {
                       unitTopicMap: unitTopicMap,
                       fetchUnitsAndTopics: _fetchUnitsAndTopics,
                     )
-                  : SubjectSettings(
-                      subject: widget.subject,
-                    ),
+                  : selectedTitle == "My Progress"
+                      ? SubjectProgressPane(
+                          subject: widget.subject,
+                        )
+                      : SubjectSettings(subject: widget.subject),
             ),
           ],
         ),

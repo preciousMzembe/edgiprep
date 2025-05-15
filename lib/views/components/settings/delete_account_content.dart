@@ -160,7 +160,7 @@ class _DeleteAccountContentState extends State<DeleteAccountContent> {
                               } else {
                                 passwordController.text = "";
 
-                                Navigator.pop(context);
+                                Get.back();
                                 await authController.logout();
                                 Get.back();
                                 Get.back();

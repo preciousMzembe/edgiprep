@@ -147,11 +147,15 @@ class ChallengeController extends GetxController {
           String cleanContent =
               option['text'].replaceAll(RegExp(r'<[^>]*>'), '').trim();
 
-          if (cleanContent.isNotEmpty) {
+          if (cleanContent.isNotEmpty ||
+              (option['imageUrl'] != null && option['imageUrl'] != "")) {
             tempOptions.add(
               QuestionAnswerModel(
                 id: option['id'],
-                text: option['text'],
+                text: cleanContent.isEmpty ? cleanContent : option['text'],
+                image: option['imageUrl'] != null && option['imageUrl'] != ""
+                    ? "${config?.imagesUrl}/${option['imageUrl']}"
+                    : "",
                 qusetionId: option['questionId'],
                 isCorrect: option['isCorrect'],
               ),
@@ -265,11 +269,15 @@ class ChallengeController extends GetxController {
           String cleanContent =
               option['text'].replaceAll(RegExp(r'<[^>]*>'), '').trim();
 
-          if (cleanContent.isNotEmpty) {
+          if (cleanContent.isNotEmpty ||
+              (option['imageUrl'] != null && option['imageUrl'] != "")) {
             tempOptions.add(
               QuestionAnswerModel(
                 id: option['id'],
-                text: option['text'],
+                text: cleanContent.isEmpty ? cleanContent : option['text'],
+                image: option['imageUrl'] != null && option['imageUrl'] != ""
+                    ? "${config?.imagesUrl}/${option['imageUrl']}"
+                    : "",
                 qusetionId: option['questionId'],
                 isCorrect: option['isCorrect'],
               ),

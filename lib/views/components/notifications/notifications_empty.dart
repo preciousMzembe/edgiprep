@@ -41,7 +41,7 @@ Widget notificationsEmpty() {
             colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
           ),
           SizedBox(
-            height: 40.h,
+            height: 30.h,
           ),
           Text(
             "No Notifications",

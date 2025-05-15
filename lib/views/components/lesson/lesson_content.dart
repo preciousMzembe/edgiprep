@@ -26,10 +26,10 @@ Widget lessonContent(SlideContentModel? slideContent) {
               : 38.sp;
 
       double contentFont = isTablet
-          ? 18.sp
+          ? 26.sp
           : isSmallTablet
-              ? 20.sp
-              : 22.sp;
+              ? 28.sp
+              : 30.sp;
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

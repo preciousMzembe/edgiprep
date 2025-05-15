@@ -1,14 +1,19 @@
+import 'dart:ui';
+
 import 'package:edgiprep/controllers/enrollment/enrollment_controller.dart';
 import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.dart';
 import 'package:edgiprep/models/exams/settings_exam_model.dart';
 import 'package:edgiprep/utils/device_utils.dart';
+import 'package:edgiprep/views/components/settings/settings_icon.dart';
 import 'package:edgiprep/views/screens/enrollment/subjects_enrollment.dart';
+import 'package:edgiprep/views/screens/settings/enrollment_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 class ExamSwitchContent extends StatefulWidget {
   const ExamSwitchContent({super.key});
@@ -24,14 +29,35 @@ class _ExamSwitchContentState extends State<ExamSwitchContent> {
   final EnrollmentController enrollmentController =
       Get.find<EnrollmentController>();
 
+  final RxBool loading = false.obs;
+  final RxString selectedExamId = ''.obs;
+
   void selectExam(SettingsExamModel exam) async {
-    Navigator.pop(context);
+    setState(() {
+      selectedExamId.value = exam.id;
+      loading.value = true;
+    });
+
+    // return;
 
     if (exam.enrollmentId.isNotEmpty) {
       await userEnrollmentController.switchExam(exam.id);
+
+      setState(() {
+        loading.value = false;
+        selectedExamId.value = "";
+      });
+      Get.back();
     } else {
       // enroll
       enrollmentController.selectExam(exam.name);
+
+      setState(() {
+        loading.value = false;
+        selectedExamId.value = "";
+      });
+      Get.back();
+
       Get.to(() => SubjectsEnrollment(
             settings: true,
           ));
@@ -70,185 +96,258 @@ class _ExamSwitchContentState extends State<ExamSwitchContent> {
                 ? 60.h
                 : 50.h;
 
-        double addButtonHeight = isTablet
-            ? 50.sp
-            : isSmallTablet
-                ? 40.h
-                : 30.h;
-
         double fontSize = isTablet
-            ? 16.sp
+            ? 32.sp
             : isSmallTablet
-                ? 18.sp
-                : 20.sp;
+                ? 34.sp
+                : 36.sp;
+
+        double examFontSize = isTablet
+            ? 24.sp
+            : isSmallTablet
+                ? 26.sp
+                : 28.sp;
+
+        double height = isTablet
+            ? 36.r
+            : isSmallTablet
+                ? 38.r
+                : 40.r;
 
         double iconSize = isTablet
-            ? 22.sp
+            ? 16.r
             : isSmallTablet
-                ? 24.sp
-                : 26.sp;
+                ? 18.r
+                : 20.r;
 
-        return Obx(
-          () {
-            return PopupMenuButton<String>(
-              color: Colors.white,
-              offset: Offset(0, buttonHeight),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.r),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12.r),
-                child: Container(
-                  color: const Color.fromRGBO(223, 228, 237, 1),
-                  padding: EdgeInsets.symmetric(horizontal: 14.h),
-                  height: buttonHeight,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        userEnrollmentController.activeExam.value.title,
-                        style: GoogleFonts.inter(
-                          fontSize: examSize,
-                          fontWeight: FontWeight.w700,
-                          color: const Color.fromRGBO(52, 74, 106, 1),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 14.w,
-                      ),
-                      SvgPicture.asset(
-                        'icons/bars.svg',
-                        height: mainIconSize,
-                        width: mainIconSize,
-                        colorFilter: ColorFilter.mode(
-                            Color.fromRGBO(52, 74, 106, 1), BlendMode.srcIn),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              onSelected: (value) {},
-              itemBuilder: (context) => [
-                // Top
-                PopupMenuItem(
-                  height: buttonHeight,
-                  value: "",
-                  enabled: false,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Switch Exam",
-                        style: GoogleFonts.inter(
-                          fontSize: fontSize,
-                          fontWeight: FontWeight.w600,
-                          color: const Color.fromRGBO(109, 124, 147, 1),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 30.w,
-                      ),
-                      Icon(
-                        FontAwesomeIcons.gear,
-                        size: iconSize,
-                        color: const Color.fromRGBO(109, 124, 147, 1),
-                      ),
-                    ],
-                  ),
-                ),
-                PopupMenuDivider(),
+        double loadingIconHeight = isTablet
+            ? 50.h
+            : isSmallTablet
+                ? 60.h
+                : 70.h;
 
-                // Options
-                ...userEnrollmentController.allExams.map((exam) {
-                  return PopupMenuItem(
-                    value: exam.id,
-                    height: buttonHeight,
-                    enabled: false,
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        top: 6.h,
-                        bottom: 0,
-                      ),
+        return GestureDetector(
+          onTap: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (context) {
+                return BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom,
+                    ),
+                    child: SingleChildScrollView(
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12.r),
-                        child: GestureDetector(
-                          onTap: () {
-                            selectExam(exam);
-                          },
-                          child: Container(
-                            color: exam.selected
-                                ? const Color.fromRGBO(202, 228, 253, 1)
-                                : Colors.transparent,
-                            height: buttonHeight,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 16.w,
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30.r),
+                          topRight: Radius.circular(30.r),
+                        ),
+                        child: Container(
+                          color: Colors.white,
+                          padding: EdgeInsets.symmetric(
+                            vertical: 30.h,
+                          ),
+                          child: Obx(() {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                // indicator
-                                Container(
-                                  height: addButtonHeight,
-                                  width: addButtonHeight,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50.r),
-                                    border: Border.all(
-                                      width: 3.r,
-                                      color: exam.selected
-                                          ? const Color.fromRGBO(
-                                              35, 131, 226, 1)
-                                          : const Color.fromRGBO(
-                                              214, 220, 233, 1),
-                                    ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 40.w,
                                   ),
-                                  child: Center(
-                                    child: IconTheme(
-                                        data: IconThemeData(
-                                          opacity: 1.0,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Switch Exam",
+                                        style: GoogleFonts.inter(
+                                          fontSize: fontSize,
+                                          fontWeight: FontWeight.w700,
+                                          color: const Color.fromRGBO(
+                                              52, 74, 106, 1),
                                         ),
-                                        child: Icon(
-                                          FontAwesomeIcons.check,
-                                          size: fontSize,
-                                          color: exam.selected
-                                              ? const Color.fromRGBO(
-                                                  35, 131, 226, 1)
-                                              : Colors.transparent,
-                                        )),
+                                      ),
+                                      SizedBox(
+                                        width: 30.w,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          Get.back();
+                                          Get.to(() => EnrollmentSettings());
+                                        },
+                                        child:
+                                            settingsIcon(FontAwesomeIcons.gear),
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 20.w,
+                                  height: 40.h,
                                 ),
+                                ...userEnrollmentController.allExams.map(
+                                  (exam) => Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 40.w,
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(12.r),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          selectExam(exam);
+                                        },
+                                        child: Container(
+                                          color: exam.selected
+                                              ? const Color.fromRGBO(
+                                                  202, 228, 253, 1)
+                                              : Colors.transparent,
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 35.w,
+                                            vertical: 8.h,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              // indicator
+                                              Container(
+                                                height: height,
+                                                width: height,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          50.r),
+                                                  border: Border.all(
+                                                    width: 3.r,
+                                                    color: exam.selected
+                                                        ? const Color.fromRGBO(
+                                                            35, 131, 226, 1)
+                                                        : const Color.fromRGBO(
+                                                            214, 220, 233, 1),
+                                                  ),
+                                                ),
+                                                child: Center(
+                                                  child: IconTheme(
+                                                      data: IconThemeData(
+                                                        opacity: 1.0,
+                                                      ),
+                                                      child: Icon(
+                                                        FontAwesomeIcons.check,
+                                                        size: iconSize,
+                                                        color: exam.selected
+                                                            ? const Color
+                                                                .fromRGBO(
+                                                                35, 131, 226, 1)
+                                                            : Colors
+                                                                .transparent,
+                                                      )),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 20.w,
+                                              ),
 
-                                // Exam
-                                Text(
-                                  exam.name,
-                                  style: GoogleFonts.inter(
-                                    color: exam.selected
-                                        ? const Color.fromRGBO(35, 131, 226, 1)
-                                        : const Color.fromRGBO(52, 74, 106, 1),
-                                    fontSize: fontSize,
-                                    fontWeight: FontWeight.w700,
+                                              // Exam
+                                              Expanded(
+                                                child: Text(
+                                                  exam.name,
+                                                  style: GoogleFonts.inter(
+                                                    color: exam.selected
+                                                        ? const Color.fromRGBO(
+                                                            35, 131, 226, 1)
+                                                        : const Color.fromRGBO(
+                                                            52, 74, 106, 1),
+                                                    fontSize: examFontSize,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
+                                              ),
+
+                                              // Loading
+                                              if (exam.id != selectedExamId.value)
+                                                SizedBox(
+                                                  height: loadingIconHeight,
+                                                ),
+                                              if (loading.value &&
+                                                  exam.id == selectedExamId.value)
+                                                Column(
+                                                  children: [
+                                                    SizedBox(
+                                                      width: 20.w,
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 20.w,
+                                                        ),
+                                                        Container(
+                                                          child: Lottie.asset(
+                                                            'icons/loading.json',
+                                                            height:
+                                                                loadingIconHeight,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
+                                SizedBox(
+                                  height: 80.h,
+                                ),
                               ],
-                            ),
-                          ),
+                            );
+                          }),
                         ),
                       ),
                     ),
-                  );
-                }),
-
-                PopupMenuItem(
-                  height: 40.h,
-                  value: "",
-                  enabled: false,
-                  child: SizedBox(),
-                ),
-              ],
+                  ),
+                );
+              },
             );
           },
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12.r),
+            child: Container(
+              color: const Color.fromRGBO(223, 228, 237, 1),
+              padding: EdgeInsets.symmetric(horizontal: 14.h),
+              height: buttonHeight,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    userEnrollmentController.activeExam.value.title,
+                    style: GoogleFonts.inter(
+                      fontSize: examSize,
+                      fontWeight: FontWeight.w700,
+                      color: const Color.fromRGBO(52, 74, 106, 1),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 14.w,
+                  ),
+                  SvgPicture.asset(
+                    'icons/bars.svg',
+                    height: mainIconSize,
+                    width: mainIconSize,
+                    colorFilter: ColorFilter.mode(
+                        Color.fromRGBO(52, 74, 106, 1), BlendMode.srcIn),
+                  ),
+                ],
+              ),
+            ),
+          ),
         );
       },
     );

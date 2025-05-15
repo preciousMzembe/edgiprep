@@ -121,17 +121,6 @@ class _NotificationsState extends State<Notifications> {
                           ],
                         );
                       }),
-                      // notificationBox(
-                      //   "System Update",
-                      //   "We've made some exciting improvements to enhance your learning experience!🎉  Update now and continue prepping smarter! 💡Let's keep moving towards exam success!",
-                      //   "3:00 AM",
-                      // ),
-                      // notificationsDay("Yesterday"),
-                      // notificationBox(
-                      //   "Subscription",
-                      //   "Unlock your full potential with EdgiPrep Premium! 🚀 Upgrade now and take your exam preparation to the next level! 💪\nDon't miss out — success is just a step away! 🏆",
-                      //   "8:30 PM",
-                      // ),
                     ],
                   ),
 

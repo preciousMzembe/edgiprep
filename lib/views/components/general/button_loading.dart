@@ -24,9 +24,9 @@ Widget buttonLoading(
       double iconHeight = kIsWeb
           ? 18
           : isTablet
-              ? 18.h
+              ? 50.h
               : isSmallTablet
-                  ? 20.h
+                  ? 60.h
                   : 70.h;
 
       return ClipRRect(

@@ -49,7 +49,7 @@ Widget lessonQuestion(LessonSlideQuestionModel? question, bool sideDone) {
             question?.questionText ?? "",
             textStyle: GoogleFonts.inter(
               fontSize: questionFont,
-              fontWeight: FontWeight.w700,
+              // fontWeight: FontWeight.w700,
               color: const Color.fromRGBO(52, 74, 106, 1),
             ),
             customWidgetBuilder: (element) {
@@ -62,7 +62,7 @@ Widget lessonQuestion(LessonSlideQuestionModel? question, bool sideDone) {
                     latexExpression,
                     textStyle: GoogleFonts.inter(
                       fontSize: questionFont,
-                      fontWeight: FontWeight.w700,
+                      // fontWeight: FontWeight.w700,
                       color: const Color.fromRGBO(52, 74, 106, 1),
                     ),
                   );
@@ -105,7 +105,10 @@ Widget lessonQuestion(LessonSlideQuestionModel? question, bool sideDone) {
                     }
                   },
                   child: lessonQuestionResponse(
-                      option.text, option.id == question.userAnswerId),
+                    option.text,
+                    option.id == question.userAnswerId,
+                    image: option.image ?? "",
+                  ),
                 ),
                 SizedBox(
                   height: 25.h,
