@@ -168,7 +168,8 @@ class NotificationService extends GetxService {
 
       // reset timer if set is true
       if (reminder.set) {
-        DateTime parsedTime = DateFormat.jm().parse(time);
+        DateFormat format = DateFormat("h:mm a");
+        DateTime parsedTime = format.parse(time);
 
         scheduleDailyReminder(
           time: parsedTime,
@@ -189,7 +190,8 @@ class NotificationService extends GetxService {
 
       // set reminder
       if (newReminder.set) {
-        DateTime parsedTime = DateFormat.jm().parse(reminder.time);
+        DateFormat format = DateFormat("h:mm a");
+        DateTime parsedTime = format.parse(reminder.time);
 
         scheduleDailyReminder(
           time: parsedTime,

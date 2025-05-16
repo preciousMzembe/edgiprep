@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 Widget homeStudyTopic(String name, double fontSize) {
   return Text(
     name,
-    maxLines: 2,
+    maxLines: 1,
     overflow: TextOverflow.ellipsis,
     style: GoogleFonts.inter(
       fontSize: fontSize,
