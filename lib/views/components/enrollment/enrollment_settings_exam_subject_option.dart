@@ -6,10 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-Widget enrollmentSettingsExamSubjectOption(
-  String name,
-  String icon,
-) {
+Widget enrollmentSettingsExamSubjectOption(String name, String icon) {
   return LayoutBuilder(
     builder: (context, constraints) {
       bool isTablet = DeviceUtils.isTablet(context);

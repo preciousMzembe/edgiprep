@@ -130,9 +130,10 @@ class PaperController extends GetxController {
                 : "",
             options: [],
             explanation: explanation,
-            explanationImage: instances['explainationImage'] != null &&
-                    instances['explainationImage'] != ""
-                ? "${config?.imagesUrl}/${instances['explainationImage']}"
+            explanationImage: instances['question']['explainationImage'] !=
+                        null &&
+                    instances['question']['explainationImage'] != ""
+                ? "${config?.imagesUrl}/${instances['question']['explainationImage']}"
                 : "",
           ),
           order: instances['order'],

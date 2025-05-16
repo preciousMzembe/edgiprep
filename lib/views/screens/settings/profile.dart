@@ -19,7 +19,6 @@ import 'package:edgiprep/views/components/settings/settings_button.dart';
 import 'package:edgiprep/views/components/settings/settings_cancel_text.dart';
 import 'package:edgiprep/views/components/settings/settings_error_text.dart';
 import 'package:edgiprep/views/components/settings/settings_input.dart';
-import 'package:edgiprep/views/components/general/phone_number_formatter.dart';
 import 'package:edgiprep/views/components/general/pin_input_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -926,171 +925,171 @@ class _ProfileState extends State<Profile> {
                 ),
 
                 // phone
-                SizedBox(
-                  height: 30.h,
-                ),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(25.r),
-                  child: Container(
-                    color: Colors.white,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 30.w,
-                      vertical: 30.h,
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // icon
-                        profileDetailIcon(FontAwesomeIcons.phone),
+                // SizedBox(
+                //   height: 30.h,
+                // ),
+                // ClipRRect(
+                //   borderRadius: BorderRadius.circular(25.r),
+                //   child: Container(
+                //     color: Colors.white,
+                //     padding: EdgeInsets.symmetric(
+                //       horizontal: 30.w,
+                //       vertical: 30.h,
+                //     ),
+                //     child: Row(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         // icon
+                //         profileDetailIcon(FontAwesomeIcons.phone),
 
-                        // details
-                        SizedBox(
-                          width: 30.w,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              // values
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: [
-                                        profileDetailTitle("Phone Number"),
-                                        profileDetaillSubtitle(
-                                            "265 000 000 000"),
-                                      ],
-                                    ),
-                                  ),
+                //         // details
+                //         SizedBox(
+                //           width: 30.w,
+                //         ),
+                //         Expanded(
+                //           child: Column(
+                //             crossAxisAlignment: CrossAxisAlignment.stretch,
+                //             children: [
+                //               // values
+                //               Row(
+                //                 crossAxisAlignment: CrossAxisAlignment.center,
+                //                 children: [
+                //                   Expanded(
+                //                     child: Column(
+                //                       crossAxisAlignment:
+                //                           CrossAxisAlignment.stretch,
+                //                       children: [
+                //                         profileDetailTitle("Phone Number"),
+                //                         profileDetaillSubtitle(
+                //                             "265 000 000 000"),
+                //                       ],
+                //                     ),
+                //                   ),
 
-                                  // edit button
-                                  if (!editPhone)
-                                    GestureDetector(
-                                      onTap: () {
-                                        togglePhone();
-                                      },
-                                      child: profileDetailEditIcon(
-                                          FontAwesomeIcons.pen),
-                                    ),
+                //                   // edit button
+                //                   if (!editPhone)
+                //                     GestureDetector(
+                //                       onTap: () {
+                //                         togglePhone();
+                //                       },
+                //                       child: profileDetailEditIcon(
+                //                           FontAwesomeIcons.pen),
+                //                     ),
 
-                                  if (editPhone)
-                                    GestureDetector(
-                                      onTap: () {
-                                        togglePhone();
-                                      },
-                                      child: settingsCancelText("Cancel"),
-                                    ),
-                                ],
-                              ),
+                //                   if (editPhone)
+                //                     GestureDetector(
+                //                       onTap: () {
+                //                         togglePhone();
+                //                       },
+                //                       child: settingsCancelText("Cancel"),
+                //                     ),
+                //                 ],
+                //               ),
 
-                              // edit
-                              if (editPhone)
-                                Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    SizedBox(
-                                      height: 25.h,
-                                    ),
-                                    SettingsInput(
-                                      controller: phoneController,
-                                      label: "New Phone Number",
-                                      type: TextInputType.number,
-                                      isPassword: false,
-                                      radius: 20,
-                                      formatter: PhoneNumberFormatter(),
-                                    ),
+                //               // edit
+                //               if (editPhone)
+                //                 Column(
+                //                   crossAxisAlignment:
+                //                       CrossAxisAlignment.stretch,
+                //                   children: [
+                //                     SizedBox(
+                //                       height: 25.h,
+                //                     ),
+                //                     SettingsInput(
+                //                       controller: phoneController,
+                //                       label: "New Phone Number",
+                //                       type: TextInputType.number,
+                //                       isPassword: false,
+                //                       radius: 20,
+                //                       formatter: PhoneNumberFormatter(),
+                //                     ),
 
-                                    // error
-                                    if (phoneErorr.isNotEmpty)
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
-                                        children: [
-                                          SizedBox(
-                                            height: 20.h,
-                                          ),
-                                          settingsErrorText(phoneErorr),
-                                        ],
-                                      ),
+                //                     // error
+                //                     if (phoneErorr.isNotEmpty)
+                //                       Column(
+                //                         crossAxisAlignment:
+                //                             CrossAxisAlignment.stretch,
+                //                         children: [
+                //                           SizedBox(
+                //                             height: 20.h,
+                //                           ),
+                //                           settingsErrorText(phoneErorr),
+                //                         ],
+                //                       ),
 
-                                    SizedBox(
-                                      height: 20.h,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Stack(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () async {
-                                                // change email
-                                                String phone =
-                                                    phoneController.text.trim();
+                //                     SizedBox(
+                //                       height: 20.h,
+                //                     ),
+                //                     Row(
+                //                       children: [
+                //                         Stack(
+                //                           children: [
+                //                             GestureDetector(
+                //                               onTap: () async {
+                //                                 // change email
+                //                                 String phone =
+                //                                     phoneController.text.trim();
 
-                                                if (phone.isNotEmpty &&
-                                                    phone.length == 15) {
-                                                  changePhoneError("");
+                //                                 if (phone.isNotEmpty &&
+                //                                     phone.length == 15) {
+                //                                   changePhoneError("");
 
-                                                  togglePhoneLoading();
+                //                                   togglePhoneLoading();
 
-                                                  var data =
-                                                      await authController
-                                                          .changePhone(phone);
+                //                                   var data =
+                //                                       await authController
+                //                                           .changePhone(phone);
 
-                                                  if (data['status'] ==
-                                                      "error") {
-                                                    changePhoneError(
-                                                        data['error']);
-                                                  } else {
-                                                    phoneController.text = "";
+                //                                   if (data['status'] ==
+                //                                       "error") {
+                //                                     changePhoneError(
+                //                                         data['error']);
+                //                                   } else {
+                //                                     phoneController.text = "";
 
-                                                    showSnackbar(
-                                                        context,
-                                                        "Update Successful",
-                                                        "Your data was updated successfuly.",
-                                                        false);
-                                                  }
+                //                                     showSnackbar(
+                //                                         context,
+                //                                         "Update Successful",
+                //                                         "Your data was updated successfuly.",
+                //                                         false);
+                //                                   }
 
-                                                  togglePhoneLoading();
-                                                } else {
-                                                  if (phone.length < 15) {
-                                                    changePhoneError(
-                                                        "Please enter a valid phone number.");
-                                                  }
-                                                }
-                                              },
-                                              child: settingsButton(
-                                                const Color.fromRGBO(
-                                                    35, 131, 226, 1),
-                                                Colors.white,
-                                                "Update",
-                                                16,
-                                              ),
-                                            ),
-                                            if (phoneLoading)
-                                              Positioned(
-                                                left: 0,
-                                                right: 0,
-                                                child: profileButtonLoading(
-                                                    unselectedButtonColor, 16),
-                                              ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                //                                   togglePhoneLoading();
+                //                                 } else {
+                //                                   if (phone.length < 15) {
+                //                                     changePhoneError(
+                //                                         "Please enter a valid phone number.");
+                //                                   }
+                //                                 }
+                //                               },
+                //                               child: settingsButton(
+                //                                 const Color.fromRGBO(
+                //                                     35, 131, 226, 1),
+                //                                 Colors.white,
+                //                                 "Update",
+                //                                 16,
+                //                               ),
+                //                             ),
+                //                             if (phoneLoading)
+                //                               Positioned(
+                //                                 left: 0,
+                //                                 right: 0,
+                //                                 child: profileButtonLoading(
+                //                                     unselectedButtonColor, 16),
+                //                               ),
+                //                           ],
+                //                         ),
+                //                       ],
+                //                     ),
+                //                   ],
+                //                 ),
+                //             ],
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
 
                 SizedBox(
                   height: 30.h,

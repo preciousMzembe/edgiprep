@@ -1,3 +1,4 @@
+import 'package:edgiprep/db/subject/subject.dart';
 import 'package:edgiprep/models/exams/enrollment_exam_model.dart';
 import 'package:edgiprep/models/subjects/enrollment_subject_model.dart';
 import 'package:edgiprep/services/enrollment/enrollment_service.dart';
@@ -49,6 +50,12 @@ class EnrollmentController extends GetxController {
     subjects.value = await enrollmentService.getSubjectsByExamId(examId);
 
     subjects.refresh();
+  }
+
+  Future<List<Subject>> fetchNewSubjects(String examId) async {
+    List<Subject> subjects = await enrollmentService.getExamSubjects(examId);
+
+    return subjects;
   }
 
   // Toggle subject selection

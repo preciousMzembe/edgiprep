@@ -40,7 +40,7 @@ class _EnrollmentSettingsState extends State<EnrollmentSettings> {
                   horizontal: 30.w,
                   vertical: 30.h,
                 ),
-                color: const Color.fromRGBO(215, 235, 255, 1),
+                color: const Color.fromARGB(255, 184, 220, 255),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [

@@ -23,7 +23,9 @@ Widget lessonIncorrect(String type) {
   ChallengeController challengeController = Get.find<ChallengeController>();
 
   QuestionAnswerModel? correctAnswer;
+  String aImage = "";
   String explanation = "";
+  String expImage = "";
 
   return LayoutBuilder(
     builder: (context, constraints) {
@@ -67,10 +69,18 @@ Widget lessonIncorrect(String type) {
           }
         }
 
+        aImage = correctAnswer?.image ?? "";
+
         explanation = lessonController
                 .slides[lessonController.currentSlideIndex.value]
                 .question
                 ?.explanation ??
+            "";
+
+        expImage = lessonController
+                .slides[lessonController.currentSlideIndex.value]
+                .question
+                ?.explanationImage ??
             "";
       } else if (type == "quiz") {
         List<QuestionAnswerModel> options = quizController
@@ -84,10 +94,16 @@ Widget lessonIncorrect(String type) {
             correctAnswer = option;
           }
         }
+
+        aImage = correctAnswer?.image ?? "";
+
         explanation = quizController
                 .slides[quizController.currentSlideIndex.value]
                 .question
                 ?.explanation ??
+            "";
+        expImage = quizController.slides[quizController.currentSlideIndex.value]
+                .question?.explanationImage ??
             "";
       } else if (type == "paper") {
         List<QuestionAnswerModel> options = paperController
@@ -100,10 +116,18 @@ Widget lessonIncorrect(String type) {
             correctAnswer = option;
           }
         }
+
+        aImage = correctAnswer?.image ?? "";
+
         explanation = paperController
                 .slides[paperController.currentSlideIndex.value]
                 .question
                 ?.explanation ??
+            "";
+        expImage = paperController
+                .slides[paperController.currentSlideIndex.value]
+                .question
+                ?.explanationImage ??
             "";
       } else if (type == "mock") {
         List<QuestionAnswerModel> options = mockController
@@ -117,10 +141,16 @@ Widget lessonIncorrect(String type) {
             correctAnswer = option;
           }
         }
+
+        aImage = correctAnswer?.image ?? "";
+
         explanation = mockController
                 .slides[mockController.currentSlideIndex.value]
                 .question
                 ?.explanation ??
+            "";
+        expImage = mockController.slides[mockController.currentSlideIndex.value]
+                .question?.explanationImage ??
             "";
       } else if (type == "challenge") {
         List<QuestionAnswerModel> options = challengeController
@@ -134,12 +164,25 @@ Widget lessonIncorrect(String type) {
             correctAnswer = option;
           }
         }
+
+        aImage = correctAnswer?.image ?? "";
+
         explanation = challengeController
                 .slides[challengeController.currentSlideIndex.value]
                 .question
                 ?.explanation ??
             "";
+        expImage = challengeController
+                .slides[challengeController.currentSlideIndex.value]
+                .question
+                ?.explanationImage ??
+            "";
       }
+
+      String cleanContent =
+          correctAnswer!.text.replaceAll(RegExp(r'<[^>]*>'), '').trim();
+
+      print(expImage);
 
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 30.h),
@@ -261,36 +304,62 @@ Widget lessonIncorrect(String type) {
                                         SizedBox(
                                           height: 8.h,
                                         ),
-                                        HtmlWidget(
-                                          correctAnswer?.text ?? "",
-                                          textStyle: GoogleFonts.inter(
-                                            fontSize: answerSize,
-                                            fontWeight: FontWeight.w700,
-                                            color: const Color.fromRGBO(
-                                                92, 101, 120, 1),
-                                          ),
-                                          customWidgetBuilder: (element) {
-                                            if (element.localName == "span" &&
-                                                element.classes
-                                                    .contains("ql-formula")) {
-                                              String? latexExpression = element
-                                                  .attributes["data-value"];
+                                        if (cleanContent != "")
+                                          HtmlWidget(
+                                            correctAnswer?.text ?? "",
+                                            textStyle: GoogleFonts.inter(
+                                              fontSize: answerSize,
+                                              fontWeight: FontWeight.w700,
+                                              color: const Color.fromRGBO(
+                                                  92, 101, 120, 1),
+                                            ),
+                                            customWidgetBuilder: (element) {
+                                              if (element.localName == "span" &&
+                                                  element.classes
+                                                      .contains("ql-formula")) {
+                                                String? latexExpression =
+                                                    element.attributes[
+                                                        "data-value"];
 
-                                              if (latexExpression != null) {
-                                                return Math.tex(
-                                                  latexExpression,
-                                                  textStyle: GoogleFonts.inter(
-                                                    fontSize: answerSize,
-                                                    fontWeight: FontWeight.w700,
-                                                    color: const Color.fromRGBO(
-                                                        92, 101, 120, 1),
-                                                  ),
-                                                );
+                                                if (latexExpression != null) {
+                                                  return Math.tex(
+                                                    latexExpression,
+                                                    textStyle:
+                                                        GoogleFonts.inter(
+                                                      fontSize: answerSize,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      color:
+                                                          const Color.fromRGBO(
+                                                              92, 101, 120, 1),
+                                                    ),
+                                                  );
+                                                }
                                               }
-                                            }
-                                            return null;
-                                          },
-                                        ),
+                                              return null;
+                                            },
+                                          ),
+
+                                        // Image
+                                        if (aImage != "")
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.stretch,
+                                            children: [
+                                              if (correctAnswer!.text != "")
+                                                SizedBox(
+                                                  height: 20.h,
+                                                ),
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(20.r),
+                                                child: Image.network(
+                                                  aImage,
+                                                  fit: BoxFit.contain,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                       ],
                                     ),
                                   ),
@@ -319,7 +388,7 @@ Widget lessonIncorrect(String type) {
                               ),
 
                               // explanation
-                              if (explanation.isNotEmpty)
+                              if (explanation.isNotEmpty || expImage != "")
                                 Column(
                                   crossAxisAlignment:
                                       CrossAxisAlignment.stretch,
@@ -339,36 +408,58 @@ Widget lessonIncorrect(String type) {
                                     SizedBox(
                                       height: 8.h,
                                     ),
-                                    HtmlWidget(
-                                      explanation,
-                                      textStyle: GoogleFonts.inter(
-                                        fontSize: explanationSize,
-                                        fontWeight: FontWeight.w500,
-                                        color:
-                                            const Color.fromRGBO(17, 25, 37, 1),
-                                      ),
-                                      customWidgetBuilder: (element) {
-                                        if (element.localName == "span" &&
-                                            element.classes
-                                                .contains("ql-formula")) {
-                                          String? latexExpression =
-                                              element.attributes["data-value"];
+                                    if (explanation.isNotEmpty)
+                                      HtmlWidget(
+                                        explanation,
+                                        textStyle: GoogleFonts.inter(
+                                          fontSize: explanationSize,
+                                          fontWeight: FontWeight.w500,
+                                          color: const Color.fromRGBO(
+                                              17, 25, 37, 1),
+                                        ),
+                                        customWidgetBuilder: (element) {
+                                          if (element.localName == "span" &&
+                                              element.classes
+                                                  .contains("ql-formula")) {
+                                            String? latexExpression = element
+                                                .attributes["data-value"];
 
-                                          if (latexExpression != null) {
-                                            return Math.tex(
-                                              latexExpression,
-                                              textStyle: GoogleFonts.inter(
-                                                fontSize: explanationSize,
-                                                fontWeight: FontWeight.w500,
-                                                color: const Color.fromRGBO(
-                                                    17, 25, 37, 1),
-                                              ),
-                                            );
+                                            if (latexExpression != null) {
+                                              return Math.tex(
+                                                latexExpression,
+                                                textStyle: GoogleFonts.inter(
+                                                  fontSize: explanationSize,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: const Color.fromRGBO(
+                                                      17, 25, 37, 1),
+                                                ),
+                                              );
+                                            }
                                           }
-                                        }
-                                        return null;
-                                      },
-                                    ),
+                                          return null;
+                                        },
+                                      ),
+
+                                    // Exp Image
+                                    if (expImage != "")
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: [
+                                          if (correctAnswer!.text != "")
+                                            SizedBox(
+                                              height: 20.h,
+                                            ),
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(20.r),
+                                            child: Image.network(
+                                              expImage,
+                                              fit: BoxFit.contain,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                   ],
                                 ),
                             ],

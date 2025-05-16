@@ -33,7 +33,7 @@ Widget paperQuestion(LessonSlideQuestionModel? question, bool sideDone) {
         children: [
           // title
           Text(
-            "Question",
+            "❓ Question",
             style: GoogleFonts.inter(
               fontSize: titleFont,
               fontWeight: FontWeight.w700,

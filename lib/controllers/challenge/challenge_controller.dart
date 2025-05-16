@@ -208,11 +208,13 @@ class ChallengeController extends GetxController {
           String cleanContent =
               option.text.replaceAll(RegExp(r'<[^>]*>'), '').trim();
 
-          if (cleanContent.isNotEmpty) {
+          if (cleanContent.isNotEmpty ||
+              (option.image != null && option.image != "")) {
             tempOptions.add(
               QuestionAnswerModel(
                 id: option.id,
                 text: option.text,
+                image: option.image,
                 qusetionId: option.qusetionId,
                 isCorrect: option.isCorrect,
               ),

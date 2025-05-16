@@ -97,7 +97,10 @@ class LessonController extends GetxController {
     }
 
     if (currentSlideIndex.value < slides.length - 1) {
-      visibleSlides.add(slides[currentSlideIndex.value + 1]);
+      // add slide if last visible slide
+      if (visibleSlides.length == currentSlideIndex.value + 1) {
+        visibleSlides.add(slides[currentSlideIndex.value + 1]);
+      }
 
       visibleSlides.refresh();
 
@@ -121,7 +124,7 @@ class LessonController extends GetxController {
         curve: Curves.easeInOut,
       );
 
-      visibleSlides.removeLast();
+      // visibleSlides.removeLast();
     }
   }
 

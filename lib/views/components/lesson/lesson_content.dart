@@ -36,7 +36,7 @@ Widget lessonContent(SlideContentModel? slideContent) {
         children: [
           // title
           Text(
-            "Content",
+            "📚  Content",
             style: GoogleFonts.inter(
               fontSize: titleFont,
               fontWeight: FontWeight.w700,

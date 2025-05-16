@@ -10,7 +10,6 @@ import 'package:edgiprep/views/components/settings/settings_user_email.dart';
 import 'package:edgiprep/views/components/settings/settings_user_image.dart';
 import 'package:edgiprep/views/components/settings/settings_username.dart';
 import 'package:edgiprep/views/components/subjects/subjects_options_title.dart';
-import 'package:edgiprep/views/screens/premium/premium.dart';
 import 'package:edgiprep/views/screens/settings/about.dart';
 import 'package:edgiprep/views/screens/settings/enrollment_settings.dart';
 import 'package:edgiprep/views/screens/settings/notifications_settings.dart';
@@ -154,16 +153,6 @@ class Settings extends StatelessWidget {
                         },
                         child: settingsOptionBox(
                             "writing.svg", "Enrollment", "Add / remove exams"),
-                      ),
-                      SizedBox(
-                        height: 30.h,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Get.to(() => Premium());
-                        },
-                        child: settingsOptionBox("wallet.svg", "Subscription",
-                            "Unlock learning experience with premium"),
                       ),
                       SizedBox(
                         height: 30.h,
