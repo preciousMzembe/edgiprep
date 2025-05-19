@@ -70,8 +70,6 @@ Widget settingsUserImage() {
         }
       }
 
-      int randomNumber = DateTime.now().millisecondsSinceEpoch;
-
       return Stack(
         children: [
           // image
@@ -82,8 +80,7 @@ Widget settingsUserImage() {
                   SizedBox(
                     height: imageSize,
                     child: CachedNetworkImage(
-                      imageUrl:
-                          "${authController.user.value?.profileImage}?$randomNumber",
+                      imageUrl: "${authController.user.value?.profileImage}",
                       imageBuilder: (context, imageProvider) => Container(
                         height: imageSize,
                         width: imageSize,
@@ -99,11 +96,22 @@ Widget settingsUserImage() {
                           ),
                         ),
                       ),
-                      placeholder: (context, url) => Center(
-                        child: Lottie.asset(
-                          'icons/loading.json',
-                          height: 90.r,
-                          fit: BoxFit.fill,
+                      placeholder: (context, url) => Container(
+                        height: imageSize,
+                        width: imageSize,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 15.r,
+                            color: primaryColor,
+                          ),
+                          borderRadius: BorderRadius.circular(200.r),
+                        ),
+                        child: Center(
+                          child: Lottie.asset(
+                            'icons/loading.json',
+                            height: 90.r,
+                            fit: BoxFit.fill,
+                          ),
                         ),
                       ),
                       errorWidget: (context, url, error) => Container(

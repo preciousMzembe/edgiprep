@@ -69,10 +69,12 @@ class AuthService extends GetxService {
             streak = stats.data['streaks'] ?? 0;
           }
 
+          int randomNumber = DateTime.now().millisecondsSinceEpoch;
+
           User user = User(
             name: response.data['name'],
             username: response.data['userName'],
-            profileImage: response.data['profileImage'] ?? "",
+            profileImage: "${response.data['profileImage']}?$randomNumber",
             email: response.data['email'],
             xp: response.data['xp'],
             streak: streak,

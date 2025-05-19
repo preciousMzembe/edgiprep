@@ -21,15 +21,12 @@ Widget profileUserImage() {
               ? 70.r
               : 70.r;
 
-      int randomNumber = DateTime.now().millisecondsSinceEpoch;
-
       return Obx(
         () {
           return SizedBox(
             height: imageSize,
             child: CachedNetworkImage(
-              imageUrl:
-                  "${authController.user.value?.profileImage}?$randomNumber",
+              imageUrl: "${authController.user.value?.profileImage}",
               imageBuilder: (context, imageProvider) => Container(
                 height: imageSize,
                 width: imageSize,
@@ -43,13 +40,6 @@ Widget profileUserImage() {
                     image: imageProvider,
                     fit: BoxFit.cover,
                   ),
-                ),
-              ),
-              placeholder: (context, url) => Center(
-                child: Lottie.asset(
-                  'icons/loading.json',
-                  height: 10.r,
-                  fit: BoxFit.fill,
                 ),
               ),
               errorWidget: (context, url, error) => Container(
@@ -71,23 +61,6 @@ Widget profileUserImage() {
           );
         },
       );
-      // return Container(
-      //   height: imageSize,
-      //   width: imageSize,
-      //   decoration: BoxDecoration(
-      //     border: Border.all(
-      //       width: 5.r,
-      //       color: primaryColor,
-      //     ),
-      //     borderRadius: BorderRadius.circular(200.r),
-      //     image: const DecorationImage(
-      //       image: AssetImage(
-      //         "images/user.jpeg",
-      //       ),
-      //       fit: BoxFit.cover,
-      //     ),
-      //   ),
-      // );
     },
   );
 }
