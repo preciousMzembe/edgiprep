@@ -60,6 +60,7 @@ dependencies:
   cached_network_image: ^3.4.1
   cached_network_svg_image: ^1.2.0
   wave_loading_indicator: ^1.0.7
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:

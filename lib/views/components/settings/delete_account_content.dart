@@ -150,6 +150,7 @@ class _DeleteAccountContentState extends State<DeleteAccountContent> {
                                   passwordController.text.trim());
 
                               if (data['status'] == "error") {
+                                toggleLoading();
                                 Get.back();
 
                                 showSnackbar(
@@ -164,12 +165,7 @@ class _DeleteAccountContentState extends State<DeleteAccountContent> {
                                 await authController.logout();
                                 Get.back();
                                 Get.back();
-
-                                showSnackbar(context, "Update Successful",
-                                    "Account deleted successfully.", false);
                               }
-
-                              toggleLoading();
                             }
                           },
                           child: Container(

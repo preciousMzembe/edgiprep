@@ -25,6 +25,9 @@ class User {
   @HiveField(6)
   final String username;
 
+  @HiveField(7)
+  final String profileImage;
+
   User({
     required this.name,
     required this.email,
@@ -33,5 +36,6 @@ class User {
     required this.weekly,
     required this.localXp,
     required this.username,
+    required this.profileImage,
   });
 }

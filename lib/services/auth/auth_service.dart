@@ -1,5 +1,6 @@
 // auth_service.dart
 import 'package:dio/dio.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:edgiprep/db/boxes.dart';
 import 'package:edgiprep/db/config/config.dart';
 import 'package:edgiprep/db/user/user.dart';
@@ -71,6 +72,7 @@ class AuthService extends GetxService {
           User user = User(
             name: response.data['name'],
             username: response.data['userName'],
+            profileImage: response.data['profileImage'] ?? "",
             email: response.data['email'],
             xp: response.data['xp'],
             streak: streak,
@@ -102,6 +104,7 @@ class AuthService extends GetxService {
       User updatedUser = User(
         name: user.name,
         username: user.username,
+        profileImage: user.profileImage,
         email: user.email,
         xp: user.xp,
         streak: user.streak,
@@ -217,6 +220,7 @@ class AuthService extends GetxService {
 
   Future<void> logout() async {
     await _removeToken();
+    await userBox.clear();
     await userExamBox.clear();
 
     doneLogout.value = !doneLogout.value;
@@ -392,13 +396,50 @@ class AuthService extends GetxService {
     };
   }
 
+  // Upload Profile Picture
+  Future<Map<String, dynamic>> uploadProfilePicture(String filePath) async {
+    try {
+      String? token = await getToken();
+
+      dio.FormData formData = dio.FormData.fromMap({
+        'file': await dio.MultipartFile.fromFile(filePath),
+      });
+
+      final response = await _dio.put(
+        '${config?.apiUrl}/Learner/Mobile/UploadProfilePicture',
+        options: dio.Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+        data: formData,
+      );
+
+      if (response.statusCode == 200) {
+        await getUserServerData();
+        return {
+          'status': "success",
+          'data': 'Profile picture updated successfully',
+        };
+      }
+    } on DioException catch (e) {
+      debugPrint("Problem uploading profile picture ------------ auth service");
+      print(e);
+    }
+
+    return {
+      'status': "error",
+      'error': "There was a problem uploading your profile picture.",
+    };
+  }
+
   // Delete Account
   Future<Map<String, dynamic>> deleteAccount(String password) async {
     try {
       String? token = await getToken();
 
       final response = await _dio.delete(
-        '${config?.apiUrl}/Learner/Mobile/DeleteMyAccount/$password',
+        '${config?.apiUrl}/Learner/Mobile/DeleteMyAccount?PIN=$password',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -407,6 +448,8 @@ class AuthService extends GetxService {
       );
 
       if (response.statusCode == 204) {
+        logout();
+
         return {
           'status': "success",
           'data': 'Account deleted successfully.',

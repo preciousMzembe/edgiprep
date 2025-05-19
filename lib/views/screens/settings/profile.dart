@@ -335,7 +335,7 @@ class _ProfileState extends State<Profile> {
                                                     showSnackbar(
                                                         context,
                                                         "Update Successful",
-                                                        "Your data was updated successfuly.",
+                                                        "Your data was updated successfully.",
                                                         false);
                                                   }
 
@@ -500,7 +500,7 @@ class _ProfileState extends State<Profile> {
                                                     showSnackbar(
                                                         context,
                                                         "Update Successful",
-                                                        "Your data was updated successfuly.",
+                                                        "Your data was updated successfully.",
                                                         false);
                                                   }
 
@@ -709,7 +709,7 @@ class _ProfileState extends State<Profile> {
                                                       showSnackbar(
                                                           context,
                                                           "Update Successful",
-                                                          "Your data was updated successfuly.",
+                                                          "Your data was updated successfully.",
                                                           false);
                                                     }
 
@@ -888,7 +888,7 @@ class _ProfileState extends State<Profile> {
                                                     showSnackbar(
                                                         context,
                                                         "Update Successful",
-                                                        "Your data was updated successfuly.",
+                                                        "Your data was updated successfully.",
                                                         false);
                                                   }
 
@@ -1050,7 +1050,7 @@ class _ProfileState extends State<Profile> {
                 //                                     showSnackbar(
                 //                                         context,
                 //                                         "Update Successful",
-                //                                         "Your data was updated successfuly.",
+                //                                         "Your data was updated successfully.",
                 //                                         false);
                 //                                   }
 

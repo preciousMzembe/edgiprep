@@ -1,11 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:edgiprep/controllers/auth/auth_controller.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 Widget profileUserImage() {
   return LayoutBuilder(
     builder: (context, constraints) {
+      AuthController authController = Get.find<AuthController>();
+
       bool isTablet = DeviceUtils.isTablet(context);
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
@@ -15,23 +21,73 @@ Widget profileUserImage() {
               ? 70.r
               : 70.r;
 
-      return Container(
-        height: imageSize,
-        width: imageSize,
-        decoration: BoxDecoration(
-          border: Border.all(
-            width: 5.r,
-            color: primaryColor,
-          ),
-          borderRadius: BorderRadius.circular(200.r),
-          image: const DecorationImage(
-            image: AssetImage(
-              "images/user.jpeg",
+      int randomNumber = DateTime.now().millisecondsSinceEpoch;
+
+      return Obx(
+        () {
+          return SizedBox(
+            height: imageSize,
+            child: CachedNetworkImage(
+              imageUrl:
+                  "${authController.user.value?.profileImage}?$randomNumber",
+              imageBuilder: (context, imageProvider) => Container(
+                height: imageSize,
+                width: imageSize,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    width: 5.r,
+                    color: primaryColor,
+                  ),
+                  borderRadius: BorderRadius.circular(200.r),
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              placeholder: (context, url) => Center(
+                child: Lottie.asset(
+                  'icons/loading.json',
+                  height: 10.r,
+                  fit: BoxFit.fill,
+                ),
+              ),
+              errorWidget: (context, url, error) => Container(
+                height: imageSize,
+                width: imageSize,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    width: 5.r,
+                    color: primaryColor,
+                  ),
+                  borderRadius: BorderRadius.circular(200.r),
+                  image: const DecorationImage(
+                    image: AssetImage("images/user.jpeg"),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
             ),
-            fit: BoxFit.cover,
-          ),
-        ),
+          );
+        },
       );
+      // return Container(
+      //   height: imageSize,
+      //   width: imageSize,
+      //   decoration: BoxDecoration(
+      //     border: Border.all(
+      //       width: 5.r,
+      //       color: primaryColor,
+      //     ),
+      //     borderRadius: BorderRadius.circular(200.r),
+      //     image: const DecorationImage(
+      //       image: AssetImage(
+      //         "images/user.jpeg",
+      //       ),
+      //       fit: BoxFit.cover,
+      //     ),
+      //   ),
+      // );
     },
   );
 }

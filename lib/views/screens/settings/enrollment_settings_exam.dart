@@ -344,7 +344,7 @@ class _EnrollmentSettingsExamState extends State<EnrollmentSettingsExam> {
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 50.w),
                                       child: Text(
-                                        "You are currentsly enrolled in all available subjects. You can not enroll in any other subjects.",
+                                        "You are currently enrolled in all available subjects. You can not enroll in any other subjects.",
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.inter(
                                           fontSize: infoSize,

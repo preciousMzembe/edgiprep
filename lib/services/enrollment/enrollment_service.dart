@@ -175,6 +175,7 @@ class EnrollmentService extends GetxService {
       if (response.statusCode == 200) {
         done = true;
         doneEnrollment.value = !doneEnrollment.value;
+        await authService.getUserServerData();
       }
     } on DioException {
       debugPrint(

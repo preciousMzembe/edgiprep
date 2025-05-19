@@ -24,13 +24,14 @@ class UserAdapter extends TypeAdapter<User> {
       weekly: fields[4] as double,
       localXp: fields[5] as int,
       username: fields[6] as String,
+      profileImage: fields[7] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, User obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -44,7 +45,9 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(5)
       ..write(obj.localXp)
       ..writeByte(6)
-      ..write(obj.username);
+      ..write(obj.username)
+      ..writeByte(7)
+      ..write(obj.profileImage);
   }
 
   @override

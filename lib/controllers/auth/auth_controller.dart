@@ -116,6 +116,11 @@ class AuthController extends GetxController {
     return await authService.changePhone(phone);
   }
 
+  // Upload Profile Picture
+  Future<Map<String, dynamic>> uploadProfilePicture(String filePath) async {
+    return await authService.uploadProfilePicture(filePath);
+  }
+
   // Delete Account
   Future<Map<String, dynamic>> deleteAccount(String password) async {
     return await authService.deleteAccount(password);
