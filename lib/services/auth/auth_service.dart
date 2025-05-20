@@ -424,9 +424,8 @@ class AuthService extends GetxService {
           'data': 'Profile picture updated successfully',
         };
       }
-    } on DioException catch (e) {
+    } on DioException{
       debugPrint("Problem uploading profile picture ------------ auth service");
-      print(e);
     }
 
     return {

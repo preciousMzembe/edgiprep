@@ -1,3 +1,4 @@
+import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,7 +32,7 @@ Widget settingsRecordBox(String icon, String title, String value) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(30.r),
         child: Container(
-          color: const Color.fromRGBO(35, 131, 226, 0.19),
+          color: Colors.white,
           padding: EdgeInsets.all(30.r),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -40,8 +41,13 @@ Widget settingsRecordBox(String icon, String title, String value) {
                 'icons/$icon',
                 height: iconSize,
                 width: iconSize,
-                colorFilter: const ColorFilter.mode(
-                    Color.fromRGBO(35, 131, 226, 1), BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(
+                    title == "Streak"
+                        ? value == "0"
+                            ? homeLightBackgroundColor
+                            : primaryColor
+                        : primaryColor,
+                    BlendMode.srcIn),
               ),
               SizedBox(
                 width: 30.w,
@@ -66,7 +72,7 @@ Widget settingsRecordBox(String icon, String title, String value) {
                       style: GoogleFonts.inter(
                         fontSize: valueSize,
                         fontWeight: FontWeight.w800,
-                        color: const Color.fromRGBO(255, 255, 255, 1),
+                        color: primaryColor,
                       ),
                     ),
                   ],

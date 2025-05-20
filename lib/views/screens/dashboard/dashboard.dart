@@ -87,7 +87,9 @@ class _DashboardState extends State<Dashboard> {
             Appraisal(
               refreshData: refreshData,
             ),
-            const Settings(),
+            Settings(
+              refreshData: refreshData,
+            ),
           ],
         ),
 
