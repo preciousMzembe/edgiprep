@@ -44,8 +44,12 @@ class NotificationController extends GetxController {
     notificationService.changeTime(settingsTime.value);
   }
 
-  void turnOnOff() {
-    notificationService.changeState();
+  void turnOff() {
+    notificationService.turnOff();
+  }
+
+  void turnOn() {
+    notificationService.turnOn();
   }
 
   // general notifications
@@ -82,11 +86,11 @@ class NotificationController extends GetxController {
       );
 
       // subscription
-      notificationService.sendNewNotification(
-        2,
-        "Achieve More with Premium 🚀",
-        "Unlock your full potential with EdgiPrep Premium! 🚀 Upgrade now and take your exam preparation to the next level! 💪\nDon't miss out — success is just a step away! 🏆",
-      );
+      // notificationService.sendNewNotification(
+      //   2,
+      //   "Achieve More with Premium 🚀",
+      //   "Unlock your full potential with EdgiPrep Premium! 🚀 Upgrade now and take your exam preparation to the next level! 💪\nDon't miss out — success is just a step away! 🏆",
+      // );
     }
 
     // system update

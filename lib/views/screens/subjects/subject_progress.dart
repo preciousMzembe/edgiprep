@@ -191,7 +191,7 @@ class _SubjectProgressPaneState extends State<SubjectProgressPane> {
                                                 CrossAxisAlignment.center,
                                             children: [
                                               Text(
-                                                "${subjectProgress.totalLessons > 0 ? double.parse((subjectProgress.completedLessons / subjectProgress.totalLessons * 100).toStringAsFixed(2)) : 0}%",
+                                                "${subjectProgress.totalLessons > 0 ? (subjectProgress.completedLessons / subjectProgress.totalLessons * 100).round() : 0}%",
                                                 style: GoogleFonts.inter(
                                                   fontSize: statTitleFontSize,
                                                   fontWeight: FontWeight.w700,
@@ -204,8 +204,8 @@ class _SubjectProgressPaneState extends State<SubjectProgressPane> {
                                                   fontSize:
                                                       statSubtitleFontSize,
                                                   fontWeight: FontWeight.w400,
-                                                  color: const Color.fromRGBO(
-                                                      117, 117, 133, 1),
+                                                  color: const Color.fromARGB(
+                                                      255, 55, 55, 70),
                                                 ),
                                               ),
                                             ],
@@ -248,7 +248,7 @@ class _SubjectProgressPaneState extends State<SubjectProgressPane> {
                                             height: 20.h,
                                           ),
                                           Text(
-                                            "${subjectProgress.coveredTopics} (${subjectProgress.totalTopics > 0 ? double.parse((subjectProgress.coveredTopics / subjectProgress.totalTopics * 100).toStringAsFixed(2)) : 0}%)",
+                                            "${subjectProgress.coveredTopics} (${subjectProgress.totalTopics > 0 ? (subjectProgress.coveredTopics / subjectProgress.totalTopics * 100).round() : 0}%)",
                                             style: GoogleFonts.inter(
                                               fontSize: titleFontSize,
                                               fontWeight: FontWeight.w700,

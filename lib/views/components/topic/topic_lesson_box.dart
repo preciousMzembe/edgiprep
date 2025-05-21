@@ -102,7 +102,7 @@ Widget topicLessonBox(
                     height: 68.r,
                     width: 68.r,
                     decoration: BoxDecoration(
-                      color: done
+                      color: done && active
                           ? Colors.transparent
                           : active
                               ? getColorFromString(subjectColor)
@@ -116,7 +116,7 @@ Widget topicLessonBox(
                       borderRadius: BorderRadius.circular(60.r),
                     ),
                     child: Center(
-                      child: done
+                      child: done && active
                           ? Icon(
                               FontAwesomeIcons.check,
                               color: getColorFromString(subjectColor),
@@ -172,12 +172,7 @@ Widget topicLessonBox(
                           vertical: 30.h,
                           horizontal: 35.w,
                         ),
-                        color:
-                            // done
-                            // ? const Color.fromRGBO(215, 235, 255, 1)
-                            // ? const Color.fromRGBO(215, 235, 255, 1)
-                            // :
-                            Colors.white,
+                        color: Colors.white,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [

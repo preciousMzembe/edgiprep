@@ -101,16 +101,15 @@ class NotificationService extends GetxService {
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         matchDateTimeComponents: DateTimeComponents.time,
       );
-      debugPrint("Notification scheduled successfully.");
     } catch (e) {
-      debugPrint("Error scheduling notification: $e");
+      debugPrint(
+          "Error --------------------------------------- scheduling notification: $e");
     }
   }
 
   /// Cancel a specific notification
   Future<void> cancelReminder() async {
     await _notificationsPlugin.cancel(265);
-    debugPrint("Notification with id 265 canceled.");
   }
 
   // Show notification
@@ -180,26 +179,36 @@ class NotificationService extends GetxService {
     doneChangeTime.value = !doneChangeTime.value;
   }
 
-  Future<void> changeState() async {
+  Future<void> turnOn() async {
     if (reminderBox.isNotEmpty) {
       Reminder reminder = reminderBox.values.first;
 
-      Reminder newReminder = Reminder(time: reminder.time, set: !reminder.set);
+      Reminder newReminder = Reminder(time: reminder.time, set: true);
       await reminderBox.clear();
       await reminderBox.add(newReminder);
 
       // set reminder
-      if (newReminder.set) {
-        DateFormat format = DateFormat("h:mm a");
-        DateTime parsedTime = format.parse(reminder.time);
+      DateFormat format = DateFormat("h:mm a");
+      DateTime parsedTime = format.parse(reminder.time);
 
-        scheduleDailyReminder(
-          time: parsedTime,
-        );
-      } else {
-        // cancel reminder
-        cancelReminder();
-      }
+      scheduleDailyReminder(
+        time: parsedTime,
+      );
+    }
+
+    doneChangeTime.value = !doneChangeTime.value;
+  }
+
+  Future<void> turnOff() async {
+    if (reminderBox.isNotEmpty) {
+      Reminder reminder = reminderBox.values.first;
+
+      Reminder newReminder = Reminder(time: reminder.time, set: false);
+      await reminderBox.clear();
+      await reminderBox.add(newReminder);
+
+      // cancel reminder
+      cancelReminder();
     }
 
     doneChangeTime.value = !doneChangeTime.value;

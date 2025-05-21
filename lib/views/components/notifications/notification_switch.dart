@@ -26,7 +26,12 @@ class _NotificationSwitchState extends State<NotificationSwitch> {
           inactiveTrackColor: const Color.fromRGBO(255, 128, 158, 1),
           trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
           onChanged: (value) {
-            notificationController.turnOnOff();
+            if (value) {
+              notificationController.turnOn();
+            } else {
+              notificationController.turnOff();
+            }
+            
           },
         ),
       );

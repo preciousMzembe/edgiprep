@@ -384,7 +384,9 @@ class UserEnrollmentService extends GetxService {
                 order: lesson['lesson']['order'],
                 topicId: lesson['lesson']['topicId'],
                 numberOfSlides: lesson['totalSlides'],
-                numberOfSlidesDone: lesson['doneSlides'],
+                numberOfSlidesDone: lesson['doneSlides'] < lesson['totalSlides']
+                    ? lesson['doneSlides']
+                    : lesson['totalSlides'],
                 subjectEnrollmentId: topic.subjectEnrollmentId,
               ),
             );

@@ -10,6 +10,8 @@ Widget homeWeeklyBox(
     double fontSize, double pieHeight, double barWidth, double progFontSize) {
   AuthController authController = Get.find<AuthController>();
 
+  print(authController.user.value?.weekly);
+
   return Container(
     padding: EdgeInsets.all(30.w),
     decoration: BoxDecoration(
@@ -61,7 +63,7 @@ Widget homeWeeklyBox(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "${authController.user.value != null ? authController.user.value?.weekly.toStringAsFixed(0) : 0}%",
+                      "${authController.user.value != null ? (authController.user.value?.weekly ?? 0).round() : 0}%",
                       style: GoogleFonts.inter(
                         fontSize: progFontSize,
                         fontWeight: FontWeight.w700,

@@ -1,4 +1,5 @@
 import 'package:edgiprep/controllers/auth/auth_controller.dart';
+import 'package:edgiprep/controllers/notification/notification_controller.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/general/button_loading.dart';
@@ -21,6 +22,8 @@ class DeleteAccountContent extends StatefulWidget {
 
 class _DeleteAccountContentState extends State<DeleteAccountContent> {
   AuthController authController = Get.find<AuthController>();
+  NotificationController notificationController =
+      Get.find<NotificationController>();
 
   TextEditingController passwordController = TextEditingController();
 
@@ -163,6 +166,7 @@ class _DeleteAccountContentState extends State<DeleteAccountContent> {
 
                                 Get.back();
                                 await authController.logout();
+                                notificationController.turnOff();
                                 Get.back();
                                 Get.back();
                               }

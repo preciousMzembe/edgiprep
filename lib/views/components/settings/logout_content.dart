@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:edgiprep/controllers/auth/auth_controller.dart';
+import 'package:edgiprep/controllers/notification/notification_controller.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,6 +13,8 @@ void showLogout(
   BuildContext context,
 ) {
   AuthController authController = Get.find<AuthController>();
+  NotificationController notificationController =
+      Get.find<NotificationController>();
 
   showDialog(
     context: context,
@@ -142,6 +145,10 @@ void showLogout(
                         GestureDetector(
                           onTap: () async {
                             await authController.logout();
+
+                            // turn off notifications
+                            notificationController.turnOff();
+
                             Get.back();
                           },
                           child: ClipRRect(

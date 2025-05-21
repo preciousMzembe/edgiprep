@@ -60,7 +60,7 @@ void notificationChangeTime(BuildContext context) {
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
                   child: Container(
-                    color: Colors.black.withOpacity(0.1),
+                    color: const Color.fromRGBO(0, 0, 0, 0.1),
                   ),
                 ),
               ),
