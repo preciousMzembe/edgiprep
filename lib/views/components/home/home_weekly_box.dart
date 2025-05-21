@@ -10,8 +10,6 @@ Widget homeWeeklyBox(
     double fontSize, double pieHeight, double barWidth, double progFontSize) {
   AuthController authController = Get.find<AuthController>();
 
-  print(authController.user.value?.weekly);
-
   return Container(
     padding: EdgeInsets.all(30.w),
     decoration: BoxDecoration(
