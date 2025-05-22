@@ -15,9 +15,9 @@ Widget profileUserImage() {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double imageSize = isTablet
-          ? 70.r
+          ? 50.r
           : isSmallTablet
-              ? 70.r
+              ? 60.r
               : 70.r;
 
       return Obx(
@@ -39,6 +39,17 @@ Widget profileUserImage() {
                     image: imageProvider,
                     fit: BoxFit.cover,
                   ),
+                ),
+              ),
+              placeholder: (context, url) => Container(
+                height: imageSize,
+                width: imageSize,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    width: 5.r,
+                    color: primaryColor,
+                  ),
+                  borderRadius: BorderRadius.circular(200.r),
                 ),
               ),
               errorWidget: (context, url, error) => Container(

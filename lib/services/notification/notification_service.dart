@@ -130,7 +130,6 @@ class NotificationService extends GetxService {
           ),
         ),
       );
-      debugPrint("user notification shown successfully.");
     } catch (e) {
       debugPrint("Error showing user notification: $e");
     }

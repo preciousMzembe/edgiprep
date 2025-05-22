@@ -49,6 +49,12 @@ class _SearchState extends State<Search> {
         bool isTablet = DeviceUtils.isTablet(context);
         bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
+        double iconSize = isTablet
+            ? 26.h
+            : isSmallTablet
+                ? 28.h
+                : 30.h;
+
         double titleSize = isTablet
             ? 34.sp
             : isSmallTablet
@@ -96,6 +102,21 @@ class _SearchState extends State<Search> {
                               controller: _searchController,
                             ),
                           ),
+                          if (_searchController.text.isNotEmpty)
+                            GestureDetector(
+                              onTap: () {
+                                _searchController.clear();
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(5.h),
+                                child: Icon(
+                                  FontAwesomeIcons.xmark,
+                                  color:
+                                      const Color.fromARGB(255, 99, 113, 141),
+                                  size: iconSize,
+                                ),
+                              ),
+                            )
                         ],
                       ),
                     ),

@@ -18,6 +18,7 @@ import 'package:edgiprep/views/components/home/home_study_box.dart';
 import 'package:edgiprep/views/components/home/home_user_name.dart';
 import 'package:edgiprep/views/components/home/home_weekly_box.dart';
 import 'package:edgiprep/views/components/home/home_xp_streak_box.dart';
+import 'package:edgiprep/views/components/profile/profile_user_image.dart';
 import 'package:edgiprep/views/screens/appraisal/challenges.dart';
 import 'package:edgiprep/views/screens/appraisal/quizzes.dart';
 import 'package:edgiprep/views/screens/notifications/notifications.dart';
@@ -241,6 +242,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
+                            // profile image
+                            profileUserImage(),
+                            SizedBox(
+                              width: 15.w,
+                            ),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,

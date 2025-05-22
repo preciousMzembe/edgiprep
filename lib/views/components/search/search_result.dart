@@ -45,26 +45,32 @@ Widget searchResult(
             child: Row(
               children: [
                 // image
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20.r),
-                  child: Container(
-                    padding: EdgeInsets.all(40.r),
-                    color: background,
-                    child: CachedNetworkSVGImage(
-                      icon,
-                      height: 40.h,
-                      width: 40.h,
-                      colorFilter:
-                          ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                      errorWidget: SvgPicture.asset(
-                        "icons/subject.svg",
-                        height: 40.h,
-                        width: 40.h,
-                        colorFilter:
-                            ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                Column(
+                  children: [
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20.r),
+                        child: Container(
+                          padding: EdgeInsets.all(40.r),
+                          color: background,
+                          child: CachedNetworkSVGImage(
+                            icon,
+                            height: 40.h,
+                            width: 40.h,
+                            colorFilter:
+                                ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                            errorWidget: SvgPicture.asset(
+                              "icons/subject.svg",
+                              height: 40.h,
+                              width: 40.h,
+                              colorFilter: ColorFilter.mode(
+                                  Colors.white, BlendMode.srcIn),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
 
                 // details
