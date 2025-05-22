@@ -1,6 +1,5 @@
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,13 +10,11 @@ Widget welcomeFadeText(String text) {
       bool isTablet = DeviceUtils.isTablet(context);
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
-      double fontSize = kIsWeb
-          ? 16
-          : isTablet
-              ? 16.sp
-              : isSmallTablet
-                  ? 18.sp
-                  : 22.sp;
+      double fontSize = isTablet
+          ? 16.sp
+          : isSmallTablet
+              ? 18.sp
+              : 22.sp;
 
       return Text(
         text,

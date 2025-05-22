@@ -43,7 +43,7 @@ class _NotificationsSettingsState extends State<NotificationsSettings> {
                         },
                         child: settingsBackButton(),
                       ),
-                      settingsTitle("Notifications")
+                      settingsTitle("Reminder Settings")
                     ],
                   ),
                   settingsIcon(FontAwesomeIcons.bell),

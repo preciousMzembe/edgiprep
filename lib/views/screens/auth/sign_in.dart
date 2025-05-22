@@ -6,7 +6,6 @@ import 'package:edgiprep/views/components/auth/auth_input.dart';
 import 'package:edgiprep/views/components/auth/auth_title_text.dart';
 import 'package:edgiprep/views/components/general/button_loading.dart';
 import 'package:edgiprep/views/components/general/normal_button.dart';
-import 'package:edgiprep/views/components/general/normal_image_button.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/views/components/general/snackbar.dart';
 import 'package:edgiprep/views/components/general/pin_input_formatter.dart';
@@ -15,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class SignIn extends StatefulWidget {
   final VoidCallback onSignUpTap;
@@ -81,7 +79,6 @@ class _SignInState extends State<SignIn> {
             ],
           ),
           authTitleText("Welcome"),
-          authTitleText("Back"),
           SizedBox(
             height: 30.h,
           ),
@@ -187,38 +184,38 @@ class _SignInState extends State<SignIn> {
           ),
 
           // or
-          SizedBox(
-            height: 30.h,
-          ),
+          // SizedBox(
+          //   height: 30.h,
+          // ),
 
-          Text(
-            "OR",
-            textAlign: TextAlign.center,
-            style: GoogleFonts.inter(
-              fontSize: 22.sp,
-              fontWeight: FontWeight.w700,
-              color: const Color.fromRGBO(191, 198, 216, 1),
-            ),
-          ),
+          // Text(
+          //   "OR",
+          //   textAlign: TextAlign.center,
+          //   style: GoogleFonts.inter(
+          //     fontSize: 22.sp,
+          //     fontWeight: FontWeight.w700,
+          //     color: const Color.fromRGBO(191, 198, 216, 1),
+          //   ),
+          // ),
 
-          // google
-          SizedBox(
-            height: 30.h,
-          ),
-          Stack(
-            children: [
-              normalImageButton(
-                unselectedButtonColor,
-                Colors.black,
-                "Continue with google",
-                16,
-                "icons/google.png",
-              ),
+          // // google
+          // SizedBox(
+          //   height: 30.h,
+          // ),
+          // Stack(
+          //   children: [
+          //     normalImageButton(
+          //       unselectedButtonColor,
+          //       Colors.black,
+          //       "Continue with google",
+          //       16,
+          //       "icons/google.png",
+          //     ),
 
-              // loading
-              if (googleLoading) buttonLoading(unselectedButtonColor, 16),
-            ],
-          ),
+          //     // loading
+          //     if (googleLoading) buttonLoading(unselectedButtonColor, 16),
+          //   ],
+          // ),
 
           // login
           SizedBox(

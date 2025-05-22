@@ -171,8 +171,10 @@ class Settings extends StatelessWidget {
                           onTap: () {
                             Get.to(() => const NotificationsSettings());
                           },
-                          child: settingsOptionBox("bell.svg", "Notifications",
-                              "Customize notification settings"),
+                          child: settingsOptionBox(
+                              "alarm.svg",
+                              "Reminder Settings",
+                              "Customize your reminder settings"),
                         ),
                         SizedBox(
                           height: 30.h,

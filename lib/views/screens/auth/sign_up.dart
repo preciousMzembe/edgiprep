@@ -312,38 +312,38 @@ class _SignUpState extends State<SignUp> {
           ),
 
           // or
-          SizedBox(
-            height: 30.h,
-          ),
+          // SizedBox(
+          //   height: 30.h,
+          // ),
 
-          Text(
-            "OR",
-            textAlign: TextAlign.center,
-            style: GoogleFonts.inter(
-              fontSize: 22.sp,
-              fontWeight: FontWeight.w700,
-              color: const Color.fromRGBO(191, 198, 216, 1),
-            ),
-          ),
+          // Text(
+          //   "OR",
+          //   textAlign: TextAlign.center,
+          //   style: GoogleFonts.inter(
+          //     fontSize: 22.sp,
+          //     fontWeight: FontWeight.w700,
+          //     color: const Color.fromRGBO(191, 198, 216, 1),
+          //   ),
+          // ),
 
-          // google
-          SizedBox(
-            height: 30.h,
-          ),
-          Stack(
-            children: [
-              normalImageButton(
-                unselectedButtonColor,
-                Colors.black,
-                "Continue with google",
-                16,
-                "icons/google.png",
-              ),
+          // // google
+          // SizedBox(
+          //   height: 30.h,
+          // ),
+          // Stack(
+          //   children: [
+          //     normalImageButton(
+          //       unselectedButtonColor,
+          //       Colors.black,
+          //       "Continue with google",
+          //       16,
+          //       "icons/google.png",
+          //     ),
 
-              // loading
-              if (googleLoading) buttonLoading(unselectedButtonColor, 16),
-            ],
-          ),
+          //     // loading
+          //     if (googleLoading) buttonLoading(unselectedButtonColor, 16),
+          //   ],
+          // ),
 
           // login
           SizedBox(
@@ -354,7 +354,7 @@ class _SignUpState extends State<SignUp> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               authBottomText(
-                "Have an account?",
+                "Already have an account?",
                 const Color.fromRGBO(115, 115, 115, 1),
               ),
               SizedBox(
