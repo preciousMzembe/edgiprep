@@ -1,38 +1,26 @@
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class NormalInput extends StatefulWidget {
+class SubjectSearchInput extends StatefulWidget {
+  final TextEditingController controller;
   final String label;
   final TextInputType type;
-  final bool isPassword;
-  final IconData icon;
   final double radius;
-  const NormalInput(
+  const SubjectSearchInput(
       {super.key,
+      required this.controller,
       required this.label,
       required this.type,
-      required this.isPassword,
-      required this.icon,
       required this.radius});
 
   @override
-  State<NormalInput> createState() => _NormalInputState();
+  State<SubjectSearchInput> createState() => _SubjectSearchInputState();
 }
 
-class _NormalInputState extends State<NormalInput> {
-  bool _show = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    if (widget.isPassword) {
-      _show = true;
-    }
-  }
-
+class _SubjectSearchInputState extends State<SubjectSearchInput> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -62,11 +50,14 @@ class _NormalInputState extends State<NormalInput> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(widget.radius.r),
             child: TextFormField(
-              obscureText: _show,
+              controller: widget.controller,
               style: GoogleFonts.inter(
                 color: Colors.black,
                 fontSize: fontSize,
               ),
+              onChanged: (value) {
+                setState(() {});
+              },
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
@@ -78,20 +69,20 @@ class _NormalInputState extends State<NormalInput> {
                 contentPadding: EdgeInsets.symmetric(vertical: verticalPadding),
                 border: InputBorder.none,
                 prefixIcon: Icon(
-                  widget.icon,
+                  FontAwesomeIcons.magnifyingGlass,
                   color: const Color.fromRGBO(191, 198, 216, 1),
                   size: iconSize,
                 ),
-                suffixIcon: widget.isPassword
+                suffixIcon: widget.controller.text.isNotEmpty
                     ? IconButton(
                         icon: Icon(
-                          _show ? Icons.visibility : Icons.visibility_off,
-                          color: const Color.fromRGBO(214, 220, 233, 1),
+                          FontAwesomeIcons.xmark,
+                          color: const Color.fromARGB(255, 64, 74, 95),
                           size: iconSize,
                         ),
                         onPressed: () {
                           setState(() {
-                            _show = !_show;
+                            widget.controller.clear();
                           });
                         },
                       )

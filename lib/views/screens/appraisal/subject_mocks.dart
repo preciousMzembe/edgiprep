@@ -8,12 +8,11 @@ import 'package:edgiprep/views/components/appraisal/appraisal_test_title.dart';
 import 'package:edgiprep/views/components/appraisal/subject_paper.dart';
 import 'package:edgiprep/views/components/general/loading_content.dart';
 import 'package:edgiprep/views/components/general/no_data_content.dart';
-import 'package:edgiprep/views/components/general/normal_input.dart';
+import 'package:edgiprep/views/components/search/subject_search_input.dart';
 import 'package:edgiprep/views/components/subjects/subjects_back.dart';
 import 'package:edgiprep/views/screens/subjects/load_slides.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class SubjectMocks extends StatefulWidget {
@@ -28,6 +27,9 @@ class _SubjectMocksState extends State<SubjectMocks> {
   UserEnrollmentController userEnrollmentController =
       Get.find<UserEnrollmentController>();
   List<MockExam> mocks = [];
+  List<MockExam> filteredMocks = [];
+
+  TextEditingController searchController = TextEditingController();
 
   bool loading = true;
 
@@ -43,18 +45,38 @@ class _SubjectMocksState extends State<SubjectMocks> {
     }
   }
 
+  void search() {
+    String query = searchController.text.toLowerCase();
+    filteredMocks = mocks.where((mock) {
+      return mock.name.toLowerCase().contains(query);
+    }).toList();
+
+    setState(() {
+      filteredMocks = filteredMocks;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
 
+    searchController.addListener(() {
+      search();
+    });
+
     _fetchSubjectPapers();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    searchController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: getBackgroundColorFromString(widget.subject.color),
-      // backgroundColor: backgroundColor,
       body: SafeArea(
         child: Container(
           color: backgroundColor,
@@ -115,10 +137,12 @@ class _SubjectMocksState extends State<SubjectMocks> {
                           loadingContent("Getting Mock Exams",
                               "Be patient while we get mock exams ready for you."),
 
-                        if (!loading && mocks.isEmpty)
+                        if (!loading &&
+                            mocks.isEmpty &&
+                            searchController.text.isEmpty)
                           noDataContent("No mocks Found",
                               "There were no mocks found for this subject. Please check back later."),
-                        if (mocks.isNotEmpty)
+                        if (mocks.isNotEmpty && searchController.text.isEmpty)
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
@@ -159,6 +183,62 @@ class _SubjectMocksState extends State<SubjectMocks> {
                                   ],
                                 );
                               }),
+                            ],
+                          ),
+
+                        // Search
+                        if (searchController.text.isNotEmpty)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              if (filteredMocks.isNotEmpty)
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 15.w),
+                                      child: appraisalHeading("Search Results"),
+                                    ),
+                                    SizedBox(
+                                      height: 25.h,
+                                    ),
+                                  ],
+                                ),
+                              ...filteredMocks.map((mock) {
+                                return Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        Get.to(
+                                          () => LoadSlides(
+                                            title: "Preparing Your Mock Exam",
+                                            message:
+                                                "Get ready to dive in! Your mock is loading, and we're setting everything up for you.",
+                                            type: "mock",
+                                            testId: mock.id,
+                                            duration: mock.duration,
+                                          ),
+                                        );
+                                      },
+                                      child: subjectPaper(
+                                        mock.name,
+                                        mock.questions,
+                                        mock.duration,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 25.h,
+                                    ),
+                                  ],
+                                );
+                              }),
+                              if (filteredMocks.isEmpty)
+                                noDataContent("No Results Found",
+                                    "There were no mocks found for your search."),
                             ],
                           ),
                       ],
@@ -225,14 +305,13 @@ class _SubjectMocksState extends State<SubjectMocks> {
                       right: 0,
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 30.w),
-                        child: const Row(
+                        child: Row(
                           children: [
                             Expanded(
-                              child: NormalInput(
+                              child: SubjectSearchInput(
+                                controller: searchController,
                                 label: "Search Past Paper",
                                 type: TextInputType.text,
-                                isPassword: false,
-                                icon: FontAwesomeIcons.magnifyingGlass,
                                 radius: 20,
                               ),
                             ),

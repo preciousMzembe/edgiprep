@@ -8,12 +8,11 @@ import 'package:edgiprep/views/components/appraisal/appraisal_test_title.dart';
 import 'package:edgiprep/views/components/appraisal/subject_paper.dart';
 import 'package:edgiprep/views/components/general/loading_content.dart';
 import 'package:edgiprep/views/components/general/no_data_content.dart';
-import 'package:edgiprep/views/components/general/normal_input.dart';
+import 'package:edgiprep/views/components/search/subject_search_input.dart';
 import 'package:edgiprep/views/components/subjects/subjects_back.dart';
 import 'package:edgiprep/views/screens/subjects/load_slides.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class SubjectPapers extends StatefulWidget {
@@ -28,6 +27,9 @@ class _SubjectPapersState extends State<SubjectPapers> {
   UserEnrollmentController userEnrollmentController =
       Get.find<UserEnrollmentController>();
   List<PastPaper> papers = [];
+  List<PastPaper> filteredPapers = [];
+
+  TextEditingController searchController = TextEditingController();
 
   bool loading = true;
 
@@ -43,18 +45,38 @@ class _SubjectPapersState extends State<SubjectPapers> {
     }
   }
 
+  void search() {
+    String query = searchController.text.toLowerCase();
+    filteredPapers = papers.where((paper) {
+      return paper.name.toLowerCase().contains(query);
+    }).toList();
+
+    setState(() {
+      filteredPapers = filteredPapers;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
 
+    searchController.addListener(() {
+      search();
+    });
+
     _fetchSubjectPapers();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    searchController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: getBackgroundColorFromString(widget.subject.color),
-      // backgroundColor: backgroundColor,
       body: SafeArea(
         child: Container(
           color: backgroundColor,
@@ -114,10 +136,12 @@ class _SubjectPapersState extends State<SubjectPapers> {
                           loadingContent("Getting Subject Papers",
                               "Be patient while we get past papers ready for you."),
 
-                        if (!loading && papers.isEmpty)
+                        if (!loading &&
+                            papers.isEmpty &&
+                            searchController.text.isEmpty)
                           noDataContent("No Papers Found",
                               "There were no papers found for this subject. Please check back later."),
-                        if (papers.isNotEmpty)
+                        if (papers.isNotEmpty && searchController.text.isEmpty)
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
@@ -158,6 +182,62 @@ class _SubjectPapersState extends State<SubjectPapers> {
                                   ],
                                 );
                               }),
+                            ],
+                          ),
+
+                        // Search Results
+                        if (searchController.text.isNotEmpty)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              if (filteredPapers.isNotEmpty)
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 15.w),
+                                      child: appraisalHeading("Search Results"),
+                                    ),
+                                    SizedBox(
+                                      height: 25.h,
+                                    ),
+                                  ],
+                                ),
+                              ...filteredPapers.map((paper) {
+                                return Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        Get.to(
+                                          () => LoadSlides(
+                                            title: "Preparing Your Paper",
+                                            message:
+                                                "Get ready to dive in! Your paper is loading, and we're setting everything up for you.",
+                                            type: "paper",
+                                            testId: paper.id,
+                                            duration: paper.duration,
+                                          ),
+                                        );
+                                      },
+                                      child: subjectPaper(
+                                        paper.name,
+                                        paper.questions,
+                                        paper.duration,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 25.h,
+                                    ),
+                                  ],
+                                );
+                              }),
+                              if (filteredPapers.isEmpty)
+                                noDataContent("No Results Found",
+                                    "There were no papers found for your search."),
                             ],
                           ),
                       ],
@@ -222,14 +302,13 @@ class _SubjectPapersState extends State<SubjectPapers> {
                       right: 0,
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 30.w),
-                        child: const Row(
+                        child: Row(
                           children: [
                             Expanded(
-                              child: NormalInput(
-                                label: "Search Pasr Paper",
+                              child: SubjectSearchInput(
+                                controller: searchController,
+                                label: "Search Past Paper",
                                 type: TextInputType.text,
-                                isPassword: false,
-                                icon: FontAwesomeIcons.magnifyingGlass,
                                 radius: 20,
                               ),
                             ),

@@ -51,7 +51,7 @@ Widget noDataContent(String title, String subtitle) {
           ),
         ),
         SizedBox(
-          height: 20.h,
+          height: 10.h,
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 60.w),
