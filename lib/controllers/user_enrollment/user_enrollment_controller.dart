@@ -161,7 +161,8 @@ class UserEnrollmentController extends GetxController {
   }
 
   // Fetch exam subjects
-  Future<List<UserSubject>> fetchEnrolledExamSubjects(String examEnrollmentId) async {
+  Future<List<UserSubject>> fetchEnrolledExamSubjects(
+      String examEnrollmentId) async {
     return await userEnrollmentService.getSubjectsByExamId(examEnrollmentId);
   }
 }

@@ -9,6 +9,7 @@ import 'package:edgiprep/db/mock_exam/mock_exam.dart';
 import 'package:edgiprep/db/notification/notification.dart';
 import 'package:edgiprep/db/past_paper/past_paper.dart';
 import 'package:edgiprep/db/reminder/reminder.dart';
+import 'package:edgiprep/db/search/search_result.dart';
 import 'package:edgiprep/db/subject/subject.dart';
 import 'package:edgiprep/db/subject/subject_progress.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
@@ -94,6 +95,7 @@ class HiveInitializer {
     Hive.registerAdapter(UserNotificationAdapter());
     Hive.registerAdapter(SubjectProgressAdapter());
     Hive.registerAdapter(UserXpsAdapter());
+    Hive.registerAdapter(SearchResultAdapter());
 
     // Open boxes
     try {
@@ -114,6 +116,7 @@ class HiveInitializer {
           await openSecureBox<UserNotification>('notificationBox');
       subjectProgressBox =
           await openSecureBox<SubjectProgress>('subjectProgressBox');
+      searchResultsBox = await openSecureBox<SearchResult>('searchResultsBox');
     } catch (e) {
       debugPrint("Error opening Hive boxes: $e");
     }
@@ -121,34 +124,12 @@ class HiveInitializer {
 
   Future<void> rebuildHiveOnFirstOpen() async {
     final prefs = await SharedPreferences.getInstance();
-    const currentVersion = 1; // Update this for each new version
+    const currentVersion = 2; // Update this for each new version
     final lastVersion = prefs.getInt('last_version') ?? 0;
 
     if (lastVersion != currentVersion) {
-      // List of all box names to be cleared
-      final boxNames = [
-        'userBox',
-        'userXpsBox',
-        'examBox',
-        'userExamBox',
-        'subjectBox',
-        'userSubjectBox',
-        'unitBox',
-        'topicBox',
-        'lessonBox',
-        'pastPaperBox',
-        'mockExamBox',
-        'configBox',
-        'reminderBox',
-        'notificationBox',
-        'subjectProgressBox',
-      ];
-
-      for (String boxName in boxNames) {
-        if (await Hive.boxExists(boxName)) {
-          await Hive.deleteBoxFromDisk(boxName);
-        }
-      }
+      // delete boxes
+      await deleteAllBoxes();
 
       // Ensure future calls don't repeat this operation
       await prefs.setInt('last_version', currentVersion);
@@ -160,9 +141,36 @@ class HiveInitializer {
     bool isFirstLaunch = prefs.getBool('first_launch') ?? true;
 
     if (isFirstLaunch) {
-      debugPrint("🛑 App reinstall detected! Clearing Secure Storage...");
       await _secureStorage.deleteAll();
       await prefs.setBool('first_launch', false);
+    }
+  }
+
+// clear all boxes
+  Future<void> deleteAllBoxes() async {
+    final boxNames = [
+      'userBox',
+      'userXpsBox',
+      'examBox',
+      'userExamBox',
+      'subjectBox',
+      'userSubjectBox',
+      'unitBox',
+      'topicBox',
+      'lessonBox',
+      'pastPaperBox',
+      'mockExamBox',
+      'configBox',
+      'reminderBox',
+      'notificationBox',
+      'subjectProgressBox',
+      'searchResultsBox',
+    ];
+
+    for (String boxName in boxNames) {
+      if (await Hive.boxExists(boxName)) {
+        await Hive.deleteBoxFromDisk(boxName);
+      }
     }
   }
 }

@@ -19,6 +19,7 @@ import 'package:edgiprep/services/mock/mock_service.dart';
 import 'package:edgiprep/services/paper/paper_service.dart';
 import 'package:edgiprep/services/notification/notification_service.dart';
 import 'package:edgiprep/services/quiz/quiz_service.dart';
+import 'package:edgiprep/services/search/search_service.dart';
 import 'package:edgiprep/services/stats/stats_service.dart';
 import 'package:get/get.dart';
 
@@ -37,6 +38,7 @@ class Controllers extends Bindings {
     Get.put<PaperService>(PaperService());
     Get.put<MockService>(MockService());
     Get.put<StatsService>(StatsService());
+    Get.put<SearchService>(SearchService());
 
     // Controllers
     Get.put<NavController>(NavController());

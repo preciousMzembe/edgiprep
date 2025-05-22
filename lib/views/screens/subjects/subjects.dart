@@ -3,10 +3,11 @@ import 'dart:ui';
 import 'package:edgiprep/controllers/enrollment/enrollment_settings_controller.dart';
 import 'package:edgiprep/controllers/user_enrollment/user_enrollment_controller.dart';
 import 'package:edgiprep/utils/constants.dart';
-import 'package:edgiprep/views/components/general/normal_input.dart';
+import 'package:edgiprep/views/components/general/disabled_input.dart';
 import 'package:edgiprep/views/components/subjects/enroll_subjects_content.dart';
 import 'package:edgiprep/views/components/subjects/subjects_add_subject.dart';
 import 'package:edgiprep/views/components/subjects/subjects_subject_box.dart';
+import 'package:edgiprep/views/screens/search/search.dart';
 import 'package:edgiprep/views/screens/subjects/subject.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -47,12 +48,15 @@ class Subjects extends StatelessWidget {
                     SizedBox(
                       height: 30.h,
                     ),
-                    const NormalInput(
-                      label: "Search Subjects",
-                      type: TextInputType.text,
-                      isPassword: false,
-                      icon: FontAwesomeIcons.magnifyingGlass,
-                      radius: 16,
+                    GestureDetector(
+                      onTap: () {
+                        Get.to(() => const Search());
+                      },
+                      child: const DisabledInput(
+                        label: "Search Everything",
+                        icon: FontAwesomeIcons.magnifyingGlass,
+                        radius: 16,
+                      ),
                     ),
 
                     // Subjects

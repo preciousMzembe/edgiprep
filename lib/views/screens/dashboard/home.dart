@@ -6,7 +6,7 @@ import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/services/configuration/configuration_service.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
-import 'package:edgiprep/views/components/general/normal_input.dart';
+import 'package:edgiprep/views/components/general/disabled_input.dart';
 import 'package:edgiprep/views/components/home/daily_challenge_box.dart';
 import 'package:edgiprep/views/components/home/exam_switch_content.dart';
 import 'package:edgiprep/views/components/home/home_fade_text.dart';
@@ -21,6 +21,7 @@ import 'package:edgiprep/views/components/home/home_xp_streak_box.dart';
 import 'package:edgiprep/views/screens/appraisal/challenges.dart';
 import 'package:edgiprep/views/screens/appraisal/quizzes.dart';
 import 'package:edgiprep/views/screens/notifications/notifications.dart';
+import 'package:edgiprep/views/screens/search/search.dart';
 import 'package:edgiprep/views/screens/subjects/load_slides.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -288,12 +289,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 30.w),
-                        child: const NormalInput(
-                          label: "Search Everything",
-                          type: TextInputType.text,
-                          isPassword: false,
-                          icon: FontAwesomeIcons.magnifyingGlass,
-                          radius: 16,
+                        child: GestureDetector(
+                          onTap: () {
+                            Get.to(() => const Search());
+                          },
+                          child: const DisabledInput(
+                            label: "Search Everything",
+                            icon: FontAwesomeIcons.magnifyingGlass,
+                            radius: 16,
+                          ),
                         ),
                       ),
 

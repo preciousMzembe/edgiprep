@@ -222,8 +222,16 @@ class AuthService extends GetxService {
 
   Future<void> logout() async {
     await _removeToken();
+
     await userBox.clear();
     await userExamBox.clear();
+    await userSubjectBox.clear();
+    await unitBox.clear();
+    await topicBox.clear();
+    await lessonBox.clear();
+    await pastPaperBox.clear();
+    await mockExamBox.clear();
+    await searchResultsBox.clear();
 
     doneLogout.value = !doneLogout.value;
   }
@@ -424,7 +432,7 @@ class AuthService extends GetxService {
           'data': 'Profile picture updated successfully',
         };
       }
-    } on DioException{
+    } on DioException {
       debugPrint("Problem uploading profile picture ------------ auth service");
     }
 

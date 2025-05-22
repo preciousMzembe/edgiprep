@@ -145,6 +145,16 @@ class UserEnrollmentService extends GetxService {
       }
     }
 
+    // clear old data
+    await userSubjectBox.clear();
+    await unitBox.clear();
+    await topicBox.clear();
+    await lessonBox.clear();
+    await pastPaperBox.clear();
+    await mockExamBox.clear();
+    await searchResultsBox.clear();
+
+    // get new data
     await getUserServerExams();
   }
 
@@ -349,6 +359,9 @@ class UserEnrollmentService extends GetxService {
         // add new subject units and topics
         await unitBox.addAll(units);
         await topicBox.addAll(topics);
+
+        // get all units and topics to find active or not
+        getUnitsAndTopics(subjectEnrollmentId);
       }
     } on DioException {
       debugPrint(

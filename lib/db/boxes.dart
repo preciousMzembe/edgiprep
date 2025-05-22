@@ -16,3 +16,4 @@ late Box notificationBox;
 late Box subjectProgressBox;
 late Box userXpsBox;
 late Box userStreakBox;
+late Box searchResultsBox;
