@@ -106,7 +106,9 @@ class AppraisalFinish extends StatelessWidget {
           status = grades['grade'];
 
           // save quiz score
-          quizController.saveQuizScore(xps);
+          if (quizController.visibleSlides.length > 1) {
+            quizController.saveQuizScore(xps);
+          }
         } else if (type == "paper") {
           questions = paperController.getNumberOfQuestions();
           xps = paperController.getCorrectAnswers();
@@ -117,7 +119,9 @@ class AppraisalFinish extends StatelessWidget {
           status = grades['grade'];
 
           // save paper score
-          paperController.saveTestScore(double.parse(scores));
+          if (paperController.visibleSlides.length > 1) {
+            paperController.saveTestScore(double.parse(scores));
+          }
         } else if (type == "mock") {
           questions = mockController.getNumberOfQuestions();
           xps = mockController.getCorrectAnswers();
@@ -128,7 +132,9 @@ class AppraisalFinish extends StatelessWidget {
           status = grades['grade'];
 
           // save mock score
-          mockController.saveTestScore(double.parse(scores));
+          if (mockController.visibleSlides.length > 1) {
+            mockController.saveTestScore(double.parse(scores));
+          }
         } else if (type == "challenge") {
           questions = challengeController.getNumberOfQuestions();
           xps = challengeController.getCorrectAnswers();
@@ -139,8 +145,10 @@ class AppraisalFinish extends StatelessWidget {
           scores = grades['percentage'];
           status = grades['grade'];
 
-          // save quiz score
-          challengeController.saveQuizScore(xps);
+          // save challenge score
+          if (challengeController.visibleSlides.length > 1) {
+            challengeController.saveQuizScore(xps);
+          }
         }
 
         // save xps

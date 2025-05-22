@@ -182,8 +182,6 @@ Widget lessonIncorrect(String type) {
       String cleanContent =
           correctAnswer!.text.replaceAll(RegExp(r'<[^>]*>'), '').trim();
 
-      print(expImage);
-
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 30.h),
         child: ClipRRect(

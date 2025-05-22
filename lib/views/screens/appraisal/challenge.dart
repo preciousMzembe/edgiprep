@@ -40,8 +40,6 @@ class _ChallengeState extends State<Challenge> {
         );
 
         challengeController.saveQuestionScores();
-        challengeController
-            .saveQuizScore(challengeController.getCorrectAnswers());
       },
       child: Scaffold(
         backgroundColor: appbarColor,
@@ -70,8 +68,6 @@ class _ChallengeState extends State<Challenge> {
                           );
 
                           challengeController.saveQuestionScores();
-                          challengeController.saveQuizScore(
-                              challengeController.getCorrectAnswers());
                         },
                         child: lessonCloseButton(),
                       ),
