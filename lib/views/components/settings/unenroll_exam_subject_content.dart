@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:edgiprep/controllers/enrollment/enrollment_settings_controller.dart';
 import 'package:edgiprep/utils/device_utils.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';

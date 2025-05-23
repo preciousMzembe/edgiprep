@@ -737,7 +737,7 @@ class UserEnrollmentService extends GetxService {
     units.sort((a, b) => a.order.compareTo(b.order));
 
     // get topics
-    bool active = true;
+    // bool active = true;
     for (Unit unit in units) {
       List<Topic> topics = topicBox.values
           .where((topic) =>
@@ -751,15 +751,16 @@ class UserEnrollmentService extends GetxService {
 
       // check for current topic
       for (var topic in topics) {
-        topic.active = active;
+        // make all topics active (late change)
+        topic.active = true;
 
-        if (active == true &&
-            topic.numberOfLessons > 0 &&
-            (topic.numberOfLessons == topic.numberOfLessonsDone)) {
-          active = true;
-        } else {
-          active = false;
-        }
+        // if (active == true &&
+        //     topic.numberOfLessons > 0 &&
+        //     (topic.numberOfLessons == topic.numberOfLessonsDone)) {
+        //   active = true;
+        // } else {
+        //   active = false;
+        // }
       }
 
       unitTopicMap[unit] = topics;
