@@ -11,9 +11,9 @@ Widget notificationsEmpty() {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double iconSize = isTablet
-          ? 150.h
+          ? 146.h
           : isSmallTablet
-              ? 150.h
+              ? 148.h
               : 150.h;
 
       double titleSize = isTablet

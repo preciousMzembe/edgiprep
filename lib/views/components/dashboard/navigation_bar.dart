@@ -17,7 +17,7 @@ Widget navigationBar(Function(int) navigate) {
       double navHeight = isTablet
           ? 100.h
           : isSmallTablet
-              ? 120.h
+              ? 110.h
               : 120.h;
 
       double verticalPadding = isTablet

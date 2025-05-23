@@ -15,9 +15,9 @@ Widget profileUserImage() {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double imageSize = isTablet
-          ? 50.r
+          ? 66.r
           : isSmallTablet
-              ? 60.r
+              ? 68.r
               : 70.r;
 
       return Obx(

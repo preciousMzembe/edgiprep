@@ -10,15 +10,15 @@ Widget lessonCloseButton() {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double buttonSize = isTablet
-          ? 70.r
+          ? 66.r
           : isSmallTablet
-              ? 70.r
+              ? 68.r
               : 70.r;
 
       double iconSize = isTablet
-          ? 30.r
+          ? 26.r
           : isSmallTablet
-              ? 30.r
+              ? 28.r
               : 30.r;
 
       return ClipOval(

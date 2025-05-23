@@ -17,9 +17,9 @@ Widget testTimeUp(
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double imageHeight = isTablet
-          ? 260.h
+          ? 170.h
           : isSmallTablet
-              ? 280.h
+              ? 180.h
               : 200.h;
 
       double titleFontSize = isTablet
@@ -37,7 +37,7 @@ Widget testTimeUp(
       double buttonHeight = isTablet
           ? 80.sp
           : isSmallTablet
-              ? 84.h
+              ? 82.h
               : 84.h;
 
       double buttonFontSize = isTablet

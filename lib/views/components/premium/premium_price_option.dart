@@ -13,21 +13,21 @@ Widget premiumPriceOption(String price) {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double fontSize = isTablet
-          ? 22.sp
+          ? 24.sp
           : isSmallTablet
-              ? 24.sp
+              ? 26.sp
               : 28.sp;
 
       double verticalPadding = isTablet
-          ? 14.r
+          ? 16.r
           : isSmallTablet
-              ? 16.r
+              ? 18.r
               : 20.r;
 
       double horizontalPadding = isTablet
-          ? 36.r
+          ? 34.r
           : isSmallTablet
-              ? 38.r
+              ? 32.r
               : 30.r;
 
       return Container(

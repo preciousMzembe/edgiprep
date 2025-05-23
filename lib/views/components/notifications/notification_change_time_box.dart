@@ -22,9 +22,9 @@ void notificationChangeTime(BuildContext context) {
           bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
           double boxWidth = isTablet
-              ? 500.w
+              ? 470.w
               : isSmallTablet
-                  ? 500.w
+                  ? 480.w
                   : 500.w;
 
           double titleFontSize = isTablet
@@ -40,15 +40,15 @@ void notificationChangeTime(BuildContext context) {
                   : 22.sp;
 
           double height = isTablet
-              ? 64.sp
+              ? 82.sp
               : isSmallTablet
-                  ? 74.h
+                  ? 82.h
                   : 84.h;
 
           double fontSize = isTablet
-              ? 18.sp
+              ? 20.sp
               : isSmallTablet
-                  ? 20.sp
+                  ? 22.sp
                   : 24.sp;
 
           return Stack(

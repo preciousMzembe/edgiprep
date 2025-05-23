@@ -19,21 +19,21 @@ Widget settingsUserImage() {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double imageSize = isTablet
-          ? 200.r
+          ? 180.r
           : isSmallTablet
-              ? 200.r
+              ? 190.r
               : 200.r;
 
       double buttonSize = isTablet
-          ? 64.r
+          ? 60.r
           : isSmallTablet
-              ? 64.r
+              ? 62.r
               : 64.r;
 
       double iconSize = isTablet
-          ? 30.r
+          ? 26.r
           : isSmallTablet
-              ? 30.r
+              ? 28.r
               : 30.r;
 
       RxBool isLoading = false.obs;

@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:edgiprep/controllers/enrollment/enrollment_settings_controller.dart';
 import 'package:edgiprep/db/exam/user_exam.dart';
 import 'package:edgiprep/utils/device_utils.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -53,22 +52,20 @@ class _UnenrollExamContentState extends State<UnenrollExamContent> {
         double height = isTablet
             ? 80.sp
             : isSmallTablet
-                ? 84.h
+                ? 82.h
                 : 84.h;
 
         double fontSize = isTablet
-            ? 18.sp
+            ? 20.sp
             : isSmallTablet
-                ? 20.sp
+                ? 22.sp
                 : 24.sp;
 
-        double iconHeight = kIsWeb
-            ? 18
-            : isTablet
-                ? 18.h
-                : isSmallTablet
-                    ? 20.h
-                    : 70.h;
+        double iconHeight = isTablet
+            ? 66.h
+            : isSmallTablet
+                ? 68.h
+                : 70.h;
 
         return Stack(
           children: [

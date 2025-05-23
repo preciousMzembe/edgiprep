@@ -15,9 +15,9 @@ Widget settingsButton(
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double height = isTablet
-          ? 74.sp
+          ? 66.sp
           : isSmallTablet
-              ? 72.h
+              ? 68.h
               : 70.h;
 
       double fontSize = isTablet

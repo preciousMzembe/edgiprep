@@ -9,9 +9,9 @@ Widget navDot(bool active) {
     bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
     double height = isTablet
-        ? 16.h
+        ? 18.h
         : isSmallTablet
-            ? 18.h
+            ? 20.h
             : 22.h;
 
     return Container(

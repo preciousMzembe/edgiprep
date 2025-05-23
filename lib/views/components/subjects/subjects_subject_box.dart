@@ -22,15 +22,15 @@ Widget subjectsSubjectBox(
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double imageContainerWidth = isTablet
-          ? 180.w
+          ? 200.w
           : isSmallTablet
-              ? 210.w
+              ? 220.w
               : 240.w;
 
       double imageHeight = isTablet
-          ? 110.h
+          ? 86.h
           : isSmallTablet
-              ? 90.h
+              ? 88.h
               : 90.h;
 
       double verticalPadding = isTablet

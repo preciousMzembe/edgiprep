@@ -16,21 +16,21 @@ Widget normalImageButton(
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double buttonHeight = isTablet
-          ? 64.sp
+          ? 80.sp
           : isSmallTablet
-              ? 74.h
+              ? 82.h
               : 84.h;
 
       double imageHeight = isTablet
-          ? 20.sp
+          ? 24.sp
           : isSmallTablet
-              ? 24.h
+              ? 26.h
               : 28.h;
 
       double fontSize = isTablet
-          ? 18.sp
+          ? 20.sp
           : isSmallTablet
-              ? 20.sp
+              ? 22.sp
               : 24.sp;
 
       return ClipRRect(

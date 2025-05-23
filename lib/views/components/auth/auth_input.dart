@@ -47,9 +47,9 @@ class _AuthInputState extends State<AuthInput> {
         bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
         double fontSize = isTablet
-            ? 18.sp
+            ? 20.sp
             : isSmallTablet
-                ? 20.sp
+                ? 22.sp
                 : 24.sp;
 
         double iconSize = isTablet

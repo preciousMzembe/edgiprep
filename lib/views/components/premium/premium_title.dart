@@ -10,9 +10,9 @@ Widget premiumTitle(String text) {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double fontSize = isTablet
-          ? 28.sp
+          ? 30.sp
           : isSmallTablet
-              ? 30.sp
+              ? 32.sp
               : 34.sp;
 
       return Text(

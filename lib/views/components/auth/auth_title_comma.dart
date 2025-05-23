@@ -11,9 +11,9 @@ Widget authTitleComma() {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double fontSize = isTablet
-          ? 60.sp
+          ? 76.sp
           : isSmallTablet
-              ? 70.sp
+              ? 78.sp
               : 80.sp;
 
       return Column(

@@ -20,19 +20,19 @@ Widget enrollmentSubjectOption(
       double fontSize = isTablet
           ? 22.sp
           : isSmallTablet
-              ? 22.sp
+              ? 24.sp
               : 26.sp;
 
       double iconSize = isTablet
-          ? 30.r
+          ? 36.r
           : isSmallTablet
-              ? 35.r
+              ? 38.r
               : 40.r;
 
       double padding = isTablet
-          ? 12.r
+          ? 16.r
           : isSmallTablet
-              ? 14.r
+              ? 18.r
               : 20.r;
 
       return Container(

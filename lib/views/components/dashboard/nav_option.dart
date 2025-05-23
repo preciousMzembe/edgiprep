@@ -12,9 +12,9 @@ Widget navOption(String name, String icon, bool active) {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double iconSize = isTablet
-          ? 34.sp
+          ? 36.sp
           : isSmallTablet
-              ? 36.sp
+              ? 38.sp
               : 40.sp;
 
       double fontSize = isTablet

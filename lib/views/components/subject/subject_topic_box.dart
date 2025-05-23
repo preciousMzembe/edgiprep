@@ -29,9 +29,9 @@ Widget subjectTopicBox(
               : 160.w;
 
       double imageHeight = isTablet
-          ? 60.h
+          ? 44.h
           : isSmallTablet
-              ? 50.h
+              ? 46.h
               : 48.h;
 
       double verticalPadding = isTablet
@@ -62,10 +62,10 @@ Widget subjectTopicBox(
 
       // icon
       double iconHeight = isTablet
-          ? 31.r
+          ? 30.r
           : isSmallTablet
-              ? 33.r
-              : 35.r;
+              ? 32.r
+              : 34.r;
 
       // inactive
       double inactiveFontSize = isTablet

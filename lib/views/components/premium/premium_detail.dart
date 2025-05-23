@@ -12,9 +12,9 @@ Widget premiumDetail(String icon, String title, String detail) {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double titleFontSize = isTablet
-          ? 22.sp
+          ? 24.sp
           : isSmallTablet
-              ? 24.sp
+              ? 26.sp
               : 28.sp;
 
       double detailFontSize = isTablet
@@ -30,9 +30,9 @@ Widget premiumDetail(String icon, String title, String detail) {
               : 90.r;
 
       double iconSize = isTablet
-          ? 24.r
+          ? 30.r
           : isSmallTablet
-              ? 26.r
+              ? 32.r
               : 34.r;
 
       return Row(

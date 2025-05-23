@@ -16,9 +16,9 @@ Widget subjectSubjectName(String name) {
               : 40.sp;
 
       double rightSpace = isTablet
-          ? 200.w
+          ? 180.w
           : isSmallTablet
-              ? 200.w
+              ? 190.w
               : 200.w;
 
       return Row(

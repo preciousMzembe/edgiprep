@@ -9,9 +9,9 @@ Widget appraisalImage(String image) {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double height = isTablet
-          ? 180.sp
+          ? 156.sp
           : isSmallTablet
-              ? 170.h
+              ? 158.h
               : 160.h;
 
       return Image.asset(

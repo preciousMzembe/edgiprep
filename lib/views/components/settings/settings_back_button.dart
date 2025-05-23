@@ -10,9 +10,9 @@ Widget settingsBackButton() {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double buttonSize = isTablet
-          ? 60.r
+          ? 56.r
           : isSmallTablet
-              ? 60.r
+              ? 58.r
               : 60.r;
 
       double iconSize = isTablet

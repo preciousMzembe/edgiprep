@@ -40,13 +40,13 @@ void showLogout(
           double height = isTablet
               ? 80.sp
               : isSmallTablet
-                  ? 84.h
+                  ? 82.h
                   : 84.h;
 
           double fontSize = isTablet
-              ? 18.sp
+              ? 20.sp
               : isSmallTablet
-                  ? 20.sp
+                  ? 22.sp
                   : 24.sp;
 
           return Stack(

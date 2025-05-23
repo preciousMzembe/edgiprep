@@ -10,9 +10,9 @@ Widget enrollmentRichText(String mainText, List<TextSpan> otherText) {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double fontSize = isTablet
-          ? 16.sp
+          ? 18.sp
           : isSmallTablet
-              ? 18.sp
+              ? 20.sp
               : 22.sp;
 
       return RichText(

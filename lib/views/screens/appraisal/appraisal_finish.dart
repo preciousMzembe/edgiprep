@@ -72,9 +72,9 @@ class AppraisalFinish extends StatelessWidget {
         bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
         double imageHeight = isTablet
-            ? 36.sp
+            ? 210.sp
             : isSmallTablet
-                ? 38.sp
+                ? 220.sp
                 : 230.h;
 
         double titleSize = isTablet

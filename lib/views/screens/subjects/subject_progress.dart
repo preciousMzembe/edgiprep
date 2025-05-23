@@ -66,7 +66,7 @@ class _SubjectProgressPaneState extends State<SubjectProgressPane> {
                 : 24.sp;
 
         double subtitleFontSize = isTablet
-            ? 18.sp
+            ? 16.sp
             : isSmallTablet
                 ? 18.sp
                 : 20.sp;

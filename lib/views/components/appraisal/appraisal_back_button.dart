@@ -10,16 +10,16 @@ Widget appraisalBackButton() {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double buttonSize = isTablet
-          ? 70.r
+          ? 66.r
           : isSmallTablet
-              ? 70.r
+              ? 68.r
               : 70.r;
 
       double iconSize = isTablet
-          ? 50.h
+          ? 30.h
           : isSmallTablet
-              ? 40.h
-              : 35.h;
+              ? 32.h
+              : 34.h;
 
       return Container(
         height: buttonSize,

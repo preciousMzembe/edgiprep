@@ -10,15 +10,15 @@ Widget premiumClose() {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double containerSize = isTablet
-          ? 70.h
+          ? 46.h
           : isSmallTablet
-              ? 60.h
+              ? 48.h
               : 50.h;
       double iconSize = isTablet
-          ? 50.h
+          ? 30.h
           : isSmallTablet
-              ? 40.h
-              : 35.h;
+              ? 32.h
+              : 34.h;
 
       return Container(
         width: containerSize,

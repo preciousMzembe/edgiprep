@@ -12,9 +12,9 @@ Widget settingsRecordBox(String icon, String title, String value) {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double iconSize = isTablet
-          ? 60.r
+          ? 56.r
           : isSmallTablet
-              ? 60.r
+              ? 58.r
               : 60.r;
 
       double titleSize = isTablet

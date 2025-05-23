@@ -8,7 +8,6 @@ Widget topicLessonName(String name, double fontSize) {
       fontSize: fontSize,
       fontWeight: FontWeight.w700,
       color: const Color.fromRGBO(52, 74, 106, 1),
-      // height: 1,
     ),
   );
 }

@@ -10,9 +10,9 @@ Widget welcomeTitleText(String text) {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double fontSize = isTablet
-          ? 40.sp
+          ? 56.sp
           : isSmallTablet
-              ? 50.sp
+              ? 58.sp
               : 60.sp;
 
       return Text(

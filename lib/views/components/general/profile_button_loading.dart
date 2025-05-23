@@ -13,15 +13,15 @@ Widget profileButtonLoading(
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double height = isTablet
-          ? 74.h
+          ? 66.h
           : isSmallTablet
-              ? 72.h
+              ? 68.h
               : 70.h;
 
       double iconHeight = isTablet
-          ? 18.h
+          ? 66.h
           : isSmallTablet
-              ? 20.h
+              ? 68.h
               : 50.h;
 
       return ClipRRect(

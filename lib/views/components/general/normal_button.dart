@@ -15,15 +15,15 @@ Widget normalButton(
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double height = isTablet
-          ? 74.h
+          ? 80.h
           : isSmallTablet
-              ? 74.h
+              ? 82.h
               : 84.h;
 
       double fontSize = isTablet
-          ? 18.sp
+          ? 20.sp
           : isSmallTablet
-              ? 20.sp
+              ? 22.sp
               : 24.sp;
 
       return ClipRRect(

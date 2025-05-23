@@ -60,7 +60,7 @@ class _UnenrollExamSubjectContentState
         double height = isTablet
             ? 80.sp
             : isSmallTablet
-                ? 84.h
+                ? 82.h
                 : 84.h;
 
         double fontSize = isTablet
@@ -69,13 +69,11 @@ class _UnenrollExamSubjectContentState
                 ? 20.sp
                 : 24.sp;
 
-        double iconHeight = kIsWeb
-            ? 18
-            : isTablet
-                ? 18.h
-                : isSmallTablet
-                    ? 20.h
-                    : 70.h;
+        double iconHeight = isTablet
+            ? 74.h
+            : isSmallTablet
+                ? 76.h
+                : 70.h;
 
         return Stack(
           children: [

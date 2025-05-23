@@ -91,10 +91,10 @@ class _ExamSwitchContentState extends State<ExamSwitchContent> {
                 : 18.sp;
 
         double buttonHeight = isTablet
-            ? 70.sp
+            ? 46.sp
             : isSmallTablet
-                ? 60.h
-                : 50.h;
+                ? 48.sp
+                : 50.sp;
 
         double fontSize = isTablet
             ? 32.sp
@@ -121,9 +121,9 @@ class _ExamSwitchContentState extends State<ExamSwitchContent> {
                 : 20.r;
 
         double loadingIconHeight = isTablet
-            ? 50.h
+            ? 66.h
             : isSmallTablet
-                ? 60.h
+                ? 68.h
                 : 70.h;
 
         return GestureDetector(
@@ -269,12 +269,14 @@ class _ExamSwitchContentState extends State<ExamSwitchContent> {
                                               ),
 
                                               // Loading
-                                              if (exam.id != selectedExamId.value)
+                                              if (exam.id !=
+                                                  selectedExamId.value)
                                                 SizedBox(
                                                   height: loadingIconHeight,
                                                 ),
                                               if (loading.value &&
-                                                  exam.id == selectedExamId.value)
+                                                  exam.id ==
+                                                      selectedExamId.value)
                                                 Column(
                                                   children: [
                                                     SizedBox(

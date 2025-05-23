@@ -9,15 +9,15 @@ Widget profileDetailIcon(IconData icon) {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double boxSize = isTablet
-          ? 80.r
+          ? 76.r
           : isSmallTablet
-              ? 80.r
+              ? 78.r
               : 80.r;
 
       double iconSize = isTablet
-          ? 28.r
+          ? 24.r
           : isSmallTablet
-              ? 28.r
+              ? 26.r
               : 28.r;
 
       return ClipOval(

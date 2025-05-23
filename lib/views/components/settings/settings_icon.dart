@@ -9,9 +9,9 @@ Widget settingsIcon(IconData icon) {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double iconSize = isTablet
-          ? 30.r
+          ? 26.r
           : isSmallTablet
-              ? 30.r
+              ? 28.r
               : 30.r;
 
       return ClipRRect(

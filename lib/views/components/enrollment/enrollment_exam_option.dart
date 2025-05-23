@@ -12,9 +12,9 @@ Widget enrollmentExamOption(BuildContext context, bool selected, String name) {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double fontSize = isTablet
-          ? 26.sp
+          ? 30.sp
           : isSmallTablet
-              ? 28.sp
+              ? 32.sp
               : 34.sp;
 
       return Container(

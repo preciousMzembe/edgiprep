@@ -12,9 +12,9 @@ Widget settingsOptionBox(String icon, String title, String value) {
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double iconSize = isTablet
-          ? 50.r
+          ? 46.r
           : isSmallTablet
-              ? 50.r
+              ? 48.r
               : 50.r;
 
       double titleSize = isTablet

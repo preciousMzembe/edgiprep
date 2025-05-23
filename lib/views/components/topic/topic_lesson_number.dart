@@ -8,7 +8,6 @@ Widget topicLessonNumber(String name, double fontSize, String color) {
     style: GoogleFonts.inter(
       fontSize: fontSize,
       fontWeight: FontWeight.w800,
-      // color: primaryColor,
       color: getBackgroundColorFromString(color),
       height: 1,
     ),

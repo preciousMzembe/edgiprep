@@ -62,9 +62,9 @@ class LessonFinish extends StatelessWidget {
         bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
         double imageHeight = isTablet
-            ? 36.sp
+            ? 210.sp
             : isSmallTablet
-                ? 38.sp
+                ? 220.sp
                 : 230.h;
 
         double titleSize = isTablet
@@ -78,12 +78,6 @@ class LessonFinish extends StatelessWidget {
             : isSmallTablet
                 ? 20.sp
                 : 22.sp;
-
-        // double previewSize = isTablet
-        //     ? 22.sp
-        //     : isSmallTablet
-        //         ? 24.sp
-        //         : 26.sp;
 
         double afterTextSize = isTablet
             ? 16.sp
@@ -264,16 +258,6 @@ class LessonFinish extends StatelessWidget {
                                       SizedBox(
                                         height: 20.h,
                                       ),
-                                      // Text(
-                                      //   "Review the Lesson",
-                                      //   textAlign: TextAlign.center,
-                                      //   style: GoogleFonts.inter(
-                                      //     fontSize: previewSize,
-                                      //     fontWeight: FontWeight.w700,
-                                      //     color: const Color.fromRGBO(
-                                      //         73, 161, 249, 1),
-                                      //   ),
-                                      // ),
                                     ],
                                   ),
                                 ),
