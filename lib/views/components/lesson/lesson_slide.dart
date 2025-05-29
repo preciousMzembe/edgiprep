@@ -23,7 +23,11 @@ class LessonSlide extends StatelessWidget {
     return ListView(
       physics: const ClampingScrollPhysics(),
       children: [
-        if (slide.content != null) lessonContent(slide.content),
+        if (slide.content != null &&
+            (slide.content!.title != "" ||
+                slide.content!.text != "" ||
+                slide.content!.slideMedia != null))
+          lessonContent(slide.content),
 
         if (slide.question != null)
           type == "lesson"

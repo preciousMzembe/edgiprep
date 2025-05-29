@@ -154,9 +154,13 @@ class LessonController extends GetxController {
           hasMedia = true;
         }
 
+        String slideDesc = slide['description'] != null
+            ? slide['description'].replaceAll(RegExp(r'<[^>]*>'), '').trim()
+            : "";
+
         SlideContentModel tempSlideContent = SlideContentModel(
           title: slide['title'] ?? "",
-          text: slide['description'] ?? "",
+          text: slideDesc != "" ? slide['description'] : "",
           slideMedia: hasMedia ? tempSlideMedia : null,
         );
 
@@ -181,7 +185,9 @@ class LessonController extends GetxController {
                       ? "${config?.imagesUrl}/${slide['question']['imageUrL']}"
                       : "",
                   options: [],
-                  explanation: explanation,
+                  explanation: explanation != ""
+                      ? slide['question']['explaination']
+                      : "",
                   explanationImage: slide['question']['explainationImage'] !=
                               null &&
                           slide['question']['explainationImage'] != ""

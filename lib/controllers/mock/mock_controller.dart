@@ -129,7 +129,8 @@ class MockController extends GetxController {
                 ? "${config?.imagesUrl}/${instances['question']['imageUrL']}"
                 : "",
             options: [],
-            explanation: explanation,
+            explanation:
+                explanation != "" ? instances['question']['explaination'] : "",
             explanationImage: instances['question']['explainationImage'] !=
                         null &&
                     instances['question']['explainationImage'] != ""

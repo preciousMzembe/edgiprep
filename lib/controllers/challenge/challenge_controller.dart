@@ -132,7 +132,7 @@ class ChallengeController extends GetxController {
                     ? "${config?.imagesUrl}/${question['imageUrL']}"
                     : "",
             options: [],
-            explanation: explanation,
+            explanation: explanation != "" ? question['explaination'] : "",
             explanationImage: question['explainationImage'] != null &&
                     question['explainationImage'] != ""
                 ? "${config?.imagesUrl}/${question['explainationImage']}"
@@ -256,7 +256,7 @@ class ChallengeController extends GetxController {
                     ? "${config?.imagesUrl}/${question['imageUrL']}"
                     : "",
             options: [],
-            explanation: explanation,
+            explanation: explanation != "" ? question['explaination'] : "",
             explanationImage: question['explainationImage'] != null &&
                     question['explainationImage'] != ""
                 ? "${config?.imagesUrl}/${question['explainationImage']}"
