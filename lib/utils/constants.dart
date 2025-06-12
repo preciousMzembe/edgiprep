@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 const appName = "EdgiPrep";
+const androidId = "com.edgicate.edgiprep";
+const playStoreLink =
+    "https://play.google.com/store/apps/details?id=$androidId";
 
 Color primaryColor = const Color.fromRGBO(35, 131, 226, 1);
 Color backgroundColor = const Color.fromRGBO(236, 239, 245, 1);
@@ -160,4 +164,9 @@ String capitalizeWords(String text) {
     if (word.isEmpty) return word;
     return word[0].toUpperCase() + word.substring(1);
   }).join(" ");
+}
+
+Future<String> getCurrentVersion() async {
+  final PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  return packageInfo.version;
 }

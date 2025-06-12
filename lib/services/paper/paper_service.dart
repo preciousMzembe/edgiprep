@@ -57,7 +57,8 @@ class PaperService extends GetxService {
     return {'error': error};
   }
 
-  Future<void> saveTestScore(String testDoneId, double score, List<String> answerIds) async {
+  Future<void> saveTestScore(
+      String testDoneId, double score, List<String> answerIds) async {
     config ??= await configService.getConfig();
 
     // Check if token is not empty first

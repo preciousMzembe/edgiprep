@@ -69,7 +69,7 @@ Widget premiumDetail(String icon, String title, String detail) {
                   ),
                 ),
                 SizedBox(
-                  height: 10.h,
+                  height: 6.h,
                 ),
                 Text(
                   detail,

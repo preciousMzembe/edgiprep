@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-Widget premiumPriceOption(String price) {
+Widget lockPoint() {
   return LayoutBuilder(
     builder: (context, constraints) {
       bool isTablet = DeviceUtils.isTablet(context);
@@ -52,7 +52,7 @@ Widget premiumPriceOption(String price) {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      "MK $price Annually",
+                      "We're Improving EdgiPrep",
                       style: GoogleFonts.inter(
                         fontSize: fontSize,
                         fontWeight: FontWeight.w700,
@@ -62,14 +62,14 @@ Widget premiumPriceOption(String price) {
                       height: 1.h,
                     ),
                     premiumFadeText(
-                        "Go to premium with only MK $price per year"),
+                        "Bringing you a better learning experience."),
                   ],
                 ),
               ),
 
               // mark
               SizedBox(
-                width: 30.w,
+                width: 20.w,
               ),
               enrollmentOptionSelectedMark(selectedExamColor),
             ],

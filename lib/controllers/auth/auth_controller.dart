@@ -10,6 +10,7 @@ class AuthController extends GetxController {
   Rx<User?> user = Rx<User?>(null);
 
   RxString authToken = "".obs;
+  RxBool isLocked = false.obs;
 
   @override
   void onInit() {
@@ -27,6 +28,8 @@ class AuthController extends GetxController {
     String? token = await authService.getToken();
 
     if (token != null && token != "") {
+      // TODO: check if app locked
+
       await getUserData();
       authToken.value = token;
 

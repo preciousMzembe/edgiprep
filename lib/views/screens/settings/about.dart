@@ -13,8 +13,30 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class About extends StatelessWidget {
+class About extends StatefulWidget {
   const About({super.key});
+
+  @override
+  State<About> createState() => _AboutState();
+}
+
+class _AboutState extends State<About> {
+  String currentVersion = "1.0.0";
+
+  Future<void> getVersion() async {
+    String version = await getCurrentVersion();
+
+    setState(() {
+      currentVersion = version;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    getVersion();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +138,7 @@ class About extends StatelessWidget {
                         height: 10.h,
                       ),
                       Text(
-                        "Your ultimate study companion for exam preparation! We believe that every student deserves the tools and support to succeed, and EdgiPrep is here to help you reach your academic goals with ease and confidence.",
+                        "Your ultimate study companion for exam preparation! We believe that every student deserves the tools and support to succeed, and $appName is here to help you reach your academic goals with ease and confidence.",
                         textAlign: TextAlign.center,
                         style: GoogleFonts.inter(
                           fontSize: textSize,
@@ -130,7 +152,7 @@ class About extends StatelessWidget {
                         height: 30.h,
                       ),
                       Text(
-                        "Version 1.0.1",
+                        "Version $currentVersion",
                         textAlign: TextAlign.center,
                         style: GoogleFonts.inter(
                           fontSize: textSize,
