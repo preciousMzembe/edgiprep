@@ -1,3 +1,4 @@
+import 'package:edgiprep/controllers/auth/auth_controller.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/general/normal_button.dart';
@@ -5,10 +6,13 @@ import 'package:edgiprep/views/components/premium/premium_subtitle.dart';
 import 'package:edgiprep/views/components/premium/premium_title.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-Widget updateContent() {
+Widget rateContent() {
   return LayoutBuilder(builder: (context, constraints) {
+    AuthController authController = Get.find<AuthController>();
+
     bool isTablet = DeviceUtils.isTablet(context);
     bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
@@ -49,7 +53,8 @@ Widget updateContent() {
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 30.w),
-                    child: premiumTitle("There Is a New Update Available!"),
+                    child:
+                        premiumTitle("Enjoying EdgiPrep?\nLet the World Know!"),
                   ),
 
                   // subtitle
@@ -59,25 +64,54 @@ Widget updateContent() {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 30.w),
                     child: premiumSubtitle(
-                        "Please update the app to enjoy the latest features and improvements."),
+                        "We're always working to make learning easier and more fun. Let us know how we're doing by leaving a quick rating and feedback, it really helps!"),
                   ),
 
                   SizedBox(
                     height: 30.h,
                   ),
 
-                  GestureDetector(
-                    onTap: () async {
-                      final uri = Uri.parse(playStoreLink);
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(
-                          uri,
-                          mode: LaunchMode.externalApplication,
-                        );
-                      }
-                    },
-                    child: normalButton(
-                        primaryColor, Colors.white, "Update Now", 20),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () async {
+                            await authController.closeRatePopup();
+                          },
+                          child: normalButton(
+                            unselectedButtonColor,
+                            Colors.black,
+                            "Not Now",
+                            20,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 25.w,
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () async {
+                            final uri = Uri.parse(playStoreLink);
+                            if (await canLaunchUrl(uri)) {
+                              await authController.markRated();
+
+                              await launchUrl(
+                                uri,
+                                mode: LaunchMode.externalApplication,
+                              );
+                            }
+                          },
+                          child: normalButton(
+                            primaryColor,
+                            Colors.white,
+                            "Rate Now",
+                            20,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

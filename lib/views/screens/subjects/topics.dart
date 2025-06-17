@@ -22,6 +22,11 @@ class SubjectTopics extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int topicsCount = 0;
+
+    for (var entry in unitTopicMap.entries) {
+      topicsCount += entry.value.length;
+    }
     return Container(
       color: backgroundColor,
       child: Padding(
@@ -33,7 +38,7 @@ class SubjectTopics extends StatelessWidget {
             ),
 
             // data
-            if (unitTopicMap.isEmpty)
+            if (topicsCount < 1)
               noDataContent("No Topics Found",
                   "There were no topics found for this subject. Please check back later."),
             ...unitTopicMap.entries.map((entry) {

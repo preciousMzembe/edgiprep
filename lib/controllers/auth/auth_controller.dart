@@ -2,6 +2,7 @@
 import 'package:edgiprep/db/user/user.dart';
 import 'package:edgiprep/services/auth/auth_service.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController extends GetxController {
   final AuthService authService = Get.find<AuthService>();
@@ -11,6 +12,7 @@ class AuthController extends GetxController {
 
   RxString authToken = "".obs;
   RxBool isLocked = false.obs;
+  RxBool showRatePopup = false.obs;
 
   @override
   void onInit() {
@@ -21,6 +23,8 @@ class AuthController extends GetxController {
     ever(authService.doneFetchingUserData, (_) async {
       checkLoginStatus();
     });
+
+    checkForRating();
   }
 
   // Check login status
@@ -134,5 +138,25 @@ class AuthController extends GetxController {
       r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
     );
     return emailRegex.hasMatch(email);
+  }
+
+  Future<void> checkForRating() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool showRatingPopup = prefs.getBool('show_rating_popup') ?? false;
+
+    if (showRatingPopup) {
+      await prefs.setBool('show_rating_popup', false);
+      showRatePopup.value = true;
+    }
+  }
+
+  Future<void> closeRatePopup() async {
+    showRatePopup.value = false;
+  }
+
+  Future<void> markRated() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('is_rated', true);
+    showRatePopup.value = false;
   }
 }

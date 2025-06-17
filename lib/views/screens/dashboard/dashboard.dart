@@ -9,6 +9,7 @@ import 'package:edgiprep/services/enrollment/user_enrollment_service.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/views/components/dashboard/app_locked.dart';
 import 'package:edgiprep/views/components/dashboard/navigation_bar.dart';
+import 'package:edgiprep/views/components/dashboard/rate_content.dart';
 import 'package:edgiprep/views/components/dashboard/update_content.dart';
 import 'package:edgiprep/views/screens/appraisal/appraisal.dart';
 import 'package:edgiprep/views/screens/dashboard/home.dart';
@@ -107,56 +108,75 @@ class _DashboardState extends State<Dashboard> {
           pageController.jumpToPage(0);
         }
       },
-      child: Scaffold(
-        // body
-        body: Stack(
-          children: [
-            // Body
-            PageView(
-              controller: pageController,
-              onPageChanged: (index) {
-                navController.changePageIndex(index);
-              },
+      child: Obx(
+        () {
+          return Scaffold(
+            // body
+            body: Stack(
               children: [
-                Home(
-                  refreshData: refreshData,
-                  toSubjects: goToSubjects,
-                  toSubject: openSubject,
+                // Body
+                PageView(
+                  controller: pageController,
+                  onPageChanged: (index) {
+                    navController.changePageIndex(index);
+                  },
+                  children: [
+                    Home(
+                      refreshData: refreshData,
+                      toSubjects: goToSubjects,
+                      toSubject: openSubject,
+                    ),
+                    Subjects(
+                      refreshData: refreshData,
+                    ),
+                    Appraisal(
+                      refreshData: refreshData,
+                    ),
+                    Settings(
+                      refreshData: refreshData,
+                    ),
+                  ],
                 ),
-                Subjects(
-                  refreshData: refreshData,
-                ),
-                Appraisal(
-                  refreshData: refreshData,
-                ),
-                Settings(
-                  refreshData: refreshData,
-                ),
+
+                // Update Banner
+                if (!authController.isLocked.value && isUpdateAvailable)
+                  SafeArea(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                      child: Container(
+                        color: const Color.fromRGBO(0, 0, 0, 0.5),
+                        child: updateContent(),
+                      ),
+                    ),
+                  ),
+
+                // Rate App
+                if (!authController.isLocked.value &&
+                    !isUpdateAvailable &&
+                    authController.showRatePopup.value)
+                  SafeArea(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                      child: Container(
+                        color: const Color.fromRGBO(0, 0, 0, 0.5),
+                        child: rateContent(),
+                      ),
+                    ),
+                  ),
+
+                // App Locked
+                if (authController.isLocked.value) appLocked(),
               ],
             ),
 
-            // Update Banner
-            if (isUpdateAvailable && !authController.isLocked.value)
-              SafeArea(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                  child: Container(
-                    color: const Color.fromRGBO(0, 0, 0, 0.5),
-                    child: updateContent(),
-                  ),
-                ),
-              ),
-
-            // App Locked
-            if (authController.isLocked.value) appLocked(),
-          ],
-        ),
-
-        // navigation
-        bottomNavigationBar:
-            !isUpdateAvailable && !authController.isLocked.value
+            // navigation
+            bottomNavigationBar: !isUpdateAvailable &&
+                    !authController.isLocked.value &&
+                    !authController.showRatePopup.value
                 ? navigationBar(changeNavIndex)
                 : null,
+          );
+        },
       ),
     );
   }

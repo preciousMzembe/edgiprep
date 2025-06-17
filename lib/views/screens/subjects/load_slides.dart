@@ -21,6 +21,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoadSlides extends StatefulWidget {
   final String title;
@@ -62,7 +63,27 @@ class _LoadSlidesState extends State<LoadSlides> {
   void initState() {
     super.initState();
 
+    countOpensForRating();
     getData();
+  }
+
+  Future<void> countOpensForRating() async {
+    final prefs = await SharedPreferences.getInstance();
+    int numberOfOpens = prefs.getInt('number_of_opens') ?? 0;
+    bool isRated = prefs.getBool('is_rated') ?? false;
+
+    numberOfOpens++;
+    await prefs.setInt('number_of_opens', numberOfOpens);
+
+    // First prompt after 10 opens
+    if (!isRated && numberOfOpens == 10) {
+      await prefs.setBool('show_rating_popup', true);
+    }
+
+    // Subsequent prompts every 20 opens
+    if (!isRated && numberOfOpens % 20 == 0) {
+      await prefs.setBool('show_rating_popup', true);
+    }
   }
 
   Future<void> getData() async {
