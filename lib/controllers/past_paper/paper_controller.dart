@@ -126,16 +126,16 @@ class PaperController extends GetxController {
             questionText: instances['question']['name'],
             questionImage: instances['question']['imageUrL'] != null &&
                     instances['question']['imageUrL'] != ""
-                ? "${config?.imagesUrl}/${instances['question']['imageUrL']}"
+                ? "${instances['question']['imageUrL']}"
                 : "",
             options: [],
             explanation:
                 explanation != "" ? instances['question']['explaination'] : "",
-            explanationImage: instances['question']['explainationImage'] !=
-                        null &&
-                    instances['question']['explainationImage'] != ""
-                ? "${config?.imagesUrl}/${instances['question']['explainationImage']}"
-                : "",
+            explanationImage:
+                instances['question']['explainationImage'] != null &&
+                        instances['question']['explainationImage'] != ""
+                    ? "${instances['question']['explainationImage']}"
+                    : "",
           ),
           order: instances['order'],
         );
@@ -154,7 +154,7 @@ class PaperController extends GetxController {
                 id: option['id'],
                 text: cleanContent.isEmpty ? cleanContent : option['text'],
                 image: option['imageUrl'] != null && option['imageUrl'] != ""
-                    ? "${config?.imagesUrl}/${option['imageUrl']}"
+                    ? "${option['imageUrl']}"
                     : "",
                 qusetionId: option['questionId'],
                 isCorrect: option['isCorrect'],

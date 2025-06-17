@@ -18,35 +18,32 @@ class ConfigAdapter extends TypeAdapter<Config> {
     };
     return Config(
       apiUrl: fields[0] as String,
-      imagesUrl: fields[1] as String,
-      privacyPolicyUrl: fields[2] as String,
-      appUrl: fields[3] as String,
-      quizQuestions: fields[4] as int,
-      topicQuizQuestions: fields[5] as int,
-      premiumPrice: fields[6] as String,
-      subjectsImageUrl: fields[7] as String,
+      privacyPolicyUrl: fields[1] as String,
+      appUrl: fields[2] as String,
+      quizQuestions: fields[3] as int,
+      topicQuizQuestions: fields[4] as int,
+      premiumPrice: fields[5] as String,
+      subjectsImageUrl: fields[6] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, Config obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.apiUrl)
       ..writeByte(1)
-      ..write(obj.imagesUrl)
-      ..writeByte(2)
       ..write(obj.privacyPolicyUrl)
-      ..writeByte(3)
+      ..writeByte(2)
       ..write(obj.appUrl)
-      ..writeByte(4)
+      ..writeByte(3)
       ..write(obj.quizQuestions)
-      ..writeByte(5)
+      ..writeByte(4)
       ..write(obj.topicQuizQuestions)
-      ..writeByte(6)
+      ..writeByte(5)
       ..write(obj.premiumPrice)
-      ..writeByte(7)
+      ..writeByte(6)
       ..write(obj.subjectsImageUrl);
   }
 

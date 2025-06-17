@@ -51,7 +51,7 @@ class Lesson {
     required this.subjectEnrollmentId,
   });
 
-  toJson() => {
+  Map<String, Object> toJson() => {
         'id': id,
         'name': name,
         'order': order,

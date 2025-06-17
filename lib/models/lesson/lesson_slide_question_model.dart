@@ -34,7 +34,7 @@ class LessonSlideQuestionModel {
     options = newOptions;
   }
 
-  toJson() {
+  Map<String, Object?> toJson() {
     return {
       'id': id,
       'questionText': questionText,

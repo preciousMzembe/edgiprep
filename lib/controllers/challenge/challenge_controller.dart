@@ -129,13 +129,13 @@ class ChallengeController extends GetxController {
             questionText: question['name'],
             questionImage:
                 question['imageUrL'] != null && question['imageUrL'] != ""
-                    ? "${config?.imagesUrl}/${question['imageUrL']}"
+                    ? "${question['imageUrL']}"
                     : "",
             options: [],
             explanation: explanation != "" ? question['explaination'] : "",
             explanationImage: question['explainationImage'] != null &&
                     question['explainationImage'] != ""
-                ? "${config?.imagesUrl}/${question['explainationImage']}"
+                ? "${question['explainationImage']}"
                 : "",
           ),
         );
@@ -154,7 +154,7 @@ class ChallengeController extends GetxController {
                 id: option['id'],
                 text: cleanContent.isEmpty ? cleanContent : option['text'],
                 image: option['imageUrl'] != null && option['imageUrl'] != ""
-                    ? "${config?.imagesUrl}/${option['imageUrl']}"
+                    ? "${option['imageUrl']}"
                     : "",
                 qusetionId: option['questionId'],
                 isCorrect: option['isCorrect'],
@@ -253,13 +253,13 @@ class ChallengeController extends GetxController {
             questionText: question['name'],
             questionImage:
                 question['imageUrL'] != null && question['imageUrL'] != ""
-                    ? "${config?.imagesUrl}/${question['imageUrL']}"
+                    ? "${question['imageUrL']}"
                     : "",
             options: [],
             explanation: explanation != "" ? question['explaination'] : "",
             explanationImage: question['explainationImage'] != null &&
                     question['explainationImage'] != ""
-                ? "${config?.imagesUrl}/${question['explainationImage']}"
+                ? "${question['explainationImage']}"
                 : "",
           ),
         );
@@ -278,7 +278,7 @@ class ChallengeController extends GetxController {
                 id: option['id'],
                 text: cleanContent.isEmpty ? cleanContent : option['text'],
                 image: option['imageUrl'] != null && option['imageUrl'] != ""
-                    ? "${config?.imagesUrl}/${option['imageUrl']}"
+                    ? "${option['imageUrl']}"
                     : "",
                 qusetionId: option['questionId'],
                 isCorrect: option['isCorrect'],

@@ -11,7 +11,7 @@ class SlideContentModel {
     this.text,
   });
 
-  toJson() => {
+  Map<String, Object?> toJson() => {
         'title': title,
         'text': text,
         'slideMedia': slideMedia,

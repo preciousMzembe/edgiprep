@@ -43,7 +43,7 @@ class Topic {
     required this.subjectEnrollmentId,
   });
 
-  toJson() {
+  Map<String, Object> toJson() {
     return {
       'id': id,
       'name': name,

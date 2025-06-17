@@ -18,7 +18,6 @@ class ConfigService extends GetxService {
       await remoteConfig.fetchAndActivate();
       String apiUrl = remoteConfig.getString('API_URL');
       String appUrl = remoteConfig.getString('APP_URL');
-      String imagesUrl = remoteConfig.getString('IMAGES_URL');
       String subjectsImageUrl = remoteConfig.getString('SUBJECTS_IMAGE_URL');
       String privacyPolicyUrl = remoteConfig.getString('PRIVACY_POLICY_URL');
       String quizQuestions = remoteConfig.getString('QUIZ_QUESTIONS');
@@ -28,7 +27,6 @@ class ConfigService extends GetxService {
 
       Config config = Config(
         apiUrl: apiUrl,
-        imagesUrl: imagesUrl,
         privacyPolicyUrl: privacyPolicyUrl,
         appUrl: appUrl,
         quizQuestions: int.parse(quizQuestions),

@@ -149,8 +149,8 @@ class LessonController extends GetxController {
         bool hasMedia = false;
         SlideMediaModel tempSlideMedia = SlideMediaModel(MediaType.image, "");
         if (slide['media'] != null && slide['media'].isNotEmpty) {
-          tempSlideMedia = SlideMediaModel(
-              MediaType.image, "${config?.imagesUrl}/${slide['media']}");
+          tempSlideMedia =
+              SlideMediaModel(MediaType.image, "${slide['media']}");
           hasMedia = true;
         }
 
@@ -182,17 +182,17 @@ class LessonController extends GetxController {
                   questionText: slide['question']['name'],
                   questionImage: slide['question']['imageUrL'] != null &&
                           slide['question']['imageUrL'] != ""
-                      ? "${config?.imagesUrl}/${slide['question']['imageUrL']}"
+                      ? "${slide['question']['imageUrL']}"
                       : "",
                   options: [],
                   explanation: explanation != ""
                       ? slide['question']['explaination']
                       : "",
-                  explanationImage: slide['question']['explainationImage'] !=
-                              null &&
-                          slide['question']['explainationImage'] != ""
-                      ? "${config?.imagesUrl}/${slide['question']['explainationImage']}"
-                      : "",
+                  explanationImage:
+                      slide['question']['explainationImage'] != null &&
+                              slide['question']['explainationImage'] != ""
+                          ? "${slide['question']['explainationImage']}"
+                          : "",
                 ),
           slideDone: slide['isDone'] ?? false,
         );
@@ -213,7 +213,7 @@ class LessonController extends GetxController {
                   id: option['id'],
                   text: cleanContent.isEmpty ? cleanContent : option['text'],
                   image: option['imageUrl'] != null && option['imageUrl'] != ""
-                      ? "${config?.imagesUrl}/${option['imageUrl']}"
+                      ? "${option['imageUrl']}"
                       : "",
                   qusetionId: option['questionId'],
                   isCorrect: option['isCorrect'],

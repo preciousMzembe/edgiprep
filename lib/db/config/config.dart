@@ -9,29 +9,25 @@ class Config {
   final String apiUrl;
 
   @HiveField(1)
-  final String imagesUrl;
-
-  @HiveField(2)
   final String privacyPolicyUrl;
 
-  @HiveField(3)
+  @HiveField(2)
   final String appUrl;
 
-  @HiveField(4)
+  @HiveField(3)
   final int quizQuestions;
 
-  @HiveField(5)
+  @HiveField(4)
   final int topicQuizQuestions;
 
-  @HiveField(6)
+  @HiveField(5)
   final String premiumPrice;
 
-  @HiveField(7)
+  @HiveField(6)
   final String subjectsImageUrl;
 
   Config({
     required this.apiUrl,
-    required this.imagesUrl,
     required this.privacyPolicyUrl,
     required this.appUrl,
     required this.quizQuestions,
@@ -40,16 +36,15 @@ class Config {
     required this.subjectsImageUrl,
   });
 
-  toJson() {
+  Map<String, Object> toJson() {
     return {
       'apiUrl': apiUrl,
-      'imagesUrl': imagesUrl,
       'privacyPolicyUrl': privacyPolicyUrl,
       'appUrl': appUrl,
       'quizQuestions': quizQuestions,
       'topicQuizQuestions': topicQuizQuestions,
       'premiumPrice': premiumPrice,
-      'subjectImageUrl': subjectsImageUrl,
+      'subjectsImageUrl': subjectsImageUrl,
     };
   }
 }

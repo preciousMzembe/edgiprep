@@ -11,7 +11,6 @@ import 'package:edgiprep/views/components/dashboard/app_locked.dart';
 import 'package:edgiprep/views/components/dashboard/navigation_bar.dart';
 import 'package:edgiprep/views/components/dashboard/update_content.dart';
 import 'package:edgiprep/views/screens/appraisal/appraisal.dart';
-import 'package:edgiprep/views/screens/auth/auth.dart';
 import 'package:edgiprep/views/screens/dashboard/home.dart';
 import 'package:edgiprep/views/screens/settings/settings.dart';
 import 'package:edgiprep/views/screens/subjects/subject.dart';
@@ -82,8 +81,6 @@ class _DashboardState extends State<Dashboard> {
         });
       }
     } catch (e) {
-      debugPrint("Error checking for update: $e");
-
       setState(() {
         isUpdateAvailable = false;
       });

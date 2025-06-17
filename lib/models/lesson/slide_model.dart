@@ -16,7 +16,7 @@ class SlideModel {
     this.order,
   });
 
-  toJson() => {
+  Map<String, dynamic> toJson() => {
         'id': id,
         'content': content?.toJson(),
         'question': question?.toJson(),
