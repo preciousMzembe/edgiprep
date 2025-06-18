@@ -10,6 +10,7 @@ import 'package:edgiprep/views/components/general/loading_content.dart';
 import 'package:edgiprep/views/components/general/no_data_content.dart';
 import 'package:edgiprep/views/components/search/subject_search_input.dart';
 import 'package:edgiprep/views/components/subjects/subjects_back.dart';
+import 'package:edgiprep/views/screens/appraisal/test_details.dart';
 import 'package:edgiprep/views/screens/subjects/load_slides.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -159,16 +160,10 @@ class _SubjectPapersState extends State<SubjectPapers> {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        Get.to(
-                                          () => LoadSlides(
-                                            title: "Preparing Your Paper",
-                                            message:
-                                                "Get ready to dive in! Your paper is loading, and we're setting everything up for you.",
-                                            type: "paper",
-                                            testId: paper.id,
-                                            duration: paper.duration,
-                                          ),
-                                        );
+                                        Get.to(() => TestDetails(
+                                              subject: widget.subject,
+                                              pastPaper: paper,
+                                            ));
                                       },
                                       child: subjectPaper(
                                         paper.name,
@@ -258,46 +253,55 @@ class _SubjectPapersState extends State<SubjectPapers> {
                 child: Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 30.w,
-                        vertical: 30.h,
-                      ),
-                      color: getBackgroundColorFromString(widget.subject.color),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Row(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 30.w,
+                            vertical: 30.h,
+                          ),
+                          color: getBackgroundColorFromString(
+                              widget.subject.color),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Get.back();
-                                },
-                                child: subjectsBack(Colors.white),
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Get.back();
+                                    },
+                                    child: subjectsBack(Colors.white),
+                                  ),
+                                ],
                               ),
+                              SizedBox(
+                                height: 20.h,
+                              ),
+                              appraisalTestTitle(
+                                widget.subject.title,
+                                Colors.white,
+                              ),
+                              appraisalTestSubtitle(
+                                "Dive into ${widget.subject.title} past papers",
+                                const Color.fromRGBO(236, 239, 245, 1),
+                              ),
+                              SizedBox(
+                                height: 40.h,
+                              )
                             ],
                           ),
-                          SizedBox(
-                            height: 20.h,
-                          ),
-                          appraisalTestTitle(
-                            widget.subject.title,
-                            Colors.white,
-                          ),
-                          appraisalTestSubtitle(
-                            "Dive into ${widget.subject.title} past papers",
-                            const Color.fromRGBO(236, 239, 245, 1),
-                          ),
-                          SizedBox(
-                            height: 40.h,
-                          )
-                        ],
-                      ),
+                        ),
+                        SizedBox(
+                          height: 40.h,
+                        )
+                      ],
                     ),
 
                     // search
                     Positioned(
-                      bottom: -40.h,
+                      bottom: 0.h,
                       left: 0,
                       right: 0,
                       child: Padding(
