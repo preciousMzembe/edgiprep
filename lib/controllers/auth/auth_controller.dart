@@ -32,7 +32,8 @@ class AuthController extends GetxController {
     String? token = await authService.getToken();
 
     if (token != null && token != "") {
-      // TODO: check if app locked
+      // check if app is locked
+      checkAppLock();
 
       await getUserData();
       authToken.value = token;
@@ -42,6 +43,10 @@ class AuthController extends GetxController {
     } else {
       authToken.value = "";
     }
+  }
+
+  Future<void> checkAppLock() async {
+    isLocked.value = await authService.checkAppLocked();
   }
 
   Future<Map<String, dynamic>> login(String email, String password) async {

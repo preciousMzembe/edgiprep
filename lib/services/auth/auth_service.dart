@@ -71,6 +71,14 @@ class AuthService extends GetxService {
 
           int randomNumber = DateTime.now().millisecondsSinceEpoch;
 
+          bool isArchived = response.data['isArchived'] ?? false;
+
+          if (isArchived) {
+            await userBox.clear();
+            await logout();
+            return;
+          }
+
           User user = User(
             name: response.data['name'],
             username: response.data['userName'],
@@ -482,6 +490,27 @@ class AuthService extends GetxService {
       'status': "error",
       'error': "There was a problem deleting your account.",
     };
+  }
+
+  // Check if App is Locked
+  Future<bool> checkAppLocked() async {
+    String? token = await getToken();
+    if (token == null) return false;
+
+    final response = await _dio.get(
+      '${config?.apiUrl}/Config/IsMobileActive',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      return !response.data['isActive'];
+    }
+
+    return false;
   }
 
   // Token handling
