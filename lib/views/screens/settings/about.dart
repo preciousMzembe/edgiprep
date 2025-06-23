@@ -8,7 +8,6 @@ import 'package:edgiprep/views/components/settings/settings_username.dart';
 import 'package:edgiprep/views/screens/settings/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -111,13 +110,11 @@ class _AboutState extends State<About> {
                             child: Container(
                               width: containerSize,
                               height: containerSize,
-                              color: const Color.fromRGBO(73, 161, 249, 1),
+                              color: const Color.fromARGB(255, 105, 180, 255),
                               child: Center(
-                                child: SvgPicture.asset(
-                                  'icons/logo.svg',
+                                child: Image.asset(
+                                  'icons/transparent_logo.png',
                                   height: iconSize,
-                                  colorFilter: const ColorFilter.mode(
-                                      Colors.white, BlendMode.srcIn),
                                 ),
                               ),
                             ),

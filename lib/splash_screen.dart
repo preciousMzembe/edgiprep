@@ -4,8 +4,8 @@ import 'package:edgiprep/root.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:edgiprep/controllers/auth/auth_controller.dart';
 import 'package:lottie/lottie.dart';
@@ -26,13 +26,13 @@ class _SplashScreenState extends State<SplashScreen> {
   bool showLoading = false;
 
   Future<void> _init() async {
-    await Future.delayed(const Duration(milliseconds: 1000), () {
+    await Future.delayed(const Duration(milliseconds: 0), () {
       setState(() {
         showLoading = true;
       });
     });
 
-    await Future.delayed(const Duration(milliseconds: 2000), () {
+    await Future.delayed(const Duration(milliseconds: 3000), () {
       Get.offAll(() => const MyRoot());
     });
   }
@@ -48,15 +48,17 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    setWhiteStatusBarIcons();
+
     return LayoutBuilder(builder: (context, constraints) {
       bool isTablet = DeviceUtils.isTablet(context);
       bool isSmallTablet = DeviceUtils.isSmallTablet(context);
 
       double iconSize = isTablet
-          ? 80.r
+          ? 100.r
           : isSmallTablet
-              ? 90.r
-              : 100.r;
+              ? 110.r
+              : 120.r;
 
       return Scaffold(
         backgroundColor: primaryColor,
@@ -67,11 +69,9 @@ class _SplashScreenState extends State<SplashScreen> {
               AnimatedSlide(
                 duration: const Duration(milliseconds: 500),
                 offset: showLoading ? Offset.zero : const Offset(0, 1),
-                child: SvgPicture.asset(
-                  'icons/logo.svg',
+                child: Image.asset(
+                  'icons/transparent_logo.png',
                   height: iconSize,
-                  colorFilter:
-                      const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                 ),
               ),
               Transform.rotate(

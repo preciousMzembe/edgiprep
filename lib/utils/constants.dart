@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 const appName = "EdgiPrep";
@@ -27,6 +28,17 @@ Color unselectedNavOptionColor = const Color.fromRGBO(161, 168, 183, 1);
 // home
 Color homeFadeColor = const Color.fromRGBO(147, 152, 159, 1);
 Color homeLightBackgroundColor = const Color.fromRGBO(193, 224, 255, 1);
+
+void setWhiteStatusBarIcons() {
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light, // For Android (white icons)
+      statusBarBrightness: Brightness.dark,      // For iOS (white icons)
+    ),
+  );
+}
+
 
 Color getColorFromString(String colorString) {
   // Match rgb
