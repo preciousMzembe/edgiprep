@@ -34,11 +34,10 @@ void setWhiteStatusBarIcons() {
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light, // For Android (white icons)
-      statusBarBrightness: Brightness.dark,      // For iOS (white icons)
+      statusBarBrightness: Brightness.dark, // For iOS (white icons)
     ),
   );
 }
-
 
 Color getColorFromString(String colorString) {
   // Match rgb
@@ -176,6 +175,16 @@ String capitalizeWords(String text) {
     if (word.isEmpty) return word;
     return word[0].toUpperCase() + word.substring(1);
   }).join(" ");
+}
+
+String removeEmptyParagraphs(String? rawText) {
+  if (rawText == null) return "";
+  return rawText.replaceAll(RegExp(r'<p><br></p>'), '');
+}
+
+String stripHtmlTags(String? htmlString) {
+  if (htmlString == null) return "";
+  return htmlString.replaceAll(RegExp(r'<[^>]*>'), '').trim();
 }
 
 Future<String> getCurrentVersion() async {

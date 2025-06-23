@@ -6,6 +6,7 @@ import 'package:edgiprep/models/lesson/slide_model.dart';
 import 'package:edgiprep/models/lesson/lesson_slide_question_model.dart';
 import 'package:edgiprep/services/configuration/configuration_service.dart';
 import 'package:edgiprep/services/quiz/quiz_service.dart';
+import 'package:edgiprep/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -113,20 +114,24 @@ class QuizController extends GetxController {
       List<SlideModel> tempSlides = [];
 
       for (var question in quizData['questions']) {
-        String explanation = question['explaination'] != null
-            ? question['explaination'].replaceAll(RegExp(r'<[^>]*>'), '').trim()
-            : "";
-
         SlideModel tempSlide = SlideModel(
           question: LessonSlideQuestionModel(
             id: question['id'],
-            questionText: question['name'],
+            questionText: question['name'] != null
+                ? stripHtmlTags(question['name']) != ""
+                    ? removeEmptyParagraphs(question['name'])
+                    : ""
+                : "",
             questionImage:
                 question['imageUrL'] != null && question['imageUrL'] != ""
                     ? "${question['imageUrL']}"
                     : "",
             options: [],
-            explanation: explanation != "" ? question['explaination'] : "",
+            explanation: question['explaination'] != null
+                ? stripHtmlTags(question['explaination']) != ""
+                    ? removeEmptyParagraphs(question['explaination'])
+                    : ""
+                : "",
             explanationImage: question['explainationImage'] != null &&
                     question['explainationImage'] != ""
                 ? "${question['explainationImage']}"
@@ -138,15 +143,16 @@ class QuizController extends GetxController {
 
         for (var option in question['answers']) {
           // Remove HTML tags using a regular expression
-          String cleanContent =
-              option['text'].replaceAll(RegExp(r'<[^>]*>'), '').trim();
+          String cleanContent = stripHtmlTags(option['text']) != ""
+              ? removeEmptyParagraphs(option['text'])
+              : "";
 
           if (cleanContent.isNotEmpty ||
               (option['imageUrl'] != null && option['imageUrl'] != "")) {
             tempOptions.add(
               QuestionAnswerModel(
                 id: option['id'],
-                text: cleanContent.isEmpty ? cleanContent : option['text'],
+                text: cleanContent,
                 image: option['imageUrl'] != null && option['imageUrl'] != ""
                     ? "${option['imageUrl']}"
                     : "",

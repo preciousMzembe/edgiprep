@@ -11,6 +11,7 @@ import 'package:edgiprep/models/lesson/lesson_slide_question_model.dart';
 import 'package:edgiprep/services/configuration/configuration_service.dart';
 import 'package:edgiprep/services/lesson/lesson_service.dart';
 import 'package:edgiprep/services/stats/stats_service.dart';
+import 'package:edgiprep/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -154,21 +155,13 @@ class LessonController extends GetxController {
           hasMedia = true;
         }
 
-        String slideDesc = slide['description'] != null
-            ? slide['description'].replaceAll(RegExp(r'<[^>]*>'), '').trim()
-            : "";
-
         SlideContentModel tempSlideContent = SlideContentModel(
           title: slide['title'] ?? "",
-          text: slideDesc != "" ? slide['description'] : "",
+          text: stripHtmlTags(slide['description']) != ""
+              ? removeEmptyParagraphs(slide['description'])
+              : "",
           slideMedia: hasMedia ? tempSlideMedia : null,
         );
-
-        String explanation = slide['question'] != null
-            ? slide['question']['explaination']
-                .replaceAll(RegExp(r'<[^>]*>'), '')
-                .trim()
-            : "";
 
         // Slide
         SlideModel tempSlide = SlideModel(
@@ -185,8 +178,11 @@ class LessonController extends GetxController {
                       ? "${slide['question']['imageUrL']}"
                       : "",
                   options: [],
-                  explanation: explanation != ""
-                      ? slide['question']['explaination']
+                  explanation: slide['question'] != null
+                      ? stripHtmlTags(slide['question']['explaination']) != ""
+                          ? removeEmptyParagraphs(
+                              slide['question']['explaination'])
+                          : ""
                       : "",
                   explanationImage:
                       slide['question']['explainationImage'] != null &&

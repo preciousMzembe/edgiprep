@@ -6,6 +6,7 @@ import 'package:edgiprep/models/lesson/slide_model.dart';
 import 'package:edgiprep/models/lesson/lesson_slide_question_model.dart';
 import 'package:edgiprep/services/configuration/configuration_service.dart';
 import 'package:edgiprep/services/mock/mock_service.dart';
+import 'package:edgiprep/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -114,23 +115,25 @@ class MockController extends GetxController {
       List<SlideModel> tempSlides = [];
 
       for (var instances in mockData['testInstances']) {
-        String explanation = instances['question']['explaination'] != null
-            ? instances['question']['explaination']
-                .replaceAll(RegExp(r'<[^>]*>'), '')
-                .trim()
-            : "";
-
         SlideModel tempSlide = SlideModel(
           question: LessonSlideQuestionModel(
             id: instances['question']['id'],
-            questionText: instances['question']['name'],
+            questionText: instances['question']['name'] != null
+                ? stripHtmlTags(instances['question']['name']) != ""
+                    ? removeEmptyParagraphs(instances['question']['name'])
+                    : ""
+                : "",
             questionImage: instances['question']['imageUrL'] != null &&
                     instances['question']['imageUrL'] != ""
                 ? "${instances['question']['imageUrL']}"
                 : "",
             options: [],
-            explanation:
-                explanation != "" ? instances['question']['explaination'] : "",
+            explanation: instances['question']['explaination'] != null
+                ? stripHtmlTags(instances['question']['explaination']) != ""
+                    ? removeEmptyParagraphs(
+                        instances['question']['explaination'])
+                    : ""
+                : "",
             explanationImage:
                 instances['question']['explainationImage'] != null &&
                         instances['question']['explainationImage'] != ""
@@ -144,15 +147,16 @@ class MockController extends GetxController {
 
         for (var option in instances['question']['answers']) {
           // Remove HTML tags using a regular expression
-          String cleanContent =
-              option['text'].replaceAll(RegExp(r'<[^>]*>'), '').trim();
+          String cleanContent = stripHtmlTags(option['text']) != ""
+              ? removeEmptyParagraphs(option['text'])
+              : "";
 
           if (cleanContent.isNotEmpty ||
               option['imageUrl'] != null && option['imageUrl'] != "") {
             tempOptions.add(
               QuestionAnswerModel(
                 id: option['id'],
-                text: cleanContent.isEmpty ? cleanContent : option['text'],
+                text: cleanContent,
                 image: option['imageUrl'] != null && option['imageUrl'] != ""
                     ? "${option['imageUrl']}"
                     : "",
