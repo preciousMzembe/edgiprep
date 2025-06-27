@@ -172,7 +172,11 @@ class LessonController extends GetxController {
               ? null
               : LessonSlideQuestionModel(
                   id: slide['question']['id'] ?? "",
-                  questionText: slide['question']['name'],
+                  questionText: slide['question']['name'] != null
+                      ? stripHtmlTags(slide['question']['name']) != ""
+                          ? removeEmptyParagraphs(slide['question']['name'])
+                          : ""
+                      : "",
                   questionImage: slide['question']['imageUrL'] != null &&
                           slide['question']['imageUrL'] != ""
                       ? "${slide['question']['imageUrL']}"
@@ -199,15 +203,16 @@ class LessonController extends GetxController {
 
           for (var option in slide['question']['answers']) {
             // Remove HTML tags using a regular expression
-            String cleanContent =
-                option['text'].replaceAll(RegExp(r'<[^>]*>'), '').trim();
+            String cleanContent = stripHtmlTags(option['text']) != ""
+                ? removeEmptyParagraphs(option['text'])
+                : "";
 
             if (cleanContent.isNotEmpty ||
                 option['imageUrl'] != null && option['imageUrl'] != "") {
               tempOptions.add(
                 QuestionAnswerModel(
                   id: option['id'],
-                  text: cleanContent.isEmpty ? cleanContent : option['text'],
+                  text: cleanContent,
                   image: option['imageUrl'] != null && option['imageUrl'] != ""
                       ? "${option['imageUrl']}"
                       : "",
