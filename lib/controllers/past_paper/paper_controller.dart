@@ -172,7 +172,7 @@ class PaperController extends GetxController {
         }
 
         // shuffle options before adding
-        tempOptions.shuffle(Random());
+        tempOptions.shuffle(Random.secure());
 
         tempSlide.question!.setOptions(tempOptions);
 

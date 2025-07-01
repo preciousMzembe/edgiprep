@@ -207,16 +207,10 @@ class _SubjectPapersState extends State<SubjectPapers> {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        Get.to(
-                                          () => LoadSlides(
-                                            title: "Preparing Your Paper",
-                                            message:
-                                                "Get ready to dive in! Your paper is loading, and we're setting everything up for you.",
-                                            type: "paper",
-                                            testId: paper.id,
-                                            duration: paper.duration,
-                                          ),
-                                        );
+                                        Get.to(() => TestDetails(
+                                              subject: widget.subject,
+                                              pastPaper: paper,
+                                            ));
                                       },
                                       child: subjectPaper(
                                         paper.name,

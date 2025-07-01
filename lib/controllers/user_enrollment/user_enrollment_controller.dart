@@ -114,7 +114,7 @@ class UserEnrollmentController extends GetxController {
   // Fetch subjects
   Future<void> fetchSubjects() async {
     subjects.value = await userEnrollmentService.getSubjects();
-    subjects.shuffle(Random());
+    subjects.shuffle(Random.secure());
 
     subjects.refresh();
   }

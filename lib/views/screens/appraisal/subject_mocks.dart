@@ -208,16 +208,10 @@ class _SubjectMocksState extends State<SubjectMocks> {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        Get.to(
-                                          () => LoadSlides(
-                                            title: "Preparing Your Mock Exam",
-                                            message:
-                                                "Get ready to dive in! Your mock is loading, and we're setting everything up for you.",
-                                            type: "mock",
-                                            testId: mock.id,
-                                            duration: mock.duration,
-                                          ),
-                                        );
+                                        Get.to(() => TestDetails(
+                                              subject: widget.subject,
+                                              mockExam: mock,
+                                            ));
                                       },
                                       child: subjectPaper(
                                         mock.name,

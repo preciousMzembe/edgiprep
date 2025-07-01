@@ -23,7 +23,6 @@ class ConfigService extends GetxService {
       String quizQuestions = remoteConfig.getString('QUIZ_QUESTIONS');
       String topicQuizQuestions =
           remoteConfig.getString('TOPIC_QUIZ_QUESTIONS');
-      String premiumPrice = remoteConfig.getString('PREMIUM_PRICE');
 
       Config config = Config(
         apiUrl: apiUrl,
@@ -31,8 +30,8 @@ class ConfigService extends GetxService {
         appUrl: appUrl,
         quizQuestions: int.parse(quizQuestions),
         topicQuizQuestions: int.parse(topicQuizQuestions),
-        premiumPrice: premiumPrice,
-        subjectsImageUrl : subjectsImageUrl,
+        premiumPrice: "",
+        subjectsImageUrl: subjectsImageUrl,
       );
 
       await configBox.clear();

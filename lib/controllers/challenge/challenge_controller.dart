@@ -174,7 +174,7 @@ class ChallengeController extends GetxController {
         }
 
         // shuffle options before adding
-        tempOptions.shuffle(Random());
+        tempOptions.shuffle(Random.secure());
 
         tempSlide.question!.setOptions(tempOptions);
 
@@ -232,14 +232,14 @@ class ChallengeController extends GetxController {
           }
         }
 
-        tempOptions.shuffle(Random());
+        tempOptions.shuffle(Random.secure());
 
         newSlide.question!.setOptions(tempOptions);
 
         tempSlides.add(newSlide);
       }
 
-      tempSlides.shuffle(Random());
+      tempSlides.shuffle(Random.secure());
 
       slides.addAll(tempSlides);
       slides.refresh();
@@ -303,7 +303,7 @@ class ChallengeController extends GetxController {
         }
 
         // shuffle options before adding
-        tempOptions.shuffle(Random());
+        tempOptions.shuffle(Random.secure());
 
         tempSlide.question!.setOptions(tempOptions);
 

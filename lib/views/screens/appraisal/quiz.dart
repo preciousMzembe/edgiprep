@@ -110,7 +110,7 @@ class _QuizState extends State<Quiz> {
                   ),
                 ),
                 SizedBox(
-                  height: 40.h,
+                  height: 6.h,
                 ),
 
                 // slides
@@ -199,7 +199,11 @@ class _QuizState extends State<Quiz> {
                               isDismissible: false,
                               builder: (BuildContext context) => BackdropFilter(
                                 filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                child: lessonCorrect(),
+                                child: lessonCorrect(quizController
+                                    .visibleSlides[
+                                        quizController.currentSlideIndex.value]
+                                    .question!
+                                    .explanation),
                               ),
                               shape: const RoundedRectangleBorder(
                                 borderRadius: BorderRadius.vertical(

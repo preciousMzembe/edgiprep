@@ -198,7 +198,7 @@ class _PaperState extends State<Paper> {
                       ),
                     ),
                     SizedBox(
-                      height: 40.h,
+                      height: 6.h,
                     ),
 
                     // slides
@@ -290,7 +290,11 @@ class _PaperState extends State<Paper> {
                                       BackdropFilter(
                                     filter:
                                         ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: lessonCorrect(),
+                                    child: lessonCorrect(paperController
+                                        .visibleSlides[paperController
+                                            .currentSlideIndex.value]
+                                        .question!
+                                        .explanation),
                                   ),
                                   shape: const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.vertical(

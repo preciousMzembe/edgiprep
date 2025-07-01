@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-Widget lessonSlidesNumber(String text) {
+Widget lessonSlidesNumber(String text,
+    {Color color = const Color.fromRGBO(161, 168, 183, 1)}) {
   return LayoutBuilder(
     builder: (context, constraints) {
       bool isTablet = DeviceUtils.isTablet(context);
@@ -20,7 +21,7 @@ Widget lessonSlidesNumber(String text) {
         style: GoogleFonts.inter(
           fontSize: fontSize,
           fontWeight: FontWeight.w700,
-          color: const Color.fromRGBO(161, 168, 183, 1),
+          color: color,
         ),
       );
     },

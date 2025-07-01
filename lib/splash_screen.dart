@@ -20,7 +20,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   final authController = Get.find<AuthController>();
 
-  final random = Random();
+  final random = Random.secure();
   double randomAngle = 0;
 
   bool showLoading = false;

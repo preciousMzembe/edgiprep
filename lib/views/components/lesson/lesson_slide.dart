@@ -23,6 +23,9 @@ class LessonSlide extends StatelessWidget {
     return ListView(
       physics: const ClampingScrollPhysics(),
       children: [
+        SizedBox(
+          height: 40.h,
+        ),
         if (slide.content != null &&
             (slide.content!.title != "" ||
                 slide.content!.text != "" ||

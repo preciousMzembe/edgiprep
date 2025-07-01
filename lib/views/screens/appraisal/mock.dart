@@ -202,7 +202,7 @@ class _MockState extends State<Mock> {
                       ),
                     ),
                     SizedBox(
-                      height: 40.h,
+                      height: 6.h,
                     ),
 
                     // slides
@@ -294,7 +294,11 @@ class _MockState extends State<Mock> {
                                       BackdropFilter(
                                     filter:
                                         ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: lessonCorrect(),
+                                    child: lessonCorrect(mockController
+                                        .visibleSlides[mockController
+                                            .currentSlideIndex.value]
+                                        .question!
+                                        .explanation),
                                   ),
                                   shape: const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.vertical(
