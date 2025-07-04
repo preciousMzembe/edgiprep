@@ -1,4 +1,5 @@
 import 'package:edgiprep/utils/device_utils.dart';
+import 'package:edgiprep/views/components/general/html_content.dart';
 import 'package:edgiprep/views/components/general/normal_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
@@ -129,35 +130,14 @@ Widget lessonCorrect(String explanation) {
                                   height: 8.h,
                                 ),
                                 if (explanation.isNotEmpty)
-                                  HtmlWidget(
-                                    explanation,
+                                  HtmlContent(
+                                    htmlContent: explanation,
                                     textStyle: GoogleFonts.inter(
                                       fontSize: explanationSize,
                                       fontWeight: FontWeight.w500,
                                       color:
                                           const Color.fromRGBO(17, 25, 37, 1),
                                     ),
-                                    customWidgetBuilder: (element) {
-                                      if (element.localName == "span" &&
-                                          element.classes
-                                              .contains("ql-formula")) {
-                                        String? latexExpression =
-                                            element.attributes["data-value"];
-
-                                        if (latexExpression != null) {
-                                          return Math.tex(
-                                            latexExpression,
-                                            textStyle: GoogleFonts.inter(
-                                              fontSize: explanationSize,
-                                              fontWeight: FontWeight.w500,
-                                              color: const Color.fromRGBO(
-                                                  17, 25, 37, 1),
-                                            ),
-                                          );
-                                        }
-                                      }
-                                      return null;
-                                    },
                                   ),
                               ],
                             ),

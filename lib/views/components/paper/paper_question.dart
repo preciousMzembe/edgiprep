@@ -1,11 +1,10 @@
 import 'package:edgiprep/controllers/past_paper/paper_controller.dart';
 import 'package:edgiprep/models/lesson/lesson_slide_question_model.dart';
 import 'package:edgiprep/utils/device_utils.dart';
+import 'package:edgiprep/views/components/general/html_content.dart';
 import 'package:edgiprep/views/components/lesson/lesson_question_response.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -45,31 +44,12 @@ Widget paperQuestion(LessonSlideQuestionModel? question, bool sideDone) {
           SizedBox(
             height: 15.h,
           ),
-          HtmlWidget(
-            question?.questionText ?? "",
+          HtmlContent(
+            htmlContent: question?.questionText ?? "",
             textStyle: GoogleFonts.inter(
               fontSize: questionFont,
-              // fontWeight: FontWeight.w700,
               color: const Color.fromRGBO(52, 74, 106, 1),
             ),
-            customWidgetBuilder: (element) {
-              if (element.localName == "span" &&
-                  element.classes.contains("ql-formula")) {
-                String? latexExpression = element.attributes["data-value"];
-
-                if (latexExpression != null) {
-                  return Math.tex(
-                    latexExpression,
-                    textStyle: GoogleFonts.inter(
-                      fontSize: questionFont,
-                      // fontWeight: FontWeight.w700,
-                      color: const Color.fromRGBO(52, 74, 106, 1),
-                    ),
-                  );
-                }
-              }
-              return null;
-            },
           ),
 
           // question image

@@ -184,7 +184,10 @@ String removeEmptyParagraphs(String? rawText) {
 
 String stripHtmlTags(String? htmlString) {
   if (htmlString == null) return "";
-  return htmlString.replaceAll(RegExp(r'<[^>]*>'), '').trim();
+  return htmlString
+      .replaceAll(RegExp(r'<[^>]*>'), '')
+      .replaceAll(RegExp(r'<span>\s*</span>'), '')
+      .trim();
 }
 
 Future<String> getCurrentVersion() async {

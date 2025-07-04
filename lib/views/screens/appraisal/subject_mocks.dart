@@ -11,7 +11,6 @@ import 'package:edgiprep/views/components/general/no_data_content.dart';
 import 'package:edgiprep/views/components/search/subject_search_input.dart';
 import 'package:edgiprep/views/components/subjects/subjects_back.dart';
 import 'package:edgiprep/views/screens/appraisal/test_details.dart';
-import 'package:edgiprep/views/screens/subjects/load_slides.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';

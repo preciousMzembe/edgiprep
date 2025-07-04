@@ -5,6 +5,7 @@ import 'package:edgiprep/controllers/past_paper/paper_controller.dart';
 import 'package:edgiprep/controllers/quiz/quiz_controller.dart';
 import 'package:edgiprep/models/lesson/question_answer_model.dart';
 import 'package:edgiprep/utils/device_utils.dart';
+import 'package:edgiprep/views/components/general/html_content.dart';
 import 'package:edgiprep/views/components/general/normal_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
@@ -303,39 +304,15 @@ Widget lessonIncorrect(String type) {
                                           height: 8.h,
                                         ),
                                         if (cleanContent != "")
-                                          HtmlWidget(
-                                            correctAnswer?.text ?? "",
+                                          HtmlContent(
+                                            htmlContent:
+                                                correctAnswer?.text ?? "",
                                             textStyle: GoogleFonts.inter(
                                               fontSize: answerSize,
                                               fontWeight: FontWeight.w700,
                                               color: const Color.fromRGBO(
                                                   92, 101, 120, 1),
                                             ),
-                                            customWidgetBuilder: (element) {
-                                              if (element.localName == "span" &&
-                                                  element.classes
-                                                      .contains("ql-formula")) {
-                                                String? latexExpression =
-                                                    element.attributes[
-                                                        "data-value"];
-
-                                                if (latexExpression != null) {
-                                                  return Math.tex(
-                                                    latexExpression,
-                                                    textStyle:
-                                                        GoogleFonts.inter(
-                                                      fontSize: answerSize,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      color:
-                                                          const Color.fromRGBO(
-                                                              92, 101, 120, 1),
-                                                    ),
-                                                  );
-                                                }
-                                              }
-                                              return null;
-                                            },
                                           ),
 
                                         // Image
@@ -407,35 +384,14 @@ Widget lessonIncorrect(String type) {
                                       height: 8.h,
                                     ),
                                     if (explanation.isNotEmpty)
-                                      HtmlWidget(
-                                        explanation,
+                                      HtmlContent(
+                                        htmlContent: explanation,
                                         textStyle: GoogleFonts.inter(
                                           fontSize: explanationSize,
                                           fontWeight: FontWeight.w500,
                                           color: const Color.fromRGBO(
                                               17, 25, 37, 1),
                                         ),
-                                        customWidgetBuilder: (element) {
-                                          if (element.localName == "span" &&
-                                              element.classes
-                                                  .contains("ql-formula")) {
-                                            String? latexExpression = element
-                                                .attributes["data-value"];
-
-                                            if (latexExpression != null) {
-                                              return Math.tex(
-                                                latexExpression,
-                                                textStyle: GoogleFonts.inter(
-                                                  fontSize: explanationSize,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: const Color.fromRGBO(
-                                                      17, 25, 37, 1),
-                                                ),
-                                              );
-                                            }
-                                          }
-                                          return null;
-                                        },
                                       ),
 
                                     // Exp Image
