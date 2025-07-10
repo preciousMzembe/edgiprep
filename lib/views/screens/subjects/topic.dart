@@ -12,6 +12,7 @@ import 'package:edgiprep/views/components/topic/topic_lesson_box.dart';
 import 'package:edgiprep/views/components/topic/topic_lessons_number.dart';
 import 'package:edgiprep/views/components/topic/topic_quiz_button.dart';
 import 'package:edgiprep/views/components/topic/topic_topic_name.dart';
+import 'package:edgiprep/views/screens/subjects/Lesson_details.dart';
 import 'package:edgiprep/views/screens/subjects/load_slides.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -182,13 +183,10 @@ class _SubjectTopicState extends State<SubjectTopic> {
                         return GestureDetector(
                           onTap: () async {
                             if (lesson.active) {
-                              await Get.to(() => LoadSlides(
-                                    title: "Preparing Your Lesson",
-                                    message:
-                                        "Get ready to dive in! Your lesson is loading, and we're setting everything up for you.",
-                                    type: "lesson",
+                              await Get.to(() => LessonDetails(
                                     topic: widget.topic,
                                     lesson: lesson,
+                                    subject: widget.subject,
                                   ));
 
                               _lessonsAfter();

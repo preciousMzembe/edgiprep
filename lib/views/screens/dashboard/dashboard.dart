@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:edgiprep/controllers/auth/auth_controller.dart';
-import 'package:edgiprep/controllers/navigation/navController.dart';
+import 'package:edgiprep/controllers/navigation/nav_controller.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
 import 'package:edgiprep/services/auth/auth_service.dart';
 import 'package:edgiprep/services/enrollment/enrollment_service.dart';

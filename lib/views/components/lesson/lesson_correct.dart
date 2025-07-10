@@ -2,10 +2,8 @@ import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/general/html_content.dart';
 import 'package:edgiprep/views/components/general/normal_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 Widget lessonCorrect(String explanation) {

@@ -1,15 +1,13 @@
-import 'package:edgiprep/db/mock_exam/mock_exam.dart';
-import 'package:edgiprep/db/past_paper/past_paper.dart';
+import 'package:edgiprep/db/lesson/lesson.dart';
 import 'package:edgiprep/db/subject/user_subject.dart';
-import 'package:edgiprep/services/mock/mock_service.dart';
-import 'package:edgiprep/services/paper/paper_service.dart';
+import 'package:edgiprep/db/topic/topic.dart';
+import 'package:edgiprep/services/lesson/lesson_service.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/appraisal/appraisal_heading.dart';
 import 'package:edgiprep/views/components/appraisal/appraisal_test_subtitle.dart';
 import 'package:edgiprep/views/components/general/lesson_test_details_title.dart';
 import 'package:edgiprep/views/components/general/loading_content.dart';
-import 'package:edgiprep/views/components/general/no_data_content.dart';
 import 'package:edgiprep/views/components/general/normal_svg_button.dart';
 import 'package:edgiprep/views/components/subjects/subjects_back.dart';
 import 'package:edgiprep/views/screens/subjects/load_slides.dart';
@@ -18,77 +16,52 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 
-class TestDetails extends StatefulWidget {
+class LessonDetails extends StatefulWidget {
   final UserSubject subject;
-  final PastPaper? pastPaper;
-  final MockExam? mockExam;
-  const TestDetails(
-      {super.key, required this.subject, this.pastPaper, this.mockExam});
+  final Topic topic;
+  final Lesson lesson;
+  const LessonDetails(
+      {super.key,
+      required this.topic,
+      required this.lesson,
+      required this.subject});
 
   @override
-  State<TestDetails> createState() => _TestDetailsState();
+  State<LessonDetails> createState() => _LessonDetailsState();
 }
 
-class _TestDetailsState extends State<TestDetails> {
-  MockService mockService = Get.find<MockService>();
-  PaperService paperService = Get.find<PaperService>();
+class _LessonDetailsState extends State<LessonDetails> {
+  LessonService lessonService = Get.find<LessonService>();
 
   bool loading = true;
-
-  String testId = "";
-  String testType = "";
-  int duration = 0;
-
-  String testName = "";
-  String subject = "";
+  String author = "";
+  List<String> contributors = [];
+  int slides = 0;
   int questions = 0;
-
-  List<dynamic> testHistory = [];
 
   @override
   void initState() {
     super.initState();
 
-    getTestData();
+    getLessonData();
   }
 
-  // get test data
-  Future<void> getTestData() async {
-    testId = widget.pastPaper?.id ?? widget.mockExam?.id ?? "";
+  // get lesson data
+  Future<void> getLessonData() async {
+    String lessonId = widget.lesson.id;
 
-    if (testId != "") {
-      var testData = {};
+    if (lessonId != "") {
+      var lessonData = await lessonService.fetchLessonData(lessonId);
 
-      if (widget.pastPaper != null) {
-        testType = "paper";
-        subject = "${widget.subject.title} Past Paper";
-        testData = await paperService.fetchData(testId);
-      } else if (widget.mockExam != null) {
-        testType = "mock";
-        subject = "${widget.subject.title} Mock Exam";
-        testData = await mockService.fetchData(testId);
-      }
+      if (lessonData['error'] != null && !lessonData['error']) {
+        // Process lesson data
+        var lessonDetails = lessonData['lessonData'];
 
-      if (testData['error'] != null && !testData['error']) {
-        var paperInfo =
-            testType == "paper" ? testData['paperData'] : testData['mockData'];
-
-        var historyRecords = paperInfo['testDones'] ?? [];
-
-        for (var record in historyRecords) {
-          if (record['isDone'] != null && record['isDone']) {
-            testHistory.add({
-              "score": record['score'] != null ? "${record['score']}" : "0",
-              "date": record['createdAt'] ?? "Unknown",
-            });
-          }
-        }
-
-        duration = paperInfo['duration'] ?? 0;
-        testName = paperInfo['name'] ?? "Test Name";
-        questions = paperInfo['testInstances']?.length ?? 0;
+        author = lessonDetails['author'] ?? "";
+        contributors = List<String>.from(lessonDetails['contributors'] ?? []);
+        slides = lessonDetails['slides'] ?? 0;
+        questions = lessonDetails['questions'] ?? 0;
       }
     }
 
@@ -115,6 +88,18 @@ class _TestDetailsState extends State<TestDetails> {
             : isSmallTablet
                 ? 20.sp
                 : 22.sp;
+
+        double textSize = isTablet
+            ? 20.sp
+            : isSmallTablet
+                ? 22.sp
+                : 24.sp;
+
+        double authorHeight = isTablet
+            ? 66.sp
+            : isSmallTablet
+                ? 68.sp
+                : 60.h;
 
         return Scaffold(
           backgroundColor: getBackgroundColorFromString(widget.subject.color),
@@ -148,31 +133,31 @@ class _TestDetailsState extends State<TestDetails> {
                               ],
                             ),
 
-                            if (testName.isNotEmpty && subject.isNotEmpty)
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  SizedBox(
-                                    height: 20.h,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                // Name
+                                Center(
+                                  child: lessonTestDetailsTitle(
+                                    widget.lesson.name,
+                                    Colors.white,
                                   ),
-                                  // Name
-                                  Center(
-                                    child: lessonTestDetailsTitle(
-                                      testName,
-                                      Colors.white,
-                                    ),
-                                  ),
+                                ),
 
-                                  // Subject
-                                  SizedBox(
-                                    height: 8.h,
-                                  ),
-                                  Center(
-                                    child: appraisalTestSubtitle(subject,
-                                        const Color.fromRGBO(236, 239, 245, 1)),
-                                  ),
-                                ],
-                              ),
+                                // Subject
+                                SizedBox(
+                                  height: 8.h,
+                                ),
+                                Center(
+                                  child: appraisalTestSubtitle(
+                                      widget.topic.name,
+                                      const Color.fromRGBO(236, 239, 245, 1)),
+                                ),
+                              ],
+                            ),
 
                             // Stats
                             SizedBox(
@@ -183,11 +168,11 @@ class _TestDetailsState extends State<TestDetails> {
                                 children: [
                                   Expanded(
                                     child: statBox(
-                                        "question-square.svg",
+                                        "slides.svg",
                                         const Color.fromRGBO(102, 203, 124, 1),
-                                        "Questions",
+                                        "Slides",
                                         statTitleFontSize,
-                                        "$questions",
+                                        "$slides",
                                         statSubtitleFontSize),
                                   ),
                                   SizedBox(
@@ -195,11 +180,11 @@ class _TestDetailsState extends State<TestDetails> {
                                   ),
                                   Expanded(
                                     child: statBox(
-                                        "alarm-clock.svg",
+                                        "question-square.svg",
                                         const Color.fromRGBO(73, 161, 249, 1),
-                                        "Duration",
+                                        "Questions",
                                         statTitleFontSize,
-                                        "$duration minutes",
+                                        "$questions",
                                         statSubtitleFontSize),
                                   ),
                                   SizedBox(
@@ -211,7 +196,7 @@ class _TestDetailsState extends State<TestDetails> {
                                         const Color.fromRGBO(249, 220, 105, 1),
                                         "Total XPs",
                                         statTitleFontSize,
-                                        "$questions",
+                                        "10",
                                         statSubtitleFontSize),
                                   ),
                                 ],
@@ -239,43 +224,72 @@ class _TestDetailsState extends State<TestDetails> {
                               loadingContent("Getting Test Details",
                                   "Be patient while we get test details for you."),
 
-                            // No Info
-                            if (!loading && testHistory.isEmpty)
-                              noDataContent("No History Available",
-                                  "Get started by taking a test. Your test history will appear here."),
-
-                            // History
-                            if (!loading && testHistory.isNotEmpty)
+                            // Author and Contributors
+                            if (!loading && author.isNotEmpty)
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 15.w),
-                                    child: appraisalHeading("Test History"),
+                                  Text(
+                                    "This lesson was developed with care by our dedicated author, with additional contributions from others who helped shape its content. We thank everyone who played a part in bringing it to life.",
+                                    style: GoogleFonts.inter(
+                                      fontSize: textSize,
+                                      fontWeight: FontWeight.w400,
+                                      color:
+                                          const Color.fromRGBO(92, 101, 120, 1),
+                                    ),
                                   ),
                                   SizedBox(
                                     height: 25.h,
                                   ),
-                                  ...testHistory.map(
-                                    (history) {
-                                      double score = double.parse(
-                                          history['score'] ?? "0.0");
-                                      String date =
-                                          history['date'] ?? "Unknown Date";
-
+                                  if (author.isNotEmpty ||
+                                      contributors.isNotEmpty)
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 15.w),
+                                      child: appraisalHeading(
+                                          "Author & Contributors"),
+                                    ),
+                                  SizedBox(
+                                    height: 20.h,
+                                  ),
+                                  if (author.isNotEmpty)
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        contributorBox(
+                                          author,
+                                          "Author",
+                                          authorHeight,
+                                          textSize,
+                                          getBackgroundColorFromString(
+                                              widget.subject.color),
+                                        ),
+                                        SizedBox(
+                                          height: 20.h,
+                                        ),
+                                      ],
+                                    ),
+                                  if (contributors.isNotEmpty)
+                                    ...contributors.map((contributor) {
                                       return Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.stretch,
                                         children: [
-                                          testHistoryBox(score, date),
+                                          contributorBox(
+                                            contributor,
+                                            "Contributor",
+                                            authorHeight,
+                                            textSize,
+                                            getBackgroundColorFromString(
+                                                widget.subject.color),
+                                          ),
                                           SizedBox(
-                                            height: 25.h,
+                                            height: 20.h,
                                           ),
                                         ],
                                       );
-                                    },
-                                  ),
+                                    }),
                                 ],
                               ),
                           ],
@@ -319,34 +333,33 @@ class _TestDetailsState extends State<TestDetails> {
                                       ),
                                     ],
                                   ),
-                                  if (testName.isNotEmpty && subject.isNotEmpty)
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: [
-                                        SizedBox(
-                                          height: 20.h,
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      SizedBox(
+                                        height: 20.h,
+                                      ),
+                                      // Name
+                                      Center(
+                                        child: lessonTestDetailsTitle(
+                                          widget.lesson.name,
+                                          Colors.white,
                                         ),
-                                        // Name
-                                        Center(
-                                          child: lessonTestDetailsTitle(
-                                            testName,
-                                            Colors.white,
-                                          ),
-                                        ),
+                                      ),
 
-                                        // Subject
-                                        SizedBox(
-                                          height: 8.h,
-                                        ),
-                                        Center(
-                                          child: appraisalTestSubtitle(
-                                              subject,
-                                              const Color.fromRGBO(
-                                                  236, 239, 245, 1)),
-                                        ),
-                                      ],
-                                    ),
+                                      // Subject
+                                      SizedBox(
+                                        height: 8.h,
+                                      ),
+                                      Center(
+                                        child: appraisalTestSubtitle(
+                                            widget.topic.name,
+                                            const Color.fromRGBO(
+                                                236, 239, 245, 1)),
+                                      ),
+                                    ],
+                                  ),
 
                                   // Stats
                                   SizedBox(
@@ -357,12 +370,12 @@ class _TestDetailsState extends State<TestDetails> {
                                       children: [
                                         Expanded(
                                           child: statBox(
-                                              "question-square.svg",
+                                              "slides.svg",
                                               const Color.fromRGBO(
                                                   102, 203, 124, 1),
-                                              "Questions",
+                                              "Slides",
                                               statTitleFontSize,
-                                              "$questions",
+                                              "$slides",
                                               statSubtitleFontSize),
                                         ),
                                         SizedBox(
@@ -370,12 +383,12 @@ class _TestDetailsState extends State<TestDetails> {
                                         ),
                                         Expanded(
                                           child: statBox(
-                                              "alarm-clock.svg",
+                                              "question-square.svg",
                                               const Color.fromRGBO(
                                                   73, 161, 249, 1),
-                                              "Duration",
+                                              "Questions",
                                               statTitleFontSize,
-                                              "$duration minutes",
+                                              "$questions",
                                               statSubtitleFontSize),
                                         ),
                                         SizedBox(
@@ -421,20 +434,19 @@ class _TestDetailsState extends State<TestDetails> {
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(80.r),
                                     child: GestureDetector(
-                                      onTap: () {
-                                        Get.back();
-
-                                        Get.to(
+                                      onTap: () async {
+                                        await Get.to(
                                           () => LoadSlides(
-                                            title:
-                                                "Preparing Your ${testType == "paper" ? "Past Paper" : "Mock Exam"}",
+                                            title: "Preparing Your Lesson",
                                             message:
-                                                "Get ready to dive in! Your test is loading, and we're setting everything up for you.",
-                                            type: testType,
-                                            testId: testId,
-                                            duration: duration,
+                                                "Get ready to dive in! Your lesson is loading, and we're setting everything up for you.",
+                                            type: "lesson",
+                                            topic: widget.topic,
+                                            lesson: widget.lesson,
                                           ),
                                         );
+
+                                        Get.back();
                                       },
                                       child: Container(
                                         color: getColorFromString(
@@ -445,7 +457,7 @@ class _TestDetailsState extends State<TestDetails> {
                                             getColorFromString(
                                                 widget.subject.color),
                                             Colors.white,
-                                            "Start Test",
+                                            "Start Lesson",
                                             0,
                                             "play.svg"),
                                       ),
@@ -514,110 +526,55 @@ Widget statBox(String icon, Color iconColor, String title, double titleFont,
   );
 }
 
-Widget testHistoryBox(
-  double score,
-  String date,
-) {
-  String getDate(String dateStr) {
-    DateTime date = DateTime.parse(dateStr);
-    String formatted = DateFormat('EEEE, d MMMM').format(date);
-    return formatted;
-  }
-
-  Color scoreColor = score >= 75
-      ? const Color.fromRGBO(102, 203, 124, 1)
-      : score >= 50
-          ? const Color.fromRGBO(73, 161, 249, 1)
-          : const Color.fromRGBO(254, 101, 93, 1);
-
-  return LayoutBuilder(
-    builder: (context, constraints) {
-      bool isTablet = DeviceUtils.isTablet(context);
-      bool isSmallTablet = DeviceUtils.isSmallTablet(context);
-
-      // details
-
-      double scoreHeight = isTablet
-          ? 100.h
-          : isSmallTablet
-              ? 90.h
-              : 80.h;
-
-      double nameSize = isTablet
-          ? 28.sp
-          : isSmallTablet
-              ? 30.sp
-              : 32.sp;
-
-      double textSize = isTablet
-          ? 16.sp
-          : isSmallTablet
-              ? 18.sp
-              : 20.sp;
-
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(20.r),
+Widget contributorBox(String name, String role, double indicatorHeight,
+    double textSize, Color color) {
+  return Row(
+    children: [
+      ClipRRect(
+        borderRadius: BorderRadius.circular(50.r),
         child: Container(
-          color: Colors.white,
-          padding: EdgeInsets.symmetric(
-            horizontal: 30.w,
-            vertical: 30.h,
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // score
-              SizedBox(
-                width: scoreHeight,
-                height: scoreHeight,
-                child: CircularProgressIndicator(
-                  value: score / 100,
-                  strokeWidth: 16.r,
-                  backgroundColor: scoreColor.withAlpha(30),
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    scoreColor,
-                  ),
-                ),
+          height: indicatorHeight,
+          width: indicatorHeight,
+          color: color,
+          child: Center(
+            child: Text(
+              name.isNotEmpty ? name[0].toUpperCase() : "",
+              style: GoogleFonts.inter(
+                fontSize: textSize,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
               ),
-
-              // details
-              SizedBox(
-                width: 30.w,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // name
-                    Text(
-                      "${score.toStringAsFixed(0)}% Questions Passed",
-                      style: GoogleFonts.inter(
-                        fontSize: nameSize,
-                        fontWeight: FontWeight.w800,
-                        color: const Color.fromRGBO(52, 74, 106, 1),
-                      ),
-                    ),
-
-                    // text
-                    SizedBox(
-                      height: 4.h,
-                    ),
-                    Text(
-                      "Played on ${getDate(date)}",
-                      style: GoogleFonts.inter(
-                        fontSize: textSize,
-                        fontWeight: FontWeight.w500,
-                        color: const Color.fromRGBO(161, 168, 183, 1),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
         ),
-      );
-    },
+      ),
+
+      SizedBox(
+        width: 20.w,
+      ),
+
+      // Name and Role
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            name,
+            style: GoogleFonts.inter(
+              fontSize: textSize,
+              fontWeight: FontWeight.w700,
+              color: const Color.fromRGBO(17, 25, 37, 1),
+            ),
+          ),
+          Text(
+            role,
+            style: GoogleFonts.inter(
+              fontSize: textSize - 2,
+              fontWeight: FontWeight.w400,
+              color: const Color.fromRGBO(92, 101, 120, 1),
+            ),
+          ),
+        ],
+      ),
+    ],
   );
 }

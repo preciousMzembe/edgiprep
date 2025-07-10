@@ -26,8 +26,6 @@ class LessonController extends GetxController {
 
   final RxList<SlideModel> slides = <SlideModel>[].obs;
 
-  RxString lessonTitle = "".obs;
-
   // Tracks the list of slides and the currently visible slide index
   RxInt currentSlideIndex = 0.obs;
   RxBool firstJump = true.obs;
@@ -278,7 +276,6 @@ class LessonController extends GetxController {
   // Reset lesson progress (optional)
   Future<bool> restartLesson(Topic topic, Lesson lesson) async {
     visibleSlides.clear();
-    lessonTitle.value = lesson.name;
 
     subjectEnrollmentID.value = topic.subjectEnrollmentId;
     bool error = await getData(topic, lesson);

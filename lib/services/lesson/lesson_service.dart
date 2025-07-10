@@ -25,6 +25,44 @@ class LessonService extends GetxService {
     config = await configService.getConfig();
   }
 
+  Future<Map> fetchLessonData(String lessonId) async {
+    // Fetch lesson data using the lessonId
+    bool error = true;
+    config ??= await configService.getConfig();
+
+    // Check if token is not empty first
+    String? token = await authService.getToken();
+
+    if (token != null && token.isNotEmpty) {
+      try {
+        final response = await _dio.get(
+          '${config?.apiUrl}/Lesson/LessonAttribution?LessonId=$lessonId',
+          options: Options(
+            headers: {
+              'Authorization': 'Bearer $token',
+            },
+          ),
+        );
+
+        if (response.statusCode == 200) {
+          var lessonData = response.data;
+
+          return {
+            'error': false,
+            'lessonData': lessonData,
+          };
+        }
+      } on DioException {
+        error = true;
+        debugPrint(
+            "Error fetching lesson data ------------------------- lesson service");
+      }
+    }
+
+    // Return error true in case of failure
+    return {'error': error};
+  }
+
   Future<Map> fetchData(Topic topic, Lesson lesson) async {
     bool error = true;
     config ??= await configService.getConfig();

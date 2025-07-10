@@ -4,7 +4,7 @@ import 'package:edgiprep/controllers/enrollment/enrollment_controller.dart';
 import 'package:edgiprep/controllers/enrollment/enrollment_settings_controller.dart';
 import 'package:edgiprep/controllers/lesson/lesson_controller.dart';
 import 'package:edgiprep/controllers/mock/mock_controller.dart';
-import 'package:edgiprep/controllers/navigation/navController.dart';
+import 'package:edgiprep/controllers/navigation/nav_controller.dart';
 import 'package:edgiprep/controllers/notification/notification_controller.dart';
 import 'package:edgiprep/controllers/past_paper/paper_controller.dart';
 import 'package:edgiprep/controllers/quiz/quiz_controller.dart';

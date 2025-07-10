@@ -1,4 +1,4 @@
-import 'package:edgiprep/controllers/navigation/navController.dart';
+import 'package:edgiprep/controllers/navigation/nav_controller.dart';
 import 'package:edgiprep/utils/constants.dart';
 import 'package:edgiprep/utils/device_utils.dart';
 import 'package:edgiprep/views/components/dashboard/nav_option.dart';

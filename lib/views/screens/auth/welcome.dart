@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:edgiprep/controllers/navigation/navController.dart';
+import 'package:edgiprep/controllers/navigation/nav_controller.dart';
 import 'package:edgiprep/responsive/responsive_layout.dart';
 import 'package:edgiprep/views/screens/auth/auth.dart';
 import 'package:edgiprep/views/components/auth/welcome_fade_text.dart';
