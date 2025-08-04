@@ -62,4 +62,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'edgiprep-f7fbf.firebasestorage.app',
     measurementId: 'G-1YSB6VGHM7',
   );
+
 }

@@ -244,7 +244,7 @@ class _SignUpState extends State<SignUp> {
                           if (password.length < 4) {
                             passwordError = true;
                             showSnackbar(context, "Something Went Wrong",
-                                "Pin should have 4 or more digits.", true);
+                                "Pin should have 4 digits.", true);
                           } else {
                             // register
                             Map registerData = await authController.register(
