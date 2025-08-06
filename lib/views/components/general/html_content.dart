@@ -180,6 +180,18 @@ class HtmlContent extends StatelessWidget {
           ));
         } else if (element.localName == 'br') {
           spans.add(const TextSpan(text: '\n'));
+        } else if (element.localName == 'sub') {
+          spans.add(WidgetSpan(
+            alignment: PlaceholderAlignment.baseline,
+            baseline: TextBaseline.alphabetic,
+            child: Transform.translate(
+              offset: const Offset(0, 4), // shift down
+              child: Text(
+                element.text,
+                style: style.merge(const TextStyle(fontSize: 12)),
+              ),
+            ),
+          ));
         } else {
           spans.addAll(_buildInlineSpans(element, style));
         }
